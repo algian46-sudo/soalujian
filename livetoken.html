@@ -1,32 +1,156 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Live Teks dari Spreadsheet</title>
   <meta charset="UTF-8">
+  <title>Live Tabel PG & Esai</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-    #liveText { font-size: 2em; color: darkblue; }
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #f0f4ff, #e0eaff);
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    .config {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 30px;
+    }
+    .config div {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin: 8px 0;
+    }
+    input {
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 80px;
+      text-align: center;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease;
+    }
+    th {
+      background: #3498db;
+      color: #fff;
+      padding: 12px;
+      font-size: 1.1em;
+    }
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      transition: background 0.3s;
+    }
+    tr:hover td {
+      background: #f9f9f9;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
   </style>
 </head>
 <body>
-  <h2>Live Token ExamBro Nedacitra</h2>
-  <div id="liveText">Loading...</div>
+  <h1>Live Data dari Spreadsheet</h1>
+
+  <div class="config">
+    <div>
+      <h3>Pengaturan PG</h3>
+      <label>Nama Mapel: <input id="pgMapel" value="A45"></label>
+      <label>Token: <input id="pgToken" value="D45"></label>
+      <button onclick="loadTables()">Update PG</button>
+    </div>
+    <div>
+      <h3>Pengaturan Esai</h3>
+      <label>Nama Mapel: <input id="esaiMapel" value="A45"></label>
+      <label>Token: <input id="esaiToken" value="D45"></label>
+      <button onclick="loadTables()">Update Esai</button>
+    </div>
+  </div>
+
+  <table id="pgTable">
+    <tr><th id="pgMapelHeader">A45</th><th id="pgTokenHeader">D45</th></tr>
+    <tr><td id="pgMapelCell">Loading...</td><td id="pgTokenCell">Loading...</td></tr>
+  </table>
+
+  <table id="esaiTable">
+    <tr><th id="esaiMapelHeader">A45</th><th id="esaiTokenHeader">D45</th></tr>
+    <tr><td id="esaiMapelCell">Loading...</td><td id="esaiTokenCell">Loading...</td></tr>
+  </table>
 
   <script>
     const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRJWwi23eF1oVWORQKXPcHOUWHiOPC2TzZFU4akzyYG1OJ21WUFJZZen57lBhARwKT0CzzUZnQ--Td1/pub?output=csv";
 
-    async function loadCell() {
+    function cellToIndex(cellRef) {
+      const colLetter = cellRef.match(/[A-Z]+/)[0];
+      const rowNumber = parseInt(cellRef.match(/[0-9]+/)[0]);
+      let colIndex = 0;
+      for (let i = 0; i < colLetter.length; i++) {
+        colIndex = colIndex * 26 + (colLetter.charCodeAt(i) - 64);
+      }
+      return { row: rowNumber - 1, col: colIndex - 1 };
+    }
+
+    async function loadTables() {
       const response = await fetch(csvUrl);
       const text = await response.text();
       const rows = text.split("\n").map(r => r.split(","));
-      
-      // D8 = baris ke-8 (index 7), kolom D = kolom ke-4 (index 3)
-      const value = rows[7][3]; 
-      document.getElementById("liveText").innerText = value || "Kosong";
+
+      const pgMapelRef = document.getElementById("pgMapel").value;
+      const pgTokenRef = document.getElementById("pgToken").value;
+      const esaiMapelRef = document.getElementById("esaiMapel").value;
+      const esaiTokenRef = document.getElementById("esaiToken").value;
+
+      document.getElementById("pgMapelHeader").innerText = pgMapelRef;
+      document.getElementById("pgTokenHeader").innerText = pgTokenRef;
+      document.getElementById("esaiMapelHeader").innerText = esaiMapelRef;
+      document.getElementById("esaiTokenHeader").innerText = esaiTokenRef;
+
+      const pgMapelIdx = cellToIndex(pgMapelRef);
+      const pgTokenIdx = cellToIndex(pgTokenRef);
+      const esaiMapelIdx = cellToIndex(esaiMapelRef);
+      const esaiTokenIdx = cellToIndex(esaiTokenRef);
+
+      document.getElementById("pgMapelCell").innerText = rows[pgMapelIdx.row][pgMapelIdx.col] || "Kosong";
+      document.getElementById("pgTokenCell").innerText = rows[pgTokenIdx.row][pgTokenIdx.col] || "Kosong";
+      document.getElementById("esaiMapelCell").innerText = rows[esaiMapelIdx.row][esaiMapelIdx.col] || "Kosong";
+      document.getElementById("esaiTokenCell").innerText = rows[esaiTokenIdx.row][esaiTokenIdx.col] || "Kosong";
     }
 
-    loadCell();
-    setInterval(loadCell, 5000); // refresh tiap 5 detik
+    loadTables();
+    setInterval(loadTables, 5000);
   </script>
 </body>
 </html>
