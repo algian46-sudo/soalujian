@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Teks dari Spreadsheet</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    #liveText { font-size: 2em; color: darkblue; }
+  </style>
+</head>
+<body>
+  <h2>Live Token ExamBro Nedacitra</h2>
+  <div id="liveText">Loading...</div>
+
+  <script>
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRJWwi23eF1oVWORQKXPcHOUWHiOPC2TzZFU4akzyYG1OJ21WUFJZZen57lBhARwKT0CzzUZnQ--Td1/pub?output=csv";
+
+    async function loadCell() {
+      const response = await fetch(csvUrl);
+      const text = await response.text();
+      const rows = text.split("\n").map(r => r.split(","));
+      
+      // D8 = baris ke-8 (index 7), kolom D = kolom ke-4 (index 3)
+      const value = rows[7][3]; 
+      document.getElementById("liveText").innerText = value || "Kosong";
+    }
+
+    loadCell();
+    setInterval(loadCell, 5000); // refresh tiap 5 detik
+  </script>
+</body>
+</html>
