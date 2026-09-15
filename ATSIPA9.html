@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kuis E-Learning IPA Kelas 9</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #1a365d;
+      --secondary-color: #2b6cb0;
+      --accent-color: #3182ce;
+      --bg-color: #f7fafc;
+      --card-bg: #ffffff;
+      --text-color: #2d3748;
+      --border-color: #e2e8f0;
+      --success-color: #38a169;
+      --warning-color: #e53e3e;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ebf8ff 0%, #f7fafc 100%);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .header-banner h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .header-banner p {
+      font-size: 0.8rem;
+      opacity: 0.85;
+      margin-top: 4px;
+    }
+
+    .content-body {
+      padding: 20px;
+    }
+
+    /* Form Inputs & Selects */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 6px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      background-color: #f8fafc;
+      color: var(--text-color);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--accent-color);
+      background-color: #fff;
+      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 6px -1px rgba(49, 130, 206, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn:disabled {
+      background: #cbd5e0;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* Quiz Screen Styles */
+    #quiz-screen {
+      display: none;
+    }
+
+    .student-badge {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #edf2f7;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 15px;
+    }
+
+    /* Grid Bilah Soal Modern */
+    .nav-grid-container {
+      margin-bottom: 15px;
+    }
+
+    .nav-grid-header {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #718096;
+      margin-bottom: 6px;
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      max-height: 110px;
+      overflow-y: auto;
+      padding: 4px;
+    }
+
+    .nav-btn {
+      padding: 8px 0;
+      background: #edf2f7;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #4a5568;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn.active {
+      border: 2px solid var(--accent-color);
+      background: #ebf8ff;
+      color: var(--accent-color);
+    }
+
+    .nav-btn.answered {
+      background: var(--success-color);
+      color: white;
+      border-color: var(--success-color);
+    }
+
+    /* Question Box */
+    .question-card {
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .question-text {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      font-weight: 500;
+      color: #1a202c;
+      margin-bottom: 15px;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
+      line-height: 1.3;
+    }
+
+    .option-item:hover {
+      background: #edf2f7;
+    }
+
+    .option-item.selected {
+      background: #ebf8ff;
+      border-color: var(--accent-color);
+      color: var(--secondary-color);
+      font-weight: 600;
+    }
+
+    .option-radio {
+      margin-right: 10px;
+      accent-color: var(--accent-color);
+    }
+
+    /* Navigation Action Buttons */
+    .action-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      background: #edf2f7;
+      color: #4a5568;
+      box-shadow: none;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #48bb78, #38a169);
+      box-shadow: 0 4px 6px -1px rgba(56, 161, 105, 0.3);
+    }
+
+    /* Status Indicator / Loader */
+    #loading-overlay {
+      display: none;
+      position: absolute;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(2px);
+      z-index: 10;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .spinner {
+      width: 35px;
+      height: 35px;
+      border: 3px solid #e2e8f0;
+      border-top: 3px solid var(--accent-color);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Loading Overlay -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <div id="loading-text" style="font-size: 0.85rem; font-weight:600; color: #4a5568;">Memuat data...</div>
+  </div>
+
+  <!-- Header Banner -->
+  <div class="header-banner">
+    <h2>ASESMEN SUMATIF IPA</h2>
+    <p>SMP Negeri 8 Cikarang Utara</p>
+  </div>
+
+  <div class="content-body">
+    <!-- SCREEN 1: LOGIN -->
+    <div id="login-screen">
+      <div class="form-group">
+        <label for="select-kelas">Pilih Kelas:</label>
+        <select id="select-kelas" onchange="onKelasChange()">
+          <option value="">-- Pilih Kelas --</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="select-nama">Pilih Nama Siswa:</label>
+        <select id="select-nama" disabled>
+          <option value="">-- Pilih Kelas Terlebih Dahulu --</option>
+        </select>
+      </div>
+
+      <button class="btn" onclick="startQuiz()">Mulai Ujian</button>
+    </div>
+
+    <!-- SCREEN 2: KUIS -->
+    <div id="quiz-screen">
+      <div class="student-badge">
+        <span id="badge-nama">Nama: -</span>
+        <span id="badge-kelas">Kelas: -</span>
+      </div>
+
+      <!-- Navigasi Bilah Soal -->
+      <div class="nav-grid-container">
+        <div class="nav-grid-header">Bilah Soal:</div>
+        <div class="nav-grid" id="nav-grid"></div>
+      </div>
+
+      <!-- Tampilan Soal Single Page -->
+      <div class="question-card">
+        <div class="question-text" id="question-text"></div>
+        <div class="options-list" id="options-container"></div>
+      </div>
+
+      <!-- Tombol Aksi Navigasi -->
+      <div class="action-group">
+        <button id="btn-prev" class="btn btn-secondary" onclick="prevQuestion()">Sebelumnya</button>
+        <button id="btn-next" class="btn" onclick="nextQuestion()">Berikutnya</button>
+        <button id="btn-submit" class="btn btn-success" style="display:none;" onclick="submitQuiz()">Selesai</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // =========================================================================
+  // MASUKKAN URL WEB APP EXEC APPS SCRIPT ANDA DI SINI
+  // =========================================================================
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwcjfegNdhqhZDIGtJsJuCsIz1DYAmE6xPE1vcG77yV7ZvhxY8MevZuGI7uiw2JMBc/exec";
+
+  // DATA NASKAH SOAL ASTS IPA KELAS 9
+  const questions = [
+    { no: 1, text: "1. Seorang siswa mengukur tinggi tanaman cabai setiap 3 hari sekali menggunakan mistar. Data menunjukkan pertumbuhan dari 2 cm menjadi 5 cm. Sifat pertumbuhan yang ditunjukkan oleh kegiatan siswa tersebut adalah...", options: ["A. Kuantitatif dan irreversibel", "B. Kualitatif dan reversibel", "C. Kuantitatif dan reversibel", "D. Kualitatif dan irreversibel"], key: "A" },
+    { no: 2, text: "2. Tahap paling awal dalam proses perkecambahan biji ditandai dengan masuknya air ke dalam biji yang dinamakan...", options: ["A. Imbibisi", "B. Osmosis", "C. Difusi", "D. Transpirasi"], key: "A" },
+    { no: 3, text: "3. Pada perkecambahan epigeal, bagian organ tumbuhan yang mengalami pemanjangan sehingga terangkat ke atas permukaan tanah adalah...", options: ["A. Hipokotil", "B. Epikotil", "C. Radikula", "D. Plumula"], key: "A" },
+    { no: 4, text: "4. Sebuah bibit tanaman diletakkan di dalam kamar yang gelap total tanpa cahaya. Setelah beberapa hari, batang tanaman tumbuh sangat cepat, panjang, tetapi berwarna pucat dan batangnya lemah. Fenomena ini terjadi karena...", options: ["A. Hormon auksin tidak terurai oleh cahaya sehingga memicu pemanjangan sel secara ekstrem", "B. Hormon giberelin terhambat pembentukannya di tempat gelap", "C. Klorofil diproduksi berlebihan sehingga batang melemah", "D. Hormon etilen menghambat pertumbuhan akar tanaman"], key: "A" },
+    { no: 5, text: "5. Pembelahan sel-sel pada kambium vaskuler ke arah luar membentuk floem sekunder dan ke arah dalam membentuk xilem sekunder. Aktivitas ini menyebabkan...", options: ["A. Bertambah lebarnya diameter batang tumbuhan dikotil", "B. Memanjangnya ujung akar dan ujung batang", "C. Terbentuknya daun-daun baru pada tunas lateral", "D. Terhentinya pembentukan lingkaran tahun pada kayu"], key: "A" },
+    { no: 6, text: "6. Jika bagian ujung pucuk batang suatu tanaman dipotong, maka yang terjadi pada tanaman tersebut adalah...", options: ["A. Dominansi apikal hilang dan tunas samping (lateral) akan tumbuh merimbun", "B. Tanaman akan bertambah tinggi secara lebih cepat", "C. Tanaman akan langsung berbunga dan berbuah", "D. Akar tanaman akan berhenti menyerap air dari tanah"], key: "A" },
+    { no: 7, text: "7. Petani buah sering kali memetik buah yang masih mentah lalu membungkusnya rapat-rapat bersama dengan buah yang sudah matang agar cepat masak. Mekanisme hormon yang bekerja pada proses ini adalah...", options: ["A. Gas etilen memicu proses pematangan buah secara fisiologis", "B. Asam absisat merangsang pembelahan sel kulit buah", "C. Giberelin mencegah pembentukan biji di dalam buah", "D. Sitokinin mempercepat pengguguran daun dan buah"], key: "A" },
+    { no: 8, text: "8. Katak mengalami proses perubahan bentuk tubuh dari telur, berudu (kecebong), katak muda, hingga katak dewasa. Proses pertumbuhan dan perkembangan tersebut tergolong ke dalam...", options: ["A. Metamorfosis sempurna", "B. Metamorfosis tidak sempurna", "C. Metagenesis", "D. Regenerasi organ"], key: "A" },
+    { no: 9, text: "9. Belalang melewati tahap perkembangan: Telur → Nimfa → Belalang Dewasa. Alasan utama proses ini disebut metamorfosis tidak sempurna adalah...", options: ["A. Tidak mengalami fase pupa (kepompong)", "B. Bentuk nimfa sangat berbeda total dari bentuk dewasa", "C. Telur menetas langsung menjadi individu dewasa", "D. Mengalami pembuahan secara eksternal"], key: "A" },
+    { no: 10, text: "10. Urutan tahapan perkembangbiakan embrio hewan (embriogenesis) yang tepat setelah terbentuknya zigot adalah...", options: ["A. Zigot → Morula → Blastula → Gastrula", "B. Zigot → Gastrula → Morula → Blastula", "C. Zigot → Blastula → Morula → Organogenesis", "D. Zigot → Morula → Organogenesis → Gastrula"], key: "A" },
+    { no: 11, text: "11. Hewan dari kelompok Arthropoda seperti kepiting dan udang mengalami proses pergantian kulit secara berkala agar tubuhnya dapat tumbuh lebih besar. Proses ini disebut...", options: ["A. Eksdisis", "B. Metamorfosis", "C. Regenerasi", "D. Partenogenesis"], key: "A" },
+    { no: 12, text: "12. Pada manusia, munculnya tanda-tanda seks sekunder seperti tumbuhnya jakun pada pria dan pembesaran payudara pada wanita menandakan bahwa manusia telah memasuki masa...", options: ["A. Pubertas", "B. Balita", "C. Dewasa akhir", "D. Lansia"], key: "A" },
+    { no: 13, text: "13. Hormon pertumbuhan yang disekresikan oleh kelenjar hipofisis untuk merangsang pemanjangan tulang dan pertumbuhan jaringan tubuh pada manusia dinamakan...", options: ["A. Somatotropin", "B. Tiroksin", "C. Adrenalin", "D. Insulin"], key: "A" },
+    { no: 14, text: "14. Apabila seorang anak mengalami kekurangan hormon tiroksin sejak bayi, maka anak tersebut berisiko mengalami gangguan pertumbuhan fisik kerdil disertai keterbelakangan mental yang dikenal dengan istilah...", options: ["A. Kretinisme", "B. Gigantisme", "C. Akromegali", "D. Diabetes Melitus"], key: "A" },
+    { no: 15, text: "15. Jenis sel saraf (neuron) yang berfungsi membawa dan menghantarkan impuls listrik dari reseptor (alat indra) menuju ke sistem saraf pusat adalah...", options: ["A. Neuron sensorik", "B. Neuron motorik", "C. Neuron konektor", "D. Interneuron"], key: "A" },
+    { no: 16, text: "16. Bagian dari struktur sel saraf berupa lapisan lemak yang berfungsi membungkus akson dan mempercepat jalannya impuls saraf adalah...", options: ["A. Selubung mielin", "B. Nodus Ranvier", "C. Dendrit", "D. Badan sel"], key: "A" },
+    { no: 17, text: "17. Ketika tangan seseorang tidak sengaja menyentuh benda yang sangat panas, tangan akan serta-merta tertarik menjauh secara cepat. Urutan lengkung refleks yang tepat pada peristiwa tersebut adalah...", options: ["A. Reseptor → Saraf Sensorik → Sumsum Tulang Belakang → Saraf Motorik → Efektor", "B. Reseptor → Saraf Motorik → Otak Besar → Saraf Sensorik → Efektor", "C. Reseptor → Saraf Sensorik → Otak Besar → Saraf Motorik → Efektor", "D. Efektor → Saraf Sensorik → Sumsum Tulang Belakang → Saraf Motorik → Reseptor"], key: "A" },
+    { no: 18, text: "18. Bagian otak manusia yang berperan utama dalam mengatur keseimbangan tubuh dan mengoordinasikan gerakan otot-otot rangka adalah...", options: ["A. Serebelum (Otak Kecil)", "B. Serebrum (Otak Besar)", "C. Medula Oblongata", "D. Hipotalamus"], key: "A" },
+    { no: 19, text: "19. Seseorang mengalami kecelakaan dan mengalami benturan keras pada bagian belakang kepalanya (lobus oksipitalis). Gangguan fungsi saraf pusat yang paling mungkin dialami orang tersebut adalah...", options: ["A. Gangguan pada penglihatan", "B. Kehilangan kemampuan mendengar", "C. Kelumpuhan gerak pita suara", "D. Hilangnya rasa pengecap pada lidah"], key: "A" },
+    { no: 20, text: "20. Pada saat seseorang merasa sangat ketakutan atau dikejar kejanggalan bahaya, sistem saraf simpatik akan aktif. Respon fisiologis tubuh yang terjadi akibat stimulasi saraf simpatik adalah...", options: ["A. Denyut jantung meningkat dan pupil mata melebar", "B. Denyut jantung menurun dan laju napas lambat", "C. Saluran pencernaan bekerja lebih aktif", "D. Tekanan darah menurun drastis"], key: "A" },
+    { no: 21, text: "21. Penghantaran sinyal antar sel saraf pada celah sinapsis membutuhkan zat kimia penyeberang impuls yang dikenal sebagai...", options: ["A. Neurotransmiter", "B. Hormon", "C. Enzim", "D. Antibodi"], key: "A" },
+    { no: 22, text: "22. Seseorang menderita penyakit Diabetes Insipidus yang ditandai dengan pengeluaran urine dalam jumlah yang sangat banyak dan sering merasa haus berlebihan. Penyebab utama kelainan hormon pada penderita tersebut adalah...", options: ["A. Kekurangan Hormon Antidiuretik (ADH)", "B. Kelebihan hormon insulin", "C. Kekurangan hormon glukagon", "D. Kelebihan hormon adrenalin"], key: "A" },
+    { no: 23, text: "23. Sebuah penelitian menunjukkan bahwa penggunaan zat kimia stimulan tertentu secara terus-menerus dapat menurunkan jumlah reseptor neurotransmiter di celah sinapsis otak. Dampak jangka panjang yang diprediksi akan terjadi pada pemakai adalah...", options: ["A. Terjadinya toleransi zat sehingga membutuhkan dosis lebih tinggi untuk mencapai efek yang sama", "B. Otak akan memproduksi lebih banyak impuls listrik secara spontan", "C. Kecepatan penghantaran impuls saraf menjadi dua kali lebih cepat", "D. Otak tidak lagi membutuhkan neurotransmiter untuk berkomunikasi"], key: "A" },
+    { no: 24, text: "24. Jika suatu mutasi genetik menyebabkan tanaman sama sekali tidak mampu memproduksi Asam Absisat (ABA), dampak yang akan terjadi pada tanaman tersebut ketika musim kemarau panjang adalah...", options: ["A. Tanaman tidak dapat menutup stomata sehingga cepat layu dan mati karena dehidrasi", "B. Batang tanaman akan bertambah pendek dan membulat", "C. Biji tanaman tidak akan pernah bisa berkecambah", "D. Tanaman akan menghasilkan buah berukuran raksasa"], key: "A" },
+    { no: 25, text: "25. Pembudidaya tanaman ingin memecahkan masa dormansi biji agar biji cepat berkecambah secara serempak. Perlakuan perendaman hormon yang paling tepat disintesis untuk memicu produksi enzim α-amilase di dalam biji adalah...", options: ["A. Hormon Giberelin", "B. Hormon Asam Absisat", "C. Hormon Asam Traumalin", "D. Hormon Kalin"], key: "A" }
+  ];
+
+  let rawStudentsData = [];
+  let currentIdx = 0;
+  let userAnswers = new Array(questions.length).fill("-");
+  let selectedNama = "";
+  let selectedKelas = "";
+  let isQuizActive = false;
+
+  // MUAT DATA DROPDOWN SAAT HALAMAN PERTAMA KALI DIBUKA
+  window.onload = function() {
+    loadDropdownData();
+    initAntiCheating();
+  };
+
+  function showLoading(text) {
+    document.getElementById("loading-text").innerText = text || "Memuat...";
+    document.getElementById("loading-overlay").style.display = "flex";
+  }
+
+  function hideLoading() {
+    document.getElementById("loading-overlay").style.display = "none";
+  }
+
+  // FETCH DROPDOWN DARI SPREADSHEET
+  async function loadDropdownData() {
+    showLoading("Mengambil data siswa...");
+    try {
+      const response = await fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "getDropdownData" })
+      });
+      const res = await response.json();
+      hideLoading();
+
+      if (res.status === "success") {
+        rawStudentsData = res.data;
+        populateKelasDropdown();
+      } else {
+        alert("Gagal memuat data siswa!");
+      }
+    } catch (err) {
+      hideLoading();
+      alert("Terjadi kesalahan jaringan!");
+    }
+  }
+
+  function populateKelasDropdown() {
+    const selectKelas = document.getElementById("select-kelas");
+    selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+
+    // Ambil daftar kelas unik
+    const kelasSet = new Set(rawStudentsData.map(item => item.kelas));
+    kelasSet.forEach(kelas => {
+      const opt = document.createElement("option");
+      opt.value = kelas;
+      opt.textContent = kelas;
+      selectKelas.appendChild(opt);
+    });
+  }
+
+  function onKelasChange() {
+    const kelasVal = document.getElementById("select-kelas").value;
+    const selectNama = document.getElementById("select-nama");
+    selectNama.innerHTML = '<option value="">-- Pilih Nama Siswa --</option>';
+
+    if (!kelasVal) {
+      selectNama.disabled = true;
+      return;
+    }
+
+    const filteredNama = rawStudentsData.filter(item => item.kelas === kelasVal);
+    filteredNama.forEach(item => {
+      const opt = document.createElement("option");
+      opt.value = item.nama;
+      opt.textContent = item.nama;
+      selectNama.appendChild(opt);
+    });
+
+    selectNama.disabled = false;
+  }
+
+  // MULAI KUIS
+  function startQuiz() {
+    selectedKelas = document.getElementById("select-kelas").value;
+    selectedNama = document.getElementById("select-nama").value;
+
+    if (!selectedKelas || !selectedNama) {
+      alert("Silakan pilih Kelas dan Nama terlebih dahulu!");
+      return;
+    }
+
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("quiz-screen").style.display = "block";
+
+    document.getElementById("badge-nama").innerText = "Nama: " + selectedNama;
+    document.getElementById("badge-kelas").innerText = "Kelas: " + selectedKelas;
+
+    isQuizActive = true;
+    userAnswers = new Array(questions.length).fill("-");
+    renderNavGrid();
+    loadQuestion(0);
+  }
+
+  // NAVIGASI KUIS
+  function renderNavGrid() {
+    const navGrid = document.getElementById("nav-grid");
+    navGrid.innerHTML = "";
+    questions.forEach((q, index) => {
+      const btn = document.createElement("button");
+      btn.className = `nav-btn ${userAnswers[index] !== "-" ? "answered" : ""}`;
+      btn.innerText = index + 1;
+      btn.onclick = () => loadQuestion(index);
+      navGrid.appendChild(btn);
+    });
+  }
+
+  function loadQuestion(index) {
+    currentIdx = index;
+    const q = questions[index];
+    document.getElementById("question-text").innerText = q.text;
+
+    const optionsContainer = document.getElementById("options-container");
+    optionsContainer.innerHTML = "";
+
+    const labels = ["A", "B", "C", "D"];
+    q.options.forEach((optText, i) => {
+      const optDiv = document.createElement("div");
+      optDiv.className = `option-item ${userAnswers[index] === labels[i] ? "selected" : ""}`;
+      optDiv.onclick = () => selectOption(labels[i]);
+
+      optDiv.innerHTML = `
+        <input type="radio" class="option-radio" name="opt" ${userAnswers[index] === labels[i] ? "checked" : ""}>
+        <span>${optText}</span>
+      `;
+      optionsContainer.appendChild(optDiv);
+    });
+
+    const navBtns = document.querySelectorAll(".nav-btn");
+    navBtns.forEach((btn, i) => {
+      btn.classList.toggle("active", i === index);
+    });
+
+    document.getElementById("btn-prev").style.display = index === 0 ? "none" : "block";
+    document.getElementById("btn-next").style.display = index === questions.length - 1 ? "none" : "block";
+    document.getElementById("btn-submit").style.display = index === questions.length - 1 ? "block" : "none";
+  }
+
+  function selectOption(choice) {
+    userAnswers[currentIdx] = choice;
+    renderNavGrid();
+    loadQuestion(currentIdx);
+  }
+
+  function nextQuestion() {
+    if (currentIdx < questions.length - 1) loadQuestion(currentIdx + 1);
+  }
+
+  function prevQuestion() {
+    if (currentIdx > 0) loadQuestion(currentIdx - 1);
+  }
+
+  // SUBMIT UJIAN HASIL SISWA
+  async function submitQuiz() {
+    if (confirm("Apakah Anda yakin ingin menyelesaikan ujian?")) {
+      isQuizActive = false; // Matikan proteksi saat mengirim jawaban
+      showLoading("Mengirim jawaban...");
+
+      let score = 0;
+      let stringAnswers = "";
+
+      questions.forEach((q, i) => {
+        const ans = userAnswers[i];
+        stringAnswers += ans;
+        if (ans === q.key) score += 4;
+      });
+
+      const payload = {
+        action: "submit",
+        nama: selectedNama,
+        kelas: selectedKelas,
+        jawaban: stringAnswers,
+        skor: score
+      };
+
+      try {
+        await fetch(WEB_APP_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+        hideLoading();
+        alert(`Ujian Selesai!\nSkor Anda: ${score}`);
+        resetToLoginScreen();
+      } catch (e) {
+        hideLoading();
+        alert("Gagal mengirim jawaban!");
+      }
+    }
+  }
+
+  // SISTEM KEAMANAN (RESET SAAT PINDAH TAB / HILANG FOKUS)
+  function initAntiCheating() {
+    window.addEventListener("blur", handleUserLeave);
+    document.addEventListener("visibilitychange", function() {
+      if (document.hidden) handleUserLeave();
+    });
+  }
+
+  function handleUserLeave() {
+    if (isQuizActive) {
+      isQuizActive = false;
+      alert("Peringatan Sistem: Anda meninggalkan/membuka tab lain! Kuis direset dan Anda harus login kembali.");
+      resetToLoginScreen();
+    }
+  }
+
+  function resetToLoginScreen() {
+    isQuizActive = false;
+    userAnswers = new Array(questions.length).fill("-");
+    document.getElementById("select-kelas").value = "";
+    document.getElementById("select-nama").innerHTML = '<option value="">-- Pilih Kelas Terlebih Dahulu --</option>';
+    document.getElementById("select-nama").disabled = true;
+
+    document.getElementById("quiz-screen").style.display = "none";
+    document.getElementById("login-screen").style.display = "block";
+  }
+</script>
+
+</body>
+</html>

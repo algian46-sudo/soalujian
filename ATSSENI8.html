@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis E-Learning Seni Rupa Kelas 8</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent-color: #6366f1;
+      --accent-hover: #4f46e5;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --active-grid: #38bdf8;
+      --filled-grid: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+
+    /* Container Main */
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Header Design */
+    .header-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 15px 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .header-card h1 {
+      font-size: 1.2rem;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+
+    .header-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Card Box */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      margin-bottom: 15px;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    select, button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    select:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #4f46e5, #06b6d4);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Grid Bilah Soal */
+    .grid-nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .grid-item {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .grid-item.active {
+      border-color: var(--active-grid);
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--active-grid);
+    }
+
+    .grid-item.filled {
+      background: var(--filled-grid);
+      color: #fff;
+      border-color: var(--filled-grid);
+    }
+
+    /* Soal & Pilihan */
+    .question-box {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.4);
+      transition: 0.2s;
+    }
+
+    .option-item:hover {
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    .option-item.selected {
+      border-color: var(--accent-color);
+      background: rgba(99, 102, 241, 0.3);
+    }
+
+    .option-prefix {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 12px;
+      font-size: 0.85rem;
+    }
+
+    .option-item.selected .option-prefix {
+      background: var(--accent-color);
+    }
+
+    /* Navigation Controls */
+    .nav-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn-nav {
+      width: 48%;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Hide Sections */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Info Warning */
+    .warning-box {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: #fca5a5;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header-card">
+      <h1><i class="fa-solid fa-graduation-cap"></i> ASTS SENI RUPA KELAS 8</h1>
+      <p>SMP Negeri 8 Cikarang Utara[cite: 1]</p>
+    </div>
+
+    <!-- HALAMAN LOGIN -->
+    <div id="login-page" class="card">
+      <h2 style="font-size: 1.1rem; margin-bottom: 15px; text-align: center;">Masuk Ke Ujian</h2>
+      
+      <div class="warning-box">
+        <i class="fa-solid fa-triangle-exclamation"></i> Dilarang keluar dari tab/aplikasi selama ujian berlangsung. Ujian akan direset jika Anda hilang fokus!
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Kelas</label>
+        <select id="select-kelas" onchange="filterNama()">
+          <option value="">-- Memuat Kelas... --</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Nama Siswa</label>
+        <select id="select-nama" disabled>
+          <option value="">-- Pilih Kelas Terlebih Dahulu --</option>
+        </select>
+      </div>
+
+      <button class="btn-primary" onclick="startQuiz()">Mulai Kerjakan <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- HALAMAN KUIS -->
+    <div id="quiz-page" class="card hidden">
+      <!-- Bilah Nomor Soal -->
+      <div class="grid-nav" id="grid-nav"></div>
+
+      <!-- Detail Soal -->
+      <div class="question-box" id="question-text"></div>
+
+      <!-- Option Pilihan Ganda -->
+      <div id="options-container"></div>
+
+      <!-- Tombol Navigasi -->
+      <div class="nav-controls">
+        <button class="btn-nav" id="btn-prev" onclick="changeQuestion(-1)"><i class="fa-solid fa-chevron-left"></i> Sebelum</button>
+        <button class="btn-nav" id="btn-next" onclick="changeQuestion(1)">Berikut <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+
+      <button class="btn-primary hidden" id="btn-submit" style="margin-top: 15px; background: linear-gradient(90deg, #22c55e, #10b981);" onclick="confirmSubmit()">
+        Kirim Semua Jawaban <i class="fa-solid fa-check"></i>
+      </button>
+    </div>
+
+    <!-- HALAMAN SELESAI -->
+    <div id="result-page" class="card hidden" style="text-align: center;">
+      <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: #22c55e; margin-bottom: 10px;"></i>
+      <h2>Ujian Selesai!</h2>
+      <p style="color: var(--text-muted); margin-top: 5px;">Jawaban Anda telah tersimpan di spreadsheet.</p>
+      <div id="score-display" style="font-size: 1.8rem; font-weight: bold; color: #38bdf8; margin: 20px 0;"></div>
+      <button class="btn-primary" onclick="location.reload()">Kembali ke Login</button>
+    </div>
+  </div>
+
+  <script>
+    // --- MASUKKAN URL GOOGLE APPS SCRIPT WEB APP DI SINI ---
+    const API_URL = "https://script.google.com/macros/s/AKfycbx7v7sBSR47QOoPiuQovyUJ69Gm0dbIvta20AQ4THM2sGFMZywspQ16Af-LWnvZJ9QC/exec";
+
+    // --- BANK SOAL KELAS 8 ASTS SENI RUPA ---
+    const rawQuestions = [
+      { q: "Seorang siswa ingin menggambar suasana koridor sekolah yang panjang dan lurus. Agar objek tampak mengecil dan memusat secara alami ke satu titik fokus di ujung lorong, teknik perspektif yang paling tepat diterapkan adalah...", options: ["Perspektif 3 titik hilang", "Perspektif 1 titik hilang", "Perspektif 2 titik hilang", "Perspektif isometrik"] },
+      { q: "Jika Anda menggambar kubus menggunakan perspektif 1 titik hilang di bawah garis horizon, penampilan permukaan atas kubus tersebut akan...", options: ["Tidak terlihat sama sekali", "Terlihat jelas dan tampak mendatar", "Menghilang ke arah garis tepi", "Tampak sejajar dengan garis tegak"] },
+      { q: "Ketika melukis pemandangan jalan raya lurus menuju pegunungan, objek tiang listrik di pinggir jalan yang dekat dengan pengamat digambar lebih besar dibanding yang jauh. Hal ini menerapkan prinsip...", options: ["Proporsi dan proporsionalitas", "Gradasi warna dan pencahayaan", "Skala dan penyusutan perspektif", "Keseimbangan simetris murni"] },
+      { q: "Seorang desainer interior menggambar denah ruang tamu secara perspektif. Apabila letak titik hilang berada persis di tengah bidang gambar sejajar mata pengamat, maka pandangan yang dihasilkan dinamakan...", options: ["Normal view (sudut pandang mata manusia)", "Bird eye view (sudut pandang burung)", "Frog eye view (sudut pandang cacing)", "Isometric view (sudut pandang terukur)"] },
+      { q: "Mengapa garis-garis vertikal pada objek bangunan yang digambar dengan teknik perspektif 1 titik hilang tetap digambar tegak lurus (vertikal) dan tidak miring menuju titik hilang?", options: ["Karena garis vertikal sejajar dengan bidang gambar pengamat", "Karena titik hilang terletak tepat di atas bidang gambar", "Karena garis vertikal tidak terpengaruh oleh pencahayaan", "Karena garis vertikal merupakan garis horizon itu sendiri"] },
+      { q: "Dua buah gedung bertingkat terletak di persimpangan jalan sudut 90 derajat. Teknik penggambaran perspektif yang paling tepat untuk menampilkan kedua sisi luar gedung tersebut secara bersamaan adalah...", options: ["Perspektif 1 titik hilang", "Perspektif 2 titik hilang", "Perspektif 3 titik hilang", "Perspektif ortogonal"] },
+      { q: "Pada gambar perspektif 2 titik hilang, garis-garis sejajar mendatar pada samping kiri dan kanan bangun ruang akan tampak...", options: ["Tetap sejajar horizontal satu sama lain", "Mengumpul sejajar secara vertikal", "Konvergen menuju dua titik hilang di garis horizon", "Membentuk sudut tegak lurus terhadap bidang gambar"] },
+      { q: "Jika titik hilang kiri dan titik hilang kanan ditempatkan sangat berdekatan di dalam bidang gambar pada perspektif 2 titik hilang, dampak visual pada objek gambar adalah...", options: ["Objek tampak sangat realistis dan proporsional", "Objek akan mengalami distorsi/penyimpangan bentuk yang ekstrem", "Garis vertikal objek menjadi condong/miring", "Gambar menjadi kehilangan efek tiga dimensi"] },
+      { q: "Seorang seniman menggambarkan sebuah gedung dari sudut pandang cacing (frog eye view) menggunakan perspektif 2 titik hilang. Di manakah posisi garis horizon diletakkan terhadap bidang objek?", options: ["Di bagian paling atas bidang gambar", "Tepat di tengah-tengah tinggi objek", "Di bagian paling bawah bidang gambar", "Di luar bidang gambar bagian samping"] },
+      { q: "Analisis perbedaan mendasar antara teknik perspektif 1 titik hilang dan 2 titik hilang terletak pada...", options: ["Jumlah bidang/sisi objek yang sejajar dengan bidang gambar", "Tingkat kecerahan warna yang digunakan pada latar belakang", "Jenis kertas dan media pensil yang digunakan", "Letak garis horizon terhadap sudut pandang pengamat"] },
+      { q: "Seorang siswa hendak memperbesar gambar tokoh kartun ukuran 5 cm X 5 cm menjadi ukuran 20 cm X 20 cm menggunakan teknik grid. Jika grid acuan pada gambar asli berukuran 1 cm X 1 cm, maka ukuran grid pada kertas pembesaran harus dibuat sebesar...", options: ["2 cm X 2 cm", "3 cm X 3 cm", "4 cm X 4 cm", "5 cm X 5 cm"] },
+      { q: "Fungsi utama dari pemodelan kolom dan baris (garis kotak-kotak) dalam teknik menggambar grid adalah...", options: ["Mempercepat proses pewarnaan dengan cat air", "Menjaga ketepatan proporsi dan bentuk objek asli", "Memberikan efek bayangan pada gambar teknik", "Membuat garis outline objek menjadi lebih tebal"] },
+      { q: "Apabila saat menyalin gambar dengan teknik grid terjadi ketidaksesuaian garis acuan (misal: gambar di sel A3 digambar pada sel B3), dampak utama pada hasil karya adalah...", options: ["Gambar menjadi lebih gelap", "Gambar mengalami distorsi proporsi/posisi", "Tekstur gambar menjadi kasar", "Garis horizon bergeser ke bawah"] },
+      { q: "Langkah manakah yang paling efektif dilakukan agar garis-garis grid tidak merusak/mengotori hasil akhir gambar yang telah diarsir atau diwarnai?", options: ["Menggambar garis grid dengan pensil keras (misal 2H) secara tipis", "Menggunakan tinta spidol tebal untuk membuat garis grid", "Menggunakan pensil lunak (misal 6B) dengan tekanan kuat", "Menimpa garis grid menggunakan cat minyak yang tebal"] },
+      { q: "Teknik grid sangat cocok digunakan oleh pemula ketika ingin memindahkan gambar acuan ke media baru karena...", options: ["Memungkinkan pemula menggambar tanpa menggunakan pensil", "Memecah kompleksitas objek besar menjadi bagian-bagian kecil yang mudah ditiru", "Menghilangkan kebutuhan akan pencahayaan dan gelap terang", "Otomatis memberikan efek tiga dimensi pada objek datar"] },
+      { q: "Sebuah gambar pada buku cerita menceritakan adegan seorang pahlawan sedang menyelamatkan warga dari banjir. Gambar tersebut berfungsi untuk memperjelas dan memperkuat narasi cerita. Gambar ini termasuk jenis karya...", options: ["Gambar Bentuk", "Gambar Ilustrasi", "Gambar Dekoratif", "Gambar Model"] },
+      { q: "Mengapa gambar ilustrasi pada sampul buku (cover) harus dirancang dengan komposisi warna dan karakter yang mencolok serta komunikatif?", options: ["Agar buku tersebut dapat dijual dengan harga yang mahal", "Untuk menarik perhatian pembaca dan merepresentasikan isi buku secara visual", "Untuk menghabiskan ruang kosong pada halaman sampul", "Agar sesuai dengan kaidah penggambaran lukisan abstrak"] },
+      { q: "Perhatikan ciri-ciri gambar ilustrasi berikut:\n1. Menampilkan karakter dengan proporsi tubuh yang dilebih-lebihkan/didesain lucu.\n2. Bertujuan untuk menghibur atau menyindir secara humoris.\nJenis ilustrasi yang memiliki ciri-ciri tersebut adalah...", options: ["Vignette", "Komik", "Karikatur", "Kartun"] },
+      { q: "Seorang ilustrator ingin merancang komik aksi. Ia menggambar urutan panel (frame) dengan variasi angle kamera, gelembung kata (speech bubble), dan garis aksi (action lines). Keberadaan garis aksi dalam ilustrasi komik bertujuan untuk...", options: ["Menyembunyikan kesalahan garis bentuk", "Memberikan kesan gerak/dinamika pada karakter", "Menunjukkan arah pencahayaan matahari", "Mengatur letak teks percakapan"] },
+      { q: "Gambar pengisi ruang kosong pada halaman majalah atau naskah cerita yang berbentuk dekorasi flora/fauna dinamakan...", options: ["Vignette", "Karikatur", "Poster", "Billboard"] },
+      { q: "Jika seorang pelukis ingin menciptakan karya lukis dengan efek transparansi (aquarel) serta pengeringan yang cepat di atas media kertas tebal, cat yang paling tepat digunakan adalah...", options: ["Cat Minyak (Oil Paint)", "Cat Akrilik (Acrylic) / Cat Air (Watercolor)", "Cat Tembok (Emulsion Paint)", "Cat Semprot (Spray Paint)"] },
+      { q: "Perbedaan utama karakteristik antara cat minyak dan cat akrilik saat digunakan dalam melukis di atas kanvas adalah...", options: ["Cat minyak berbahan dasar air dan cepat kering, sedangkan cat akrilik berbahan dasar minyak", "Cat minyak membutuhkan pengencer thinner/turpentine dan lambat kering, sedangkan cat akrilik berbasis air dan cepat kering", "Cat akrilik tidak dapat dicampur warna lain, sedangkan cat minyak sangat mudah larut", "Cat minyak hanya cocok untuk media kertas, sedangkan cat akrilik khusus media kayu"] },
+      { q: "Seniman memadukan berbagai bahan seperti kain perca, kertas koran, pasir, dan cat dalam satu bidang kanvas hingga membentuk lukisan bermakna. Teknik pelukisan media campuran ini disebut...", options: ["Teknik Plakat", "Teknik Pointilis", "Teknik Mixed Media / Kolase", "Teknik Arsir Cross-Hatching"] },
+      { q: "Seorang pelukis ingin membuat karya lukis outdoor pada dinding fasilitas umum (mural) yang tahan terhadap perubahan cuaca (hujan dan panas). Kombinasi medium dan bahan terbaik yang sebaiknya dipilih adalah...", options: ["Cat air di atas kertas karton", "Pastels/Krayon cair di atas papan kayu halus", "Cat eksterior berbahan akrilik/cat semprot sintetis di atas dinding semen", "Cat minyak cair di atas media kain mori"] },
+      { q: "Evaluasilah penggunaan media oil pastel dibandingkan dengan dry pastel (kapur) dalam pemuatan gambar ilustrasi berwarna! Manakah pernyataan yang paling akurat terkait daya rekat dan karakter tekniknya?", options: ["Oil pastel lebih berdebu dan memerlukan pengikat (fixative), sedangkan dry pastel berminyak dan pekat", "Oil pastel memiliki daya cengkeram pekat berbasis minyak dan tidak mudah goyah, sedangkan dry pastel menghasilkan sapuan lembut namun mudah berdebu/luntur jika tidak diberi fixative", "Keduanya memiliki karakter yang persis sama dan larut sempurna di dalam air", "Dry pastel sangat cocok untuk lukisan luar ruangan tahan air, sedangkan oil pastel hanya untuk kertas tipis"] }
+    ];
+
+    let studentData = [];
+    let answers = new Array(rawQuestions.length).fill("");
+    let currentIdx = 0;
+    let quizActive = false;
+
+    // Fetch Database Siswa saat Halaman Memuat
+    window.onload = function() {
+      fetchStudentData();
+      setupAntiCheating();
+    };
+
+    function fetchStudentData() {
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "getStudents" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          studentData = data.students;
+          populateClasses(data.classes);
+        } else {
+          alert("Gagal mengambil data siswa: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Gagal koneksi ke server Backend Database!");
+      });
+    }
+
+    function populateClasses(classes) {
+      const selectKelas = document.getElementById("select-kelas");
+      selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+      classes.forEach(c => {
+        selectKelas.innerHTML += `<option value="${c}">${c}</option>`;
+      });
+    }
+
+    function filterNama() {
+      const selectedClass = document.getElementById("select-kelas").value;
+      const selectNama = document.getElementById("select-nama");
+      
+      selectNama.innerHTML = '<option value="">-- Pilih Nama Siswa --</option>';
+      if(!selectedClass) {
+        selectNama.disabled = true;
+        return;
+      }
+
+      const filtered = studentData.filter(s => s.kelas === selectedClass);
+      filtered.forEach(s => {
+        selectNama.innerHTML += `<option value="${s.nama}">${s.nama}</option>`;
+      });
+      selectNama.disabled = false;
+    }
+
+    // --- PROTEKSI ANTI-KECURANGAN (BLUR / TAB SWITCHING) ---
+    function setupAntiCheating() {
+      window.addEventListener("blur", function() {
+        if(quizActive) {
+          quizActive = false;
+          alert("PERINGATAN: Anda meninggalkan layar kuis! Jawaban direset dan Anda dikeluarkan.");
+          answers.fill("");
+          location.reload();
+        }
+      });
+    }
+
+    function startQuiz() {
+      const kelas = document.getElementById("select-kelas").value;
+      const nama = document.getElementById("select-nama").value;
+
+      if(!kelas || !nama) {
+        alert("Pilih Kelas dan Nama Anda terlebih dahulu!");
+        return;
+      }
+
+      document.getElementById("login-page").classList.add("hidden");
+      document.getElementById("quiz-page").classList.remove("hidden");
+      
+      quizActive = true;
+      renderGridNav();
+      showQuestion(0);
+    }
+
+    function renderGridNav() {
+      const grid = document.getElementById("grid-nav");
+      grid.innerHTML = "";
+      for(let i=0; i<rawQuestions.length; i++) {
+        const btn = document.createElement("div");
+        btn.className = `grid-item ${i === currentIdx ? 'active' : ''} ${answers[i] ? 'filled' : ''}`;
+        btn.innerText = i + 1;
+        btn.onclick = () => showQuestion(i);
+        grid.appendChild(btn);
+      }
+    }
+
+    function showQuestion(idx) {
+      currentIdx = idx;
+      renderGridNav();
+      
+      const q = rawQuestions[idx];
+      document.getElementById("question-text").innerText = `${idx + 1}. ${q.q}`;
+
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+
+      const prefixes = ["A", "B", "C", "D"];
+      q.options.forEach((opt, i) => {
+        const char = prefixes[i];
+        const isSelected = answers[idx] === char;
+        
+        const div = document.createElement("div");
+        div.className = `option-item ${isSelected ? 'selected' : ''}`;
+        div.onclick = () => selectOption(char);
+        
+        div.innerHTML = `
+          <div class="option-prefix">${char}</div>
+          <div>${opt}</div>
+        `;
+        optionsContainer.appendChild(div);
+      });
+
+      // Update Button Visibility
+      document.getElementById("btn-prev").style.visibility = idx === 0 ? "hidden" : "visible";
+      
+      if(idx === rawQuestions.length - 1) {
+        document.getElementById("btn-next").classList.add("hidden");
+        document.getElementById("btn-submit").classList.remove("hidden");
+      } else {
+        document.getElementById("btn-next").classList.remove("hidden");
+        document.getElementById("btn-submit").classList.add("hidden");
+      }
+    }
+
+    function selectOption(char) {
+      answers[currentIdx] = char;
+      showQuestion(currentIdx);
+    }
+
+    function changeQuestion(dir) {
+      const newIdx = currentIdx + dir;
+      if(newIdx >= 0 && newIdx < rawQuestions.length) {
+        showQuestion(newIdx);
+      }
+    }
+
+    function confirmSubmit() {
+      const unfilled = answers.filter(a => a === "").length;
+      if(unfilled > 0) {
+        if(!confirm(`Ada ${unfilled} soal yang belum dijawab. Apakah Anda yakin ingin mengirimkannya?`)) {
+          return;
+        }
+      } else {
+        if(!confirm("Yakin ingin menyelesaikan dan mengirim jawaban?")) return;
+      }
+      
+      submitAnswers();
+    }
+
+    function submitAnswers() {
+      quizActive = false;
+      const kelas = document.getElementById("select-kelas").value;
+      const nama = document.getElementById("select-nama").value;
+
+      document.getElementById("quiz-page").classList.add("hidden");
+      document.getElementById("result-page").classList.remove("hidden");
+      document.getElementById("score-display").innerText = "Mengirim Jawaban...";
+
+      const payload = {
+        action: "submitQuiz",
+        nama: nama,
+        kelas: kelas,
+        jawaban: answers
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          document.getElementById("score-display").innerText = `Skor Anda: ${data.score}`;
+        } else {
+          alert("Error: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Gagal koneksi ke server saat menyimpan jawaban.");
+      });
+    }
+  </script>
+</body>
+</html>

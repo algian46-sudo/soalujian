@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ASTS Seni Rupa Kelas 7 - SMPN 8 Cikarang Utara</title>
+  
+  <!-- Google Fonts & Tailwind CSS CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            themeBg: '#0b132b',
+            themeCard: '#1c2541',
+            accentSky: '#38bdf8',
+            accentIndigo: '#6366f1',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background: radial-gradient(circle at top, #1c2541 0%, #0b132b 100%);
+      min-height: 100vh;
+      color: #f8fafc;
+    }
+    
+    .glass-box {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased flex flex-col min-h-screen justify-between select-none">
+
+  <!-- Header Sekolah -->
+  <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-0 z-50 py-3 px-4 shadow-xl">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-gradient-to-tr from-sky-500 to-indigo-500 rounded-xl flex items-center justify-center font-bold text-white shadow-lg text-sm">
+          🎨
+        </div>
+        <div>
+          <h1 class="text-xs font-bold text-sky-400 tracking-wide uppercase">SMPN 8 CIKARANG UTARA</h1>
+          <p class="text-[11px] text-slate-400 font-medium">ASTS Ganjil • Seni Rupa Kelas 7</p>
+        </div>
+      </div>
+      <div id="user-badge" class="hidden text-right">
+        <span id="badge-nama" class="block text-xs font-semibold text-slate-200"></span>
+        <span id="badge-kelas" class="inline-block text-[10px] bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded-full font-mono mt-0.5"></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Container Utama (Mobile Optimized) -->
+  <main class="max-w-md w-full mx-auto p-4 flex-grow flex flex-col justify-center">
+
+    <!-- 1. FORM LOGIN -->
+    <div id="page-login" class="glass-box rounded-3xl p-6 shadow-2xl space-y-5">
+      <div class="text-center space-y-1">
+        <h2 class="text-xl font-extrabold text-white tracking-tight">Portal Ujian Siswa</h2>
+        <p class="text-xs text-slate-400">Silakan pilih Kelas dan Nama Anda dari daftar</p>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Pilih Kelas</label>
+          <select id="select-kelas" onchange="onKelasChange()" class="w-full bg-slate-800/90 border border-slate-700 text-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+            <option value="">-- Memuat Data Kelas... --</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Pilih Nama Siswa</label>
+          <select id="select-nama" disabled class="w-full bg-slate-800/90 border border-slate-700 text-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none transition disabled:opacity-40">
+            <option value="">-- Pilih Kelas Terlebih Dahulu --</option>
+          </select>
+        </div>
+
+        <!-- Warning Keamanan -->
+        <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl flex gap-2.5 items-start">
+          <span class="text-amber-400 text-sm">⚠️</span>
+          <p class="text-[11px] text-amber-200/90 leading-relaxed">
+            <strong>Aturan Ujian:</strong> Jangan keluar dari browser atau berpindah tab! Jika fokus aplikasi hilang, ujian akan <strong>otomatis direset</strong> dan jawaban akan terhapus.
+          </p>
+        </div>
+
+        <button onclick="startExam()" class="w-full py-3.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-sky-500/25 transition active:scale-[0.98]">
+          Mulai Mengerjakan Ujian
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. HALAMAN KUIS & BILAH SOAL -->
+    <div id="page-quiz" class="hidden flex-col gap-4">
+      
+      <!-- Bilah Navigasi Soal (Grid Mobile) -->
+      <div class="glass-box rounded-2xl p-4 shadow-xl">
+        <div class="flex items-center justify-between mb-3 border-b border-slate-700/60 pb-2">
+          <span class="text-xs font-bold text-slate-300">Bilah Navigasi Soal</span>
+          <span id="progress-indicator" class="text-[11px] font-mono bg-sky-500/20 text-sky-400 px-2.5 py-0.5 rounded-full border border-sky-500/30">Soal 1/20</span>
+        </div>
+        <div id="nav-grid" class="grid grid-cols-5 gap-2 max-h-36 overflow-y-auto custom-scroll p-1">
+          <!-- Button navigasi soal dinamis -->
+        </div>
+      </div>
+
+      <!-- Card Tampilan Soal (1 halaman 1 soal) -->
+      <div class="glass-box rounded-2xl p-5 shadow-2xl flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span id="question-title" class="text-xs font-bold text-sky-400 bg-sky-500/10 px-3 py-1 rounded-lg border border-sky-500/20">Soal No. 1</span>
+          </div>
+
+          <p id="question-text" class="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium mb-5">
+            <!-- Teks Soal -->
+          </p>
+
+          <!-- Choice Container -->
+          <div id="options-container" class="space-y-2.5">
+            <!-- Opsi Jawaban A, B, C, D -->
+          </div>
+        </div>
+
+        <!-- Tombol Navigasi Bawah -->
+        <div class="flex items-center justify-between mt-6 pt-4 border-t border-slate-700/60">
+          <button id="btn-prev" onclick="navigateQuestion(-1)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold border border-slate-700 transition">
+            ← Sebelumnya
+          </button>
+          
+          <button id="btn-next" onclick="navigateQuestion(1)" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-sky-600/30 transition">
+            Berikutnya →
+          </button>
+          
+          <button id="btn-submit" onclick="confirmSubmit()" class="hidden px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-emerald-600/30 transition">
+            Kirim Jawaban ✓
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. HALAMAN SELESAI -->
+    <div id="page-finish" class="hidden glass-box rounded-3xl p-6 text-center shadow-2xl space-y-4">
+      <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-inner">
+        🎉
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-white">Ujian Telah Selesai!</h2>
+        <p class="text-xs text-slate-400 mt-1">Jawaban Anda berhasil direkam ke Google Spreadsheet.</p>
+      </div>
+
+      <div class="py-5 px-4 bg-slate-900/80 rounded-2xl border border-slate-800 my-4">
+        <span class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">Perolehan Skor</span>
+        <span id="final-score" class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">0</span>
+        <span class="text-xs text-slate-500 block mt-1">Skor Maksimal: 100</span>
+      </div>
+
+      <p class="text-[11px] text-slate-400">Terima kasih telah mengerjakan ujian Asesmen Sumatif Tengah Semester ini secara jujur.</p>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-3 text-center text-[10px] text-slate-500 border-t border-slate-800/50">
+    &copy; 2026 SMP Negeri 8 Cikarang Utara. All Rights Reserved.
+  </footer>
+
+  <script>
+    // GANTI SCRIPT_URL DENGAN URL WEB APP EXEC DARI GOOGLE APPS SCRIPT ANDA
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmTtnGp2ax6nVyzLohIyAdVHqdBHLizvA4Xoy1C2VgouxWiCwMIt3M_X2RbncnHc43/exec";
+
+    // Bank Soal ASTS Seni Rupa Kelas 7
+    const questions = [
+      {
+        q: "1. Seorang desainer ingin membuat poster pameran arsitektur bangunan pencakar langit. Kesan utama yang ingin ditonjolkan adalah keagungan, ketegasan, dan ketinggian gedung tersebut. Jenis garis yang paling dominan digunakan dalam latar belakang poster tersebut adalah…",
+        options: ["Garis horizontal", "Garis vertikal", "Garis lengkung", "Garis zig-zag"],
+        key: "B"
+      },
+      {
+        q: "2. Perhatikan objek-objek berikut: (1) Buah apel, (2) Tabung gas, (3) Batang pohon, (4) Dadu game, (5) Kerucut lalu lintas. Objek yang termasuk ke dalam kategori bentuk geometris ditunjukkan oleh nomor…",
+        options: ["(1), (2), dan (3)", "(2), (4), dan (5)", "(1), (3), dan (4)", "(3), (4), dan (5)"],
+        key: "B"
+      },
+      {
+        q: "3. Dalam sebuah eksperimen pewarnaan, seorang siswa mencampurkan warna primer kuning dan biru dengan porsi seimbang. Setelah itu, ia menambahkan lagi warna merah ke dalam campuran tersebut dalam jumlah terbatas. Hasil warna akhir yang dikategorikan berdasarkan tingkatan campuran adalah jenis warna…",
+        options: ["Sekunder", "Tersier", "Komplementer", "Panas"],
+        key: "B"
+      },
+      {
+        q: "4. Ketika kamu melihat lukisan sebuah dinding batu bata tua, permukaan lukisan terlihat kasar dan berlekuk-lekuk. Namun, saat kamu menyentuh permukaan kanvas tersebut, rasanya terasa sangat halus dan rata. Fenomena ini menunjukkan penggunaan…",
+        options: ["Tekstur nyata", "Tekstur semu", "Ruang nyata", "Bidang geometris"],
+        key: "B"
+      },
+      {
+        q: "5. Mengapa pemberian arsiran gelap-terang sangat krusial dalam menggambar bentuk tiga dimensi pada bidang datar (kertas)?",
+        options: [
+          "Agar gambar terlihat memiliki banyak warna.",
+          "Untuk menutupi kesalahan garis sketsa awal.",
+          "Untuk menciptakan ilusi volume dan kedalaman ruang semu.",
+          "Agar kertas menggambar menjadi lebih padat."
+        ],
+        key: "C"
+      },
+      {
+        q: "6. Di sebuah lukisan, seniman menempatkan sebuah objek pohon besar di sisi sebelah kiri. Pada sisi sebelah kanan, seniman menggambar tiga ekor burung kecil dan sebuah batu sedang. Walau bentuknya berbeda, lukisan terasa stabil dan tidak miring ke salah satu sisi. Keseimbangan yang diterapkan adalah…",
+        options: ["Keseimbangan simetris", "Keseimbangan radial", "Keseimbangan asimetris", "Keseimbangan terpusat"],
+        key: "C"
+      },
+      {
+        q: "7. Jika kamu hendak menggambar tubuh manusia utuh dengan tinggi kepala 3 cm, berapakah perkiraan tinggi total badan manusia yang proporsional sesuai acuan standar?",
+        options: ["12 - 15 cm", "21 - 24 cm", "30 - 35 cm", "35 - 40 cm"],
+        key: "B"
+      },
+      {
+        q: "8. Penataan elemen garis zig-zag yang diulang-ulang secara berselang-seling dengan garis lengkung pada pinggiran sampul buku menciptakan efek visual yang…",
+        options: ["Statis dan membosankan", "Terpisah-pisah dan tidak utuh", "Dinamis dan memiliki irama mengalir", "Kaku dan membatasi bidang"],
+        key: "C"
+      },
+      {
+        q: "9. Sebuah lukisan alam menampilkan gunung, sungai, dan rumah. Namun, warna gunung terlalu mencolok, ukuran rumah jauh lebih besar dari gunung, serta garis sungai terputus acak tanpa menyambung ke objek lain. Karya ini dirasa kurang indah karena gagal memenuhi prinsip…",
+        options: ["Proporsi saja", "Kesatuan (Unity)", "Keseimbangan simetris", "Tekstur nyata"],
+        key: "B"
+      },
+      {
+        q: "10. Pada tahap awal menggambar vas bunga dari alam benda, langkah efisien pertama yang harus dilakukan setelah mengamati objek secara langsung adalah…",
+        options: [
+          "Mengarsir bagian yang paling gelap.",
+          "Membuat sketsa tipis dengan bentuk dasar geometris (geometrisasi).",
+          "Mewarnai bagian detail bunga menggunakan cat cair.",
+          "Menebalkan garis luar dengan spidol hitam."
+        ],
+        key: "B"
+      },
+      {
+        q: "11. Jika sumber cahaya datang dari arah depan atas sebelah kanan objek, maka bayangan jatuh (shadow) atau daerah paling gelap pada objek akan berada di bagian…",
+        options: ["Depan atas kanan", "Belakang bawah kiri", "Tepat di tengah-tengah objek", "Sisi atas objek"],
+        key: "B"
+      },
+      {
+        q: "12. Motif dekoratif yang terdiri dari rangkaian lingkaran, segitiga, dan garis-garis meander melingkar dipadukan pada tepian kain taplak meja. Motif ini dikelompokkan ke dalam jenis motif…",
+        options: ["Organik", "Figuratif", "Geometris", "Stilasi flora"],
+        key: "C"
+      },
+      {
+        q: "13. Seorang pengrajin menggambar bentuk daun keladi. Ia memperjelas lekukan urat daunnya, memperindah bentuk lengkungnya, tetapi tidak menghilangkan karakteristik asli daun keladi tersebut. Proses gubahan bentuk ini dinamakan…",
+        options: ["Deformasi", "Stilasi", "Pointilis", "Simplifikasi ekstrem"],
+        key: "B"
+      },
+      {
+        q: "14. Perbedaan mendasar antara teknik stilasi dan deformasi dalam pembuatan motif ragam hias terletak pada…",
+        options: [
+          "Stilasi mengubah bentuk secara drastis, sedangkan deformasi memperindah tanpa merubah bentuk.",
+          "Stilasi menyederhanakan/memperindah tanpa membuang karakter asli, sedangkan deformasi merubah susunan bentuk secara drastis menjadi bentuk baru.",
+          "Stilasi hanya berlaku untuk bentuk manusia, sedangkan deformasi untuk bentuk tumbuhan.",
+          "Stilasi menggunakan garis lurus, sedangkan deformasi menggunakan garis lengkung."
+        ],
+        key: "B"
+      },
+      {
+        q: "15. Pembatas buku berbahan kertas tebal dihias dengan motif ragam hias flora. Manfaat utama pemberian hiasan tersebut pada benda fungsional adalah…",
+        options: [
+          "Mengubah fungsi pembatas buku menjadi alat tulis",
+          "Meningkatkan nilai estetis dan nilai jual benda",
+          "Membuat pembatas buku tahan terhadap air",
+          "Mengurangi ketebalan kertas agar ringan"
+        ],
+        key: "B"
+      },
+      {
+        q: "16. Font dengan ciri memiliki kait/garis kecil pada setiap ujung hurufnya seperti Times New Roman dinamakan tipe font…",
+        options: ["Sans Serif", "Serif", "Script", "Decorative"],
+        key: "B"
+      },
+      {
+        q: "17. Sebuah perusahaan teknologi multinasional meluncurkan produk aplikasi seluler terbaru yang mengusung kesan modern, bersih, serba cepat, dan tegas. Jenis tipografi yang paling tepat untuk penulisan judul aplikasi tersebut adalah…",
+        options: ["Serif (berkait)", "Sans Serif (tanpa kait)", "Script (tulisan tangan/luwes)", "Ukiran Jawa Tradisional"],
+        key: "B"
+      },
+      {
+        q: "18. Andi membuat logo untuk usaha kedai kopinya. Ia menggabungkan gambar biji kopi, cangkir, asap, pemandangan gunung, pohon kopi, dan 5 jenis font berbeda dalam satu logo kecil. Logo tersebut dinilai kurang baik menurut kriteria logo yang efektif karena…",
+        options: [
+          "Tidak memuat warna panas",
+          "Terlalu rumit dan tidak memenuhi syarat kesederhanaan (simplicity)",
+          "Menggunakan objek benda mati",
+          "Tidak diukir di kayu"
+        ],
+        key: "B"
+      },
+      {
+        q: "19. Mengapa dalam perancangan logo diperlukan proses simplifikasi (penyederhanaan bentuk)?",
+        options: [
+          "Agar logo mudah digambar kembali dan mudah diingat dalam berbagai ukuran.",
+          "Agar biaya pembuatan logo menjadi lebih murah.",
+          "Agar warna yang digunakan hanya terbatas pada warna primer.",
+          "Karena garis yang terlalu tebal dilarang dalam seni rupa."
+        ],
+        key: "A"
+      },
+      {
+        q: "20. Ruang perpustakaan sekolah dirancang agar terasa sejuk, tenang, dan nyaman untuk membaca. Kombinasi kelompok warna yang paling mendukung suasana tersebut pada lukisan dinding adalah…",
+        options: ["Merah, Kuning, dan Oranye", "Biru, Hijau, dan Ungu", "Merah, Oranye, dan Hitam", "Kuning, Merah, dan Cokelat"],
+        key: "B"
+      }
+    ];
+
+    let dbStudents = [];
+    let userAnswers = new Array(questions.length).fill('');
+    let currentIndex = 0;
+    let activeUser = { nama: '', kelas: '' };
+    let isExamRunning = false;
+
+    // Fetch Data Siswa dari Spreadsheet saat Halaman Dimuat
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchStudentDatabase();
+    });
+
+    function fetchStudentDatabase() {
+      fetch(`${SCRIPT_URL}?action=getStudents`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.students) {
+            dbStudents = data.students;
+            populateClassDropdown(data.classes);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert('Gagal mengambil data siswa dari Spreadsheet. Pastikan SCRIPT_URL sudah terisi dengan benar!');
+        });
+    }
+
+    function populateClassDropdown(classList) {
+      const selectKelas = document.getElementById('select-kelas');
+      selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+      classList.forEach(c => {
+        let opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        selectKelas.appendChild(opt);
+      });
+    }
+
+    function onKelasChange() {
+      const selectedKelas = document.getElementById('select-kelas').value;
+      const selectNama = document.getElementById('select-nama');
+      selectNama.innerHTML = '<option value="">-- Pilih Nama Siswa --</option>';
+
+      if (!selectedKelas) {
+        selectNama.disabled = true;
+        return;
+      }
+
+      const filtered = dbStudents.filter(s => s.kelas === selectedKelas);
+      filtered.forEach(s => {
+        let opt = document.createElement('option');
+        opt.value = s.nama;
+        opt.textContent = s.nama;
+        selectNama.appendChild(opt);
+      });
+      selectNama.disabled = false;
+    }
+
+    function startExam() {
+      const kelas = document.getElementById('select-kelas').value;
+      const nama = document.getElementById('select-nama').value;
+
+      if (!kelas || !nama) {
+        alert('Silakan pilih Kelas dan Nama Anda!');
+        return;
+      }
+
+      activeUser = { nama, kelas };
+      document.getElementById('badge-nama').textContent = nama;
+      document.getElementById('badge-kelas').textContent = kelas;
+      document.getElementById('user-badge').classList.remove('hidden');
+
+      document.getElementById('page-login').classList.add('hidden');
+      document.getElementById('page-quiz').classList.remove('hidden');
+      document.getElementById('page-quiz').classList.add('flex');
+
+      isExamRunning = true;
+      renderNavGrid();
+      loadQuestion(0);
+    }
+
+    function renderNavGrid() {
+      const grid = document.getElementById('nav-grid');
+      grid.innerHTML = '';
+
+      questions.forEach((_, idx) => {
+        const btn = document.createElement('button');
+        btn.textContent = idx + 1;
+        btn.onclick = () => loadQuestion(idx);
+        
+        let style = "py-2 text-xs font-bold rounded-xl border transition-all text-center ";
+        if (idx === currentIndex) {
+          style += "bg-sky-500 text-white border-sky-400 shadow-lg shadow-sky-500/40 ring-2 ring-sky-400/50";
+        } else if (userAnswers[idx] !== '') {
+          style += "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
+        } else {
+          style += "bg-slate-800/80 text-slate-400 border-slate-700 hover:bg-slate-700";
+        }
+
+        btn.className = style;
+        grid.appendChild(btn);
+      });
+    }
+
+    function loadQuestion(index) {
+      currentIndex = index;
+      const q = questions[index];
+
+      document.getElementById('question-title').textContent = `Soal No. ${index + 1}`;
+      document.getElementById('progress-indicator').textContent = `Soal ${index + 1}/${questions.length}`;
+      document.getElementById('question-text').textContent = q.q;
+
+      const labels = ['A', 'B', 'C', 'D'];
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      q.options.forEach((optText, optIdx) => {
+        const label = labels[optIdx];
+        const isSelected = userAnswers[index] === label;
+
+        const optCard = document.createElement('div');
+        optCard.onclick = () => chooseAnswer(label);
+        
+        let cardStyle = "p-3.5 rounded-xl border cursor-pointer transition-all flex items-center gap-3 ";
+        if (isSelected) {
+          cardStyle += "bg-sky-500/20 border-sky-400 text-white shadow-md shadow-sky-500/10";
+        } else {
+          cardStyle += "bg-slate-800/60 border-slate-700/80 text-slate-300 hover:bg-slate-800 hover:border-slate-600";
+        }
+        optCard.className = cardStyle;
+
+        optCard.innerHTML = `
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${
+            isSelected ? 'bg-sky-500 text-white shadow' : 'bg-slate-700 text-slate-300'
+          }">
+            ${label}
+          </div>
+          <div class="text-xs flex-1 leading-normal font-medium">${optText}</div>
+        `;
+
+        container.appendChild(optCard);
+      });
+
+      // Tombol Navigasi
+      document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
+      if (index === questions.length - 1) {
+        document.getElementById('btn-next').classList.add('hidden');
+        document.getElementById('btn-submit').classList.remove('hidden');
+      } else {
+        document.getElementById('btn-next').classList.remove('hidden');
+        document.getElementById('btn-submit').classList.add('hidden');
+      }
+
+      renderNavGrid();
+    }
+
+    function chooseAnswer(label) {
+      userAnswers[currentIndex] = label;
+      loadQuestion(currentIndex);
+    }
+
+    function navigateQuestion(direction) {
+      const target = currentIndex + direction;
+      if (target >= 0 && target < questions.length) {
+        loadQuestion(target);
+      }
+    }
+
+    function confirmSubmit() {
+      const emptyCount = userAnswers.filter(a => a === '').length;
+      if (emptyCount > 0) {
+        if (!confirm(`Masih ada ${emptyCount} soal belum dijawab. Yakin ingin menyelesaikan ujian?`)) {
+          return;
+        }
+      } else {
+        if (!confirm("Apakah Anda yakin ingin menyelesaikan dan mengirimkan seluruh jawaban?")) {
+          return;
+        }
+      }
+      submitExamData();
+    }
+
+    function submitExamData() {
+      isExamRunning = false; // Mematikan proteksi reset tab
+
+      // 1. Menyusun string urutan jawaban (contoh: ABDCABD...)
+      let jawabanStr = userAnswers.map(a => a || '-').join('');
+
+      // 2. Perhitungan Skor Otomatis
+      let correctCount = 0;
+      userAnswers.forEach((ans, idx) => {
+        if (ans === questions[idx].key) {
+          correctCount++;
+        }
+      });
+      const finalScore = Math.round((correctCount / questions.length) * 100);
+
+      // 3. Payload POST data ke Web App
+      const payload = {
+        nama: activeUser.nama,
+        kelas: activeUser.kelas,
+        jawabanStr: jawabanStr,
+        skor: finalScore
+      };
+
+      document.getElementById('page-quiz').classList.add('hidden');
+      document.getElementById('page-finish').classList.remove('hidden');
+      document.getElementById('final-score').textContent = finalScore;
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+
+    // --- FITUR KEAMANAN / ANTI-CHEAT ---
+    // Mengembalikan ke Halaman Login & Reset Jawaban jika pindah tab atau hilang fokus
+    window.addEventListener('blur', () => {
+      if (isExamRunning) {
+        triggerSecurityReset();
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && isExamRunning) {
+        triggerSecurityReset();
+      }
+    });
+
+    function triggerSecurityReset() {
+      isExamRunning = false;
+      userAnswers = new Array(questions.length).fill('');
+      currentIndex = 0;
+
+      alert('SISTEM KEAMANAN: Anda terdeteksi keluar dari ujian atau berpindah tab! Ujian direset dan Anda dikembalikan ke halaman awal.');
+
+      document.getElementById('select-kelas').value = '';
+      document.getElementById('select-nama').value = '';
+      document.getElementById('select-nama').disabled = true;
+
+      document.getElementById('user-badge').classList.add('hidden');
+      document.getElementById('page-quiz').classList.add('hidden');
+      document.getElementById('page-quiz').classList.remove('flex');
+      document.getElementById('page-finish').classList.add('hidden');
+      document.getElementById('page-login').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
