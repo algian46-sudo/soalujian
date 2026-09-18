@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis Bahasa Sunda Kelas 7 - ASST Ganjil</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #0d6efd;
+      --primary-dark: #0b5ed7;
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --text-color: #334155;
+      --accent-color: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: #1e293b;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 4px solid var(--accent-color);
+    }
+
+    .header h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .header p {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    /* Form Login */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s;
+      background: #fff;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+    }
+
+    .btn {
+      width: 100%;
+      background: var(--primary-color);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Bilah Navigasi Soal (Grid Kotak Smartphone Responsive) */
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+      max-height: 140px;
+      overflow-y: auto;
+      padding: 4px;
+    }
+
+    .nav-box {
+      aspect-ratio: 1;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: #f8fafc;
+      transition: all 0.2s;
+    }
+
+    .nav-box.active {
+      border-color: var(--primary-color);
+      background: #dbeafe;
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+
+    .nav-box.answered {
+      background: #22c55e;
+      color: white;
+      border-color: #16a34a;
+    }
+
+    /* Tampilan Soal */
+    .question-card {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .question-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .option-btn:hover {
+      background: #f1f5f9;
+    }
+
+    .option-btn.selected {
+      border-color: var(--primary-color);
+      background: #eff6ff;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .essay-input {
+      width: 100%;
+      height: 120px;
+      padding: 10px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      resize: vertical;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .essay-input:focus {
+      border-color: var(--primary-color);
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+    }
+
+    .action-btns .btn {
+      flex: 1;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #e2e8f0;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .loading-text {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2>SMP NEGERI 8 CIKARANG UTARA</h2>
+    <p>ASESMEN SUMATIF TENGAH SEMESTER GANJIL - BAHASA SUNDA</p>
+  </div>
+
+  <div class="content">
+    <!-- LAYAR LOGIN -->
+    <div id="login-screen">
+      <div class="form-group">
+        <label for="select-kelas">Pilih Kelas:</label>
+        <select id="select-kelas" class="form-control" onchange="filterNama()">
+          <option value="">-- Mengambil Data Kelas... --</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="select-nama">Pilih Nama Siswa:</label>
+        <select id="select-nama" class="form-control" disabled>
+          <option value="">-- Pilih Kelas Terlebih Dahulu --</option>
+        </select>
+      </div>
+
+      <button class="btn" id="btn-start" onclick="startQuiz()">
+        <i class="fa-solid fa-play"></i> Mulai Ujian
+      </button>
+      <div id="loading-status" class="loading-text"></div>
+    </div>
+
+    <!-- LAYAR KUIS -->
+    <div id="quiz-screen" class="hidden">
+      <!-- Bilah Soal Grid -->
+      <div class="nav-grid" id="nav-grid"></div>
+
+      <!-- Container Soal -->
+      <div class="question-card">
+        <span class="badge" id="question-type">Pilihan Ganda</span>
+        <div class="question-title" id="question-text">Memuat Soal...</div>
+        <div id="answers-container"></div>
+      </div>
+
+      <!-- Tombol Navigasi -->
+      <div class="action-btns">
+        <button class="btn" id="btn-prev" onclick="prevQuestion()" style="background: #64748b;">Sebelumnya</button>
+        <button class="btn" id="btn-next" onclick="nextQuestion()">Berikutnya</button>
+        <button class="btn hidden" id="btn-submit" onclick="submitQuiz()" style="background: #22c55e;">Selesai & Kirim</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // URL WEB APP GOOGLE APPS SCRIPT
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyeT5KNUAnkZjjBtMYyuvCi4SJR4m8hMqsZf_KbkOR7hTMWVUbciaXiFEVp-DOTg9OX/exec";
+
+  // Data Soal Ujian Bahasa Sunda Kelas 7
+  const quizData = [
+    // Pilihan Ganda (15 Soal)
+    { id: 1, type: "PG", q: "Baca paguneman di handap!\n\nRina: 'Deni, isukan urang aya tugas kelompok, nya?'\nDeni: 'Enya, Rin. Tugasna kudu réngsé minggu hareup.'\nRina: 'Urang rék kumpul di mana?'\nDeni: 'Kumaha lamun di perpustakaan sakola?'\nRina: 'Muhun, éta mah saé. Urang kumpul tabuh dua beurang.'\nDeni: 'Sae, abdi satuju.'\n\n1. Naon anu keur dibahas ku Rina jeung Deni?", options: ["A. Rencana piknik", "B. Tugas kelompok", "C. Kagiatan olahraga", "D. Ulangan sakola"], correct: "B" },
+    { id: 2, type: "PG", q: "2. Di mana Rina jeung Deni rencanana bakal kumpul?", options: ["A. Di kelas", "B. Di imah Rina", "C. Di perpustakaan sakola", "D. Di lapang sakola"], correct: "C" },
+    { id: 3, type: "PG", q: "3. Iraha maranéhna rencanana kumpul?", options: ["A. Tabuh hiji beurang", "B. Tabuh dua beurang", "C. Tabuh tilu beurang", "D. Tabuh opat beurang"], correct: "B" },
+    { id: 4, type: "PG", q: "4. Kumaha sikep Deni nalika diajak kumpul di perpustakaan?", options: ["A. Nolak", "B. Ambek", "C. Bingung", "D. Satuju"], correct: "D" },
+    { id: 5, type: "PG", q: "5. Kecap 'isukan' dina paguneman di luhur hartina nyaéta ....", options: ["A. ayeuna", "B. kamari", "C. poé isuk", "D. minggu hareup"], correct: "C" },
+    { id: 6, type: "PG", q: "6. Paguneman nyaéta kagiatan ....", options: ["A. maca carita sorangan", "B. ngobrol atawa komunikasi antara dua urang atawa leuwih", "C. nulis surat ka babaturan", "D. maca buku di perpustakaan"], correct: "B" },
+    { id: 7, type: "PG", q: "7. Lamun nyarita ka guru, urang kudu ngagunakeun basa anu ....", options: ["A. kasar", "B. loma", "C. sopan", "D. heureuy"], correct: "C" },
+    { id: 8, type: "PG", q: "8. Kalimah anu merenah pikeun nyuhunkeun ijin ka guru nyaéta ....", options: ["A. 'Bu, kuring rék kaluar!'", "B. 'Bu, punten abdi nyuhunkeun ijin ka luar sakedap.'", "C. 'Eh Bu, kuring kaluar heula.'", "D. 'Bu, urang kaluar, nya!'"], correct: "B" },
+    { id: 9, type: "PG", q: "9. Kaulinan nyaéta kagiatan anu dilakukeun pikeun ....", options: ["A. meunangkeun nilai ulangan", "B. hiburan jeung kasenangan", "C. diajar matematika", "D. nyieun paguneman"], correct: "B" },
+    { id: 10, type: "PG", q: "10. Salah sahiji kaulinan tradisional Sunda anu dilakukeun ku sababaraha urang bari dibarengan ku nyanyian nyaéta ....", options: ["A. catur", "B. oray-orayan", "C. kaulinan komputer", "D. badminton"], correct: "B" },
+    { id: 11, type: "PG", q: "11. Dina kaulinan oray-orayan, pamaén biasana ....", options: ["A. diuk ngabaris", "B. silih pajuangkeun bal", "C. ngabaris bari silih cekelan", "D. lumpat sorangan-sorangan"], correct: "C" },
+    { id: 12, type: "PG", q: "12. Boy-boyan mangrupa kaulinan tradisional anu umumna ngagunakeun ....", options: ["A. tumpukan batu/pecahan genteng jeung bal", "B. tali panjang", "C. papan catur", "D. kaulinan kartu"], correct: "A" },
+    { id: 13, type: "PG", q: "13. Tujuan utama dina kaulinan tradisional nyaéta ....", options: ["A. meunangkeun duit", "B. pikeun hiburan, sosialisasi, jeung ngalatih gawé babarengan", "C. meunangkeun hadiah ti guru", "D. pikeun ngalakukeun ulangan"], correct: "B" },
+    { id: 14, type: "PG", q: "14. Kakawihan nyaéta ....", options: ["A. lagu anu biasana dinyanyikeun pikeun marengan kaulinan barudak", "B. carita pondok basa Sunda", "C. paguneman antara dua jalma", "D. tulisan ngeunaan kaulinan"], correct: "A" },
+    { id: 15, type: "PG", q: "15. Ieu di handap anu kaasup kakawihan barudak Sunda nyaéta ....", options: ["A. Oray-orayan", "B. Gugur Gunung", "C. Bagimu Negeri", "D. Maju Tak Gentar"], correct: "A" },
+
+    // Uraian/Esai (5 Soal)
+    { id: 16, type: "Esai", q: "1. Jieun hiji conto paguneman pondok antara dua urang! Temana bébas. Gunakeun basa Sunda anu sopan!" },
+    { id: 17, type: "Esai", q: "2. Lamun ngobrol jeung guru, naha kudu ngagunakeun basa anu sopan? Jelaskeun alesanana!" },
+    { id: 18, type: "Esai", q: "3. Sebutkeun dua kaulinan tradisional Sunda! Teras, jelaskeun salah sahiji kaulinan éta sacara singkat!" },
+    { id: 19, type: "Esai", q: "4. Naon anu dimaksud ku kakawihan? Sebutkeun dua conto kakawihan Sunda!" },
+    { id: 20, type: "Esai", q: "5. Naon waé mangpaat maén kaulinan tradisional jeung ngawih sacara babarengan? Sebutkeun sahenteuna dua mangpaatna!" }
+  ];
+
+  let rawSiswaData = [];
+  let userAnswers = {};
+  let currentIdx = 0;
+  let currentUser = null;
+  let isExamActive = false;
+
+  // Load Data Siswa dari Spreadsheet via Apps Script
+  window.onload = async () => {
+    const statusDiv = document.getElementById("loading-status");
+    statusDiv.textContent = "Sedang mengunduh data siswa dari database...";
+    
+    try {
+      const res = await fetch(`${WEB_APP_URL}?action=getSiswa`);
+      rawSiswaData = await res.json();
+      
+      if(Array.isArray(rawSiswaData) && rawSiswaData.length > 0) {
+        populateKelasDropdown();
+        statusDiv.textContent = "";
+      } else {
+        statusDiv.textContent = "Data siswa di Sheet 'Database' masih kosong.";
+      }
+    } catch (err) {
+      console.error(err);
+      statusDiv.textContent = "Gagal mengambil data. Pastikan nama sheet adalah 'Database'.";
+      alert("Gagal memuat data dari Spreadsheet. Periksa koneksi internet atau nama sheet Database Anda.");
+    }
+  };
+
+  function populateKelasDropdown() {
+    const kelasSelect = document.getElementById("select-kelas");
+    kelasSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+    
+    // Filter nilai unik kelas & bersihkan dari spasi berlebih
+    const uniqueKelas = [...new Set(rawSiswaData.map(item => String(item.kelas).trim()))].filter(Boolean);
+    
+    uniqueKelas.sort().forEach(k => {
+      const opt = document.createElement("option");
+      opt.value = k;
+      opt.textContent = k;
+      kelasSelect.appendChild(opt);
+    });
+  }
+
+  function filterNama() {
+    const kelasVal = document.getElementById("select-kelas").value.trim().toLowerCase();
+    const namaSelect = document.getElementById("select-nama");
+    namaSelect.innerHTML = '<option value="">-- Pilih Nama --</option>';
+    
+    if (!kelasVal) {
+      namaSelect.disabled = true;
+      return;
+    }
+
+    // Filter daftar nama siswa berdasarkan kelas
+    const filtered = rawSiswaData.filter(s => String(s.kelas).trim().toLowerCase() === kelasVal);
+
+    if (filtered.length === 0) {
+      const opt = document.createElement("option");
+      opt.value = "";
+      opt.textContent = "-- Tidak ada data siswa di kelas ini --";
+      namaSelect.appendChild(opt);
+      namaSelect.disabled = true;
+      return;
+    }
+
+    filtered.forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = JSON.stringify(s);
+      opt.textContent = s.nama;
+      namaSelect.appendChild(opt);
+    });
+
+    namaSelect.disabled = false;
+  }
+
+  function startQuiz() {
+    const namaVal = document.getElementById("select-nama").value;
+    if(!namaVal) {
+      alert("Silakan pilih Kelas dan Nama Siswa terlebih dahulu!");
+      return;
+    }
+    
+    currentUser = JSON.parse(namaVal);
+    isExamActive = true;
+
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("quiz-screen").classList.remove("hidden");
+
+    renderNavGrid();
+    loadQuestion(0);
+  }
+
+  function renderNavGrid() {
+    const grid = document.getElementById("nav-grid");
+    grid.innerHTML = "";
+    quizData.forEach((q, idx) => {
+      const box = document.createElement("div");
+      const isAnswered = userAnswers[q.id] && String(userAnswers[q.id]).trim() !== "";
+      box.className = `nav-box ${idx === currentIdx ? 'active' : ''} ${isAnswered ? 'answered' : ''}`;
+      box.textContent = q.id;
+      box.onclick = () => loadQuestion(idx);
+      grid.appendChild(box);
+    });
+  }
+
+  function loadQuestion(idx) {
+    currentIdx = idx;
+    const q = quizData[idx];
+
+    document.getElementById("question-type").textContent = q.type === "PG" ? "Pilihan Ganda" : "Soal Uraian / Esai";
+    document.getElementById("question-text").innerText = q.q;
+
+    const container = document.getElementById("answers-container");
+    container.innerHTML = "";
+
+    if (q.type === "PG") {
+      const optionsDiv = document.createElement("div");
+      optionsDiv.className = "options";
+      
+      q.options.forEach(opt => {
+        const char = opt.charAt(0);
+        const btn = document.createElement("div");
+        btn.className = `option-btn ${userAnswers[q.id] === char ? 'selected' : ''}`;
+        btn.textContent = opt;
+        btn.onclick = () => {
+          userAnswers[q.id] = char;
+          loadQuestion(currentIdx);
+        };
+        optionsDiv.appendChild(btn);
+      });
+      container.appendChild(optionsDiv);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.className = "essay-input";
+      textarea.placeholder = "Ketikkan jawaban uraian Anda di sini...";
+      textarea.value = userAnswers[q.id] || "";
+      textarea.oninput = (e) => {
+        userAnswers[q.id] = e.target.value;
+        renderNavGrid();
+      };
+      container.appendChild(textarea);
+    }
+
+    // Navigasi Tombol
+    document.getElementById("btn-prev").style.visibility = idx === 0 ? "hidden" : "visible";
+    if (idx === quizData.length - 1) {
+      document.getElementById("btn-next").classList.add("hidden");
+      document.getElementById("btn-submit").classList.remove("hidden");
+    } else {
+      document.getElementById("btn-next").classList.remove("hidden");
+      document.getElementById("btn-submit").classList.add("hidden");
+    }
+
+    renderNavGrid();
+  }
+
+  function prevQuestion() {
+    if (currentIdx > 0) loadQuestion(currentIdx - 1);
+  }
+
+  function nextQuestion() {
+    if (currentIdx < quizData.length - 1) loadQuestion(currentIdx + 1);
+  }
+
+  async function submitQuiz() {
+    if(!confirm("Apakah Anda yakin telah selesai dan ingin mengirimkan jawaban?")) return;
+
+    // Hitung Jawaban PG & Nilai Skor PG
+    let stringPG = "";
+    let correctCount = 0;
+
+    for(let i = 1; i <= 15; i++) {
+      const ans = userAnswers[i] || "-";
+      stringPG += ans;
+      if(ans === quizData[i-1].correct) {
+        correctCount++;
+      }
+    }
+
+    // Format Jawaban Esai 1-5 digabung dalam 1 teks
+    let stringEsai = "";
+    for(let i = 16; i <= 20; i++) {
+      const essayNum = i - 15;
+      const ans = userAnswers[i] ? userAnswers[i].trim() : "-";
+      stringEsai += ` [Soal ${essayNum}: ${ans}]`;
+    }
+
+    const finalJawaban = `PG: ${stringPG} | Esai:${stringEsai}`;
+    const finalSkor = Math.round((correctCount / 15) * 100);
+
+    const payload = {
+      no: currentUser.no,
+      nama: currentUser.nama,
+      kelas: currentUser.kelas,
+      jawaban: finalJawaban,
+      skor: finalSkor
+    };
+
+    try {
+      await fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+      alert("Jawaban berhasil dikirim ke Spreadsheet! Terima kasih.");
+      isExamActive = false;
+      location.reload();
+    } catch(err) {
+      alert("Gagal mengirim jawaban. Periksa koneksi internet Anda.");
+    }
+  }
+
+  // --- FITUR ANTI-KECURANGAN (RESET SAAT PINDAH TAB/APLIKASI) ---
+  window.addEventListener("blur", () => {
+    if (isExamActive) {
+      alert("Peringatan Integritas: Anda terdeteksi meninggalkan layar/tab kuis! Seluruh jawaban Anda direset dan kembali ke halaman login.");
+      resetExam();
+    }
+  });
+
+  function resetExam() {
+    isExamActive = false;
+    userAnswers = {};
+    currentIdx = 0;
+    currentUser = null;
+    document.getElementById("quiz-screen").classList.add("hidden");
+    document.getElementById("login-screen").classList.remove("hidden");
+    document.getElementById("select-kelas").value = "";
+    document.getElementById("select-nama").innerHTML = '<option value="">-- Pilih Kelas Terlebih Dahulu --</option>';
+    document.getElementById("select-nama").disabled = true;
+  }
+</script>
+
+</body>
+</html>
