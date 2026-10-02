@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PENILAIAN HARIAN IPA - 9</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent-color: #6366f1;
+      --accent-hover: #4f46e5;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .header-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 15px 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .header-card h1 {
+      font-size: 1.2rem;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+
+    .header-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      margin-bottom: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    select, button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    select:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #4f46e5, #06b6d4);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .progress-bar {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-align: right;
+    }
+
+    .question-box {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 10px;
+      white-space: pre-line;
+    }
+
+    /* CSS UNTUK ELEMEN GAMBAR SOAL */
+    .question-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin: 10px 0 15px 0;
+      display: block;
+      border: 1px solid var(--card-border);
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.4);
+      transition: 0.2s;
+    }
+
+    .option-item:hover {
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    .option-item.selected {
+      border-color: var(--accent-color);
+      background: rgba(99, 102, 241, 0.3);
+    }
+
+    .option-prefix {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 12px;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .option-item.selected .option-prefix {
+      background: var(--accent-color);
+    }
+
+    .nav-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn-nav {
+      width: 48%;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .warning-box {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: #fca5a5;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    /* ========================================== */
+    /* CUSTOM MODAL UI STYLES                     */
+    /* ========================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 25px 20px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-icon-danger {
+      font-size: 3rem;
+      color: #ef4444;
+      margin-bottom: 12px;
+    }
+
+    .modal-icon-warning {
+      font-size: 3rem;
+      color: #f59e0b;
+      margin-bottom: 12px;
+    }
+
+    .modal-card h3 {
+      font-size: 1.2rem;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .modal-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header-card">
+      <h1><i class="fa-solid fa-flask"></i> PENILAIAN HARIAN IPA - 9</h1>
+      <p>SMP NEGERI 8 CIKARANG UTARA</p>
+    </div>
+
+    <!-- HALAMAN LOGIN -->
+    <div id="login-page" class="card">
+      <h2 style="font-size: 1.1rem; margin-bottom: 15px; text-align: center;">Masuk Ke Ujian</h2>
+      
+      <div class="warning-box">
+        <i class="fa-solid fa-triangle-exclamation"></i> Dilarang keluar dari layar/tab selama ujian. Jika Anda keluar atau berpindah aplikasi, ujian akan otomatis direset dan soal diacak ulang!
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Kelas</label>
+        <select id="select-kelas" onchange="filterNama()">
+          <option value="">-- Memuat Kelas... --</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Nama Siswa</label>
+        <select id="select-nama" disabled>
+          <option value="">-- Pilih Kelas Terlebih Dahulu --</option>
+        </select>
+      </div>
+
+      <button class="btn-primary" onclick="startQuiz()">Mulai Kerjakan <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- HALAMAN KUIS -->
+    <div id="quiz-page" class="card hidden">
+      <div class="progress-bar" id="progress-text">Progress: 1 / 80</div>
+
+      <!-- Tampilan Soal (Tanpa Nomor Urut) -->
+      <div class="question-box" id="question-text"></div>
+      
+      <!-- ELEMEN CONTAINER GAMBAR SOAL -->
+      <img id="question-img" class="question-image hidden" alt="Gambar Soal">
+
+      <!-- Opsi Pilihan Ganda -->
+      <div id="options-container"></div>
+
+      <!-- Navigasi -->
+      <div class="nav-controls">
+        <button class="btn-nav" id="btn-prev" onclick="changeQuestion(-1)"><i class="fa-solid fa-chevron-left"></i> Sebelum</button>
+        <button class="btn-nav" id="btn-next" onclick="changeQuestion(1)">Berikut <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+
+      <button class="btn-primary hidden" id="btn-submit" style="margin-top: 15px; background: linear-gradient(90deg, #22c55e, #10b981);" onclick="confirmSubmit()">
+        Kirim Semua Jawaban <i class="fa-solid fa-check"></i>
+      </button>
+    </div>
+
+    <!-- HALAMAN SELESAI -->
+    <div id="result-page" class="card hidden" style="text-align: center;">
+      <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: #22c55e; margin-bottom: 10px;"></i>
+      <h2>Ujian Selesai!</h2>
+      <p style="color: var(--text-muted); margin-top: 5px;">Jawaban Anda telah tersimpan di spreadsheet.</p>
+      <div id="score-display" style="font-size: 1.8rem; font-weight: bold; color: #38bdf8; margin: 20px 0;"></div>
+      <button class="btn-primary" onclick="location.reload()">Kembali ke Halaman Utama</button>
+    </div>
+  </div>
+
+  <!-- CUSTOM UI MODAL PERINGATAN KECURANGAN -->
+  <div id="cheat-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <i class="fa-solid fa-triangle-exclamation modal-icon-danger"></i>
+      <h3>Pelanggaran Terdeteksi!</h3>
+      <p>Anda terdeteksi meninggalkan layar/tab ujian. Sesuai aturan, ujian Anda direset dan urutan soal telah diacak kembali.</p>
+      <button class="btn-primary" style="background: #ef4444;" onclick="location.reload()">Mengerti & Ulangi Ujian</button>
+    </div>
+  </div>
+
+  <!-- CUSTOM UI MODAL KONFIRMASI SUBMIT -->
+  <div id="submit-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <i class="fa-solid fa-circle-question modal-icon-warning"></i>
+      <h3 id="submit-modal-title">Konfirmasi Selesai</h3>
+      <p id="submit-modal-msg">Apakah Anda yakin ingin menyelesaikan dan mengirim jawaban Anda sekarang?</p>
+      <div class="modal-buttons">
+        <button class="btn-secondary" onclick="closeSubmitModal()">Batal</button>
+        <button class="btn-primary" style="margin-top:0; background: linear-gradient(90deg, #22c55e, #10b981);" onclick="executeSubmit()">Kirim Jawaban</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOM UI MODAL INFORMASI UMUM -->
+  <div id="info-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <i class="fa-solid fa-circle-info modal-icon-warning"></i>
+      <h3>Pemberitahuan</h3>
+      <p id="info-modal-msg">Pesan informasi</p>
+      <button class="btn-primary" onclick="closeInfoModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbzFOLyaXpakHlcHcQWLRhL8F9METrVp3lCtX1TWL8y1MuviV3H38feb-eab7T0D4ME/exec";
+
+    // Data Bank Soal IPA Bab 1-9 (80 Soal) dengan Properti Gambar (img)
+    const rawQuestions = [
+      { id: 1, q: "Seorang anak laki-laki berusia 10 tahun mencatat tinggi badannya dari 130 cm menjadi 138 cm dalam setahun. Pada saat yang sama, ia mulai mahir bermain catur dan memahami strategi kompleks. Perubahan tinggi badan dan kemampuan bermain catur secara berurutan mencerminkan proses...", img: "", options: ["Perkembangan dan pertumbuhan", "Pertumbuhan dan perkembangan", "Pertumbuhan dan pembelahan", "Perkembangan dan diferensiasi", "Diferensiasi dan regenerasi"] },
+      { id: 2, q: "Manakah di antara peristiwa berikut yang paling tepat dikategori sebagai proses perkembangan pada makhluk hidup?", img: "", options: ["Pembuatan sel sperma pada remaja laki-laki yang memasuki masa pubertas", "Penambahan berat badan bayi dari 3,2 kg menjadi 6,5 kg", "Bertambah panjangnya akar tanaman dari 5 cm menjadi 12 cm", "Penambahan jumlah daun pada tanaman dikotil dari 4 helai menjadi 10 helai", "Pembesaran lingkar batang pohon kayu akibat aktivitas cambium"] },
+      { id: 3, q: "Perhatikan data berikut:\n1. Pembesaran volume sel\n2. Berfungsinya organ reproduksi\n3. Pertumbuhan tinggi badan yang berkesinambungan\n4. Kematangan emosional dan pola pikir logis\nCiri-ciri yang bersifat kuantitatif dan irreversible ditunjukkan oleh nomor...", img: "", options: ["1 dan 2", "2 dan 4", "1 dan 3", "3 dan 4", "1 dan 4"] },
+      { id: 4, q: "Seorang peneliti mengamati dua kelompok anak balita. Kelompok A diberi asupan gizi seimbang, sedangkan Kelompok B mengalami defisiensi protein berat. Setelah 1 tahun, Kelompok B mengalami penurunan laju pertumbuhan tinggi dan massa otot. Hal ini menunjukkan bahwa...", img: "", options: ["Pertumbuhan sepenuhnya ditentukan oleh faktor internal genetik", "Perkembangan kualitatif tidak dipengaruhi oleh nutrisi eksternal", "Faktor lingkungan dapat mengubah struktur kode DNA bawaan lahir secara permanen", "Hormon pertumbuhan bekerja independen tanpa memerlukan bahan baku nutrisi", "Potensi genetik pertumbuhan hanya dapat dicapai secara optimal jika ditunjang faktor eksternal yang memadai"] },
+      { id: 5, q: "Hormon Growth Hormone (GH) yang diproduksi oleh kelenjar hipofisis anterior merangsang pertumbuhan tulang panjang. Jika seseorang mengalami hipersekresi GH sebelum penutupan lempeng epifisis, kondisi yang terjadi adalah...", img: "", options: ["Akromegali", "Gigantisme", "Kretinisme", "Dwarisme", "Mikrosefali"] },
+      { id: 6, q: "Mengapa olahraga teratur dan tidur cukup pada malam hari sangat disarankan bagi remaja dalam masa pertumbuhan?", img: "", options: ["Olahraga mengurangi pembentukan tulang keras dan memperbanyak kartilago", "Olahraga memicu percepatan regenerasi sel darah merah untuk membawa estrogen", "Tidur malam menghentikan proses metabolisme sel sehingga energi tersimpan", "Tidur malam merangsang sekresi hormon somatotropin/GH secara maksimal", "Olahraga menurunkan sintesis protein intraseluler"] },
+      { id: 7, q: "Pasangan suami istri memiliki tinggi badan rata-rata (suami 170 cm, istri 160 cm). Namun, anak kandung mereka mencapai tinggi 185 cm saat dewasa. Manakah kombinasi analisis yang paling masuk akal untuk menjelaskan hal tersebut?", img: "", options: ["Anak mewarisi gen tinggi resesif dari kedua orang tua serta mendapat nutrisi dan olahraga optimal", "Anak mengalami mutasi genetik acak akibat paparan sinar matahari", "Faktor genetik orang tua tidak berpengaruh sama sekali terhadap tinggi badan anak", "Anak mengalami kelebihan hormon estrogen sehingga tulang terus memanjang tanpa batas", "Lingkungan tempat tinggal anak berada di dataran tinggi yang bertekanan udara rendah"] },
+      { id: 8, q: "Seorang anak yang tinggal di daerah pedalaman terpencil mengalami keterlambatan pertumbuhan fisik ekstrem dan gangguan perkembangan kognitif (kretinisme). Hasil uji laboratorium menunjukkan kekurangan kadar hormon tiroksin. Penyebab utama kondisi ini dipicu oleh...", img: "", options: ["Kekurangan asupan asam amino esensial dalam makanan", "Kerusakan pada kelenjar pankreas dalam menghasilkan insulin", "Defisiensi mineral yodium dalam diet harian yang mengganggu sintesis hormon tiroid", "Paparan radiasi ultraviolet berlebihan", "Infeksi virus pada kelenjar adrenal"] },
+      { id: 9, q: "Perhatikan diagram faktor pertumbuhan berikut:\n[ Genetik ] + [ Nutrisi ] + [ Gaya Hidup ] = Pertumbuhan Optimal\nJika seorang remaja memiliki genetik tinggi badan 180 cm tetapi mengalami malnutrisi kronis pada masa kanak-kanak, apa yang kemungkinan besar terjadi pada usia dewasanya?", img: "", options: ["Tinggi badannya tetap mencapai 180 cm karena genetik dominan mutlak", "Tinggi badannya tidak akan mencapai 180 cm karena potensi genetik gagal terekspresi maksimal", "Tinggi badannya justru melebihi 180 cm sebagai bentuk kompensasi tubuh", "Ia akan mengalami penuaan dini tanpa mempengaruhi tinggi badannya", "Struktur tulangnya memanjang tetapi ototnya tidak terbentuk"] },
+      { id: 10, q: "Seseorang mengalami kelainan gangguan sekresi hormon paratiroid (PTH) berlebih (hiperparatiroidisme). Dampak yang paling mungkin terjadi pada proses pertumbuhan dan kesehatan tulangnya adalah...", img: "", options: ["Tulang menjadi sangat padat dan tidak mudah patah", "Penutupan lempeng epifisis memanjang secara abnormal", "Pembentukan kartilago meningkat dua kali lipat", "Sintesis kolagen pada matriks tulang terhenti total", "Kalsium ditarik berlebihan dari tulang ke darah sehingga tulang menjadi rapuh dan osteoporosis"] },
+      { id: 11, q: "Setelah proses fertilisasi antara sperma dan sel telur terjadi di tuba falopi, terbentuklah zigot. Urutan pembelahan sel awal embrionik yang benar hingga siap mengalami implantasi adalah...", img: "", options: ["Zigot → Blastula → Morula → Gastrula", "Zigot → Gastrula → Morula → Blastula", "Zigot → Morula → Gastrula → Blastula", "Zigot → Morula → Blastula → Gastrula", "Zigot → Blastula → Gastrula → Morula"] },
+      { id: 12, q: "Pembelahan sel pada tahap Morula ditandai oleh pembelahan mitosis berulang. Ciri khas dari fase morula ini adalah...", img: "", options: ["Penambahan jumlah sel (blastomer) tanpa disertai pertambahan volume/massa total bola sel", "Pembentukan rongga berdinding sel yang berisi cairan blastosol", "Pembentukan tiga lapisan embrionik utama (ektoderm, mesoderm, endoderm)", "Perkembangan sistem saraf pusat dan jantung primer", "Penempelan struktur sel secara langsung ke dinding endometrium"] },
+      { id: 13, q: "Pada tahap Gastrula, terjadi proses gastrulasi yang menghasilkan tiga lapisan jaringan embrional dasar. Jaringan tulang, otot, pembuluh darah, dan sistem reproduksi berkembang dari lapisan...", img: "", options: ["Ektoderm", "Endoderm", "Epiblast", "Mesoderm", "Trofoblas"] },
+      { id: 14, q: "Jika pada fase gastrulasi terjadi kelainan perkembangan pada lapisan Ektoderm, maka organ/sistem organ pada janin yang akan mengalami gangguan pembentukan paling serius adalah...", img: "", options: ["Jantung dan pembuluh darah utama", "Saluran pencernaan dan paru-paru", "Ginjal dan saluran kemih", "Tulang rangka dan sistem imun", "Sistem saraf pusat (otak dan sumsum tulang belakang) serta kulit"] },
+      { id: 15, q: "Struktur embrionik yang berfungsi untuk menempel pada dinding rahim (implantasi) dan nantinya berkembang membentuk plasenta adalah...", img: "", options: ["Inner cell mass (massa sel dalam)", "Trofoblas", "Archenteron", "Notochord", "Blastopor"] },
+      { id: 16, q: "Perhatikan timeline perkembangan fetus berikut:\nMinggu 4: Jantung mulai berdetak\nMinggu 8: Jari tangan dan kaki terbentuk\nMinggu 12: Ossifikasi tulang berlangsung\nMinggu 20: Gerakan tendangan bayi dirasakan ibu\nApabila seorang ibu hamil terpapar zat teratogenik pada minggu ke-3 hingga ke-8 kehamilan, mengapa dampaknya paling krusial bagi janin?", img: "", options: ["Karena pada periode tersebut terjadi organogenesis utama (pembentukan organ vital)", "Karena janin baru mulai menyerap nutrisi dari cangkang telur", "Karena pada periode tersebut otak janin sudah berkembang sempurna", "Karena plasenta telah berhenti berfungsi", "Karena janin mengalami masa dormansi metabolisme"] },
+      { id: 17, q: "Seorang dokter mengamati janin berusia 28 minggu melalui USG. Janin tampak membuka mata dan responsif terhadap suara. Secara teoritis, peluang hidup bayi jika lahir prematur pada usia kehamilan ini meningkat pesat karena...", img: "", options: ["Sistem pencernaannya telah mampu mencerna makanan padat", "Semua tulang bayi telah mengalami pengapuran sempurna", "Paru-paru dan sistem saraf pusat telah berkembang cukup matang untuk menunjang fungsi vital sederhana", "Imunitas bayi sudah setara dengan imunitas orang dewasa", "Tubuh bayi tidak lagi membutuhkan cairan amnion"] },
+      { id: 18, q: "Tahap perkembangan dari pembuahan hingga kelahiran memiliki sebutan yang berbeda. Urutan istilah yang tepat untuk calon individu baru tersebut adalah...", img: "", options: ["Fetus → Embrio → Zigot", "Embrio → Zigot → Fetus", "Zigot → Fetus → Embrio", "Fetus → Zigot → Embrio", "Zigot → Embrio → Fetus"] },
+      { id: 19, q: "Mengapa pemeriksaan USG rutin pada trimester pertama kehamilan sangat krusial untuk mengevaluasi denyut jantung janin?", img: "", options: ["Denyut jantung janin baru dimulai pada usia kehamilan 7 bulan", "Detak jantung merupakan indikator utama kelangsungan hidup embrio setelah organogenesis awal (sekitar minggu ke-4 s.d. 6)", "Denyut jantung menandakan bahwa bayi siap untuk dilahirkan", "Detak jantung menandakan telah berhentinya pembelahan mitosis pada embrio", "Detak jantung janin menentukan jenis kelamin secara mutlak"] },
+      { id: 20, q: "Kasus anensefali (bayi lahir tanpa sebagian otak dan tengkorak) terjadi akibat kegagalan penutupan tabung saraf (neural tube). Kegagalan ini merupakan gangguan pada proses...", img: "", options: ["Blastulasi dari lapisan trofoblas", "Gastrulasi pada lapisan mesoderm", "Implantasi di dinding endometrium", "Neurulasi yang berasal dari diferensiasi lapisan ektoderm", "Pembelahan morula pada tuba falopi"] },
+      { id: 21, q: "Pada bayi baru lahir, proporsi ukuran kepala dibandingkan dengan panjang total tubuhnya adalah sekitar...", img: "", options: ["1/10 bagian", "1/8 bagian", "1/4 bagian", "1/2 bagian", "1/6 bagian"] },
+      { id: 22, q: "Bayi umumnya mengalami perkembangan motorik kasar secara berurutan. Urutan perkembangan motorik kasar yang logis pada bayi usia 0–15 bulan adalah...", img: "", options: ["Merangkak → Tengkurap → Duduk → Berjalan", "Tengkurap → Duduk → Merangkak → Berjalan", "Duduk → Tengkurap → Berjalan → Merangkak", "Tengkurap → Merangkak → Duduk → Berjalan", "Duduk → Merangkak → Tengkurap → Berjalan"] },
+      { id: 23, q: "Seorang anak balita berusia 4 tahun sudah mampu naik turun tangga dengan kaki bergantian dan sering bertanya 'Mengapa?' terhadap benda-benda di sekitarnya. Hal ini menunjukkan keterpaduan antara...", img: "", options: ["Perkembangan motorik kasar dan perkembangan kognitif/bahasa", "Pertumbuhan fisik yang berhenti dan kemunduran kognitif", "Perkembangan motorik halus dan penurunan fungsi sensorik", "Pertumbuhan sistem pencernaan dan perkembangan hormon reproduksi", "Perkembangan seks sekunder dan kognitif"] },
+      { id: 24, q: "Mengapa bayi berusia di bawah 6 bulan disarankan hanya dikasi Air Susu Ibu (ASI) eksklusif tanpa makanan tambahan padat?", img: "", options: ["Karena bayi belum memiliki refleks menghisap", "ASI mengandung estrogen tinggi yang mempercepat pertumbuhan gigi", "Karena makanan padat dapat merusak struktur tengkorak bayi", "Enzim pencernaan bayi belum siap mencerna karbohidrat kompleks/protein asing, dan ginjalnya belum matang", "Bayi belum memiliki asam lambung sama sekali"] },
+      { id: 25, q: "Refleks memegang benda yang menyentuh telapak tangan bayi (palmar grasp reflex) pada awal kelahiran perlahan menghilang seiring bertambahnya usia. Hal ini menandakan...", img: "", options: ["Terjadinya kerusakan saraf tepi pada bayi", "Bayi mengalami kekurangan kalsium pada otot tangan", "Otot tangan bayi mengalami atrofi", "Pembuluh darah di area tangan menyempit", "Perkembangan dan kematangan sistem saraf pusat (korteks serebral) yang mengambil alih kontrol motorik sadar"] },
+      { id: 26, q: "Pubertas pada remaja ditandai oleh berfungsinya organ reproduksi yang dipicu oleh hormon. Hormon utama yang memicu perkembangan ciri-ciri seks sekunder pada laki-laki dan perempuan secara berurutan adalah...", img: "", options: ["Estrogen dan Testosteron", "Testosteron dan Estrogen", "Progesteron dan Insulin", "Prolaktin dan Oksitosin", "Progesteron dan Testosteron"] },
+      { id: 27, q: "Perhatikan ciri-ciri perubahan tubuh berikut:\n1. Tumbuh jakun di leher\n2. Produksi sel sperma oleh testis\n3. Suara membesar dan dada melebar\n4. Mengalami mimpi basah\nYang termasuk ciri-ciri seks primer pada remaja laki-laki ditunjukkan oleh nomor...", img: "", options: ["2 dan 4", "1 dan 3", "1 dan 2", "3 dan 4", "2 dan 3"] },
+      { id: 28, q: "Ciri seks sekunder pada remaja perempuan yang dipicu oleh hormon estrogen dan progesteron meliputi...", img: "", options: ["Menstruasi pertama (menarche) dan ovulasi", "Produksi sel telur oleh ovarium", "Pinggul melebar, payudara membesar, dan suara menjadi lebih halus", "Pelepasan sel telur menuju tuba falopi", "Pembelahan meiosis pada sel oogonium"] },
+      { id: 29, q: "Jika seorang anak laki-laki usia 14 tahun belum menunjukkan tanda-tanda perkembangan pubertas, pemeriksaan kadar hormon yang paling relevan untuk dilakukan terlebih dahulu adalah...", img: "", options: ["Insulin dan Glukagon", "Adrenalin dan Kortisol", "Tiroksin dan Kalsitonin", "Oksitosin dan Prolaktin", "LH (Luteinizing Hormone), FSH (Follicle Stimulating Hormone), dan Testosteron"] },
+      { id: 30, q: "Peristiwa menstruasi pertama pada remaja perempuan (menarche) menandakan bahwa...", img: "", options: ["Pertumbuhan tinggi badannya telah berhenti total saat itu juga", "Sistem reproduksinya telah mulai berfungsi dan mampu menghasilkan sel telur matang", "Lapisan dinding rahimnya telah mengalami pengerasan permanen", "Hormon estrogennya tidak diproduksi lagi oleh tubuh", "Jumlah sel tulangnya berkurang dari 300 menjadi 206"] },
+      { id: 31, q: "Mengapa kemunculan jerawat sering kali meningkat secara drastis pada masa pubertas baik bagi laki-laki maupun perempuan?", img: "", options: ["Karena konsumsi air putih yang berlebihan memicu keringat berlebih", "Peningkatan kadar hormon androgen merangsang kelenjar sebasea (minyak) memproduksi sebum secara berlebihan sehingga menyumbat pori-pori", "Karena berhentinya fungsi kekebalan tubuh pada kulit wajah", "Akibat penurunan laju pembelahan sel epitel kulit", "Karena penurunan metabolisme tubuh saat remaja"] },
+      { id: 32, q: "Dampak psikologis dan emosional yang umum dialami remaja selama masa pubertas sebagai akibat dari fluktuasi hormon adalah...", img: "", options: ["Perubahan suasana hati (mood swings) yang relatif cepat dan pencarian identitas diri", "Kemampuan ingatan jangka panjang menurun tajam", "Kehilangan kemampuan berpikir abstrak", "Penurunan rasa ingin tahu terhadap lingkungan sosial", "Hilangnya empati sosial secara permanen"] },
+      { id: 33, q: "Pada usia sekitar 45–50 tahun, wanita akan mengalami masa menopause. Menopause didefinisikan sebagai...", img: "", options: ["Berhentinya produksi sel sperma pada wanita", "Berhentinya siklus menstruasi dan kemampuan reproduksi secara alami akibat penurunan hormon estrogen/progesteron", "Penurunan massa tulang akibat kekurangan hormon tiroksin", "Peningkatan drastis pelepasan sel telur dari ovarium", "Pembesaran kelenjar prostat pada wanita"] },
+      { id: 34, q: "Pada pria lanjut usia, proses penurunan produksi hormon testosteron dan penurunan kualitas sperma yang terjadi secara bertahap dikenal dengan istilah...", img: "", options: ["Andropause", "Menopause", "Metamorfosis", "Ovulasi", "Senesens"] },
+      { id: 35, q: "Mengapa wanita pasca-menopause memiliki risiko lebih tinggi terkena penyakit keropos tulang (osteoporosis) dibandingkan wanita usia produktif?", img: "", options: ["Karena wanita menopause berhenti mengonsumsi makanan berprotein", "Karena sel-sel tulang (osteoblas) berubah menjadi sel lemak", "Karena ginjal tidak lagi mengekskresikan asam urat", "Karena aktivitas fisik wanita lansia selalu meningkat drastis", "Karena hormon estrogen yang berfungsi membantu mempertahankan densitas/kepadatan kalsium tulang menurun drastis"] },
+      { id: 36, q: "Jumlah tulang manusia saat bayi adalah sekitar 300 tulang, sedangkan pada orang dewasa menjadi 206 tulang. Pengurangan jumlah tulang ini disebabkan oleh...", img: "", options: ["Tulang-tulang kecil yang hancur dan diserap oleh darah", "Penggabungan (fusi) beberapa tulang kecil menjadi tulang yang lebih besar seiring proses ossifikasi", "Tulang rawan yang menghilang akibat terbuang melalui ekskresi", "Pembusukan alami tulang-tulang rawan di area persendian", "Transformasi tulang menjadi otot lurik"] },
+      { id: 37, q: "Hewan yang embrionya berkembang di dalam telur di luar tubuh induknya, dan nutrisi utamanya berasal dari kuning telur dinamakan hewan...", img: "", options: ["Vivipar", "Ovipar", "Ovovivipar", "Metamorfosis", "Hermafrodit"] },
+      { id: 38, q: "Hewan Ovovivipar memiliki strategi reproduksi yang unik. Pernyataan yang benar mengenai hewan ovovivipar adalah...", img: "", options: ["Embrio mendapatkan nutrisi langsung dari darah induk melalui struktur plasenta", "Telur dikeluarkan dari tubuh induk dan dierami di dalam sarang", "Embrio berkembang di dalam telur yang tetap berada di dalam tubuh induk hingga menetas, kemudian dilahirkan", "Embrio tidak memiliki cangkang dan berkembang bebas di dalam air seni", "Perkembangan embrio tidak memerlukan kuning telur sama sekali"] },
+      { id: 39, q: "Perhatikan kelompok hewan berikut:\n1. Hiu (beberapa spesies)\n2. Kuda Laut\n3. Platypus\n4. Buaya\nHewan yang tergolong Ovovivipar ditunjukkan oleh nomor...", img: "", options: ["1 dan 2", "1 dan 4", "2 dan 3", "3 dan 4", "2 dan 4"] },
+      { id: 40, q: "Bandingkan antara hewan Ovipar dan Vivipar. Manakah analisis yang paling tepat terkait alokasi nutrisi dan tingkat perlindungan embrio?", img: "", options: ["Ovipar memberikan nutrisi via plasenta, Vivipar via cangkang telur", "Ovipar memiliki tingkat perlindungan embrio lebih tinggi dari bahaya predator dibanding Vivipar", "Nutrisi embrio Ovipar terbatas pada cadangan kuning telur, sedangkan Vivipar mendapat suplai nutrisi terus-menerus dari induknya", "Embrio Vivipar tidak memerlukan oksigen selama masa kehamilan", "Waktu perkembangan embrio Ovipar selalu lebih lama dibandingkan Vivipar"] },
+      { id: 41, q: "Platypus merupakan salah satu mamalia paling unik di dunia. Alasan Platypus dikelompokkan sebagai mamalia ovipar adalah...", img: "", options: ["Bertelur tetapi memiliki kelenjar susu untuk menyusui anaknya setelah menetas", "Melahirkan anak dan menyusui melalui plasenta sempurna", "Memiliki kantung perut seperti kanguru tanpa bertelur", "Bernapas dengan insang saat muda dan paru-paru saat dewasa", "Memiliki cangkang telur dari zat kapur tebal dan berdarah dingin"] },
+      { id: 42, q: "Ikan mas bereproduksi secara oviposisi dengan pembuahan eksternal di dalam air. Risiko terbesar dari strategi reproduksi ini adalah...", img: "", options: ["Embrio memerlukan waktu kehamilan bertahun-tahun", "Jumlah telur yang dihasilkan sangat sedikit", "Tingkat keberhasilan hidup telur dan embrio rendah akibat bahaya arus air dan predator", "Sel sperma tidak membutuhkan media air untuk berenang", "Induk ikan harus mengerami telurnya di daratan"] },
+      { id: 43, q: "Kuda laut jantan memiliki peran unik dalam reproduksi. Analisis yang tepat mengenai reproduksi kuda laut adalah...", img: "", options: ["Kuda laut jantan menghasilkan sel telur dan membuahinya sendiri", "Betina memasukkan telur ke dalam kantung eram jantan, di mana telur dibuahi dan disimpan hingga menetas (ovovivipar)", "Jantan melahirkan anak yang terhubung dengan plasenta sejati ke pembuluh darahnya", "Jantan mengeluarkan telur ke laut terbuka tanpa perlindungan", "Kuda laut jantan tidak memiliki organ reproduksi yang berfungsi"] },
+      { id: 44, q: "Perhatikan struktur telur amniotik. Bagian telur yang berfungsi sebagai sumber makanan utama bagi perkembangan embrio adalah...", img: "", options: ["Amnion", "Alantois", "Kuning telur (Yolk sac)", "Albumen", "Cangkang telur"] },
+      { id: 45, q: "Membran ekstraembrionik pada telur amniotik yang membentuk kantung berisi cairan untuk melindungi embrio dari guncangan mekanis adalah...", img: "", options: ["Alantois", "Korion", "Amnion", "Vitellus", "Kalaza"] },
+      { id: 46, q: "Bagian telur yang bertindak sebagai tempat penampungan sisa-sisa metabolisme embrio dan membantu pertukaran gas adalah...", img: "", options: ["Alantois", "Kalaza", "Cangkang kapur", "Albumen", "Rongga udara"] },
+      { id: 47, q: "Jika cangkang telur unggas dilapisi dengan zat lilin kedap udara sehingga seluruh pori-pori cangkangnya tertutup rapat, apa yang akan terjadi?", img: "", options: ["Embrio akan tumbuh lebih cepat karena kelembaban terjaga 100%", "Embrio akan mati karena terhentinya pertukaran gas O2 dan CO2 melalui pori cangkang", "Embrio akan berubah menjadi ovovivipar", "Albumen akan berubah menjadi kuning telur tambahan", "Embrio menetas lebih awal sebelum waktunya"] },
+      { id: 48, q: "Tali pita berpilin dari protein albumin yang berfungsi menjaga posisi kuning telur agar tetap berada di tengah-tengah telur dinamakan...", img: "", options: ["Korion", "Kalaza (Chalaza)", "Keping germinal", "Alantois", "Membran cangkang"] },
+      { id: 49, q: "Reptil yang bertelur di darat memiliki cangkang telur lemas/liat, sedangkan burung memiliki cangkang telur keras. Hubungan adaptatif dari perbedaan ini adalah...", img: "", options: ["Cangkang lemas pada reptil mempermudah penyerapan kelembaban dari tanah tempat telur ditimbun", "Burung membutuhkan cangkang lemas agar tidak pecah saat dierami", "Reptil mengerami telurnya dengan cara diduduki oleh induknya", "Cangkang keras burung menghalangi pertukaran gas O2", "Cangkang reptil tidak memiliki membran amnion"] },
+      { id: 50, q: "Pada hewan mamalia vivipar, plasenta merupakan organ vital. Manakah pernyataan yang BENAR mengenai mekanisme kerja plasenta?", img: "", options: ["Pembuluh darah induk dan fetus bercampur secara langsung di dalam ruang plasenta", "Pertukaran nutrisi, oksigen, dan sisa metabolisme terjadi secara difusi melalui membran kapiler tanpa percampuran darah secara langsung", "Plasenta hanya berfungsi mengalirkan darah dari fetus ke induk tanpa arah sebaliknya", "Induk menyalurkan sel darah merah matang langsung ke jantung janin", "Plasenta dibentuk sepenuhnya oleh jaringan tubuh induk tanpa keterlibatan jaringan embrio"] },
+      { id: 51, q: "Zat-zat berikut ini dapat melewati barrier plasenta dari darah ibu ke darah janin, KECUALI...", img: "", options: ["Glukosa dan asam amino", "Oksigen (O2)", "Antibodi IgG", "Sel darah merah ibu (Eritrosit)", "Alkohol dan nikotin"] },
+      { id: 52, q: "Mengapa bahaya paparan asap rokok atau obat-obatan teratogenik pada ibu hamil dapat merusak janin meskipun darah ibu dan janin tidak bercampur?", img: "", options: ["Karena zat beracun berukuran molekul kecil dapat menembus membran plasenta secara difusi", "Karena plasenta memompa zat beracun secara aktif ke dalam kantung amnion", "Karena zat beracun merusak cangkang luar rahim", "Karena zat beracun mengubah antibodi ibu menjadi racun", "Karena plasenta hancur saat terpapar racun"] },
+      { id: 53, q: "Perhatikan data masa kehamilan (gestasi) hewan vivipar berikut:\nHamster: 16 hari | Kucing: 63 hari | Manusia: 280 hari | Gajah: 660 hari\nKesimpulan umum mengenai hubungan antara ukuran tubuh dengan masa gestasinya adalah...", img: "", options: ["Makin besar ukuran tubuh hewan, makin singkat masa gestasinya", "Ukuran tubuh hewan tidak memiliki korelasi dengan masa gestasi", "Hewan dengan ukuran tubuh lebih besar umumnya membutuhkan masa gestasi lebih lama untuk perkembangan organ yang sempurna", "Hewan kecil membutuhkan waktu lebih lama untuk membentuk plasenta", "Masa gestasi hanya ditentukan oleh jumlah anak yang dilahirkan"] },
+      { id: 54, q: "Apabila fungsi arteri umbilikalis pada tali pusat terganggu atau terjepit, dampak langsung yang dialami oleh janin adalah...", img: "", options: ["Terhentinya aliran darah kaya nutrisi dari ibu ke janin", "Terhambatnya pembuangan zat sisa metabolisme (CO2 dan urea) dari janin menuju ke plasenta", "Kebocoran cairan amnion dari kantung ketuban", "Penurunan massa cangkang telur", "Terhentinya pembentukan hormon progesteron oleh ovarium"] },
+      { id: 55, q: "Hormon yang diproduksi oleh plasenta untuk mempertahankan ketebalan endometrium dan mencegah terjadinya menstruasi selama kehamilan adalah...", img: "", options: ["hCG (Human Chorionic Gonadotropin) dan Progesteron", "Oksitosin dan Prolaktin", "Adrenalin dan Glukagon", "Testosteron dan LH", "FSH dan Tiroksin"] },
+      { id: 56, q: "Urutan tahapan metamorfosis sempurna (Holometabola) pada serangga yang benar adalah...", img: "", options: ["Telur → Nimfa → Imago", "Telur → Larva → Pupa → Imago", "Telur → Pupa → Larva → Imago", "Telur → Nimfa → Pupa → Imago", "Larva → Telur → Imago → Pupa"] },
+      { id: 57, q: "Perbedaan utama antara metamorfosis sempurna dan metamorfosis tidak sempurna terletak pada...", img: "", options: ["Ada atau tidaknya fase telur dalam siklus hidupnya", "Ada atau tidaknya fase pupa (kepompong) serta perbedaan bentuk antara fase muda dan dewasa", "Kemampuan bertelur pada fase imago", "Jumlah kaki pada fase dewasa", "Media hidup hewan (air atau darat)"] },
+      { id: 58, q: "Manakah di antara kelompok serangga berikut yang seluruhnya mengalami metamorfosis tidak sempurna (Hemimetabola)?", img: "", options: ["Kupu-kupu, lalat, dan nyamuk", "Belalang, jangkrik, dan kecoak", "Lebah, semut, dan kumbang", "Capung, kupu-kupu, dan lebah", "Kecoak, lalat, dan belalang"] },
+      { id: 59, q: "Mengapa fase larva (ulat) pada metamorfosis sempurna dianggap sebagai fase yang paling merugikan bagi petani, sedangkan fase imago justru menguntungkan?", img: "", options: ["Larva aktif memakan dedaunan tanaman untuk akumulasi energi, sedangkan imago membantu penyerbukan bunga", "Larva menyedot darah tanaman, sedangkan imago memangsa hama serangga lain", "Larva merusak akar di dalam tanah, sedangkan imago menghasilkan madu", "Larva tidak bergerak sama sekali, sedangkan imago membersihkan gulma", "Larva dan imago memiliki pola makan yang persis sama"] },
+      { id: 60, q: "Seorang peneliti menyemprotkan hormon juvenil (Juvenile Hormone) secara terus-menerus pada ulat sutra (fase larva). Apa akibat yang akan terjadi?", img: "", options: ["Ulat sutra akan segera berubah menjadi pupa dalam waktu 1 jam", "Ulat sutra akan terus tumbuh menjadi larva raksasa tanpa memasuki fase kepompong/pupa", "Ulat sutra akan langsung menetas menjadi imago tanpa bersayap", "Ulat sutra akan mati karena telur tidak terbendung", "Ulat sutra berubah menjadi katak"] },
+      { id: 61, q: "Ciri khas dari fase Nimfa pada belalang adalah...", img: "", options: ["Memiliki bentuk tubuh yang sangat berbeda dari belalang dewasa dan mengalami fase diam (pupa)", "Memiliki bentuk tubuh menyerupai belalang dewasa tetapi ukurannya lebih kecil dan belum memiliki sayap sempurna", "Bernapas dengan insang di dalam air", "Tidak mengalami pergantian kulit (ecdysis)", "Mengisolasi diri di dalam kokon sutra"] },
+      { id: 62, q: "Populasi nyamuk Aedes aegypti hendak dikendalikan. Langkah intervensi mekanis paling efektif untuk memutus rantai perkembangan pada fase larva adalah...", img: "", options: ["Menyemprotkan gas obat nyamuk di udara terbuka", "Menguras, menutup tempat penampungan air, dan memberikan serbuk abate pada wadah air", "Menanam tumbuhan berbunga di sekitar rumah", "Memasang kawat nyamuk pada ventilasi rumah", "Mematikan semua lampu pada malam hari"] },
+      { id: 63, q: "Pada metamorfosis katak, terjadi perubahan struktur organ respirasi dan sistem pencernaan. Perubahan yang benar saat berudu beradaptasi menjadi katak dewasa adalah...", img: "", options: ["Bernapas dengan paru-paru → bernapas dengan insang", "Bernapas dengan insang → bernapas dengan paru-paru dan kulit; usus panjang (herbivora) → usus pendek (karnivora)", "Bernapas dengan kulit → bernapas dengan trakea", "Bernapas dengan paru-paru → bernapas dengan trakea", "Bernapas dengan insang → bernapas dengan insang luar"] },
+      { id: 64, q: "Selama proses metamorfosis dari berudu berkaki menjadi katak dewasa, ekor berudu perlahan-lahan memendek dan akhirnya menghilang. Mekanisme seluler yang bertanggung jawab atas hal tersebut adalah...", img: "", options: ["Nekrosis akibat infeksi bakteri", "Autofagi dan apoptosis (kematian sel terprogram) yang dicerna oleh enzim lisosom", "Pembelahan mitosis cepat pada sel-sel ekor", "Pengelupasan kulit luar secara paksa", "Dehidrasi selular ekstrim pada area ekor"] },
+      { id: 65, q: "Hormon utama yang mengontrol dan merangsang terjadinya metamorfosis pada katak adalah...", img: "", options: ["Hormon Tiroksin (yang diproduksi kelenjar tiroid)", "Hormon Insulin", "Hormon Estrogen", "Hormon Adrenalin", "Hormon Feromon"] },
+      { id: 66, q: "Jika kelenjar tiroid dari seekor berudu diangkat (tiroidektomi) sebelum ia mengalami metamorfosis, apa yang akan terjadi?", img: "", options: ["Berudu tidak akan pernah mengalami metamorfosis dan tetap menjadi berudu raksasa", "Berudu akan segera berubah menjadi katak dewasa bertubuh kerdil", "Berudu akan mati seketika karena jantung berhenti berdetak", "Berudu akan menumbuhkan sayap seperti serangga", "Ekor berudu akan putus dengan sendirinya dalam 2 hari"] },
+      { id: 67, q: "Berudu mengekskresikan sisa metabolisme nitrogen dalam bentuk amonia, sedangkan katak dewasa dalam bentuk urea. Alasan adaptif perubahan ini adalah...", img: "", options: ["Urea lebih beracun daripada amonia sehingga butuh banyak air", "Amonia bersifat sangat toksik dan membutuhkan banyak air untuk melarutkannya, sedangkan urea kurang toksik dan menghemat air di darat", "Katak dewasa tidak memiliki organ ginjal", "Berudu tidak dapat menghasilkan zat sisa metabolisme", "Urea hanya dapat dibentuk saat kulit katak basah"] },
+      { id: 68, q: "Perhatikan struktur metamorfosis katak:\n1. Telur | 2. Berudu tanpa kaki | 3. Berudu berkaki | 4. Katak muda berekor | 5. Katak dewasa\nUrutan perkembangan yang tepat adalah...", img: "", options: ["1 → 2 → 3 → 4 → 5", "1 → 3 → 2 → 4 → 5", "1 → 2 → 4 → 3 → 5", "2 → 1 → 3 → 4 → 5", "1 → 4 → 2 → 3 → 5"] },
+      { id: 69, q: "Krustasea seperti lobster mengalami siklus pertumbuhan yang unik. Proses pelepasan cangkang lama untuk digantikan cangkang baru agar tubuh dapat bertambah besar disebut...", img: "", options: ["Metamorfosis", "Molting (Ecdysis)", "Regenerasi", "Ossifikasi", "Fertilisation"] },
+      { id: 70, q: "Sesaat setelah lobster mengalami proses molting, kondisi tubuhnya sangat lunak dan rentan. Bagaimana lobster melindungi dirinya dan memperbesar volume tubuhnya?", img: "", options: ["Berenang cepat di permukaan laut dan memakan cangkangnya sendiri", "Bersembunyi di celah bebatuan/lumpur serta menyerap air laut untuk membusungkan tubuh sebelum cangkang baru mengeras", "Mengubah warna tubuhnya menjadi transparan secara permanen", "Mengeluarkan racun kimia ke air sekitar", "Mengurangi konsumsi oksigen hingga 0%"] },
+      { id: 71, q: "Urutan fase perkembangan dalam siklus hidup lobster secara umum adalah...", img: "", options: ["Telur → Larva (Zoea/Mysis) → Lobster Remaja → Lobster Dewasa", "Telur → Pupa → Nimfa → Lobster Dewasa", "Larva → Telur → Lobster Remaja → Lobster Dewasa", "Telur → Berudu → Imago", "Nimfa → Larva → Pupa → Lobster Dewasa"] },
+      { id: 72, q: "Mengapa lobster betina membawa ribuan telurnya di bawah lipatan ekornya (pleopod) selama kurun waktu beberapa bulan hingga menetas?", img: "", options: ["Untuk memberikan nutrisi darah dari induk ke telur", "Untuk melindungi telur dari predator dan menjaga pasokan oksigen melalui gerakan kipasan kaki renang", "Agar telur tidak mengapung ke udara", "Untuk mencegah telur mengalami pembelahan mitosis", "Karena lobster betina tidak memiliki sarang di dasar laut"] },
+      { id: 73, q: "Spesies hewan baru ditemukan dengan ciri: bernapas dengan paru-paru, melahirkan anak prematur yang lalu merambat masuk ke dalam kantung perut induknya untuk menyusu. Hewan ini tergolong...", img: "", options: ["Mamalia Plasental (Eutheria)", "Mamalia Berkantung (Marsupialia)", "Mamalia Bertelur (Monotremata)", "Reptil Ovovivipar", "Amfibi Vivipar"] },
+      { id: 74, q: "Di sebuah danau tercemar limbah industri yang mengandung senyawa mirip-estrogen (xenoestrogen). Dampak pencemaran terhadap populasi katak adalah...", img: "", options: ["Laju metamorfosis berudu menjadi katak dewasa akan terhenti total pada fase telur", "Terjadi feminisasi populasi katak jantan dan gangguan rasio jenis kelamin yang mengancam keberlanjutan populasi", "Katak akan tumbuh menjadi ukuran raksasa melebihi ukuran normal", "Katak akan kehilangan kemampuan bernapas dengan paru-paru", "Cangkang telur katak menjadi sangat tebal seperti cangkang telur ayam"] },
+      { id: 75, q: "Anak-anak yang sering beraktivitas di bawah sinar matahari pagi cenderung memiliki kepadatan tulang yang baik. Hubungan fisiologis yang menjelaskan fenomena ini adalah...", img: "", options: ["Sinar matahari pagi membantu sintesis Vitamin D di kulit, yang merangsang penyerapan kalsium di usus untuk pembentukan tulang", "Sinar matahari merangsang pankreas menghasilkan insulin untuk mengeras kartilago", "Sinar ultraviolet membunuh semua bakteri di jaringan tulang", "Sinar matahari meningkatkan kadar asam urat pada persendian", "Sinar matahari merangsang pembentukan eritrosit di sumsum tulang"] },
+      { id: 76, q: "Rancangan metode biokontrol yang paling tepat untuk membasmi populasi belalang kayu (metamorfosis tidak sempurna) tanpa pestisida kimia adalah...", img: "", options: ["Mengisolasi fase pupa belalang di dalam tanah", "Menyebarkan bio-pestisida yang menghambat proses pergantian kulit (molting/ecdysis) pada fase nimfa sehingga belalang gagal mencapai usia dewasa reproduktif", "Membasmi tanaman inang tempat belalang bertelur secara total", "Menginjeksikan hormon tiroksin pada belalang dewasa", "Membakar seluruh populasi imago pada sore hari"] },
+      { id: 77, q: "Seorang pasien lansia pria mengalami pembesaran kelenjar prostat jinak (BPH). Kondisi ini berkaitan dengan perubahan hormonal lansia, yaitu...", img: "", options: ["Penurunan hormon tiroksin yang ekstrem", "Ketidakseimbangan metabolisme androgen (DHT) dan penurunan kadar testosteron bebas pada masa andropause", "Hipersekresi hormon pertumbuhan (GH)", "Kelebihan hormon insulin dalam darah", "Penurunan hormon kalsitonin dari tiroid"] },
+      { id: 78, q: "Perhatikan tabel perbedaan struktur reproduksi embrio hewan:\nHewan X: Telur di luar tubuh | Kuning Telur | Pori-pori Cangkang\nHewan Y: Dalam Rahim Induk | Plasenta | Difusi Pembuluh Darah\nKesimpulan klasifikasi dan strategi keberlangsungan hidupnya adalah...", img: "", options: ["Hewan X adalah Vivipar; Hewan Y adalah Ovipar", "Hewan X adalah Ovipar (menghasilkan telur banyak untuk mengkompensasi risiko predator); Hewan Y adalah Vivipar (menghasilkan anak sedikit dengan tingkat kelangsungan hidup lebih tinggi)", "Hewan X adalah Ovovivipar; Hewan Y adalah Ovipar", "Hewan X dan Y memiliki tingkat mortalitas embrio yang persis sama", "Hewan X pasti kelompok Mamalia, Hewan Y pasti kelompok Aves"] },
+      { id: 79, q: "Pada pengamatan mikroskopis jaringan rahim wanita, ditemukan pembentukan pembuluh darah baru yang sangat masif dan penebalan dinding endometrium. Kondisi ini dipersiapkan untuk...", img: "", options: ["Menopause", "Menstruasi", "Implantasi blastosis jika terjadi fertilisasi", "Degenerasi ovarium", "Pembentukan sel telur baru"] },
+      { id: 80, q: "Pernyataan sintesis yang menggambarkan keterkaitan antara metamorfosis, hormon, dan kelangsungan hidup spesies amfibi/serangga adalah...", img: "", options: ["Metamorfosis adalah proses tanpa regulasi hormon yang berfungsi memperlambat pertumbuhan fisik", "Metamorfosis dikontrol secara ketat oleh sistem endokrin (hormon) untuk mengubah bentuk dan fungsi tubuh hewan, mengurangi kompetisi sumber daya antara fase muda dan dewasa, sehingga meningkatkan adaptabilitas dan kelangsungan hidup spesies", "Metamorfosis menyebabkan hewan muda kehilangan kemampuan bertelur saat dewasa", "Metamorfosis hanya terjadi jika lingkungan hidup hewan berada dalam kondisi stres", "Hormon pertumbuhan hanya bekerja pada fase imago untuk menghentikan metamorfosis"] }
+    ];
+
+    // Pola Kunci Jawaban Bervariasi (A, B, C, D, E) untuk Soal 1 s.d 80
+    const keysPattern = [
+      "B","A","C","E","B","D","A","C","B","E",
+      "D","A","C","E","B","A","C","E","B","D",
+      "C","B","A","D","E","B","A","C","E","B",
+      "B","A","B","A","E","B","B","C","A","C",
+      "A","C","B","C","C","A","B","B","A","B",
+      "D","A","C","B","A","B","E","B","A","B",
+      "B","E","B","D","A","B","C","A","B","E",
+      "A","B","C","D","A","B","D","B","C","B"
+    ];
+
+    // Terapkan pola kunci jawaban acak ke dalam array rawQuestions
+    rawQuestions.forEach((item, index) => {
+      item.key = keysPattern[index];
+    });
+
+    let studentData = [];
+    let randomizedQuestions = [];
+    let userAnswers = [];
+    let currentIdx = 0;
+    let quizActive = false;
+
+    // Fungsi Pengacak Array (Fisher-Yates)
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    window.onload = function() {
+      fetchStudentData();
+      setupAntiCheating();
+    };
+
+    // Helper Modal UI
+    function showInfoModal(msg) {
+      document.getElementById("info-modal-msg").innerText = msg;
+      document.getElementById("info-modal").classList.remove("hidden");
+    }
+
+    function closeInfoModal() {
+      document.getElementById("info-modal").classList.add("hidden");
+    }
+
+    function fetchStudentData() {
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({ action: "getStudents" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          studentData = data.students;
+          populateClasses(data.classes);
+        } else {
+          showInfoModal("Gagal mengambil data siswa: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error("Detail Error:", err);
+        showInfoModal("Gagal terhubung ke Backend Spreadsheet!");
+      });
+    }
+
+    function populateClasses(classes) {
+      const selectKelas = document.getElementById("select-kelas");
+      selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+      classes.forEach(c => {
+        selectKelas.innerHTML += `<option value="${c}">${c}</option>`;
+      });
+    }
+
+    function filterNama() {
+      const selectedClass = document.getElementById("select-kelas").value;
+      const selectNama = document.getElementById("select-nama");
+      
+      selectNama.innerHTML = '<option value="">-- Pilih Nama Siswa --</option>';
+      if(!selectedClass) {
+        selectNama.disabled = true;
+        return;
+      }
+
+      const filtered = studentData.filter(s => s.kelas === selectedClass);
+      filtered.forEach(s => {
+        selectNama.innerHTML += `<option value="${s.nama}">${s.nama}</option>`;
+      });
+      selectNama.disabled = false;
+    }
+
+    // Penanganan Anti Kecurangan dengan Custom Modal
+    function setupAntiCheating() {
+      window.addEventListener("blur", function() {
+        if(quizActive) {
+          quizActive = false;
+          document.getElementById("cheat-modal").classList.remove("hidden");
+        }
+      });
+    }
+
+    function startQuiz() {
+      const kelas = document.getElementById("select-kelas").value;
+      const nama = document.getElementById("select-nama").value;
+
+      if(!kelas || !nama) {
+        showInfoModal("Pilih Kelas dan Nama Anda terlebih dahulu!");
+        return;
+      }
+
+      randomizedQuestions = shuffleArray(rawQuestions).map(q => {
+        const originalKeyIndex = ["A", "B", "C", "D", "E"].indexOf(q.key);
+        const correctText = q.options[originalKeyIndex];
+        const shuffledOpts = shuffleArray(q.options);
+
+        return {
+          id: q.id,
+          q: q.q,
+          img: q.img || "",
+          options: shuffledOpts,
+          correctText: correctText
+        };
+      });
+
+      userAnswers = new Array(randomizedQuestions.length).fill(null);
+
+      document.getElementById("login-page").classList.add("hidden");
+      document.getElementById("quiz-page").classList.remove("hidden");
+      
+      quizActive = true;
+      showQuestion(0);
+    }
+
+    function showQuestion(idx) {
+      currentIdx = idx;
+      const total = randomizedQuestions.length;
+      document.getElementById("progress-text").innerText = `Progress: ${idx + 1} / ${total}`;
+      
+      const q = randomizedQuestions[idx];
+      document.getElementById("question-text").innerText = q.q;
+
+      // Render Gambar
+      const imgElement = document.getElementById("question-img");
+      if (q.img && q.img.trim() !== "") {
+        imgElement.src = q.img;
+        imgElement.classList.remove("hidden");
+      } else {
+        imgElement.src = "";
+        imgElement.classList.add("hidden");
+      }
+
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+
+      const prefixes = ["A", "B", "C", "D", "E"];
+      q.options.forEach((optText, i) => {
+        const char = prefixes[i];
+        const selectedAns = userAnswers[idx];
+        const isSelected = selectedAns && selectedAns.selectedText === optText;
+        
+        const div = document.createElement("div");
+        div.className = `option-item ${isSelected ? 'selected' : ''}`;
+        div.onclick = () => selectOption(optText);
+        
+        div.innerHTML = `
+          <div class="option-prefix">${char}</div>
+          <div>${optText}</div>
+        `;
+        optionsContainer.appendChild(div);
+      });
+
+      document.getElementById("btn-prev").style.visibility = idx === 0 ? "hidden" : "visible";
+      
+      if(idx === total - 1) {
+        document.getElementById("btn-next").classList.add("hidden");
+        document.getElementById("btn-submit").classList.remove("hidden");
+      } else {
+        document.getElementById("btn-next").classList.remove("hidden");
+        document.getElementById("btn-submit").classList.add("hidden");
+      }
+    }
+
+    function selectOption(optText) {
+      const q = randomizedQuestions[currentIdx];
+      userAnswers[currentIdx] = {
+        questionId: q.id,
+        selectedText: optText,
+        isCorrect: optText === q.correctText
+      };
+      showQuestion(currentIdx);
+    }
+
+    function changeQuestion(dir) {
+      const newIdx = currentIdx + dir;
+      if(newIdx >= 0 && newIdx < randomizedQuestions.length) {
+        showQuestion(newIdx);
+      }
+    }
+
+    // Pengganti confirm() dengan Custom Modal UI
+    function confirmSubmit() {
+      const unanswered = userAnswers.filter(a => a === null).length;
+      const titleEl = document.getElementById("submit-modal-title");
+      const msgEl = document.getElementById("submit-modal-msg");
+
+      if(unanswered > 0) {
+        titleEl.innerText = "Soal Belum Lengkap!";
+        msgEl.innerText = `Masih ada ${unanswered} soal yang belum Anda jawab. Apakah Anda yakin ingin tetap mengirimkan jawaban?`;
+      } else {
+        titleEl.innerText = "Konfirmasi Selesai Ujian";
+        msgEl.innerText = "Apakah Anda yakin ingin menyelesaikan dan mengirim seluruh jawaban Anda sekarang?";
+      }
+
+      document.getElementById("submit-modal").classList.remove("hidden");
+    }
+
+    function closeSubmitModal() {
+      document.getElementById("submit-modal").classList.add("hidden");
+    }
+
+    function executeSubmit() {
+      closeSubmitModal();
+      submitAnswers();
+    }
+
+    function submitAnswers() {
+      quizActive = false;
+      const kelas = document.getElementById("select-kelas").value;
+      const nama = document.getElementById("select-nama").value;
+
+      document.getElementById("quiz-page").classList.add("hidden");
+      document.getElementById("result-page").classList.remove("hidden");
+      document.getElementById("score-display").innerText = "Mengirim Jawaban...";
+
+      let formattedAnswers = new Array(rawQuestions.length).fill("");
+      userAnswers.forEach(ans => {
+        if(ans) {
+          const rawQ = rawQuestions.find(rq => rq.id === ans.questionId);
+          if(rawQ) {
+            const optIndex = rawQ.options.indexOf(ans.selectedText);
+            if(optIndex !== -1) {
+              formattedAnswers[ans.questionId - 1] = ["A", "B", "C", "D", "E"][optIndex];
+            }
+          }
+        }
+      });
+
+      const payload = {
+        action: "submitQuiz",
+        nama: nama,
+        kelas: kelas,
+        jawaban: formattedAnswers
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          document.getElementById("score-display").innerText = `Skor Anda: ${data.score}`;
+        } else {
+          showInfoModal("Error: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error("Detail Error:", err);
+        showInfoModal("Gagal koneksi ke server saat mengirim jawaban.");
+      });
+    }
+  </script>
+</body>
+</html>
