@@ -299,32 +299,257 @@
 
     // --- BANK SOAL KELAS 8 ASTS SENI RUPA ---
     const rawQuestions = [
-      { q: "Seorang siswa ingin menggambar suasana koridor sekolah yang panjang dan lurus. Agar objek tampak mengecil dan memusat secara alami ke satu titik fokus di ujung lorong, teknik perspektif yang paling tepat diterapkan adalah...", options: ["Perspektif 3 titik hilang", "Perspektif 1 titik hilang", "Perspektif 2 titik hilang", "Perspektif isometrik"] },
-      { q: "Jika Anda menggambar kubus menggunakan perspektif 1 titik hilang di bawah garis horizon, penampilan permukaan atas kubus tersebut akan...", options: ["Tidak terlihat sama sekali", "Terlihat jelas dan tampak mendatar", "Menghilang ke arah garis tepi", "Tampak sejajar dengan garis tegak"] },
-      { q: "Ketika melukis pemandangan jalan raya lurus menuju pegunungan, objek tiang listrik di pinggir jalan yang dekat dengan pengamat digambar lebih besar dibanding yang jauh. Hal ini menerapkan prinsip...", options: ["Proporsi dan proporsionalitas", "Gradasi warna dan pencahayaan", "Skala dan penyusutan perspektif", "Keseimbangan simetris murni"] },
-      { q: "Seorang desainer interior menggambar denah ruang tamu secara perspektif. Apabila letak titik hilang berada persis di tengah bidang gambar sejajar mata pengamat, maka pandangan yang dihasilkan dinamakan...", options: ["Normal view (sudut pandang mata manusia)", "Bird eye view (sudut pandang burung)", "Frog eye view (sudut pandang cacing)", "Isometric view (sudut pandang terukur)"] },
-      { q: "Mengapa garis-garis vertikal pada objek bangunan yang digambar dengan teknik perspektif 1 titik hilang tetap digambar tegak lurus (vertikal) dan tidak miring menuju titik hilang?", options: ["Karena garis vertikal sejajar dengan bidang gambar pengamat", "Karena titik hilang terletak tepat di atas bidang gambar", "Karena garis vertikal tidak terpengaruh oleh pencahayaan", "Karena garis vertikal merupakan garis horizon itu sendiri"] },
-      { q: "Dua buah gedung bertingkat terletak di persimpangan jalan sudut 90 derajat. Teknik penggambaran perspektif yang paling tepat untuk menampilkan kedua sisi luar gedung tersebut secara bersamaan adalah...", options: ["Perspektif 1 titik hilang", "Perspektif 2 titik hilang", "Perspektif 3 titik hilang", "Perspektif ortogonal"] },
-      { q: "Pada gambar perspektif 2 titik hilang, garis-garis sejajar mendatar pada samping kiri dan kanan bangun ruang akan tampak...", options: ["Tetap sejajar horizontal satu sama lain", "Mengumpul sejajar secara vertikal", "Konvergen menuju dua titik hilang di garis horizon", "Membentuk sudut tegak lurus terhadap bidang gambar"] },
-      { q: "Jika titik hilang kiri dan titik hilang kanan ditempatkan sangat berdekatan di dalam bidang gambar pada perspektif 2 titik hilang, dampak visual pada objek gambar adalah...", options: ["Objek tampak sangat realistis dan proporsional", "Objek akan mengalami distorsi/penyimpangan bentuk yang ekstrem", "Garis vertikal objek menjadi condong/miring", "Gambar menjadi kehilangan efek tiga dimensi"] },
-      { q: "Seorang seniman menggambarkan sebuah gedung dari sudut pandang cacing (frog eye view) menggunakan perspektif 2 titik hilang. Di manakah posisi garis horizon diletakkan terhadap bidang objek?", options: ["Di bagian paling atas bidang gambar", "Tepat di tengah-tengah tinggi objek", "Di bagian paling bawah bidang gambar", "Di luar bidang gambar bagian samping"] },
-      { q: "Analisis perbedaan mendasar antara teknik perspektif 1 titik hilang dan 2 titik hilang terletak pada...", options: ["Jumlah bidang/sisi objek yang sejajar dengan bidang gambar", "Tingkat kecerahan warna yang digunakan pada latar belakang", "Jenis kertas dan media pensil yang digunakan", "Letak garis horizon terhadap sudut pandang pengamat"] },
-      { q: "Seorang siswa hendak memperbesar gambar tokoh kartun ukuran 5 cm X 5 cm menjadi ukuran 20 cm X 20 cm menggunakan teknik grid. Jika grid acuan pada gambar asli berukuran 1 cm X 1 cm, maka ukuran grid pada kertas pembesaran harus dibuat sebesar...", options: ["2 cm X 2 cm", "3 cm X 3 cm", "4 cm X 4 cm", "5 cm X 5 cm"] },
-      { q: "Fungsi utama dari pemodelan kolom dan baris (garis kotak-kotak) dalam teknik menggambar grid adalah...", options: ["Mempercepat proses pewarnaan dengan cat air", "Menjaga ketepatan proporsi dan bentuk objek asli", "Memberikan efek bayangan pada gambar teknik", "Membuat garis outline objek menjadi lebih tebal"] },
-      { q: "Apabila saat menyalin gambar dengan teknik grid terjadi ketidaksesuaian garis acuan (misal: gambar di sel A3 digambar pada sel B3), dampak utama pada hasil karya adalah...", options: ["Gambar menjadi lebih gelap", "Gambar mengalami distorsi proporsi/posisi", "Tekstur gambar menjadi kasar", "Garis horizon bergeser ke bawah"] },
-      { q: "Langkah manakah yang paling efektif dilakukan agar garis-garis grid tidak merusak/mengotori hasil akhir gambar yang telah diarsir atau diwarnai?", options: ["Menggambar garis grid dengan pensil keras (misal 2H) secara tipis", "Menggunakan tinta spidol tebal untuk membuat garis grid", "Menggunakan pensil lunak (misal 6B) dengan tekanan kuat", "Menimpa garis grid menggunakan cat minyak yang tebal"] },
-      { q: "Teknik grid sangat cocok digunakan oleh pemula ketika ingin memindahkan gambar acuan ke media baru karena...", options: ["Memungkinkan pemula menggambar tanpa menggunakan pensil", "Memecah kompleksitas objek besar menjadi bagian-bagian kecil yang mudah ditiru", "Menghilangkan kebutuhan akan pencahayaan dan gelap terang", "Otomatis memberikan efek tiga dimensi pada objek datar"] },
-      { q: "Sebuah gambar pada buku cerita menceritakan adegan seorang pahlawan sedang menyelamatkan warga dari banjir. Gambar tersebut berfungsi untuk memperjelas dan memperkuat narasi cerita. Gambar ini termasuk jenis karya...", options: ["Gambar Bentuk", "Gambar Ilustrasi", "Gambar Dekoratif", "Gambar Model"] },
-      { q: "Mengapa gambar ilustrasi pada sampul buku (cover) harus dirancang dengan komposisi warna dan karakter yang mencolok serta komunikatif?", options: ["Agar buku tersebut dapat dijual dengan harga yang mahal", "Untuk menarik perhatian pembaca dan merepresentasikan isi buku secara visual", "Untuk menghabiskan ruang kosong pada halaman sampul", "Agar sesuai dengan kaidah penggambaran lukisan abstrak"] },
-      { q: "Perhatikan ciri-ciri gambar ilustrasi berikut:\n1. Menampilkan karakter dengan proporsi tubuh yang dilebih-lebihkan/didesain lucu.\n2. Bertujuan untuk menghibur atau menyindir secara humoris.\nJenis ilustrasi yang memiliki ciri-ciri tersebut adalah...", options: ["Vignette", "Komik", "Karikatur", "Kartun"] },
-      { q: "Seorang ilustrator ingin merancang komik aksi. Ia menggambar urutan panel (frame) dengan variasi angle kamera, gelembung kata (speech bubble), dan garis aksi (action lines). Keberadaan garis aksi dalam ilustrasi komik bertujuan untuk...", options: ["Menyembunyikan kesalahan garis bentuk", "Memberikan kesan gerak/dinamika pada karakter", "Menunjukkan arah pencahayaan matahari", "Mengatur letak teks percakapan"] },
-      { q: "Gambar pengisi ruang kosong pada halaman majalah atau naskah cerita yang berbentuk dekorasi flora/fauna dinamakan...", options: ["Vignette", "Karikatur", "Poster", "Billboard"] },
-      { q: "Jika seorang pelukis ingin menciptakan karya lukis dengan efek transparansi (aquarel) serta pengeringan yang cepat di atas media kertas tebal, cat yang paling tepat digunakan adalah...", options: ["Cat Minyak (Oil Paint)", "Cat Akrilik (Acrylic) / Cat Air (Watercolor)", "Cat Tembok (Emulsion Paint)", "Cat Semprot (Spray Paint)"] },
-      { q: "Perbedaan utama karakteristik antara cat minyak dan cat akrilik saat digunakan dalam melukis di atas kanvas adalah...", options: ["Cat minyak berbahan dasar air dan cepat kering, sedangkan cat akrilik berbahan dasar minyak", "Cat minyak membutuhkan pengencer thinner/turpentine dan lambat kering, sedangkan cat akrilik berbasis air dan cepat kering", "Cat akrilik tidak dapat dicampur warna lain, sedangkan cat minyak sangat mudah larut", "Cat minyak hanya cocok untuk media kertas, sedangkan cat akrilik khusus media kayu"] },
-      { q: "Seniman memadukan berbagai bahan seperti kain perca, kertas koran, pasir, dan cat dalam satu bidang kanvas hingga membentuk lukisan bermakna. Teknik pelukisan media campuran ini disebut...", options: ["Teknik Plakat", "Teknik Pointilis", "Teknik Mixed Media / Kolase", "Teknik Arsir Cross-Hatching"] },
-      { q: "Seorang pelukis ingin membuat karya lukis outdoor pada dinding fasilitas umum (mural) yang tahan terhadap perubahan cuaca (hujan dan panas). Kombinasi medium dan bahan terbaik yang sebaiknya dipilih adalah...", options: ["Cat air di atas kertas karton", "Pastels/Krayon cair di atas papan kayu halus", "Cat eksterior berbahan akrilik/cat semprot sintetis di atas dinding semen", "Cat minyak cair di atas media kain mori"] },
-      { q: "Evaluasilah penggunaan media oil pastel dibandingkan dengan dry pastel (kapur) dalam pemuatan gambar ilustrasi berwarna! Manakah pernyataan yang paling akurat terkait daya rekat dan karakter tekniknya?", options: ["Oil pastel lebih berdebu dan memerlukan pengikat (fixative), sedangkan dry pastel berminyak dan pekat", "Oil pastel memiliki daya cengkeram pekat berbasis minyak dan tidak mudah goyah, sedangkan dry pastel menghasilkan sapuan lembut namun mudah berdebu/luntur jika tidak diberi fixative", "Keduanya memiliki karakter yang persis sama dan larut sempurna di dalam air", "Dry pastel sangat cocok untuk lukisan luar ruangan tahan air, sedangkan oil pastel hanya untuk kertas tipis"] }
-    ];
+  {
+    q: "1. Seorang siswa ingin menggambar suasana koridor sekolah yang panjang dan lurus. Agar objek tampak mengecil dan memusat secara alami ke satu titik fokus di ujung lorong, teknik perspektif yang paling tepat diterapkan adalah...",
+    options: [
+      "Perspektif 3 titik hilang",
+      "Perspektif 1 titik hilang",
+      "Perspektif 2 titik hilang",
+      "Perspektif isometrik"
+    ],
+    key: "B"
+  },
+  {
+    q: "2. Jika Anda menggambar kubus menggunakan perspektif 1 titik hilang di bawah garis horizon, penampilan permukaan atas kubus tersebut akan...",
+    options: [
+      "Terlihat jelas dan tampak mendatar",
+      "Tidak terlihat sama sekali",
+      "Menghilang ke arah garis tepi",
+      "Tampak sejajar dengan garis tegak"
+    ],
+    key: "A"
+  },
+  {
+    q: "3. Ketika melukis pemandangan jalan raya lurus menuju pegunungan, objek tiang listrik di pinggir jalan yang dekat dengan pengamat digambar lebih besar dibanding yang jauh. Hal ini menerapkan prinsip...",
+    options: [
+      "Proporsi dan proporsionalitas",
+      "Gradasi warna dan pencahayaan",
+      "Keseimbangan simetris murni",
+      "Skala dan penyusutan perspektif"
+    ],
+    key: "D"
+  },
+  {
+    q: "4. Seorang desainer interior menggambar denah ruang tamu secara perspektif. Apabila letak titik hilang berada persis di tengah bidang gambar sejajar mata pengamat, maka pandangan yang dihasilkan dinamakan...",
+    options: [
+      "Bird eye view (sudut pandang burung)",
+      "Normal view (sudut pandang mata manusia)",
+      "Frog eye view (sudut pandang cacing)",
+      "Isometric view (sudut pandang terukur)"
+    ],
+    key: "B"
+  },
+  {
+    q: "5. Mengapa garis-garis vertikal pada objek bangunan yang digambar dengan teknik perspektif 1 titik hilang tetap digambar tegak lurus (vertikal) dan tidak miring menuju titik hilang?",
+    options: [
+      "Karena titik hilang terletak tepat di atas bidang gambar",
+      "Karena garis vertikal tidak terpengaruh oleh pencahayaan",
+      "Karena garis vertikal sejajar dengan bidang gambar pengamat",
+      "Karena garis vertikal merupakan garis horizon itu sendiri"
+    ],
+    key: "C"
+  },
+  {
+    q: "6. Dua buah gedung bertingkat terletak di persimpangan jalan sudut 90 derajat. Teknik penggambaran perspektif yang paling tepat untuk menampilkan kedua sisi luar gedung tersebut secara bersamaan adalah...",
+    options: [
+      "Perspektif 2 titik hilang",
+      "Perspektif 1 titik hilang",
+      "Perspektif 3 titik hilang",
+      "Perspektif ortogonal"
+    ],
+    key: "A"
+  },
+  {
+    q: "7. Pada gambar perspektif 2 titik hilang, garis-garis sejajar mendatar pada samping kiri dan kanan bangun ruang akan tampak...",
+    options: [
+      "Tetap sejajar horizontal satu sama lain",
+      "Mengumpul sejajar secara vertikal",
+      "Membentuk sudut tegak lurus terhadap bidang gambar",
+      "Konvergen menuju dua titik hilang di garis horizon"
+    ],
+    key: "D"
+  },
+  {
+    q: "8. Jika titik hilang kiri dan titik hilang kanan ditempatkan sangat berdekatan di dalam bidang gambar pada perspektif 2 titik hilang, dampak visual pada objek gambar adalah...",
+    options: [
+      "Objek tampak sangat realistis dan proporsional",
+      "Objek akan mengalami distorsi/penyimpangan bentuk yang ekstrem",
+      "Garis vertikal objek menjadi condong/miring",
+      "Gambar menjadi kehilangan efek tiga dimensi"
+    ],
+    key: "B"
+  },
+  {
+    q: "9. Seorang seniman menggambarkan sebuah gedung dari sudut pandang cacing (frog eye view) menggunakan perspektif 2 titik hilang. Di manakah posisi garis horizon diletakkan terhadap bidang objek?",
+    options: [
+      "Di bagian paling atas bidang gambar",
+      "Tepat di tengah-tengah tinggi objek",
+      "Di bagian paling bawah bidang gambar",
+      "Di luar bidang gambar bagian samping"
+    ],
+    key: "C"
+  },
+  {
+    q: "10. Analisis perbedaan mendasar antara teknik perspektif 1 titik hilang dan 2 titik hilang terletak pada...",
+    options: [
+      "Jumlah bidang/sisi objek yang sejajar dengan bidang gambar",
+      "Tingkat kecerahan warna yang digunakan pada latar belakang",
+      "Jenis kertas dan media pensil yang digunakan",
+      "Letak garis horizon terhadap sudut pandang pengamat"
+    ],
+    key: "A"
+  },
+  {
+    q: "11. Seorang siswa hendak memperbesar gambar tokoh kartun ukuran 5 cm X 5 cm menjadi ukuran 20 cm X 20 cm menggunakan teknik grid. Jika grid acuan pada gambar asli berukuran 1 cm X 1 cm, maka ukuran grid pada kertas pembesaran harus dibuat sebesar...",
+    options: [
+      "2 cm X 2 cm",
+      "3 cm X 3 cm",
+      "4 cm X 4 cm",
+      "5 cm X 5 cm"
+    ],
+    key: "C"
+  },
+  {
+    q: "12. Fungsi utama dari pemodelan kolom dan baris (garis kotak-kotak) dalam teknik menggambar grid adalah...",
+    options: [
+      "Mempercepat proses pewarnaan dengan cat air",
+      "Memberikan efek bayangan pada gambar teknik",
+      "Membuat garis outline objek menjadi lebih tebal",
+      "Menjaga ketepatan proporsi dan bentuk objek asli"
+    ],
+    key: "D"
+  },
+  {
+    q: "13. Apabila saat menyalin gambar dengan teknik grid terjadi ketidaksesuaian garis acuan (misal: gambar di sel A3 digambar pada sel B3), dampak utama pada hasil karya adalah...",
+    options: [
+      "Gambar mengalami distorsi proporsi/posisi",
+      "Gambar menjadi lebih gelap",
+      "Tekstur gambar menjadi kasar",
+      "Garis horizon bergeser ke bawah"
+    ],
+    key: "A"
+  },
+  {
+    q: "14. Langkah manakah yang paling efektif dilakukan agar garis-garis grid tidak merusak/mengotori hasil akhir gambar yang telah diarsir atau diwarnai?",
+    options: [
+      "Menggunakan tinta spidol tebal untuk membuat garis grid",
+      "Menggambar garis grid dengan pensil keras (misal 2H) secara tipis",
+      "Menggunakan pensil lunak (misal 6B) dengan tekanan kuat",
+      "Menimpa garis grid menggunakan cat minyak yang tebal"
+    ],
+    key: "B"
+  },
+  {
+    q: "15. Teknik grid sangat cocok digunakan oleh pemula ketika ingin memindahkan gambar acuan ke media baru karena...",
+    options: [
+      "Memungkinkan pemula menggambar tanpa menggunakan pensil",
+      "Menghilangkan kebutuhan akan pencahayaan dan gelap terang",
+      "Memecah kompleksitas objek besar menjadi bagian-bagian kecil yang mudah ditiru",
+      "Otomatis memberikan efek tiga dimensi pada objek datar"
+    ],
+    key: "C"
+  },
+  {
+    q: "16. Sebuah gambar pada buku cerita menceritakan adegan seorang pahlawan sedang menyelamatkan warga dari banjir. Gambar tersebut berfungsi untuk memperjelas dan memperkuat narasi cerita. Gambar ini termasuk jenis karya...",
+    options: [
+      "Gambar Bentuk",
+      "Gambar Dekoratif",
+      "Gambar Model",
+      "Gambar Ilustrasi"
+    ],
+    key: "D"
+  },
+  {
+    q: "17. Mengapa gambar ilustrasi pada sampul buku (cover) harus dirancang dengan komposisi warna dan karakter yang mencolok serta komunikatif?",
+    options: [
+      "Untuk menarik perhatian pembaca dan merepresentasikan isi buku secara visual",
+      "Agar buku tersebut dapat dijual dengan harga yang mahal",
+      "Untuk menghabiskan ruang kosong pada halaman sampul",
+      "Agar sesuai dengan kaidah penggambaran lukisan abstrak"
+    ],
+    key: "A"
+  },
+  {
+    q: "18. Perhatikan ciri-ciri gambar ilustrasi berikut:\n1. Menampilkan karakter dengan proporsi tubuh yang dilebih-lebihkan/didesain lucu.\n2. Bertujuan untuk menghibur atau menyindir secara humoris.\nJenis ilustrasi yang memiliki ciri-ciri tersebut adalah...",
+    options: [
+      "Vignette",
+      "Komik",
+      "Kartun",
+      "Karikatur"
+    ],
+    key: "C"
+  },
+  {
+    q: "19. Seorang ilustrator ingin merancang komik aksi. Ia menggambar urutan panel (frame) dengan variasi angle kamera, gelembung kata (speech bubble), dan garis aksi (action lines). Keberadaan garis aksi dalam ilustrasi komik bertujuan untuk...",
+    options: [
+      "Menyembunyikan kesalahan garis bentuk",
+      "Memberikan kesan gerak/dinamika pada karakter",
+      "Menunjukkan arah pencahayaan matahari",
+      "Mengatur letak teks percakapan"
+    ],
+    key: "B"
+  },
+  {
+    q: "20. Gambar pengisi ruang kosong pada halaman majalah atau naskah cerita yang berbentuk dekorasi flora/fauna dinamakan...",
+    options: [
+      "Vignette",
+      "Karikatur",
+      "Poster",
+      "Billboard"
+    ],
+    key: "A"
+  },
+  {
+    q: "21. Jika seorang pelukis ingin menciptakan karya lukis dengan efek transparansi (aquarel) serta pengeringan yang cepat di atas media kertas tebal, cat yang paling tepat digunakan adalah...",
+    options: [
+      "Cat Minyak (Oil Paint)",
+      "Cat Tembok (Emulsion Paint)",
+      "Cat Akrilik (Acrylic) / Cat Air (Watercolor)",
+      "Cat Semprot (Spray Paint)"
+    ],
+    key: "C"
+  },
+  {
+    q: "22. Perbedaan utama karakteristik antara cat minyak dan cat akrilik saat digunakan dalam melukis di atas kanvas adalah...",
+    options: [
+      "Cat minyak membutuhkan pengencer thinner/turpentine dan lambat kering, sedangkan cat akrilik berbasis air dan cepat kering",
+      "Cat minyak berbahan dasar air dan cepat kering, sedangkan cat akrilik berbahan dasar minyak",
+      "Cat akrilik tidak dapat dicampur warna lain, sedangkan cat minyak sangat mudah larut",
+      "Cat minyak hanya cocok untuk media kertas, sedangkan cat akrilik khusus media kayu"
+    ],
+    key: "A"
+  },
+  {
+    q: "23. Seniman memadukan berbagai bahan seperti kain perca, kertas koran, pasir, dan cat dalam satu bidang kanvas hingga membentuk lukisan bermakna. Teknik pelukisan media campuran ini disebut...",
+    options: [
+      "Teknik Plakat",
+      "Teknik Pointilis",
+      "Teknik Arsir Cross-Hatching",
+      "Teknik Mixed Media / Kolase"
+    ],
+    key: "D"
+  },
+  {
+    q: "24. Seorang pelukis ingin membuat karya lukis outdoor pada dinding fasilitas umum (mural) yang tahan terhadap perubahan cuaca (hujan dan panas). Kombinasi medium dan bahan terbaik yang sebaiknya dipilih adalah...",
+    options: [
+      "Cat air di atas kertas karton",
+      "Cat eksterior berbahan akrilik/cat semprot sintetis di atas dinding semen",
+      "Pastels/Krayon cair di atas papan kayu halus",
+      "Cat minyak cair di atas media kain mori"
+    ],
+    key: "B"
+  },
+  {
+    q: "25. Evaluasilah penggunaan media oil pastel dibandingkan dengan dry pastel (kapur) dalam pemuatan gambar ilustrasi berwarna! Manakah pernyataan yang paling akurat terkait daya rekat dan karakter tekniknya?",
+    options: [
+      "Oil pastel lebih berdebu dan memerlukan pengikat (fixative), sedangkan dry pastel berminyak dan pekat",
+      "Keduanya memiliki karakter yang persis sama dan larut sempurna di dalam air",
+      "Oil pastel memiliki daya cengkeram pekat berbasis minyak dan tidak mudah goyah, sedangkan dry pastel menghasilkan sapuan lembut namun mudah berdebu/luntur jika tidak diberi fixative",
+      "Dry pastel sangat cocok untuk lukisan luar ruangan tahan air, sedangkan oil pastel hanya untuk kertas tipis"
+    ],
+    key: "C"
+  }
+];
 
     let studentData = [];
     let answers = new Array(rawQuestions.length).fill("");
