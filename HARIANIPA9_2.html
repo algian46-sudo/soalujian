@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PENILAIAN HARIAN IPA - 9 bab 2</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent-color: #6366f1;
+      --accent-hover: #4f46e5;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .header-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 15px 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .header-card h1 {
+      font-size: 1.2rem;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+
+    .header-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      margin-bottom: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    select, button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    select:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #4f46e5, #06b6d4);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .progress-bar {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-align: right;
+    }
+
+    .question-box {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 10px;
+      white-space: pre-line;
+    }
+
+    /* CSS UNTUK ELEMEN GAMBAR SOAL */
+    .question-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin: 10px 0 15px 0;
+      display: block;
+      border: 1px solid var(--card-border);
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.4);
+      transition: 0.2s;
+    }
+
+    .option-item:hover {
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    .option-item.selected {
+      border-color: var(--accent-color);
+      background: rgba(99, 102, 241, 0.3);
+    }
+
+    .option-prefix {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 12px;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .option-item.selected .option-prefix {
+      background: var(--accent-color);
+    }
+
+    .nav-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn-nav {
+      width: 48%;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .warning-box {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: #fca5a5;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    /* ========================================== */
+    /* CUSTOM MODAL UI STYLES                     */
+    /* ========================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 25px 20px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-icon-danger {
+      font-size: 3rem;
+      color: #ef4444;
+      margin-bottom: 12px;
+    }
+
+    .modal-icon-warning {
+      font-size: 3rem;
+      color: #f59e0b;
+      margin-bottom: 12px;
+    }
+
+    .modal-card h3 {
+      font-size: 1.2rem;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .modal-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header-card">
+      <h1><i class="fa-solid fa-flask"></i> PENILAIAN HARIAN IPA - 9 bab 2</h1>
+      <p>SMP NEGERI 8 CIKARANG UTARA</p>
+    </div>
+
+    <!-- HALAMAN LOGIN -->
+    <div id="login-page" class="card">
+      <h2 style="font-size: 1.1rem; margin-bottom: 15px; text-align: center;">Masuk Ke Ujian</h2>
+      
+      <div class="warning-box">
+        <i class="fa-solid fa-triangle-exclamation"></i> Dilarang keluar dari layar/tab selama ujian. Jika Anda keluar atau berpindah aplikasi, ujian akan otomatis direset dan soal diacak ulang!
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Kelas</label>
+        <select id="select-kelas" onchange="filterNama()">
+          <option value="">-- Memuat Kelas... --</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Nama Siswa</label>
+        <select id="select-nama" disabled>
+          <option value="">-- Pilih Kelas Terlebih Dahulu --</option>
+        </select>
+      </div>
+
+      <button class="btn-primary" onclick="startQuiz()">Mulai Kerjakan <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- HALAMAN KUIS -->
+    <div id="quiz-page" class="card hidden">
+      <div class="progress-bar" id="progress-text">Progress: 1 / 80</div>
+
+      <!-- Tampilan Soal (Tanpa Nomor Urut) -->
+      <div class="question-box" id="question-text"></div>
+      
+      <!-- ELEMEN CONTAINER GAMBAR SOAL -->
+      <img id="question-img" class="question-image hidden" alt="Gambar Soal">
+
+      <!-- Opsi Pilihan Ganda -->
+      <div id="options-container"></div>
+
+      <!-- Navigasi -->
+      <div class="nav-controls">
+        <button class="btn-nav" id="btn-prev" onclick="changeQuestion(-1)"><i class="fa-solid fa-chevron-left"></i> Sebelum</button>
+        <button class="btn-nav" id="btn-next" onclick="changeQuestion(1)">Berikut <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+
+      <button class="btn-primary hidden" id="btn-submit" style="margin-top: 15px; background: linear-gradient(90deg, #22c55e, #10b981);" onclick="confirmSubmit()">
+        Kirim Semua Jawaban <i class="fa-solid fa-check"></i>
+      </button>
+    </div>
+
+    <!-- HALAMAN SELESAI -->
+    <div id="result-page" class="card hidden" style="text-align: center;">
+      <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: #22c55e; margin-bottom: 10px;"></i>
+      <h2>Ujian Selesai!</h2>
+      <p style="color: var(--text-muted); margin-top: 5px;">Jawaban Anda telah tersimpan di spreadsheet.</p>
+      <div id="score-display" style="font-size: 1.8rem; font-weight: bold; color: #38bdf8; margin: 20px 0;"></div>
+      <button class="btn-primary" onclick="location.reload()">Kembali ke Halaman Utama</button>
+    </div>
+  </div>
+
+  <!-- CUSTOM UI MODAL PERINGATAN KECURANGAN -->
+  <div id="cheat-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <i class="fa-solid fa-triangle-exclamation modal-icon-danger"></i>
+      <h3>Pelanggaran Terdeteksi!</h3>
+      <p>Anda terdeteksi meninggalkan layar/tab ujian. Sesuai aturan, ujian Anda direset dan urutan soal telah diacak kembali.</p>
+      <button class="btn-primary" style="background: #ef4444;" onclick="location.reload()">Mengerti & Ulangi Ujian</button>
+    </div>
+  </div>
+
+  <!-- CUSTOM UI MODAL KONFIRMASI SUBMIT -->
+  <div id="submit-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <i class="fa-solid fa-circle-question modal-icon-warning"></i>
+      <h3 id="submit-modal-title">Konfirmasi Selesai</h3>
+      <p id="submit-modal-msg">Apakah Anda yakin ingin menyelesaikan dan mengirim jawaban Anda sekarang?</p>
+      <div class="modal-buttons">
+        <button class="btn-secondary" onclick="closeSubmitModal()">Batal</button>
+        <button class="btn-primary" style="margin-top:0; background: linear-gradient(90deg, #22c55e, #10b981);" onclick="executeSubmit()">Kirim Jawaban</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOM UI MODAL INFORMASI UMUM -->
+  <div id="info-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <i class="fa-solid fa-circle-info modal-icon-warning"></i>
+      <h3>Pemberitahuan</h3>
+      <p id="info-modal-msg">Pesan informasi</p>
+      <button class="btn-primary" onclick="closeInfoModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycby7cXJVbxjtYyfEJMeVVBVUa9b-wSly6oqmuNTm2NrVEgwPDpUNtXLVD3p0Bhcqgukt/exec";
+
+    // Data Bank Soal IPA Bab 1-9 (80 Soal) dengan Properti Gambar (img)
+    const rawQuestions = [
+  {
+    id: 1,
+    q: "Seorang atlet lari segera bersiap setelah mendengar suara letusan pistol start. Urutan penjalaran impuls saraf yang benar pada peristiwa gerak sadar tersebut adalah…",
+    img: "",
+    options: [
+      "Reseptor → Saraf Motorik → Otak → Saraf Sensorik → Efektor",
+      "Reseptor → Saraf Sensorik → Otak → Saraf Motorik → Efektor",
+      "Efektor → Saraf Sensorik → Sumsum Tulang Belakang → Saraf Motorik → Reseptor",
+      "Reseptor → Saraf Sensorik → Sumsum Tulang Belakang → Saraf Motorik → Efektor"
+    ]
+  },
+  {
+    id: 2,
+    q: "Ketika jari tangan seseorang tidak sengaja menyentuh wajan panas, tangan akan terangkat secara spontan sebelum otak menyadari rasa sakit. Bagian yang bertindak sebagai pusat kendali pada gerak refleks tersebut adalah…",
+    img: "",
+    options: [
+      "Cerebrum",
+      "Cerebellum",
+      "Hypothalamus",
+      "Sumsum tulang belakang"
+    ]
+  },
+  {
+    id: 3,
+    q: "Ujung akson (terminal sinapsis) mengandung vesikel yang berisi cairan kimia neurotransmiter. Ketika impuls listrik sampai di terminal akson, proses yang memicu pelepasan neurotransmiter ke dalam celah sinapsis adalah…",
+    img: "",
+    options: [
+      "Terbukanya saluran ion kalsium (Ca2+) akibat timbulnya depolarisasi di terminal akson",
+      "Masuknya ion Ca2+ ke dalam sel saraf penerima",
+      "Keluar potensial aksi menuju selubung mielin",
+      "Masuknya ion Ca2+ ke dalam nodus Ranvier terminal akson"
+    ]
+  },
+  {
+    id: 4,
+    q: "Seorang pasien mengalami kesulitan dalam menjaga keseimbangan tubuh dan koordinasi gerakan halus saat berjalan. Hasil pemeriksaan menunjukkan adanya gangguan pada pusat koordinasi motorik. Bagian otak yang mengalami gangguan adalah…",
+    img: "",
+    options: [
+      "Lobus frontalis cerebrum",
+      "Medulla oblongata",
+      "Cerebellum",
+      "Pons Varolii"
+    ]
+  },
+  {
+    id: 5,
+    q: "Obat anestesi lokal bekerja dengan memblokir saluran ion natrium (Na+) bertunas tegangan pada membran sel saraf. Dampak fisiologis utama dari mekanisme ini adalah…",
+    img: "",
+    options: [
+      "Mengakibatkan aliran ion K+ terhenti total",
+      "Mempercepat repolarisasi pada akson",
+      "Merangsang pelepasan neurotransmiter secara berlebihan",
+      "Mencegah terjadinya depolarisasi sehingga impuls nyeri tidak diteruskan"
+    ]
+  },
+  {
+    id: 6,
+    q: "Pernyataan manakah yang paling tepat untuk membedakan fungsi antara neuron sensoris, neuron motoris, dan neuron konektor?",
+    img: "",
+    options: [
+      "Sensoris membawa impuls dari reseptor ke otak; motoris membawa impuls dari otak ke efektor",
+      "Sensoris membawa impuls dari efektor ke otak; motoris membawa impuls dari otak ke reseptor",
+      "Sensoris mengolah informasi di otak; konektor membawa perintah ke otot",
+      "Motoris menerima rangsangan fisik; sensoris memproses logika berpikir"
+    ]
+  },
+  {
+    id: 7,
+    q: "Seseorang mengalami cedera pada tulang belakang sehingga sumsum tulang belakangnya rusak parsial pada bagian dorsal. Evaluasi klinis yang paling mungkin terjadi pada pasien adalah…",
+    img: "",
+    options: [
+      "Kehilangan kemampuan gerak refleks namun tetap bisa merasakan sensasi raba",
+      "Kehilangan kemampuan berpikir abstrak dan memori",
+      "Kehilangan sensasi impuls sensorik dari bagian bawah cedera tetapi respon motorik tetap ada",
+      "Denyut jantung dan napas terhenti seketika"
+    ]
+  },
+  {
+    id: 8,
+    q: "Apabila disimulasikan sebuah jaringan saraf buatan di mana impuls harus berpindah 50% lebih cepat dari kondisi normal, modifikasi struktur neuron yang paling efektif dilakukan adalah…",
+    img: "",
+    options: [
+      "Memperpanjang dendrit dan memperbanyak nodus Ranvier",
+      "Memperkecil diameter akson dan menghilangkan sel Schwann",
+      "Menghapus celah sinapsis dan menggantinya dengan sel glial",
+      "Mempertebal selubung mielin dan memperlebar jarak antar nodus Ranvier"
+    ]
+  },
+  {
+    id: 9,
+    q: "Ketika seseorang berpindah dari ruangan yang terang benderang ke dalam bioskop yang gelap, matanya membutuhkan waktu beberapa saat untuk dapat melihat objek di sekitarnya. Sel fotoreseptor pada retina yang paling berperan saat berada di ruang gelap tersebut adalah…",
+    img: "",
+    options: [
+      "Sel kerucut (cone)",
+      "Sel batang (rod)",
+      "Sel bipolar",
+      "Sel ganglion"
+    ]
+  },
+  {
+    id: 10,
+    q: "Bagian telinga yang berfungsi untuk mengubah getaran mekanis menjadi sinyal impuls saraf yang siap dikirimkan ke otak adalah…",
+    img: "",
+    options: [
+      "Gendang telinga (membran timpani)",
+      "Tulang sanggurdi",
+      "Saluran Eustachius",
+      "Koklea (rumah siput)"
+    ]
+  },
+  {
+    id: 11,
+    q: "Saat seseorang mengalami flu berat dan hidungnya tersumbat lendir, makanan yang dimakan seringkali terasa hambar atau kurang gurih. Hubungan fisiologis antara indera pembau dan pengecap pada kasus ini adalah…",
+    img: "",
+    options: [
+      "Bintik pengecap pada lidah mati rasa akibat infeksi virus flu",
+      "Sel olfaktorius terhalang oleh lendir sehingga aroma makanan tidak dapat berinteraksi dengan reseptor pembau",
+      "Saraf fasialis pada lidah terhambat oleh suhu tubuh yang tinggi",
+      "Enzim saliva berhenti diproduksi akibat hidung tersumbat"
+    ]
+  },
+  {
+    id: 12,
+    q: "Seorang penyelam merasakan nyeri hebat pada telinganya saat menyelam di kedalaman tertentu. Hal ini disebabkan oleh ketidakseimbangan tekanan udara antara telinga luar dan telinga tengah. Struktur telinga yang bertugas menyeimbangkan tekanan tersebut adalah…",
+    img: "",
+    options: [
+      "Saluran setengah lingkaran",
+      "Membran timpani",
+      "Saluran Eustachius",
+      "Tulang martil"
+    ]
+  },
+  {
+    id: 13,
+    q: "Reseptor pada kulit yang peka terhadap rangsangan berupa tekanan kuat dan dalam adalah…",
+    img: "",
+    options: [
+      "Korpuskel Meissner",
+      "Ujung saraf bebas",
+      "Korpuskel Ruffini",
+      "Korpuskel Pacini"
+    ]
+  },
+  {
+    id: 14,
+    q: "Pilihlah analisis yang paling akurat mengenai efek pemakaian kacamata berlensa cembung (+) pada penderita hipermetropi!",
+    img: "",
+    options: [
+      "Mengubah arah bayangan agar jatuh di depan retina",
+      "Mengumpulkan sinar cahaya sehingga bayangan jatuh tepat di retina",
+      "Menyebarkan sinar cahaya agar bayangan yang jatuh di belakang retina dapat digeser maju",
+      "Memperbesar sel batang agar peka terhadap warna"
+    ]
+  },
+  {
+    id: 15,
+    q: "Dalam Efek Stroop, seseorang mengalami kesulitan dan keterlambatan saat menyebutkan warna tinta dari sebuah kata jika kata tersebut menyatakan warna lain (contoh: kata \"MERAH\" ditulis dengan tinta biru). Penyebab utama fenomena ini secara neurobiologis adalah…",
+    img: "",
+    options: [
+      "Kebutaan warna parsial pada sel kerucut retina",
+      "Hambatan aliran darah pada kelenjar pituitari",
+      "Konflik pemrosesan informasi di otak antara membaca kata otomatis dan mengenali warna tinta",
+      "Gangguan impuls pada saraf olfaktorius"
+    ]
+  },
+  {
+    id: 16,
+    q: "Guna membantu penderita gangguan keseimbangan tubuh kronis akibat kerusakan pada saluran setengah lingkaran (semisirkularis) di telinga dalam, sebuah alat implan bio-elektronik dirancang. Alat ini harus memiliki mekanisme kerja utama berupa…",
+    img: "",
+    options: [
+      "Sensor tekanan getaran gelombang bunyi akustik",
+      "Sensor akselerasi dan orientasi posisi tubuh yang mengubah posisi menjadi impuls ke otak",
+      "Sensor suhu untuk meregulasi cairan limfa",
+      "Kelenjar penghasil hormon melatonin otomatis"
+    ]
+  },
+  {
+    id: 17,
+    q: "Kelenjar endokrin yang dijuluki sebagai \"Master of Glands\" karena merangsang dan mengendalikan sekretori kelenjar endokrin lainnya dalam tubuh adalah…",
+    img: "",
+    options: [
+      "Kelenjar Tiroid",
+      "Kelenjar Adrenal",
+      "Kelenjar Pineal",
+      "Kelenjar Pituitari (Hipofisis)"
+    ]
+  },
+  {
+    id: 18,
+    q: "Hormon yang dihasilkan oleh kelenjar pineal dan berfungsi mengatur jam biologis tubuh serta siklus tidur-bangun (ritme sirkadian) adalah…",
+    img: "",
+    options: [
+      "Tiroksin",
+      "Insulin",
+      "Adrenalin",
+      "Melatonin"
+    ]
+  },
+  {
+    id: 19,
+    q: "Saat seseorang tiba-tiba berhadapan dengan situasi berbahaya atau menakutkan, jantungnya berdetak kencang, napasnya menjadi cepat, dan kadar gula darahnya meningkat. Hormon yang berperan mendasari respon \"fight or flight\" ini adalah…",
+    img: "",
+    options: [
+      "Adrenalin (Epinefrin) dari kelenjar adrenal",
+      "Oksitosin dari kelenjar hipofisis posterior",
+      "Kalsitonin dari kelenjar tiroid",
+      "Estrogen dari ovarium"
+    ]
+  },
+  {
+    id: 20,
+    q: "Perhatikan tabel perbandingan sistem saraf dan sistem hormon berikut!\n\nAspek | Sistem Saraf | Sistem Hormon\nKecepatan respon | Sangat cepat | Lambat\nMedia penghantar | Neuronal (listrik) | X\nDurasi efek | Singkat | Y\n\nIsian yang tepat untuk menggantikan X dan Y berturut-turut adalah…",
+    img: "",
+    options: [
+      "Kelenjar ludah dan Singkat",
+      "Pembuluh darah dan Bertahan lama",
+      "Udara dan Bertahan lama",
+      "Limfa dan Singkat"
+    ]
+  },
+  {
+    id: 21,
+    q: "Seorang anak mengalami pertumbuhan tinggi badan yang jauh melampaui rata-rata anak seusianya (gigantisme). Kondisi ini disebabkan oleh hypersekrasi hormon…",
+    img: "",
+    options: [
+      "Parathormon (PTH) dari kelenjar paratiroid",
+      "Tiroksin dari kelenjar tiroid",
+      "Growth Hormone (GH) dari kelenjar pituitari",
+      "Glukagon dari pankreas"
+    ]
+  },
+  {
+    id: 22,
+    q: "Seseorang dengan gangguan fungsi kelenjar tiroid mengalami penurunan metabolisme basal, sering merasa kedinginan, berat badan melonjak naik tanpa sebab yang jelas, serta mudah lelah (hipotiroidisme). Penjelasan paling logis atas kondisi tersebut adalah…",
+    img: "",
+    options: [
+      "Kelebihan hormon kalsitonin yang mengendapkan seluruh kalsium di hati",
+      "Kekurangan hormon tiroksin sehingga laju oksidasi seluler dalam memproduksi energi/panas menurun",
+      "Kekurangan insulin yang menyebabkan gula darah meluap",
+      "Kelebihan hormon adrenalin yang menghambat metabolisme"
+    ]
+  },
+  {
+    id: 23,
+    q: "Manakah pernyataan berikut yang menggambarkan interaksi antara hormon kalsitonin dan hormon paratiroid (PTH) dalam menjaga keseimbangan kalsium darah?",
+    img: "",
+    options: [
+      "Kalsitonin meningkatkan kalsium darah; PTH menurunkan kalsium darah",
+      "Kalsitonin dan PTH bersama-sama menurunkan kalsium melalui ginjal",
+      "Kalsitonin dirangsang saat kalsium rendah; PTH dirangsang saat kalsium tinggi",
+      "Kalsitonin menurunkan kalsium darah dengan mengendapkannya di tulang; PTH meningkatkan kalsium darah dengan membongkar kalsium tulang"
+    ]
+  },
+  {
+    id: 24,
+    q: "Jika Anda diminta mendesain obat pemulih bagi penderita gangguan metabolisme karbohidrat akibat kerusakan sel alfa pankreas, target molekuler obat tersebut harus bekerja mensimulasikan fungsi dari hormon…",
+    img: "",
+    options: [
+      "Insulin",
+      "Aldosteron",
+      "Progesteron",
+      "Glukagon"
+    ]
+  },
+  {
+    id: 25,
+    q: "Kelenjar endokrin yang terletak melekat di atas organ ginjal adalah…",
+    img: "",
+    options: [
+      "Hipofisis",
+      "Adrenal",
+      "Tiroid",
+      "Timus"
+    ]
+  },
+  {
+    id: 26,
+    q: "Sinyal elektrokimia yang merambat sepanjang selubung akson melompati selubung mielin dari satu ceruk ke ceruk berikutnya dinamakan…",
+    img: "",
+    options: [
+      "Depolarisasi lambat",
+      "Transduksi reseptor",
+      "Konduksi saltatori pada nodus Ranvier",
+      "Potensial istirahat"
+    ]
+  },
+  {
+    id: 27,
+    q: "Mengapa denyut jantung dan laju pencernaan bekerja dalam pola yang berlawanan saat sistem saraf simpatis aktif?",
+    img: "",
+    options: [
+      "Otak tidak mampu memproses dua organ sekaligus",
+      "Pencernaan membutuhkan pasokan adrenalin yang tinggi",
+      "Sistem parasimpatis merusak kerja pembuluh darah",
+      "Energi dialihkan dari pencernaan ke otot rangka dan organ vital untuk mendukung respon darurat"
+    ]
+  },
+  {
+    id: 28,
+    q: "Bagian dari mata yang berfungsi mengatur jumlah cahaya yang masuk ke dalam bola mata dengan cara mengubah ukuran pupil adalah…",
+    img: "",
+    options: [
+      "Kornea",
+      "Iris",
+      "Sklera",
+      "Bintik buta"
+    ]
+  },
+  {
+    id: 29,
+    q: "Proses fisiologis yang terjadi pada lensa mata saat seseorang fokus melihat benda dalam jarak sangat dekat adalah…",
+    img: "",
+    options: [
+      "Lensa memipih akibat relaksasi otot siliaris",
+      "Lensa bergeser mundur mendekati retina",
+      "Lensa mencembung akibat kontraksi otot siliaris",
+      "Pupil membesar selebar-lebarnya"
+    ]
+  },
+  {
+    id: 30,
+    q: "Tanda-tanda kerusakan pada otak besar bagian lobus oksipitalis adalah…",
+    img: "",
+    options: [
+      "Gangguan bicara dan memori",
+      "Hilangnya pendengaran",
+      "Kelumpuhan gerak kaki",
+      "Gangguan penglihatan meskipun organ mata dalam keadaan sehat"
+    ]
+  },
+  {
+    id: 31,
+    q: "Pernyataan mana yang paling benar mengenai mekanisme impuls pada celah sinapsis?",
+    img: "",
+    options: [
+      "Impuls melompati celah sinapsis dalam bentuk arus listrik tegangan tinggi",
+      "Akson pascasinaps menyerap kembali vesikel dari sel prasinaps secara fagositosis",
+      "Celah sinapsis selalu tertutup rapat oleh selubung mielin",
+      "Neurotransmiter berdifusi melintasi celah sinapsis dan berikatan dengan reseptor khusus pada sel pascasinaps"
+    ]
+  },
+  {
+    id: 32,
+    q: "Bandingkan kondisi akson yang memiliki selubung mielin dengan akson tanpa mielin! Pernyataan yang tepat adalah…",
+    img: "",
+    options: [
+      "Akson tanpa mielin menghantarkan impuls lebih cepat karena tidak ada hambatan",
+      "Kecepatan hantar keduanya persis sama",
+      "Akson bermielin menghantarkan impuls lebih cepat karena impuls meloncat antar nodus Ranvier",
+      "Mielin menghambat hantaran impuls listrik secara total"
+    ]
+  },
+  {
+    id: 33,
+    q: "Seorang anak lahir tanpa kemampuan merasakan nyeri (analgesia kongenital). Evaluasi dampak kondisi ini terhadap kelangsungan hidup anak tersebut adalah…",
+    img: "",
+    options: [
+      "Sangat menguntungkan karena anak tidak pernah merasa sakit",
+      "Tidak berdampak pada kesehatan umum",
+      "Berbahaya karena anak tidak dapat merespon kerusakan fisik/cedera tubuh sebagai bentuk perlindungan diri",
+      "Menyebabkan anak menjadi super imun"
+    ]
+  },
+  {
+    id: 34,
+    q: "Guna mengatasi kram otot parah pada pasien yang kekurangan neurotransmiter inhibitor seperti GABA, formulasi obat hipotetis yang paling tepat adalah…",
+    img: "",
+    options: [
+      "Meningkatkan ambang rangsang sinapsis dan merangsang reseptor GABA agar menghentikan eksitasi berlebih",
+      "Menghancurkan reseptor GABA pada membran pascasinaps",
+      "Memicu pelepasan asetilkolin terus menerus",
+      "Memblokir aliran ion klorida ke dalam sel saraf"
+    ]
+  },
+  {
+    id: 35,
+    q: "Tipe papila pada lidah yang memiliki jumlah kuncup pengecap (taste buds) terbanyak dan berbentuk seperti huruf V di bagian belakang lidah adalah…",
+    img: "",
+    options: [
+      "Papila filiformis",
+      "Papila fungiformis",
+      "Papila foliata",
+      "Papila sirkumvalata"
+    ]
+  },
+  {
+    id: 36,
+    q: "Bagian otak tengah yang berfungsi sebagai pusat refleks gerak mata dan pendengaran adalah…",
+    img: "",
+    options: [
+      "Talamus",
+      "Pons",
+      "Kolikulus (bagian dari mesensefalon)",
+      "Hipokampus"
+    ]
+  },
+  {
+    id: 37,
+    q: "Ketika kadar glukosa darah melonjak setelah makan makanan manis, sel beta pankreas merespons dengan memproduksi insulin. Fungsi utama insulin dalam menurunkan gula darah adalah…",
+    img: "",
+    options: [
+      "Mengubah glikogen menjadi glukosa di hati",
+      "Mengeluarkan glukosa melalui saluran pencernaan",
+      "Memfasilitasi masuknya glukosa ke dalam sel dan merangsang pembentukan glikogen",
+      "Menghambat sekresi enzim pencernaan"
+    ]
+  },
+  {
+    id: 38,
+    q: "Seorang penderita kelainan mata tidak dapat membedakan warna hijau dan merah. Penilaian klinis terhadap organ penglihatannya adalah…",
+    img: "",
+    options: [
+      "Kerusakan kornea akibat paparan infeksi",
+      "Cacat pada sel batang retina",
+      "Tekanan cairan humor aqueus terlalu tinggi",
+      "Kelainan genetik yang menyebabkan malfungsi jenis sel kerucut tertentu di retina"
+    ]
+  },
+  {
+    id: 39,
+    q: "Evaluasi perbedaan mendasar antara respons sistem simpatis dan parasimpatis pada iris mata adalah…",
+    img: "",
+    options: [
+      "Simpatis memicu konstriksi pupil; parasimpatis memicu dilatasi pupil",
+      "Kedua sistem memicu pelebaran pupil secara bersamaan",
+      "Simpatis memicu dilatasi (pelebaran) pupil; parasimpatis memicu konstriksi (penyempitan) pupil",
+      "Parasimpatis mengeruhkan lensa mata"
+    ]
+  },
+  {
+    id: 40,
+    q: "Rutu disarani merancang simulasi medis untuk melatih respon gerak refleks murid. Jalur refleks yang harus ia buat dalam program perangkat lunaknya adalah…",
+    img: "",
+    options: [
+      "Otak Besar → Reseptor → Saraf Motorik → Saraf Sensorik",
+      "Reseptor → Otak Kecil → Saraf Motorik → Efektor",
+      "Saraf Motorik → Reseptor → Sumsum Tulang Belakang → Efektor",
+      "Reseptor → Saraf Sensorik → Interneuron Sumsum Tulang Belakang → Saraf Motorik → Efektor"
+    ]
+  },
+  {
+    id: 41,
+    q: "Pusat kendali utama dalam otak manusia yang bertindak sebagai termostat tubuh untuk mempertahankan suhu inti mendekati 37°C adalah…",
+    img: "",
+    options: [
+      "Talamus",
+      "Medulla oblongata",
+      "Hipotalamus",
+      "Korteks serebri"
+    ]
+  },
+  {
+    id: 42,
+    q: "Ketika lingkungan sekitar sangat panas, tubuh manusia akan melakukan penyesuaian termoregulasi berupa…",
+    img: "",
+    options: [
+      "Vasokonstriksi pembuluh darah kulit dan kontraksi otot (menggigil)",
+      "Penurunan laju ekskresi urine secara total",
+      "Menurunkan laju napas",
+      "Vasodilatasi pembuluh darah kulit dan peningkatan sekresi kelenjar keringat"
+    ]
+  },
+  {
+    id: 43,
+    q: "Mengapa menggigil (kontraksi cepat otot rangka) terjadi ketika tubuh berada di lingkungan yang sangat dingin?",
+    img: "",
+    options: [
+      "Untuk memompa lebih banyak keringat keluar",
+      "Untuk menurunkan tekanan darah secara drastis",
+      "Untuk merangsang kerja selubung mielin",
+      "Untuk menghasilkan energi panas internal melalui peningkatan metabolisme otot"
+    ]
+  },
+  {
+    id: 44,
+    q: "Proses penguapan keringat dari permukaan kulit dapat menurunkan suhu tubuh karena…",
+    img: "",
+    options: [
+      "Air keringat menyerap energi panas dari kulit untuk berubah fase menjadi uap",
+      "Keringat menyumbat pori-pori kulit dari paparan udara",
+      "Keringat membawa ion natrium keluar dari tubuh secara aktif",
+      "Air keringat mendinginkan pembuluh darah secara konduksi langsung dari luar"
+    ]
+  },
+  {
+    id: 45,
+    q: "Saat seseorang menderita demam akibat infeksi kuman, senyawa pirogen merangsang hipotalamus untuk menaikkan \"set point\" suhu tubuh dari 37°C menjadi 39°C. Pada fase awal demam, pasien sering merasa kedinginan dan menggigil. Penjelasan yang paling tepat atas fenomena tersebut adalah…",
+    img: "",
+    options: [
+      "Pirogen membekukan cairan darah di pembuluh perifer",
+      "Suhu tubuh aktual (37°C) saat itu dinilai lebih rendah daripada set point baru (39°C) oleh hipotalamus",
+      "Tubuh kehilangan kemampuan memproduksi keringat",
+      "Kelenjar tiroid berhenti bekerja total"
+    ]
+  },
+  {
+    id: 46,
+    q: "Rancanglah mekanisme mekanisme umpan balik negatif (negative feedback) tubuh saat seseorang melakukan aktivitas olahraga berat di bawah terik matahari!",
+    img: "",
+    options: [
+      "Peningkatan suhu tubuh → Dideteksi hipotalamus → Vasokonstriksi & menggigil → Suhu makin meningkat",
+      "Peningkatan suhu tubuh → Dideteksi hipotalamus → Vasodilatasi & berkeringat → Suhu tubuh turun kembali ke normal",
+      "Penurunan suhu tubuh → Kelenjar adrenal aktif → Berkeringat → Suhu stabil",
+      "Suhu tubuh tetap konstan tanpa adanya mekanisme respon fisiologis"
+    ]
+  },
+  {
+    id: 47,
+    q: "Hormon yang disekresikan oleh kelenjar pituitari posterior untuk merangsang penyerapan kembali (reabsorpsi) air di tubulus ginjal saat tubuh kekurangan cairan adalah…",
+    img: "",
+    options: [
+      "Insulin",
+      "Oksitosin",
+      "Aldosteron",
+      "Antidiuretic Hormone (ADH) / Vasopresin"
+    ]
+  },
+  {
+    id: 48,
+    q: "Kondisi di mana kadar glukosa dalam darah melonjak melebihi batas normal dinamakan…",
+    img: "",
+    options: [
+      "Hipoglikemia",
+      "Hipotensi",
+      "Hiperglikemia",
+      "Hipertensi"
+    ]
+  },
+  {
+    id: 49,
+    q: "Seseorang yang banyak mengonsumsi makanan asin/bergaram tinggi tanpa meminum cukup air akan mengalami kondisi darah yang hipertonis. Respon organ ginjal dan kelenjar hipofisis terhadap situasi ini adalah…",
+    img: "",
+    options: [
+      "Sekresi ADH menurun, memproduksi urine yang banyak dan encer",
+      "Sekresi ADH terhenti, ginjal menyerap sedikit air",
+      "Ginjal menyaring darah tanpa membentuk urine",
+      "Sekresi ADH meningkat, memproduksi urine yang sedikit dan pekat"
+    ]
+  },
+  {
+    id: 50,
+    q: "Apabila seseorang berpuasa seharian, kadar gula darahnya akan menurun. Organ pankreas merespons keadaan tersebut dengan mensekresikan hormon glukagon yang berfungsi untuk…",
+    img: "",
+    options: [
+      "Merangsang hati merombak glikogen menjadi glukosa",
+      "Memasukkan glukosa ke dalam sel lemak",
+      "Menghambat penyerapan glukosa di usus halus",
+      "Membuang glukosa berlebih melalui urine"
+    ]
+  },
+  {
+    id: 51,
+    q: "Penderita Diabetes Insipidus sering kali membuang urine dalam jumlah sangat banyak (polyuria) dan mudah haus (polydipsia). Evaluasi gangguan homeostasis yang dialami penderita ini adalah…",
+    img: "",
+    options: [
+      "Kegagalan pankreas memproduksi hormon insulin",
+      "Kelebihan produksi glukagon oleh kelenjar tiroid",
+      "Kekurangan produksi hormon ADH sehingga ginjal gagal mereabsorpsi air di tubulus",
+      "Kerusakan sel fotoreseptor di mata"
+    ]
+  },
+  {
+    id: 52,
+    q: "Bandingkan mekanisme umpan balik negatif antara pengaturan gula darah tinggi dan gula darah rendah! Mana analisis yang benar?",
+    img: "",
+    options: [
+      "Gula darah tinggi memicu pelepasan glukagon; gula darah rendah memicu pelepasan insulin",
+      "Kedua kondisi dipicu oleh penyerapan kalsium di tulang",
+      "Tidak ada peranan organ hati dalam kedua mekanisme tersebut",
+      "Gula darah tinggi memicu pelepasan insulin dari sel beta pankreas; gula darah rendah memicu pelepasan glukagon dari sel alfa pankreas"
+    ]
+  },
+  {
+    id: 53,
+    q: "Skenario: Seseorang terdampar di padang pasir tanpa air minum selama 24 jam. Konstruksikan urutan respon osmoregulasi homeostasis tubuhnya!",
+    img: "",
+    options: [
+      "Dehidrasi → Osmolaritas darah naik → Hipotalamus terangsang → Pituitari lepas ADH tinggi → Reabsorpsi air di ginjal meningkat → Urine sedikit & pekat",
+      "Dehidrasi → Osmolaritas darah turun → Sekresi ADH berhenti → Ginjal keluarkan banyak urine",
+      "Dehidrasi → Pankreas lepas insulin → Air diserap otot → Keringat bertambah",
+      "Dehidrasi → Suhu tubuh turun → Menggigil berlebihan → Urine melimpah"
+    ]
+  },
+  {
+    id: 54,
+    q: "Proses pembuahan (fertilisasi) sel telur oleh sel sperma pada organ reproduksi wanita secara alami terjadi pada bagian…",
+    img: "",
+    options: [
+      "Ovarium",
+      "Uterus (Rahim)",
+      "Serviks",
+      "Tuba Falopi (Saluran Telur)"
+    ]
+  },
+  {
+    id: 55,
+    q: "Organ reproduksi wanita yang berfungsi sebagai tempat menempelnya embrio dan berkembangnya janin selama masa kehamilan adalah…",
+    img: "",
+    options: [
+      "Vagina",
+      "Ovarium",
+      "Uterus",
+      "Klitoris"
+    ]
+  },
+  {
+    id: 56,
+    q: "Mengapa kebiasaan merokok pada ibu hamil sangat berbahaya bagi perkembangan janin di dalam rahim?",
+    img: "",
+    options: [
+      "Nikotin dan karbon monoksida dapat menyebabkan penyempitan pembuluh darah plasenta sehingga pasokan oksigen dan nutrisi ke janin terganggu",
+      "Asap rokok merusak jaringan tulang tengkorak ibu",
+      "Merokok merangsang pematangan sel telur baru di ovarium",
+      "Zat kimia rokok mengubah pH cairan amnion menjadi sangat basa"
+    ]
+  },
+  {
+    id: 57,
+    q: "Pada bayi baru lahir, terdapat bagian lunak pada tengkorak yang dinamakan ubun-ubun (fontanel). Fungsi fisiologis dari fontanel selama proses persalinan adalah…",
+    img: "",
+    options: [
+      "Mencegah aliran darah ke otak bayi",
+      "Memudahkan tumpukan lempeng tulang tengkorak bergeser fleksibel saat melewati jalan lahir",
+      "Sebagai saluran ekskresi keringat pertama bayi",
+      "Tempat penyerapan oksigen langsung dari udara"
+    ]
+  },
+  {
+    id: 58,
+    q: "Pernyataan manakah yang paling akurat mengenai peran plasenta bagi janin selama dalam kandungan?",
+    img: "",
+    options: [
+      "Mencampur darah ibu dan janin secara penuh agar antibodi tersalurkan sempurna",
+      "Menghasilkan sel sperma pendukung perkembangan embrio",
+      "Mencegah bercampurnya darah ibu dan janin namun memungkinkan pertukaran gas, nutrisi, dan zat sisa",
+      "Menyerap seluruh cairan ketuban agar janin tetap kering"
+    ]
+  },
+  {
+    id: 59,
+    q: "Seorang ibu hamil mengalami gangguan pembentukan hormon progesteron oleh korpus luteum pada trimester pertama kehamilan. Evaluasi risiko klinis terhadap kehamilan tersebut adalah…",
+    img: "",
+    options: [
+      "Terjadinya peluruhan dinding endometrium uterus yang berisiko menyebabkan keguguran",
+      "Bayi lahir kembar siam",
+      "Terjadinya peningkatan volume cairan amnion berlebih",
+      "Perkembangan organ indera janin menjadi hiperaktif"
+    ]
+  },
+  {
+    id: 60,
+    q: "Guna mencegah dampak bahaya zat teratogenik (seperti alkohol dan rokok) terhadap janin pada usia kehamilan awal (trimester pertama), prinsip rekomendasi edukasi kesehatan yang paling tepat dirancang adalah…",
+    img: "",
+    options: [
+      "Mengonsumsi obat penenang tanpa resep dokter",
+      "Menerapkan pola hidup sehat dan menghindari paparan zat kimia beracun karena trimester pertama merupakan fase krusial organogenesis (pembentukan organ utama) janin",
+      "Membatasi asupan air putih secara ketat",
+      "Melakukan olahraga berat untuk memperkuat dinding rahim"
+    ]
+  },
+  {
+    id: 61,
+    q: "Kelenjar yang menghasilkan hormon kalsitonin untuk menurunkan kadar kalsium berlebih dalam darah adalah…",
+    img: "",
+    options: [
+      "Kelenjar Paratiroid",
+      "Kelenjar Pankreas",
+      "Kelenjar Tiroid",
+      "Kelenjar Timus"
+    ]
+  },
+  {
+    id: 62,
+    q: "Hormon reproduksi wanita yang memicu terjadinya ovulasi (pelepasan sel telur dari ovarium) adalah…",
+    img: "",
+    options: [
+      "FSH (Follicle Stimulating Hormone)",
+      "Progesteron",
+      "Prolaktin",
+      "LH (Luteinizing Hormone)"
+    ]
+  },
+  {
+    id: 63,
+    q: "Bagaimanakah mekanisme kerja umpan balik positif (positive feedback) saat proses persalinan berlangsung?",
+    img: "",
+    options: [
+      "Kontraksi rahim menurunkan sekresi hormon oksitosin hingga proses henti",
+      "Dorongan kepala bayi merangsang pelepas oksitosin yang memperkuat kontraksi rahim, yang pada intinya memicu pelepasan oksitosin lebih banyak lagi",
+      "Progesteron meningkat drastis untuk menghentikan gerakan rahim",
+      "Hipotalamus menghentikan seluruh pasokan hormon"
+    ]
+  },
+  {
+    id: 64,
+    q: "Apabila kadar kalsium dalam darah turun di bawah rentang normal, kelenjar paratiroid merespons dengan melepaskan Parathormon (PTH). Efek langsung dari hormon PTH ini pada organ target adalah…",
+    img: "",
+    options: [
+      "Mengendapkan kalsium ke dalam matriks tulang",
+      "Membuang kalsium lewat vesica urinaria",
+      "Memerintahkan ginjal menyerap kembali kalsium dan merangsang pembongkaran kalsium dari tulang",
+      "Menghambat penyerapan kalsium di usus"
+    ]
+  },
+  {
+    id: 65,
+    q: "Cairan amnion (ketuban) yang mengelilingi janin di dalam rahim memiliki fungsi fisiologis utama yaitu…",
+    img: "",
+    options: [
+      "Memasok glukosa utama bagi janin",
+      "Menghasilkan hormon estrogen janin",
+      "Menyaring darah ibu sebelum masuk ke plasenta",
+      "Melindungi janin dari guncangan fisik luar dan menjaga kestabilan suhu"
+    ]
+  },
+  {
+    id: 66,
+    q: "Mengapa penderita diabetes melitus kerap mengalami gejala sering buang air kecil dengan volume besar?",
+    img: "",
+    options: [
+      "Glukosa yang meluap di tubulus ginjal menarik air secara osmotik ke dalam urine (diuresis osmotik)",
+      "Hormon ADH merusak jaringan pankreas",
+      "Kandung kemih menyusut ukurannya",
+      "Tubuh menolak menyerap cairan minum"
+    ]
+  },
+  {
+    id: 67,
+    q: "Pernyataan berikut merupakan evaluasi perbandingan antara homeostasis suhu pada keadaan vasodilatasi dan vasokonstriksi:",
+    img: "",
+    options: [
+      "Vasodilatasi terjadi saat dingin; vasokonstriksi terjadi saat panas",
+      "Vasodilatasi memperlebar pembuluh darah kulit untuk membuang panas; vasokonstriksi menyempitkan pembuluh kulit untuk menahan panas",
+      "Vasodilatasi menghentikan aliran darah ke otak; vasokonstriksi meningkatkan pembentukan keringat",
+      "Keduanya memiliki dampak yang sama terhadap pelepas panas tubuh"
+    ]
+  },
+  {
+    id: 68,
+    q: "Rancanglah skema konseptual interaksi organ tubuh dalam menurunkan suhu saat terjadi hipertermia!",
+    img: "",
+    options: [
+      "Sensasi Panas → Hipofisis → Pengeluaran ADH → Menggigil → Suhu Turun",
+      "Sensasi Panas → Pankreas → Lepas Insulin → Suhu Turun",
+      "Sensasi Panas → Sensasi Panas → Hipotalamus → Stimulasi Kelenjar Keringat & Vasodilatasi Pembuluh Darah Kulit → Evaporasi Keringat → Suhu Kembali Normal",
+      "Sensasi Panas → Otak Kecil → Vasokonstriksi → Suhu Turun"
+    ]
+  },
+  {
+    id: 69,
+    q: "Hormon yang memicu produksi Air Susu Ibu (ASI) setelah proses persalinan adalah…",
+    img: "",
+    options: [
+      "Estrogen",
+      "Prolaktin",
+      "Glukagon",
+      "Aldosteron"
+    ]
+  },
+  {
+    id: 70,
+    q: "Apa yang akan terjadi pada siklus menstruasi wanita apabila sel telur yang dilepaskan tidak dibuahi oleh sel sperma?",
+    img: "",
+    options: [
+      "Dinding endometrium semakin menebal selamanya",
+      "Kadar hCG melonjak tajam",
+      "Korpus luteum meluruh, kadar progesteron & estrogen anjlok, menyebabkan peluruhan dinding endometrium (menstruasi)",
+      "Ovulasi berhenti secara permanen"
+    ]
+  },
+  {
+    id: 71,
+    q: "Seseorang mengalami dehidrasi berat akibat diare. Respon homeostasis sistem kardiovaskular dan endokrin untuk mempertahankan tekanan darah adalah…",
+    img: "",
+    options: [
+      "Penurunan denyut jantung dan penghentian produksi ADH",
+      "Melebarkan seluruh pembuluh darah secara ekstrem",
+      "Membuang seluruh cairan seluer ke saluran cerna",
+      "Peningkatan denyut jantung dan penyerapan air-garam melalui sistem Renin-Angiotensin-Aldosteron serta ADH"
+    ]
+  },
+  {
+    id: 72,
+    q: "Penilaian klinis terhadap pemanfaatan tes kehamilan (planotest) yang mendeteksi hormon Human Chorionic Gonadotropin (hCG) dalam urine wanita adalah…",
+    img: "",
+    options: [
+      "Akurat, karena hCG hanya diproduksi oleh jaringan trofoblast/plasenta embrio yang berkembang setelah implantasi",
+      "Tidak akurat, karena hCG diproduksi oleh semua orang saat makan gula",
+      "Hanya mendeteksi tingkat kelelahan fisik wanita",
+      "Mengukur kadar insulin dalam ginjal"
+    ]
+  },
+  {
+    id: 73,
+    q: "Seseorang berada di lingkungan ekstrem yang dingin tanpa pakaian tebal. Evaluasi urutan kegagalan homeostasis (hipotermia) yang dapat mengancam jiwa adalah…",
+    img: "",
+    options: [
+      "Berkeringat hebat → Suhu inti naik → Kejang",
+      "Menggigil maksimal → Pembuluh darah perifer vasokonstriksi ekstrem → Suhu inti turun → Penurunan fungsi saraf dan kesadaran",
+      "Terjadi peningkatan kadar gula darah secara berlebihan → Stroke",
+      "Kelenjar adrenal berhenti memproduksi hormon selamanya"
+    ]
+  },
+  {
+    id: 74,
+    q: "Guna merekayasa sistem terapi bagi pasien hipoglikemia berat secara cepat, tindakan intervensi hormonal medis paling tepat yang harus diberikan adalah…",
+    img: "",
+    options: [
+      "Menyuntikkan hormon insulin skala besar",
+      "Memberikan hormon ADH konsentrasi tinggi",
+      "Menyuntikkan hormon glukagon untuk memicu glikogenolisis cepat di organ hati",
+      "Menghambat sekresi adrenalin dari kelenjar adrenal"
+    ]
+  },
+  {
+    id: 75,
+    q: "Tempat terjadinya proses pembentukan dan pematangan sel sperma (spermatogenesis) pada organ reproduksi pria adalah…",
+    img: "",
+    options: [
+      "Vas deferens",
+      "Tubulus seminiferus dalam testis",
+      "Vesikula seminalis",
+      "Kelenjar prostat"
+    ]
+  },
+  {
+    id: 76,
+    q: "Peran hormon FSH pada sistem reproduksi pria adalah…",
+    img: "",
+    options: [
+      "Memicu pelepasan hormon adrenalin",
+      "Menghasilkan cairan semen yang bersifat basa",
+      "Menyebabkan ejakulasi gerak refleks",
+      "Merangsang sel Sertoli untuk memberi nutrisi dan mendukung proses spermatogenesis"
+    ]
+  },
+  {
+    id: 77,
+    q: "Mengapa suhu di dalam skrotum testis pria terukur sedikit lebih rendah (sekitar 2°C) dibanding suhu inti tubuh?",
+    img: "",
+    options: [
+      "Agar testis tidak mengalami dehidrasi",
+      "Merupakan kondisi optimal yang diperlukan untuk proses pembentukan sperma yang sehat",
+      "Tempat penyimpanan hormon insulin",
+      "Mencegah aliran darah masuk ke organ reproduksi"
+    ]
+  },
+  {
+    id: 78,
+    q: "Penilaian dampak terhadap keseimbangan hormon reproduksi wanita jika terjadi penyumbatan total pada kedua saluran Tuba Falopi adalah…",
+    img: "",
+    options: [
+      "Menstruasi berhenti seketika secara permanen",
+      "Proses ovulasi dan menstruasi tetap terjadi, namun sperma tidak dapat bertemu sel telur sehingga terjadi infertilitas",
+      "Ovarium berhenti memproduksi sel telur dan estrogen",
+      "Uterus membesar secara abnormal"
+    ]
+  },
+  {
+    id: 79,
+    q: "Bandingkan peran umpan balik negatif pada regulasi suhu tubuh dan regulasi gula darah!",
+    img: "",
+    options: [
+      "Keduanya memperbesar penyimpangan kondisi tubuh hingga rusak",
+      "Termoregulasi tidak melibatkan otak sedangkan regulasi gula darah melibatkannya",
+      "Keduanya bekerja mengembalikan kondisi variabel tubuh (suhu/gula) ke titik setimbang (set point) setelah timbul penyimpangan",
+      "Keduanya hanya aktif saat manusia tertidur"
+    ]
+  },
+  {
+    id: 80,
+    q: "Formulasikan matriks panduan edukasi kesehatan reproduksi bagi remaja untuk menjaga homeostasis organ reproduksi dan mencegah infeksi!",
+    img: "",
+    options: [
+      "Memelihara kebersihan organ vital, menjaga kelembapan seimbang, tidak menggunakan sabun pembersih pembersih kewanitaan berantiseptik kuat secara berlebihan yang dapat merusak pH alami dan flora normal",
+      "Menggunakan antiseptik keras setiap jam",
+      "Membatasi minum air putih agar tidak sering buang air",
+      "Mengonsumsi hormon sintetis tanpa pengawasan dokter"
+    ]
+  }
+];
+
+// Array Kunci Jawaban Baru (Tersebar Rata: 20 A, 20 B, 20 C, 20 D)
+const keysPattern = [
+  "B", "D", "A", "C", "D", "A", "C", "D", "B", "D",
+  "B", "C", "D", "B", "C", "B", "D", "D", "A", "B",
+  "C", "B", "D", "D", "B", "C", "D", "B", "C", "D",
+  "D", "C", "C", "A", "D", "C", "C", "D", "C", "D",
+  "C", "D", "D", "A", "B", "B", "D", "C", "D", "A",
+  "C", "D", "A", "D", "C", "A", "B", "C", "A", "B",
+  "C", "D", "B", "C", "D", "A", "B", "C", "B", "C",
+  "D", "A", "B", "C", "B", "D", "B", "B", "C", "A"
+];
+
+    // Terapkan pola kunci jawaban acak ke dalam array rawQuestions
+    rawQuestions.forEach((item, index) => {
+      item.key = keysPattern[index];
+    });
+
+    let studentData = [];
+    let randomizedQuestions = [];
+    let userAnswers = [];
+    let currentIdx = 0;
+    let quizActive = false;
+
+    // Fungsi Pengacak Array (Fisher-Yates)
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    window.onload = function() {
+      fetchStudentData();
+      setupAntiCheating();
+    };
+
+    // Helper Modal UI
+    function showInfoModal(msg) {
+      document.getElementById("info-modal-msg").innerText = msg;
+      document.getElementById("info-modal").classList.remove("hidden");
+    }
+
+    function closeInfoModal() {
+      document.getElementById("info-modal").classList.add("hidden");
+    }
+
+    function fetchStudentData() {
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({ action: "getStudents" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          studentData = data.students;
+          populateClasses(data.classes);
+        } else {
+          showInfoModal("Gagal mengambil data siswa: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error("Detail Error:", err);
+        showInfoModal("Gagal terhubung ke Backend Spreadsheet!");
+      });
+    }
+
+    function populateClasses(classes) {
+      const selectKelas = document.getElementById("select-kelas");
+      selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+      classes.forEach(c => {
+        selectKelas.innerHTML += `<option value="${c}">${c}</option>`;
+      });
+    }
+
+    function filterNama() {
+      const selectedClass = document.getElementById("select-kelas").value;
+      const selectNama = document.getElementById("select-nama");
+      
+      selectNama.innerHTML = '<option value="">-- Pilih Nama Siswa --</option>';
+      if(!selectedClass) {
+        selectNama.disabled = true;
+        return;
+      }
+
+      const filtered = studentData.filter(s => s.kelas === selectedClass);
+      filtered.forEach(s => {
+        selectNama.innerHTML += `<option value="${s.nama}">${s.nama}</option>`;
+      });
+      selectNama.disabled = false;
+    }
+
+    // Penanganan Anti Kecurangan dengan Custom Modal
+    function setupAntiCheating() {
+      window.addEventListener("blur", function() {
+        if(quizActive) {
+          quizActive = false;
+          document.getElementById("cheat-modal").classList.remove("hidden");
+        }
+      });
+    }
+
+    function startQuiz() {
+      const kelas = document.getElementById("select-kelas").value;
+      const nama = document.getElementById("select-nama").value;
+
+      if(!kelas || !nama) {
+        showInfoModal("Pilih Kelas dan Nama Anda terlebih dahulu!");
+        return;
+      }
+
+      randomizedQuestions = shuffleArray(rawQuestions).map(q => {
+        const originalKeyIndex = ["A", "B", "C", "D", "E"].indexOf(q.key);
+        const correctText = q.options[originalKeyIndex];
+        const shuffledOpts = shuffleArray(q.options);
+
+        return {
+          id: q.id,
+          q: q.q,
+          img: q.img || "",
+          options: shuffledOpts,
+          correctText: correctText
+        };
+      });
+
+      userAnswers = new Array(randomizedQuestions.length).fill(null);
+
+      document.getElementById("login-page").classList.add("hidden");
+      document.getElementById("quiz-page").classList.remove("hidden");
+      
+      quizActive = true;
+      showQuestion(0);
+    }
+
+    function showQuestion(idx) {
+      currentIdx = idx;
+      const total = randomizedQuestions.length;
+      document.getElementById("progress-text").innerText = `Progress: ${idx + 1} / ${total}`;
+      
+      const q = randomizedQuestions[idx];
+      document.getElementById("question-text").innerText = q.q;
+
+      // Render Gambar
+      const imgElement = document.getElementById("question-img");
+      if (q.img && q.img.trim() !== "") {
+        imgElement.src = q.img;
+        imgElement.classList.remove("hidden");
+      } else {
+        imgElement.src = "";
+        imgElement.classList.add("hidden");
+      }
+
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+
+      const prefixes = ["A", "B", "C", "D", "E"];
+      q.options.forEach((optText, i) => {
+        const char = prefixes[i];
+        const selectedAns = userAnswers[idx];
+        const isSelected = selectedAns && selectedAns.selectedText === optText;
+        
+        const div = document.createElement("div");
+        div.className = `option-item ${isSelected ? 'selected' : ''}`;
+        div.onclick = () => selectOption(optText);
+        
+        div.innerHTML = `
+          <div class="option-prefix">${char}</div>
+          <div>${optText}</div>
+        `;
+        optionsContainer.appendChild(div);
+      });
+
+      document.getElementById("btn-prev").style.visibility = idx === 0 ? "hidden" : "visible";
+      
+      if(idx === total - 1) {
+        document.getElementById("btn-next").classList.add("hidden");
+        document.getElementById("btn-submit").classList.remove("hidden");
+      } else {
+        document.getElementById("btn-next").classList.remove("hidden");
+        document.getElementById("btn-submit").classList.add("hidden");
+      }
+    }
+
+    function selectOption(optText) {
+      const q = randomizedQuestions[currentIdx];
+      userAnswers[currentIdx] = {
+        questionId: q.id,
+        selectedText: optText,
+        isCorrect: optText === q.correctText
+      };
+      showQuestion(currentIdx);
+    }
+
+    function changeQuestion(dir) {
+      const newIdx = currentIdx + dir;
+      if(newIdx >= 0 && newIdx < randomizedQuestions.length) {
+        showQuestion(newIdx);
+      }
+    }
+
+    // Pengganti confirm() dengan Custom Modal UI
+    function confirmSubmit() {
+      const unanswered = userAnswers.filter(a => a === null).length;
+      const titleEl = document.getElementById("submit-modal-title");
+      const msgEl = document.getElementById("submit-modal-msg");
+
+      if(unanswered > 0) {
+        titleEl.innerText = "Soal Belum Lengkap!";
+        msgEl.innerText = `Masih ada ${unanswered} soal yang belum Anda jawab. Apakah Anda yakin ingin tetap mengirimkan jawaban?`;
+      } else {
+        titleEl.innerText = "Konfirmasi Selesai Ujian";
+        msgEl.innerText = "Apakah Anda yakin ingin menyelesaikan dan mengirim seluruh jawaban Anda sekarang?";
+      }
+
+      document.getElementById("submit-modal").classList.remove("hidden");
+    }
+
+    function closeSubmitModal() {
+      document.getElementById("submit-modal").classList.add("hidden");
+    }
+
+    function executeSubmit() {
+      closeSubmitModal();
+      submitAnswers();
+    }
+
+    function submitAnswers() {
+      quizActive = false;
+      const kelas = document.getElementById("select-kelas").value;
+      const nama = document.getElementById("select-nama").value;
+
+      document.getElementById("quiz-page").classList.add("hidden");
+      document.getElementById("result-page").classList.remove("hidden");
+      document.getElementById("score-display").innerText = "Mengirim Jawaban...";
+
+      let formattedAnswers = new Array(rawQuestions.length).fill("");
+      userAnswers.forEach(ans => {
+        if(ans) {
+          const rawQ = rawQuestions.find(rq => rq.id === ans.questionId);
+          if(rawQ) {
+            const optIndex = rawQ.options.indexOf(ans.selectedText);
+            if(optIndex !== -1) {
+              formattedAnswers[ans.questionId - 1] = ["A", "B", "C", "D", "E"][optIndex];
+            }
+          }
+        }
+      });
+
+      const payload = {
+        action: "submitQuiz",
+        nama: nama,
+        kelas: kelas,
+        jawaban: formattedAnswers
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          document.getElementById("score-display").innerText = `Skor Anda: ${data.score}`;
+        } else {
+          showInfoModal("Error: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error("Detail Error:", err);
+        showInfoModal("Gagal koneksi ke server saat mengirim jawaban.");
+      });
+    }
+  </script>
+</body>
+</html>
