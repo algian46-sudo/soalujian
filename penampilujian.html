@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rekapitulasi Nilai & Remedial Kelas 9</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f4f6f9; margin: 0; padding: 20px; }
+    .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    
+    /* Header & Navigation */
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 20px; }
+    h2 { margin: 0; color: #333; }
+    .btn-change { background: #4a90e2; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    
+    /* Tables Layout */
+    .tables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .tables-grid { grid-template-columns: 1fr; } }
+    
+    .card { background: #fff; border-radius: 8px; border: 1px solid #e0e0e0; overflow: hidden; }
+    .card-header { padding: 12px 15px; font-weight: bold; font-size: 1.1em; text-align: center; color: white; }
+    .pass-header { background-color: #2e7d32; }
+    .remedial-header { background-color: #c62828; }
+    
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px 12px; text-align: left; font-size: 0.9em; border-bottom: 1px solid #eee; }
+    th { background: #f8f9fa; color: #555; }
+    .score-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.85em; }
+    .bg-pass { background-color: #e8f5e9; color: #2e7d32; }
+    .bg-remedial { background-color: #ffebee; color: #c62828; }
+    
+    /* Popup Modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+    .modal-content { background: white; padding: 30px; border-radius: 12px; text-align: center; width: 320px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+    .modal-content h3 { margin-top: 0; color: #333; }
+    .modal-btn { width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 6px; font-size: 1em; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+    .btn-91 { background-color: #3498db; color: white; }
+    .btn-92 { background-color: #9b59b6; color: white; }
+    .modal-btn:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+
+  <!-- Modal Popup Pilihan Kelas -->
+  <div id="classModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Pilih Kelas</h3>
+      <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">Silakan pilih kelas untuk menampilkan data hasil ujian:</p>
+      <button class="modal-btn btn-91" onclick="selectClass('9,1')">Kelas 9,1</button>
+      <button class="modal-btn btn-92" onclick="selectClass('9,2')">Kelas 9,2</button>
+    </div>
+  </div>
+
+  <!-- Konten Utama -->
+  <div class="container">
+    <div class="header">
+      <h2 id="classTitle">Data Hasil Ujian</h2>
+      <button class="btn-change" onclick="openModal()">Ganti Kelas</button>
+    </div>
+
+    <div class="tables-grid">
+      <!-- Tabel Tidak Remedial -->
+      <div class="card">
+        <div class="card-header pass-header">TIDAK REMEDIAL (Skor &ge; 78)</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Siswa</th>
+              <th style="width: 80px; text-align: center;">Skor</th>
+            </tr>
+          </thead>
+          <tbody id="passList"></tbody>
+        </table>
+      </div>
+
+      <!-- Tabel Remedial -->
+      <div class="card">
+        <div class="card-header remedial-header">REMEDIAL / SUSULAN (Skor &lt; 78)</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Siswa</th>
+              <th style="width: 130px; text-align: center;">Skor / Keterangan</th>
+            </tr>
+          </thead>
+          <tbody id="remedialList"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const studentData = [
+      { name: "ALYA KHOIRU NISA", class: "9,1", score: 45 },
+      { name: "ANGGA MULYANA", class: "9,1", score: 55 },
+      { name: "BAYU OKTAVIANA", class: "9,1", score: 71 },
+      { name: "CACA LISTIANA", class: "9,1", score: 66 },
+      { name: "DION", class: "9,1", score: 71 },
+      { name: "DIVO ARLYAN SEPTIYANDRA", class: "9,1", score: 63 },
+      { name: "EKA MEYLA NURSARI", class: "9,1", score: 64 },
+      { name: "ELYSA NIRMALA PUTRI", class: "9,1", score: 61 },
+      { name: "FENDI ERFAN NURAFADIL", class: "9,1", score: 65 },
+      { name: "ISMAIL MUDJAKI", class: "9,1", score: 56 },
+      { name: "JUAN HADRIANDRA MAULANA", class: "9,1", score: 50 },
+      { name: "KHOIRUDIN AL FAZRI", class: "9,1", score: 68 },
+      { name: "MARWAH OCTAVIANI", class: "9,1", score: 57 },
+      { name: "MUHAMAD FEBRIYANTO", class: "9,1", score: 45 },
+      { name: "MUHAMAD RIZQI ANDRIANSYAH", class: "9,1", score: 61 },
+      { name: "MUHAMAD YUDA ALFRIANSAH", class: "9,1", score: 68 },
+      { name: "MUHAMMAD NASAR", class: "9,1", score: "TIDAK MENGIKUTI UJIAN" },
+      { name: "MUHAMMAD AL KIFARI ARDAN", class: "9,1", score: 63 },
+      { name: "MUHAMMAD NUR FAJAR", class: "9,1", score: 60 },
+      { name: "NAZWA KIRANA RINJANI", class: "9,1", score: 74 },
+      { name: "NURUL ASYIFA AUDYA", class: "9,1", score: 64 },
+      { name: "NURUL AWALIA", class: "9,1", score: 66 },
+      { name: "RADITYA FIRMANSYAH", class: "9,1", score: "TIDAK MENGIKUTI UJIAN" },
+      { name: "RAFKA PRAYOGA", class: "9,1", score: 73 },
+      { name: "REFI ANDRIANSYAH", class: "9,1", score: 66 },
+      { name: "RIKI MAULANA", class: "9,1", score: 57 },
+      { name: "SITI FATIMAH", class: "9,1", score: 48 },
+      { name: "TASYA AULIA MINTANI", class: "9,1", score: 63 },
+      { name: "ZAHWA FRISILLIA AMANDA", class: "9,1", score: 81 },
+      { name: "ABDI FIRDAUS", class: "9,2", score: 59 },
+      { name: "AHMAD KHAERUL FAHMI", class: "9,2", score: 61 },
+      { name: "ANANDA PUTRA DARMAWAN", class: "9,2", score: 73 },
+      { name: "BERLIYANA SELPIRA", class: "9,2", score: 64 },
+      { name: "DIKA AMIN SEPTIAN", class: "9,2", score: 60 },
+      { name: "DINA AGUSTIN RAMADANI", class: "9,2", score: 60 },
+      { name: "DZALFA IBNU SANTOSA", class: "9,2", score: 64 },
+      { name: "GALIH FIRMANSYAH", class: "9,2", score: 63 },
+      { name: "IBNU RAMADAN SANTOSO", class: "9,2", score: 59 },
+      { name: "KAYILA PUTRI HAERUNISAH", class: "9,2", score: "TIDAK MENGIKUTI UJIAN" },
+      { name: "KELVIN AFRIYANSAH", class: "9,2", score: 64 },
+      { name: "MHAFY RIDWAN", class: "9,2", score: 66 },
+      { name: "MOCH. NABIL AL PARIZ", class: "9,2", score: 68 },
+      { name: "MOZA PRAMESTI PUTRI SUWANDI", class: "9,2", score: 64 },
+      { name: "MUHAMAD HAIKAL SYAKIR", class: "9,2", score: 59 },
+      { name: "MUHAMAD MISBAH", class: "9,2", score: 78 },
+      { name: "MUHAMMAD BAQIR HAGA", class: "9,2", score: 48 },
+      { name: "MUHAMMAD NASIR", class: "9,2", score: 61 },
+      { name: "NABILA AJUMI AGISTI", class: "9,2", score: 61 },
+      { name: "NAZRIAH HANNUM LBS", class: "9,2", score: "TIDAK MENGIKUTI UJIAN" },
+      { name: "OKSA NIARARIF", class: "9,2", score: 68 },
+      { name: "RESTINA MAWARDAH", class: "9,2", score: "TIDAK MENGIKUTI UJIAN" },
+      { name: "RIFQI DAFFA AL FIKRI", class: "9,2", score: 64 },
+      { name: "RIZKY MAULANA", class: "9,2", score: "TIDAK MENGIKUTI UJIAN" },
+      { name: "ROFIQUL HAMDI", class: "9,2", score: 64 },
+      { name: "SAKHWA NUR SAKINAH", class: "9,2", score: 63 },
+      { name: "SATRIA PUTRA PRATAMA", class: "9,2", score: 46 },
+      { name: "SULTAN HADI KUSUMA", class: "9,2", score: "TIDAK MENGIKUTI UJIAN" },
+      { name: "SULTAN YUSUF FIRDAUS", class: "9,2", score: 57 },
+      { name: "SYAMILA FAHRA SETIANA", class: "9,2", score: 68 },
+      { name: "SYAVIRA VITRIYAH", class: "9,2", score: 59 },
+      { name: "ZAHRA ALFIRA ROHMAN", class: "9,2", score: "TIDAK MENGIKUTI UJIAN" },
+      { name: "ZAHRA AURELLIA", class: "9,2", score: 66 }
+    ];
+
+    function selectClass(selectedClass) {
+      document.getElementById('classModal').style.display = 'none';
+      document.getElementById('classTitle').innerText = 'Data Nilai Siswa - Kelas ' + selectedClass;
+
+      const passList = document.getElementById('passList');
+      const remedialList = document.getElementById('remedialList');
+
+      passList.innerHTML = '';
+      remedialList.innerHTML = '';
+
+      const filtered = studentData.filter(s => s.class === selectedClass);
+
+      filtered.forEach(s => {
+        const isNumeric = typeof s.score === 'number';
+        const isPass = isNumeric && s.score >= 78;
+
+        const row = document.createElement('tr');
+        if (isPass) {
+          row.innerHTML = `
+            <td>${s.name}</td>
+            <td style="text-align: center;"><span class="score-badge bg-pass">${s.score}</span></td>
+          `;
+          passList.appendChild(row);
+        } else {
+          row.innerHTML = `
+            <td>${s.name}</td>
+            <td style="text-align: center;"><span class="score-badge bg-remedial">${s.score}</span></td>
+          `;
+          remedialList.appendChild(row);
+        }
+      });
+
+      if (passList.children.length === 0) {
+        passList.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#888;">Tidak ada siswa lulus.</td></tr>';
+      }
+      if (remedialList.children.length === 0) {
+        remedialList.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#888;">Tidak ada siswa remedial.</td></tr>';
+      }
+    }
+
+    function openModal() {
+      document.getElementById('classModal').style.display = 'flex';
+    }
+  </script>
+</body>
+</html>
