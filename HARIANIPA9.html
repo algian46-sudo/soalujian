@@ -71,6 +71,67 @@
       margin-bottom: 15px;
     }
 
+    /* STYLES Halaman Pengumuman / Maintenance */
+    .announcement-box {
+      text-align: center;
+      padding: 10px 5px;
+    }
+
+    .announcement-icon {
+      font-size: 3.5rem;
+      color: #f59e0b;
+      margin-bottom: 15px;
+    }
+
+    .announcement-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .timer-container {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .timer-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .countdown-display {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #38bdf8;
+      letter-spacing: 1px;
+    }
+
+    .btn-result {
+      display: inline-block;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #06b6d4, #3b82f6);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.3s;
+      box-sizing: border-box;
+    }
+
+    .btn-result:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
     .form-group {
       margin-bottom: 15px;
     }
@@ -126,7 +187,6 @@
       white-space: pre-line;
     }
 
-    /* CSS UNTUK ELEMEN GAMBAR SOAL */
     .question-image {
       max-width: 100%;
       height: auto;
@@ -202,9 +262,6 @@
       text-align: center;
     }
 
-    /* ========================================== */
-    /* CUSTOM MODAL UI STYLES                     */
-    /* ========================================== */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -287,8 +344,28 @@
       <p>SMP NEGERI 8 CIKARANG UTARA</p>
     </div>
 
-    <!-- HALAMAN LOGIN -->
-    <div id="login-page" class="card">
+    <!-- HALAMAN INFORMASI PENUTUPAN / MAINTENANCE -->
+    <div id="maintenance-page" class="card">
+      <div class="announcement-box">
+        <i class="fa-solid fa-clock-rotate-left announcement-icon"></i>
+        <div class="announcement-text">
+          HALAMAN INI DITUTUP SEMENTARA, DAN AKAN DIBUKA LAGI UNTUK KEGIATAN REMEDIAL PADA HARI JUM'AT 9 OKTOBER 2026 PUKUL 20.00 WIB HINGGA SABTU 10 OKTOBER 2026 PUKUL 04.00 WIB
+        </div>
+
+        <div class="timer-container">
+          <div class="timer-title" id="timer-title">WAKTU MENUJU REMEDIAL DIBUKA:</div>
+          <div class="countdown-display" id="countdown">00 jam 00 menit 00 detik</div>
+        </div>
+
+        <!-- SILAKAN GANTI ALAMAT LINK (href="#") DI BAWAH DENGAN LINK HASIL UJIAN ANDA -->
+        <a href="https://example.com/hasil-ujian" target="_blank" class="btn-result">
+          <i class="fa-solid fa-file-lines"></i> LIHAT HASIL UJIAN
+        </a>
+      </div>
+    </div>
+
+    <!-- HALAMAN LOGIN (AKAN TAMPIL OTOMATIS SAAT WAKTU TIBA) -->
+    <div id="login-page" class="card hidden">
       <h2 style="font-size: 1.1rem; margin-bottom: 15px; text-align: center;">Masuk Ke Ujian</h2>
       
       <div class="warning-box">
@@ -316,16 +393,10 @@
     <div id="quiz-page" class="card hidden">
       <div class="progress-bar" id="progress-text">Progress: 1 / 80</div>
 
-      <!-- Tampilan Soal (Tanpa Nomor Urut) -->
       <div class="question-box" id="question-text"></div>
-      
-      <!-- ELEMEN CONTAINER GAMBAR SOAL -->
       <img id="question-img" class="question-image hidden" alt="Gambar Soal">
-
-      <!-- Opsi Pilihan Ganda -->
       <div id="options-container"></div>
 
-      <!-- Navigasi -->
       <div class="nav-controls">
         <button class="btn-nav" id="btn-prev" onclick="changeQuestion(-1)"><i class="fa-solid fa-chevron-left"></i> Sebelum</button>
         <button class="btn-nav" id="btn-next" onclick="changeQuestion(1)">Berikut <i class="fa-solid fa-chevron-right"></i></button>
@@ -346,7 +417,7 @@
     </div>
   </div>
 
-  <!-- CUSTOM UI MODAL PERINGATAN KECURANGAN -->
+  <!-- CUSTOM UI MODALS -->
   <div id="cheat-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <i class="fa-solid fa-triangle-exclamation modal-icon-danger"></i>
@@ -356,7 +427,6 @@
     </div>
   </div>
 
-  <!-- CUSTOM UI MODAL KONFIRMASI SUBMIT -->
   <div id="submit-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <i class="fa-solid fa-circle-question modal-icon-warning"></i>
@@ -369,7 +439,6 @@
     </div>
   </div>
 
-  <!-- CUSTOM UI MODAL INFORMASI UMUM -->
   <div id="info-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <i class="fa-solid fa-circle-info modal-icon-warning"></i>
@@ -382,7 +451,52 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzFOLyaXpakHlcHcQWLRhL8F9METrVp3lCtX1TWL8y1MuviV3H38feb-eab7T0D4ME/exec";
 
-    // Data Bank Soal IPA Bab 1-9 (80 Soal) dengan Properti Gambar (img)
+    // Konfigurasi Jadwal Buka-Tutup Akses (WIB / GMT+7)
+    const startTime = new Date("2026-10-09T20:00:00+07:00").getTime();
+    const endTime = new Date("2026-10-10T04:00:00+07:00").getTime();
+
+    function updateAccessTimer() {
+      const now = new Date().getTime();
+      const maintenancePage = document.getElementById("maintenance-page");
+      const loginPage = document.getElementById("login-page");
+      const countdownEl = document.getElementById("countdown");
+      const timerTitleEl = document.getElementById("timer-title");
+
+      if (now < startTime) {
+        // Sebelum Waktu Remedial Dibuka
+        maintenancePage.classList.remove("hidden");
+        loginPage.classList.add("hidden");
+        
+        const distance = startTime - now;
+        const hours = Math.floor(distance / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        timerTitleEl.innerText = "WAKTU MENUJU REMEDIAL DIBUKA:";
+        countdownEl.innerText = `${hours} jam ${minutes} menit ${seconds} detik`;
+      } 
+      else if (now >= startTime && now <= endTime) {
+        // Waktu Remedial Sedang Berlangsung (Akses Dibuka)
+        maintenancePage.classList.add("hidden");
+        if (document.getElementById("quiz-page").classList.contains("hidden") && 
+            document.getElementById("result-page").classList.contains("hidden")) {
+          loginPage.classList.remove("hidden");
+        }
+      } 
+      else {
+        // Waktu Remedial Telah Berakhir
+        maintenancePage.classList.remove("hidden");
+        loginPage.classList.add("hidden");
+        document.getElementById("quiz-page").classList.add("hidden");
+        
+        timerTitleEl.innerText = "STATUS KEGIATAN:";
+        countdownEl.innerText = "KEGIATAN REMEDIAL TELAH SELESAI DITUTUP";
+      }
+    }
+
+    // Jalankan timer setiap 1 detik
+    setInterval(updateAccessTimer, 1000);
+
     const rawQuestions = [
       { id: 1, q: "Seorang anak laki-laki berusia 10 tahun mencatat tinggi badannya dari 130 cm menjadi 138 cm dalam setahun. Pada saat yang sama, ia mulai mahir bermain catur dan memahami strategi kompleks. Perubahan tinggi badan dan kemampuan bermain catur secara berurutan mencerminkan proses...", img: "", options: ["Perkembangan dan pertumbuhan", "Pertumbuhan dan perkembangan", "Pertumbuhan dan pembelahan", "Perkembangan dan diferensiasi", "Diferensiasi dan regenerasi"] },
       { id: 2, q: "Manakah di antara peristiwa berikut yang paling tepat dikategori sebagai proses perkembangan pada makhluk hidup?", img: "", options: ["Pembuatan sel sperma pada remaja laki-laki yang memasuki masa pubertas", "Penambahan berat badan bayi dari 3,2 kg menjadi 6,5 kg", "Bertambah panjangnya akar tanaman dari 5 cm menjadi 12 cm", "Penambahan jumlah daun pada tanaman dikotil dari 4 helai menjadi 10 helai", "Pembesaran lingkar batang pohon kayu akibat aktivitas cambium"] },
@@ -466,7 +580,6 @@
       { id: 80, q: "Pernyataan sintesis yang menggambarkan keterkaitan antara metamorfosis, hormon, dan kelangsungan hidup spesies amfibi/serangga adalah...", img: "", options: ["Metamorfosis adalah proses tanpa regulasi hormon yang berfungsi memperlambat pertumbuhan fisik", "Metamorfosis dikontrol secara ketat oleh sistem endokrin (hormon) untuk mengubah bentuk dan fungsi tubuh hewan, mengurangi kompetisi sumber daya antara fase muda dan dewasa, sehingga meningkatkan adaptabilitas dan kelangsungan hidup spesies", "Metamorfosis menyebabkan hewan muda kehilangan kemampuan bertelur saat dewasa", "Metamorfosis hanya terjadi jika lingkungan hidup hewan berada dalam kondisi stres", "Hormon pertumbuhan hanya bekerja pada fase imago untuk menghentikan metamorfosis"] }
     ];
 
-    // Pola Kunci Jawaban Bervariasi (A, B, C, D, E) untuk Soal 1 s.d 80
     const keysPattern = [
       "B","A","C","E","B","D","A","C","B","E",
       "D","A","C","E","B","A","C","E","B","D",
@@ -478,7 +591,6 @@
       "A","B","C","D","A","B","D","B","C","B"
     ];
 
-    // Terapkan pola kunci jawaban acak ke dalam array rawQuestions
     rawQuestions.forEach((item, index) => {
       item.key = keysPattern[index];
     });
@@ -489,7 +601,6 @@
     let currentIdx = 0;
     let quizActive = false;
 
-    // Fungsi Pengacak Array (Fisher-Yates)
     function shuffleArray(array) {
       let arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
@@ -500,11 +611,11 @@
     }
 
     window.onload = function() {
+      updateAccessTimer();
       fetchStudentData();
       setupAntiCheating();
     };
 
-    // Helper Modal UI
     function showInfoModal(msg) {
       document.getElementById("info-modal-msg").innerText = msg;
       document.getElementById("info-modal").classList.remove("hidden");
@@ -562,7 +673,6 @@
       selectNama.disabled = false;
     }
 
-    // Penanganan Anti Kecurangan dengan Custom Modal
     function setupAntiCheating() {
       window.addEventListener("blur", function() {
         if(quizActive) {
@@ -612,7 +722,6 @@
       const q = randomizedQuestions[idx];
       document.getElementById("question-text").innerText = q.q;
 
-      // Render Gambar
       const imgElement = document.getElementById("question-img");
       if (q.img && q.img.trim() !== "") {
         imgElement.src = q.img;
@@ -670,7 +779,6 @@
       }
     }
 
-    // Pengganti confirm() dengan Custom Modal UI
     function confirmSubmit() {
       const unanswered = userAnswers.filter(a => a === null).length;
       const titleEl = document.getElementById("submit-modal-title");
