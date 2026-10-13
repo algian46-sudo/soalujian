@@ -21,11 +21,6 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      /* TAMBAHAN: Mencegah teks diseleksi/di-copy secara keseluruhan */
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
     }
 
     body {
@@ -139,7 +134,6 @@
       margin: 10px 0 15px 0;
       display: block;
       border: 1px solid var(--card-border);
-      pointer-events: none; /* Mencegah klik kanan/save image as pada gambar */
     }
 
     .option-item {
@@ -1307,29 +1301,8 @@ const keysPattern = [
 
     window.onload = function() {
       fetchStudentData();
-      setupSecurityFeatures(); // Menjalankan fungsi pengaman tambahan
+      setupAntiCheating();
     };
-
-    // TAMBAHAN: Fungsi untuk menonaktifkan klik kanan, shortcut copy/inspect element
-    function setupSecurityFeatures() {
-      // 1. Nonaktifkan klik kanan
-      document.addEventListener("contextmenu", function(e) {
-        e.preventDefault();
-        showInfoModal("Klik kanan dinonaktifkan selama ujian berlangsung.");
-      });
-
-      // 2. Nonaktifkan kombinasi shortcut keyboard untuk copy, cut, select all, inspect element
-      document.addEventListener("keydown", function(e) {
-        if (
-          e.key === "F12" || 
-          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) || 
-          (e.ctrlKey && (e.key === "U" || e.key === "c" || e.key === "a" || e.key === "x" || e.key === "p"))
-        ) {
-          e.preventDefault();
-          showInfoModal("Aksi atau pintasan tombol ini dilarang selama ujian!");
-        }
-      });
-    }
 
     // Helper Modal UI
     function showInfoModal(msg) {
