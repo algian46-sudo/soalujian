@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PENILAIAN HARIAN SENI RUPA - 8</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent-color: #6366f1;
+      --accent-hover: #4f46e5;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .header-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 15px 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .header-card h1 {
+      font-size: 1.2rem;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+
+    .header-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      margin-bottom: 15px;
+    }
+
+    /* STYLES Halaman Pengumuman / Maintenance */
+    .announcement-box {
+      text-align: center;
+      padding: 10px 5px;
+    }
+
+    .announcement-icon {
+      font-size: 3.5rem;
+      color: #f59e0b;
+      margin-bottom: 15px;
+    }
+
+    .announcement-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .timer-container {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .timer-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .countdown-display {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #38bdf8;
+      letter-spacing: 1px;
+    }
+
+    .btn-result {
+      display: inline-block;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #06b6d4, #3b82f6);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.3s;
+      box-sizing: border-box;
+    }
+
+    .btn-result:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    select, button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    select:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #4f46e5, #06b6d4);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .progress-bar {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-align: right;
+    }
+
+    .question-box {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 10px;
+      white-space: pre-line;
+    }
+
+    .question-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin: 10px 0 15px 0;
+      display: block;
+      border: 1px solid var(--card-border);
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.4);
+      transition: 0.2s;
+    }
+
+    .option-item:hover {
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    .option-item.selected {
+      border-color: var(--accent-color);
+      background: rgba(99, 102, 241, 0.3);
+    }
+
+    .option-prefix {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 12px;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .option-item.selected .option-prefix {
+      background: var(--accent-color);
+    }
+
+    .nav-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn-nav {
+      width: 48%;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .warning-box {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: #fca5a5;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 25px 20px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-icon-danger {
+      font-size: 3rem;
+      color: #ef4444;
+      margin-bottom: 12px;
+    }
+
+    .modal-icon-warning {
+      font-size: 3rem;
+      color: #f59e0b;
+      margin-bottom: 12px;
+    }
+
+    .modal-card h3 {
+      font-size: 1.2rem;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .modal-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header-card">
+      <h1><i class="fa-solid fa-flask"></i> PENILAIAN HARIAN SENI RUPA - 8</h1>
+      <p>SMP NEGERI 8 CIKARANG UTARA</p>
+    </div>
+
+    <!-- HALAMAN INFORMASI PENUTUPAN / MAINTENANCE -->
+    <div id="maintenance-page" class="card">
+      <div class="announcement-box">
+        <i class="fa-solid fa-clock-rotate-left announcement-icon"></i>
+        <div class="announcement-text">
+          HALAMAN INI DITUTUP SEMENTARA, DAN AKAN DIBUKA PADA HARI SELASA 13 OKTOBER 2026 PUKUL 14.00
+        </div>
+
+        <div class="timer-container">
+          <div class="timer-title" id="timer-title">WAKTU MENUJU UJIAN DIBUKA:</div>
+          <div class="countdown-display" id="countdown">00 jam 00 menit 00 detik</div>
+        </div>
+
+        <!-- SILAKAN GANTI ALAMAT LINK (href="#") DI BAWAH DENGAN LINK HASIL UJIAN ANDA -->
+        <a href="#" target="_blank" class="btn-result">
+          <i class="fa-solid fa-file-lines"></i> LIHAT HASIL UJIAN
+        </a>
+      </div>
+    </div>
+
+    <!-- HALAMAN LOGIN (AKAN TAMPIL OTOMATIS SAAT WAKTU TIBA) -->
+    <div id="login-page" class="card hidden">
+      <h2 style="font-size: 1.1rem; margin-bottom: 15px; text-align: center;">Masuk Ke Ujian</h2>
+      
+      <div class="warning-box">
+        <i class="fa-solid fa-triangle-exclamation"></i> Dilarang keluar dari layar/tab selama ujian. Jika Anda keluar atau berpindah aplikasi, ujian akan otomatis direset dan soal diacak ulang!
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Kelas</label>
+        <select id="select-kelas" onchange="filterNama()">
+          <option value="">-- Memuat Kelas... --</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Nama Siswa</label>
+        <select id="select-nama" disabled>
+          <option value="">-- Pilih Kelas Terlebih Dahulu --</option>
+        </select>
+      </div>
+
+      <button class="btn-primary" onclick="startQuiz()">Mulai Kerjakan <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- HALAMAN KUIS -->
+    <div id="quiz-page" class="card hidden">
+      <div class="progress-bar" id="progress-text">Progress: 1 / 80</div>
+
+      <div class="question-box" id="question-text"></div>
+      <img id="question-img" class="question-image hidden" alt="Gambar Soal">
+      <div id="options-container"></div>
+
+      <div class="nav-controls">
+        <button class="btn-nav" id="btn-prev" onclick="changeQuestion(-1)"><i class="fa-solid fa-chevron-left"></i> Sebelum</button>
+        <button class="btn-nav" id="btn-next" onclick="changeQuestion(1)">Berikut <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+
+      <button class="btn-primary hidden" id="btn-submit" style="margin-top: 15px; background: linear-gradient(90deg, #22c55e, #10b981);" onclick="confirmSubmit()">
+        Kirim Semua Jawaban <i class="fa-solid fa-check"></i>
+      </button>
+    </div>
+
+    <!-- HALAMAN SELESAI -->
+    <div id="result-page" class="card hidden" style="text-align: center;">
+      <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: #22c55e; margin-bottom: 10px;"></i>
+      <h2>Ujian Selesai!</h2>
+      <p style="color: var(--text-muted); margin-top: 5px;">Jawaban Anda telah tersimpan di spreadsheet.</p>
+      <div id="score-display" style="font-size: 1.8rem; font-weight: bold; color: #38bdf8; margin: 20px 0;"></div>
+      <button class="btn-primary" onclick="location.reload()">Kembali ke Halaman Utama</button>
+    </div>
+  </div>
+
+  <!-- CUSTOM UI MODALS -->
+  <div id="cheat-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <i class="fa-solid fa-triangle-exclamation modal-icon-danger"></i>
+      <h3>Pelanggaran Terdeteksi!</h3>
+      <p>Anda terdeteksi meninggalkan layar/tab ujian. Sesuai aturan, ujian Anda direset dan urutan soal telah diacak kembali.</p>
+      <button class="btn-primary" style="background: #ef4444;" onclick="location.reload()">Mengerti & Ulangi Ujian</button>
+    </div>
+  </div>
+
+  <div id="submit-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <i class="fa-solid fa-circle-question modal-icon-warning"></i>
+      <h3 id="submit-modal-title">Konfirmasi Selesai</h3>
+      <p id="submit-modal-msg">Apakah Anda yakin ingin menyelesaikan dan mengirim jawaban Anda sekarang?</p>
+      <div class="modal-buttons">
+        <button class="btn-secondary" onclick="closeSubmitModal()">Batal</button>
+        <button class="btn-primary" style="margin-top:0; background: linear-gradient(90deg, #22c55e, #10b981);" onclick="executeSubmit()">Kirim Jawaban</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="info-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <i class="fa-solid fa-circle-info modal-icon-warning"></i>
+      <h3>Pemberitahuan</h3>
+      <p id="info-modal-msg">Pesan informasi</p>
+      <button class="btn-primary" onclick="closeInfoModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbywzzeQlVuHRBaHMH2LEHrVouySpH4A2p6l6c6Twwkr8vEB5KD_4Yi8OmD6ENKm21Jj/exec";
+
+    // Konfigurasi Jadwal Buka-Tutup Akses (WIB / GMT+7)
+    const startTime = new Date("2026-10-13T11:00:00+07:00").getTime();
+    const endTime = new Date("2026-10-13T15:50:00+07:00").getTime();
+
+    function updateAccessTimer() {
+      const now = new Date().getTime();
+      const maintenancePage = document.getElementById("maintenance-page");
+      const loginPage = document.getElementById("login-page");
+      const countdownEl = document.getElementById("countdown");
+      const timerTitleEl = document.getElementById("timer-title");
+
+      if (now < startTime) {
+        // Sebelum Waktu Remedial Dibuka
+        maintenancePage.classList.remove("hidden");
+        loginPage.classList.add("hidden");
+        
+        const distance = startTime - now;
+        const hours = Math.floor(distance / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        timerTitleEl.innerText = "WAKTU MENUJU REMEDIAL DIBUKA:";
+        countdownEl.innerText = `${hours} jam ${minutes} menit ${seconds} detik`;
+      } 
+      else if (now >= startTime && now <= endTime) {
+        // Waktu Remedial Sedang Berlangsung (Akses Dibuka)
+        maintenancePage.classList.add("hidden");
+        if (document.getElementById("quiz-page").classList.contains("hidden") && 
+            document.getElementById("result-page").classList.contains("hidden")) {
+          loginPage.classList.remove("hidden");
+        }
+      } 
+      else {
+        // Waktu Remedial Telah Berakhir
+        maintenancePage.classList.remove("hidden");
+        loginPage.classList.add("hidden");
+        document.getElementById("quiz-page").classList.add("hidden");
+        
+        timerTitleEl.innerText = "STATUS KEGIATAN:";
+        countdownEl.innerText = "KEGIATAN REMEDIAL TELAH SELESAI DITUTUP";
+      }
+    }
+
+    // Jalankan timer setiap 1 detik
+    setInterval(updateAccessTimer, 1000);
+
+    const rawQuestions = [
+  { 
+    id: 1, 
+    q: 'Sebuah karya seni rupa menggambarkan bangunan dengan seluruh garis proyeksi yang tidak sejajar horizon bertemu pada satu titik pusat di kejauhan. Analisislah prinsip utama yang sedang diterapkan oleh perupa tersebut...', 
+    img: '', 
+    options: [
+      'Mengaplikasikan teknik distorsi bentuk tiga dimensi bebas', 
+      'Menggunakan kaidah proyeksi sentral linear satu titik hilang', 
+      'Menentukan arah pencahayaan buatan dari satu sudut pandang', 
+      'Menyelaraskan bidang gambar simetris dua sisi berlawanan', 
+      'Menghilangkan unsur garis horizon secara mutlak dan total'
+    ] 
+  },
+  { 
+    id: 2, 
+    q: 'Perhatikan istilah etimologi seni rupa. Kata "Prospettiva" yang menjadi asal mula istilah perspektif berasal dari bahasa...', 
+    img: '', 
+    options: [
+      'Bahasa Italia yang memiliki arti sebagai gambar pandangan', 
+      'Bahasa Yunani Kuno yang berarti ruang pandang visual', 
+      'Bahasa Latin Klasik yang bermakna proyeksi garis datar', 
+      'Bahasa Spanyol Kuno yang berarti teknik garis cakrawala', 
+      'Bahasa Portugis Lama yang berarti titik tengah seniman'
+    ] 
+  },
+  { 
+    id: 3, 
+    q: 'Seorang siswa ingin menggambar sebuah koridor sekolah yang panjang secara realistis menggunakan satu titik hilang. Langkah awal operasional yang paling tepat setelah membuat garis horizon adalah...', 
+    img: '', 
+    options: [
+      'Membuat garis vertikal tebal di sisi kanan dan kiri bidang gambar secara bersamaan', 
+      'Menghapus seluruh garis bantu agar objek terlihat bersih tanpa ada coretan pensil', 
+      'Menentukan satu titik pusat di garis horizon sebagai tempat pertemuan garis proyeksi', 
+      'Menarik garis diagonal menyilang dari sudut kertas menuju bagian tengah kertas', 
+      'Memberikan warna pekat pada seluruh permukaan bidang dasar kertas gambar A4'
+    ] 
+  },
+  { 
+    id: 4, 
+    q: 'Mengapa pada teknik perspektif satu titik hilang, garis yang posisinya tegak lurus dengan garis horizon tetap harus digambar dalam posisi tegak lurus?...', 
+    img: '', 
+    options: [
+      'Karena hukum gravitasi bumi dan struktur penglihatan mata manusia konsisten vertikal', 
+      'Supaya keseimbangan komposisi geometris bidang gambar tetap terjaga dengan baik', 
+      'Disebabkan oleh keterbatasan alat ukur mistar segitiga dalam menarik garis miring', 
+      'Karena aturan baku seni rupa melarang adanya garis vertikal yang digambar miring', 
+      'Agar objek tidak mengalami distorsi miring yang merusak estetika bentuk bangunan asli'
+    ] 
+  },
+  { 
+    id: 5, 
+    q: 'Ketika seorang pengamat berdiri di depan sebuah kubus yang bidang depannya sejajar sempurna dengan bidang gambar, jenis perspektif yang paling efektif digunakan adalah...', 
+    img: '', 
+    options: [
+      'Proyeksi ortogonal dua titik hilang sudut miring penuh', 
+      'Perspektif satu titik hilang dengan bidang sejajar horizon', 
+      'Perspektif tiga titik hilang dari arah pandangan burung', 
+      'Proyeksi sentral bebas tanpa menggunakan garis horizon', 
+      'Perspektif garis miring simetris dua arah berlawanan'
+    ] 
+  },
+  { 
+    id: 6, 
+    q: 'Apa fungsi utama dari garis proyeksi atau garis bantu yang ditarik dari sudut objek menuju titik hilang dalam menggambar perspektif?...', 
+    img: '', 
+    options: [
+      'Menghitung jumlah total bidang datar pada objek tiga dimensi', 
+      'Menentukan arah jatuhnya bayangan objek akibat sinar matahari', 
+      'Membagi bidang kertas menjadi beberapa bagian sama besar', 
+      'Menciptakan ilusi kedalaman jarak jauh dan dekat secara visual', 
+      'Menghubungkan batas tepi kertas dengan bingkai lukisan'
+    ] 
+  },
+  { 
+    id: 7, 
+    q: 'Perhatikan pernyataan berikut: "Garis mendatar yang merepresentasikan ketinggian mata pengamat dan batas kemampuan pandang." Konsep ini merujuk pada...', 
+    img: '', 
+    options: [
+      'Garis horizon atau cakrawala dalam teknik perspektif', 
+      'Garis proyeksi bantu utama pada karya seni rupa murni', 
+      'Garis diagonal penentu titik tengah bidang ruang datar', 
+      'Garis vertikal pembatas ukuran objek di sisi luar', 
+      'Garis kontur luar yang mempertegas siluet benda'
+    ] 
+  },
+  { 
+    id: 8, 
+    q: 'Jika seorang perupa ingin membuat objek tampak semakin mengecil secara konsisten seiring bertambahnya jarak dari pandangan mata, prinsip geometri apa yang mendasarinya?...', 
+    img: '', 
+    options: [
+      'Pengurangan intensitas warna gelap secara berangsur', 
+      'Penambahan ketebalan garis tepi secara vertikal', 
+      'Perbandingan skala matematis pada titik hilang terpusat', 
+      'Penggunaan pensil jenis lunak pada area latar belakang', 
+      'Pembuatan garis horizontal melengkung di tepi kertas'
+    ] 
+  },
+  { 
+    id: 9, 
+    q: 'Evaluasilah pernyataan berikut mengenai pemilihan alat: "Penggunaan pensil 2B atau HB sangat dianjurkan untuk tahap awal membuat garis horizon dan titik hilang." Alasan logis dari anjuran tersebut adalah...', 
+    img: '', 
+    options: [
+      'Karena goresannya sangat pekat dan permanen sehingga tidak mudah luntur saat terkena tangan', 
+      'Karena tingkat kekerasannya ideal, menghasilkan garis tipis yang mudah dibersihkan dengan penghapus', 
+      'Karena jenis pensil tersebut dirancang khusus untuk mewarnai bidang ruang yang luas', 
+      'Karena harganya sangat terjangkau dan mudah ditemukan di setiap toko alat tulis kantor', 
+      'Karena kandungan grafitnya tidak akan merusak serat kertas gambar berukuran besar'
+    ] 
+  },
+  { 
+    id: 10, 
+    q: 'Manakah di antara fenomena alam berikut yang paling akurat merepresentasikan prinsip kerja perspektif satu titik hilang dalam kehidupan nyata?...', 
+    img: '', 
+    options: [
+      'Bayangan tubuh manusia di bawah terik matahari siang hari', 
+      'Gelombang air laut yang bergerak menuju garis pantai berpasir', 
+      'Bentuk awan di langit yang menyerupai gumpalan kapas putih', 
+      'Pantulan cahaya lampu jalan pada genangan air di malam hari', 
+      'Dua rel kereta api lurus yang tampak bertemu di satu titik di kejauhan'
+    ] 
+  },
+  { 
+    id: 11, 
+    q: 'Dalam merancang sebuah gambar interior ruangan (seperti lorong kelas) dengan satu titik hilang, posisi titik hilang yang paling ideal diletakkan di mana agar tercipta keseimbangan visual?...', 
+    img: '', 
+    options: [
+      'Tepat di sudut kiri atas kertas gambar agar komposisi tampak dinamis', 
+      'Di luar batas kertas bagian bawah agar ruang terasa sangat sempit', 
+      'Menempel pada garis tepi vertikal sebelah kanan bidang gambar', 
+      'Di tengah-tengah garis horizon yang berada di area pandang pengamat', 
+      'Mengikuti arah garis diagonal yang ditarik secara acak dan bebas'
+    ] 
+  },
+  { 
+    id: 12, 
+    q: 'Apa yang akan terjadi pada hasil gambar perspektif satu titik hilang jika bidang depan objek digambar dalam posisi miring tidak sejajar dengan garis horizon?...', 
+    img: '', 
+    options: [
+      'Gambar akan berubah menjadi sistem perspektif dua titik hilang secara otomatis', 
+      'Objek akan terlihat lebih simetris dan memiliki kedalaman yang sangat sempurna', 
+      'Garis proyeksi tidak akan lagi menuju satu titik pusat melainkan menyebar luas', 
+      'Seluruh garis vertikal akan berubah menjadi garis horizontal yang kaku', 
+      'Kualitas estetika gambar meningkat drastis karena mengikuti kaidah modern'
+    ] 
+  },
+  { 
+    id: 13, 
+    q: 'Analisislah korelasi ilmu dalam teknik menggambar perspektif. Disiplin ilmu apa saja yang mendasari terciptanya kaidah perspektif yang akurat?...', 
+    img: '', 
+    options: [
+      'Biologi sel, kimia bahan warna, dan sejarah kebudayaan lokal', 
+      'Sosiologi perkotaan, ekonomi kreatif, dan teknik sipil bangunan', 
+      'Seni rupa, fisika pengindraan mata, dan matematika geometri', 
+      'Sastra bahasa, antropologi budaya, dan geografi tata ruang', 
+      'Astronomi tata surya, meteorologi cuaca, dan logika informatika'
+    ] 
+  },
+  { 
+    id: 14, 
+    q: 'Ketika seorang siswa menyelesaikan gambar perspektif satu titik hilang, langkah terakhir yang wajib dilakukan sebelum pewarnaan adalah...', 
+    img: '', 
+    options: [
+      'Menambahkan garis horizon baru di bagian atas objek agar terlihat ramai', 
+      'Mempertebal seluruh garis bantu dengan pensil warna merah menyala', 
+      'Memotong kertas gambar mengikuti bentuk tepi objek bangunan utama', 
+      'Menutup seluruh permukaan gambar dengan lapisan cat minyak tebal', 
+      'Menghapus garis-garis proyeksi bantu yang sudah tidak diperlukan pada objek'
+    ] 
+  },
+  { 
+    id: 15, 
+    q: 'Mengapa pemilihan kertas gambar berukuran A4 atau A3 dengan tekstur yang tidak terlalu tipis sangat disarankan dalam latihan menggambar perspektif?...', 
+    img: '', 
+    options: [
+      'Supaya hasil goresan pensil terlihat sangat mengkilap seperti logam mulia', 
+      'Agar kertas tidak mudah robek akibat gesekan penghapus yang berulang-ulang', 
+      'Karena ukuran tersebut merupakan standar internasional pameran seni lukis', 
+      'Agar proses penyimpanan dokumen di dalam tas sekolah menjadi lebih praktis', 
+      'Supaya cat air dapat meresap secara merata tanpa merusak sisi belakang kertas'
+    ] 
+  },
+  { 
+    id: 16, 
+    q: 'Jika garis horizon digambar tepat di tengah-tengah bidang kertas vertikal, kesan pandangan apa yang akan dirasakan oleh pengamat terhadap objek di dalam gambar?...', 
+    img: '', 
+    options: [
+      'Pengamat seolah-olah melihat objek dari posisi berdiri normal sejajar mata', 
+      'Pengamat merasa sedang melihat objek dari atas menara yang sangat tinggi', 
+      'Pengamat merasa berada di posisi sangat rendah melihat ke arah atas langit', 
+      'Objek tampak melayang di udara tanpa berpijak pada landasan yang nyata', 
+      'Ruangan di dalam gambar terasa sangat sempit dan menekan jiwa pengamat'
+    ] 
+  },
+  { 
+    id: 17, 
+    q: 'Perhatikan pernyataan berikut: "Semua garis yang tidak sejajar atau tidak tegak lurus dengan horizon akan bertemu di satu titik hilang." Prinsip ini merupakan inti dari...', 
+    img: '', 
+    options: [
+      'Aturan baku pembuatan ilustrasi kartun karikatur', 
+      'Konsep dasar pembesaran objek menggunakan grid', 
+      'Kaidah dasar teknik one point linear perspective', 
+      'Teori pencampuran warna primer dan sekunder', 
+      'Teknik melukis menggunakan medium cat akrilik'
+    ] 
+  },
+  { 
+    id: 18, 
+    q: 'Bagaimana cara mendesain objek kubus agar terlihat memiliki volume tiga dimensi yang kuat pada teknik satu titik hilang?...', 
+    img: '', 
+    options: [
+      'Memberikan arsiran gelap terang yang sangat kontras di seluruh sisi bagian luar kubus', 
+      'Menambahkan bayangan hitam pekat di bawah dasar kubus tanpa menggunakan garis proyeksi', 
+      'Menggambar kubus dengan ukuran sangat besar menutupi seluruh garis horizon gambar', 
+      'Memutar posisi kubus hingga membentuk sudut miring 45 derajat terhadap bidang', 
+      'Menghubungkan setiap sudut bidang depan ke titik hilang lalu memotongnya dengan garis penutup sejajar'
+    ] 
+  },
+  { 
+    id: 19, 
+    q: 'Evaluasilah kesalahan umum yang sering dilakukan pemula saat menggambar perspektif satu titik hilang...', 
+    img: '', 
+    options: [
+      'Menggunakan pensil jenis 2B yang terlalu lunak untuk membuat sketsa garis horizon tipis', 
+      'Lupa menarik garis proyeksi menuju satu titik pusat sehingga objek tampak pipih dua dimensi', 
+      'Terlalu sering membersihkan sisa rautan pensil di atas meja gambar secara berkala', 
+      'Mengabaikan penggunaan penggaris panjang saat menarik garis vertikal tegak lurus', 
+      'Menentukan posisi titik hilang di atas garis horizon secara sembarangan tanpa hitungan'
+    ] 
+  },
+  { 
+    id: 20, 
+    q: 'Apa tujuan utama dari penyusunan tahapan belajar mulai dari perspektif titik, garis, bidang, hingga bangun ruang dalam modul pembelajaran seni rupa?...', 
+    img: '', 
+    options: [
+      'Memastikan siswa dapat menyelesaikan seluruh tugas dalam waktu singkat sehari', 
+      'Menghindari kebosanan siswa saat menghadapi soal-soal ujian teori tertulis', 
+      'Mempermudah guru dalam memberikan nilai akhir rapor tanpa praktik langsung', 
+      'Melatih pemahaman siswa secara sistematis dari konsep paling dasar hingga kompleks', 
+      'Membatasi kreativitas siswa agar sesuai dengan contoh di buku pegangan'
+    ] 
+  },
+  { 
+    id: 21, 
+    q: 'Ketika menggambar sebuah bangunan sudut jalan di mana dua sisi dindingnya sama-sama membentuk sudut terhadap garis horizon, teknik perspektif apa yang paling tepat digunakan?...', 
+    img: '', 
+    options: [
+      'Perspektif satu titik hilang dengan bidang sejajar', 
+      'Proyeksi ortogonal pandangan atas secara mutlak', 
+      'Perspektif dua titik hilang (two point perspective)', 
+      'Perspektif tiga titik hilang arah pandang burung', 
+      'Teknik grid skala perbandingan sama sisi datar'
+    ] 
+  },
+  { 
+    id: 22, 
+    q: 'Perhatikan karakteristik sudut pandang mata dalam seni rupa. Jika posisi objek berada di bawah garis horizon sehingga pengamat seolah melihat dari atas, sudut pandang ini disebut...', 
+    img: '', 
+    options: [
+      'Sudut pandang mata normal (eye level view)', 
+      'Sudut pandang mata burung (bird\'s eye view)', 
+      'Sudut pandang mata katak (worm\'s eye view)', 
+      'Sudut pandang bebas tanpa garis horizon', 
+      'Sudut pandang simetris dua arah berlawanan'
+    ] 
+  },
+  { 
+    id: 23, 
+    q: 'Apa karakteristik utama yang membedakan antara perspektif satu titik hilang dengan perspektif dua titik hilang pada objek balok atau kubus?...', 
+    img: '', 
+    options: [
+      'Posisi bidang datar objek pada perspektif dua titik hilang tidak ada yang sejajar dengan horizon melainkan membentuk sudut', 
+      'Perspektif dua titik hilang hanya memerlukan satu garis bantu vertikal tanpa ada garis proyeksi samping', 
+      'Garis horizon pada perspektif dua titik hilang selalu digambar dalam posisi melengkung menyerupai busur', 
+      'Penggunaan titik hilang pada sistem dua titik diletakkan tepat di tengah-tengah bidang depan objek', 
+      'Objek pada perspektif dua titik hilang digambar tanpa menggunakan bantuan penggaris lurus sama sekali'
+    ] 
+  },
+  { 
+    id: 24, 
+    q: 'Dalam praktik menggambar perspektif dua titik hilang, di mana letak posisi kedua titik hilang (TH 1 dan TH 2) yang standar pada bidang gambar?...', 
+    img: '', 
+    options: [
+      'Berhimpitan tepat di tengah-tengah garis horizon utama kertas', 
+      'Ditempatkan secara vertikal di bagian atas dan bawah kertas', 
+      'Dibuat di luar batas kertas bagian sudut kiri dan kanan bawah', 
+      'Terletak berjauhan di ujung kanan dan kiri pada garis horizon', 
+      'Diletakkan bersisian sejajar dengan garis tepi vertikal kertas'
+    ] 
+  },
+  { 
+    id: 25, 
+    q: 'Analisislah fungsi dari skala kekerasan pensil dalam tahapan menggambar. Pensil dengan kode H atau HB sangat ideal digunakan untuk...', 
+    img: '', 
+    options: [
+      'Melakukan proses finishing mempertebal objek karena menghasilkan goresan sangat hitam', 
+      'Memberikan arsiran gelap terang pada seluruh permukaan bidang ruang tiga dimensi', 
+      'Menghapus kesalahan garis yang sudah terlanjur ditebalkan dengan tinta hitam', 
+      'Mewarnai latar belakang gambar agar tampak kontras dengan objek utama bangunan', 
+      'Membuat garis proyeksi dan sketsa awal karena sifatnya yang keras dan tidak terlalu pekat'
+    ] 
+  },
+  { 
+    id: 26, 
+    q: 'Manakah pensil dalam rentang skala kekerasan yang paling cocok digunakan untuk tahap finishing atau mempertebal garis akhir objek agar terlihat tegas dan pekat?...', 
+    img: '', 
+    options: [
+      'Pensil dengan kode H (keras dan tipis)', 
+      'Pensil dengan kode B (lunak dan pekat)', 
+      'Pensil dengan kode HB (sedang netral)', 
+      'Pensil dengan kode 9H (sangat keras)', 
+      'Pensil mekanik ukuran 0.5 milimeter tipis'
+    ] 
+  },
+  { 
+    id: 27, 
+    q: 'Jika seorang pengamat berposisi sejajar dengan objek (objek setinggi garis horizon), jenis sudut pandang apa yang sedang dialami oleh pengamat tersebut?...', 
+    img: '', 
+    options: [
+      'Sudut pandang mata normal (eye level view)', 
+      'Sudut pandang mata burung (bird\'s eye view)', 
+      'Sudut pandang mata katak (worm\'s eye view)', 
+      'Sudut pandang udara bebas tanpa batas', 
+      'Sudut pandang diagonal miring menyilang'
+    ] 
+  },
+  { 
+    id: 28, 
+    q: 'Ketika seorang siswa ingin menggambar objek dari bawah ke atas (seolah melihat gedung pencakar langit dari permukaan tanah), posisi objek diletakkan di mana terhadap garis horizon?...', 
+    img: '', 
+    options: [
+      'Objek berada di bawah garis horizon (sudut pandang mata burung)', 
+      'Objek berada tepat memotong garis horizon di tengah kertas', 
+      'Objek berada di atas garis horizon (sudut pandang mata katak)', 
+      'Objek diletakkan di luar area kertas gambar bagian samping', 
+      'Objek disembunyikan di balik garis horizon secara horizontal'
+    ] 
+  },
+  { 
+    id: 29, 
+    q: 'Evaluasilah kaidah dasar menggambar perspektif dua titik hilang. Mengapa garis vertikal pada objek (seperti tiang atau sudut dinding) tetap harus digambar tegak lurus?...', 
+    img: '', 
+    options: [
+      'Supaya bangunan terlihat miring dan dinamis mengikuti arah angin di sekitarnya', 
+      'Karena aturan seni rupa mewajibkan seluruh garis gambar berbentuk lurus tegak', 
+      'Untuk menghemat penggunaan waktu dalam menarik garis proyeksi tambahan', 
+      'Disebabkan oleh keterbatasan mata manusia dalam melihat objek vertikal', 
+      'Karena garis vertikal tidak terpengaruh oleh titik hilang horizontal yang berada di cakrawala'
+    ] 
+  },
+  { 
+    id: 30, 
+    q: 'Dalam materi perspektif bangun majemuk (dua atau lebih bangun dalam satu bidang), apa prinsip utama yang harus dipegang oleh perupa?...', 
+    img: '', 
+    options: [
+      'Setiap bangun wajib menggunakan titik hilang yang berbeda agar tidak saling tumpang tindih', 
+      'Setiap bangun memiliki perspektifnya sendiri namun tetap mengacu pada dua titik hilang yang sama', 
+      'Bangunan kedua tidak boleh menggunakan garis proyeksi agar gambar terlihat lebih sederhana', 
+      'Posisi garis horizon harus diubah-ubah untuk setiap bangun yang digambar di atas kertas', 
+      'Seluruh bangun harus digambar dengan ukuran yang persis sama tanpa ada variasi skala'
+    ] 
+  },
+  { 
+    id: 31, 
+    q: 'Bagaimana cara matematis yang tepat untuk mencari titik tengah suatu bidang datar berbentuk persegi atau persegi panjang dalam perspektif dua titik hilang?...', 
+    img: '', 
+    options: [
+      'Mengukur panjang sisi menggunakan penggaris centimeter lalu membaginya dengan angka dua', 
+      'Membuat garis diagonal menyilang dari sudut-sudut bidang, perpotongannya adalah titik tengah', 
+      'Menarik garis lurus horizontal dari titik hilang menuju ke tengah-tengah sisi samping', 
+      'Menghitung jumlah kotak grid yang ada di dalam bidang tersebut secara manual', 
+      'Memperkirakan letak tengah dengan pandangan mata tanpa bantuan garis diagonal'
+    ] 
+  },
+  { 
+    id: 32, 
+    q: 'Aspek penilaian estetis dalam karya perspektif mencakup "Kesan Ruang". Indikator utama apa yang menunjukkan bahwa sebuah gambar berhasil mencapai kesan ruang tiga dimensi?...', 
+    img: '', 
+    options: [
+      'Gambar menunjukkan kedalaman, volume, dan proporsi jarak jauh-dekat yang konsisten', 
+      'Penggunaan warna cat yang sangat cerah dan mencolok pada seluruh bidang objek', 
+      'Ketebalan garis tepi yang sama rata di setiap sudut bangunan tanpa pengecualian', 
+      'Jumlah objek bangunan yang digambar sangat banyak memenuhi seluruh kertas', 
+      'Kebersihan permukaan kertas dari sisa debu penghapus pensil grafit'
+    ] 
+  },
+  { 
+    id: 33, 
+    q: 'Apa keunggulan utama dari penggunaan teknik perspektif dua titik hilang dibandingkan satu titik hilang dalam penggambaran objek arsitektur luar ruangan (eksterior)?..', 
+    img: '', 
+    options: [
+      'Proses pengerjaannya jauh lebih cepat karena tidak memerlukan garis proyeksi bantu yang rumit', 
+      'Hasil gambar terlihat jauh lebih wajar, dinamis, dan tidak statis karena merefleksikan sudut pandang nyata', 
+      'Memungkinkan perupa untuk menggambar objek tanpa harus membuat garis horizon terlebih dahulu', 
+      'Sangat cocok digunakan khusus untuk menggambar interior ruangan tertutup yang sempit', 
+      'Menghilangkan kebutuhan akan ketelitian penggaris karena sudut dibentuk secara bebas'
+    ] 
+  },
+  { 
+    id: 34, 
+    q: 'Perhatikan langkah praktik perspektif dua titik hilang. Setelah menarik titik sudut vertikal ke TH 1 dan TH 2, langkah konstruktif berikutnya adalah...', 
+    img: '', 
+    options: [
+      'Menentukan batas ketebalan atau lebar objek dengan menarik garis vertikal penutup', 
+      'Langsung mewarnai seluruh bidang objek menggunakan cat air atau spidol pekat', 
+      'Menghapus garis horizon dan titik hilang agar gambar tampak seperti lukisan abstrak', 
+      'Menambahkan detail jendela dan pintu secara acak tanpa memperhatikan garis proyeksi', 
+      'Membalikkan posisi kertas gambar untuk melihat keseimbangan dari arah belakang'
+    ] 
+  },
+  { 
+    id: 35, 
+    q: 'Evaluasilah kriteria penilaian kualitas teknis dalam rubrik evaluasi praktik seni rupa. Manakah indikator yang termasuk dalam kualitas teknis persiapan dan proses?...', 
+    img: '', 
+    options: [
+      'Kelengkapan unsur estetis, penerapan kaidah perspektif, dan kesan ruang 3D', 
+      'Pemilihan warna cat yang harmonis dan kesesuaian tema dengan alam sekitar', 
+      'Kecepatan siswa dalam mengumpulkan tugas sebelum jam pelajaran berakhir', 
+      'Jumlah coretan garis bantu yang berhasil dihapus hingga bersih tanpa bekas', 
+      'Kesiapan alat, kebersihan, keseriusan, dan kemandirian siswa selama berkarya'
+    ] 
+  },
+  { 
+    id: 36, 
+    q: 'Mengapa kertas manila atau kertas drawing yang memiliki permukaan halus dan kuat sangat direkomendasikan untuk praktik perspektif dua titik hilang yang kompleks?...', 
+    img: '', 
+    options: [
+      'Warnanya yang sangat gelap membuat garis pensil putih terlihat lebih kontras', 
+      'Permukaannya yang kuat tahan terhadap goresan penggaris dan penghapusan berulang', 
+      'Harganya yang sangat mahal menjamin kualitas karya seni bernilai tinggi', 
+      'Teksturnya yang kasar membantu menahan posisi pensil agar tidak mudah selip', 
+      'Ukurannya sudah terpotong secara otomatis sesuai standar internasional lukis'
+    ] 
+  },
+  { 
+    id: 37, 
+    q: 'Apa fungsi utama dari titik hilang dalam sistem proyeksi perspektif dua titik hilang jika bukan sebagai titik sentral pandangan?...', 
+    img: '', 
+    options: [
+      'Berfungsi sebagai pusat rotasi saat kertas gambar diputar ke arah kanan atau kiri', 
+      'Berfungsi sebagai titik proyeksi tempat bertemunya garis-garis sisi objek yang membentuk sudut', 
+      'Berfungsi sebagai penentu arah jatuhnya bayangan objek terhadap sinar matahari', 
+      'Berfungsi sebagai batas akhir area warna yang boleh diwarnai oleh siswa', 
+      'Berfungsi sebagai titik pusat lingkaran untuk membuat bentuk dekoratif'
+    ] 
+  },
+  { 
+    id: 38, 
+    q: 'Jika seorang siswa salah meletakkan posisi titik hilang terlalu berdekatan di tengah garis horizon pada perspektif dua titik hilang, distorsi apa yang akan terjadi pada gambar objek?...', 
+    img: '', 
+    options: [
+      'Objek bangunan akan berubah menjadi bentuk dua dimensi yang pipih dan melebar', 
+      'Garis vertikal pada bangunan akan otomatis berubah menjadi garis horizontal melengkung', 
+      'Objek bangunan akan terlihat terlalu lancip, terdistorsi ekstrem, dan tidak proporsional', 
+      'Seluruh garis proyeksi akan sejajar satu sama lain tanpa pernah saling bertemu', 
+      'Kualitas gambar menjadi sangat sempurna layaknya foto profesional kamera digital'
+    ] 
+  },
+  { 
+    id: 39, 
+    q: 'Analisislah perbedaan mendasar antara sudut pandang mata burung (bird\'s eye view) dan mata katak (worm\'s eye view) dalam hal letak objek terhadap garis horizon...', 
+    img: '', 
+    options: [
+      'Mata burung menempatkan objek di bawah horizon, sedangkan mata katak menempatkan objek di atas horizon', 
+      'Mata burung menggunakan satu titik hilang, sedangkan mata katak menggunakan tiga titik hilang', 
+      'Mata burung melihat dari arah samping kanan, sedangkan mata katak melihat dari arah kiri', 
+      'Mata burung digambar menggunakan pensil lunak, sedangkan mata katak menggunakan pensil keras', 
+      'Tidak ada perbedaan signifikan karena keduanya menggunakan posisi garis horizon yang sama'
+    ] 
+  },
+  { 
+    id: 40, 
+    q: 'Bagaimana cara mengevaluasi apakah sebuah karya perspektif dua titik hilang telah dibuat sesuai dengan kaidah geometri yang benar?...', 
+    img: '', 
+    options: [
+      'Menghitung jumlah total garis vertikal yang ada pada setiap sudut bangunan balok', 
+      'Menilai kecerahan warna yang digunakan pada bagian atap dan dinding bangunan', 
+      'Memeriksa apakah semua garis sisi horizontal objek telah ditarik secara akurat menuju ke TH 1 dan TH 2', 
+      'Memastikan tidak ada satu pun garis bantu yang tersisa di seluruh permukaan kertas', 
+      'Mengukur berat kertas gambar menggunakan timbangan digital presisi tinggi'
+    ] 
+  },
+  { 
+    id: 41, 
+    q: 'Apa definisi konseptual dari teknik "Grid" dalam seni rupa kaitannya dengan upaya memperbesar atau menyalin suatu gambar secara akurat?...', 
+    img: '', 
+    options: [
+      'Jaringan bujur sangkar atau kotak-kotak yang saling berhimpitan membentuk jejaring bantu', 
+      'Garis diagonal panjang yang membagi bidang kertas menjadi dua bagian simetris', 
+      'Teknik pewarnaan gradasi menggunakan cat air pada bidang kertas bertekstur kasar', 
+      'Sistem penomoran halaman buku gambar untuk keperluan inventaris karya seni', 
+      'Alat ukur khusus berupa mistar geser untuk menghitung luas permukaan gambar'
+    ] 
+  },
+  { 
+    id: 42, 
+    q: 'Dalam konteks seni rupa dan matematika geometri, apa yang dimaksud dengan "Skala" pada teknik pembesaran gambar grid?...', 
+    img: '', 
+    options: [
+      'Tingkat ketebalan garis pensil yang digunakan untuk membuat kotak-kotak grid', 
+      'Jumlah total kotak bujur sangkar yang terdapat pada satu lembar kertas gambar', 
+      'Perbandingan ukuran besarnya gambar hasil salinan dengan keadaan objek yang sebenarnya', 
+      'Jarak antara garis horizon dengan batas tepi bawah kertas gambar utama', 
+      'Derajat kemiringan sudut pandang saat melihat objek asli di alam terbuka'
+    ] 
+  },
+  { 
+    id: 43, 
+    q: 'Jika sebuah gambar asli pada foto memiliki ukuran kotak grid 1 cm × 1 cm, dan perupa ingin memperbesarnya dengan faktor skala 1:5 pada kertas baru, berapa ukuran setiap kotak grid target yang harus dibuat?...', 
+    img: '', 
+    options: [
+      '1 cm × 1 cm per kotak', 
+      '5 cm × 5 cm per kotak', 
+      '0.2 cm × 0.2 cm per kotak', 
+      '10 cm × 10 cm per kotak', 
+      '25 cm × 25 cm per kotak'
+    ] 
+  },
+  { 
+    id: 44, 
+    q: 'Mengapa teknik grid sangat populer dan banyak digunakan oleh para seniman tradisional sebelum era digital untuk memperbesar karya seni?...', 
+    img: '', 
+    options: [
+      'Karena proses pembuatannya tidak memerlukan alat bantu penggaris sama sekali', 
+      'Karena hasil akhirnya selalu berupa lukisan cat minyak bernilai jual sangat tinggi', 
+      'Karena teknik ini mampu menjaga keakuratan proporsi objek secara tinggi dan presisi manual', 
+      'Karena teknik grid dapat menggantikan fungsi pensil warna dan kuas lukis', 
+      'Karena menghemat penggunaan kertas gambar ukuran besar secara drastis'
+    ] 
+  },
+  { 
+    id: 45, 
+    q: 'Analisislah hubungan antara ukuran bujur sangkar grid dengan tingkat detail hasil gambar. Apa yang terjadi jika ukuran kotak grid dibuat semakin kecil (rapat)?..', 
+    img: '', 
+    options: [
+      'Waktu pengerjaan gambar menjadi sangat cepat tanpa memerlukan ketelitian', 
+      'Proporsi objek akan mengalami distorsi miring yang tidak beraturan', 
+      'Detail gambar yang dihasilkan akan semakin akurat dan menyerupai bentuk aslinya', 
+      'Jumlah garis bantu yang harus dihapus menjadi jauh lebih sedikit', 
+      'Kualitas warna karya seni akan menurun drastis akibat terlalu banyak garis'
+    ] 
+  },
+  { 
+    id: 46, 
+    q: 'Apa fungsi utama dari pemberian nomor atau abjad pada setiap baris dan kolom kotak grid di atas objek dan media baru?...', 
+    img: '', 
+    options: [
+      'Memudahkan pelacakan posisi koordinat kotak agar tidak salah saat menyalin detail gambar', 
+      'Menghitung total harga jual karya seni berdasarkan jumlah kotak yang terisi', 
+      'Menentukan urutan warna cat yang harus diaplikasikan pada setiap bagian gambar', 
+      'Menghindari kebingungan saat menghapus garis grid setelah sketsa selesai', 
+      'Menandai bagian kertas yang boleh disobek karena mengalami kerusakan'
+    ] 
+  },
+  { 
+    id: 47, 
+    q: 'Berdasarkan materi panduan teknik grid, apa perbedaan perlakuan garis grid antara menyalin foto/gambar di kertas dengan menyalin peta geografis?...', 
+    img: '', 
+    options: [
+      'Grid pada peta harus diwarnai dengan spidol hitam pekat, sedangkan foto menggunakan pensil tipis', 
+      'Grid pada foto umumnya harus dihapus setelah selesai, sedangkan grid pada peta biasanya tidak perlu dihapus', 
+      'Foto menggunakan skala 1:10, sedangkan peta selalu menggunakan skala 1:1', 
+      'Grid pada foto dibuat berbentuk lingkaran, sedangkan pada peta berbentuk segitiga', 
+      'Tidak ada perbedaan perlakuan sama sekali antara foto dan peta dalam teknik grid'
+    ] 
+  },
+  { 
+    id: 48, 
+    q: 'Evaluasilah rumus perhitungan ukuran hasil pada kalkulator skala grid: "Ukuran Hasil = Ukuran Asli × Faktor Skala". Jika ukuran asli suatu elemen gambar adalah 2 cm dan skala pembesaran adalah 4, berapa ukuran pada kertas target?...', 
+    img: '', 
+    options: [
+      '6 cm', 
+      '8 cm', 
+      '2 cm', 
+      '0.5 cm', 
+      '16 cm'
+    ] 
+  },
+  { 
+    id: 49, 
+    q: 'Mengapa dalam pembuatan grid di atas kertas gambar, perupa dianjurkan untuk menggunakan pensil berjenis keras dengan goresan yang sangat tipis?...', 
+    img: '', 
+    options: [
+      'Agar garis grid tersebut nantinya lebih mudah dihapus secara bersih tanpa meninggalkan bekas kotor', 
+      'Supaya garis grid terlihat sangat mencolok dan artistik sebagai bagian dari karya akhir', 
+      'Karena pensil keras tidak akan pernah patah meskipun ditekan dengan tenaga kuat', 
+      'Untuk memastikan garis grid bersifat permanen dan tidak bisa diubah kembali', 
+      'Agar cat air yang ditimpa di atasnya dapat berubah warna menjadi transparan'
+    ] 
+  },
+  { 
+    id: 50, 
+    q: 'Analisislah kunci kesuksesan utama dalam mengaplikasikan teknik grid untuk menyalin gambar secara manual...', 
+    img: '', 
+    options: [
+      'Kecepatan tangan dalam menarik garis lurus tanpa menggunakan alat penggaris', 
+      'Kerapian pembuatan kotak, akurasi skala hitungan, dan ketelitian menyalin detail per kotak', 
+      'Penggunaan jenis cat minyak mahal dengan kuas bulu halus impor dari luar negeri', 
+      'Pemilihan warna kontras yang mencolok pada latar belakang gambar utama', 
+      'Ukuran kertas gambar minimal harus berukuran A1 agar detail terlihat jelas'
+    ] 
+  },
+  { 
+    id: 51, 
+    q: 'Apa langkah pertama yang harus dilakukan ketika seorang siswa akan memulai praktik menyalin gambar menggunakan teknik grid?...', 
+    img: '', 
+    options: [
+      'Langsung mewarnai kertas target menggunakan cat akrilik tebal', 
+      'Menghapus seluruh garis tepi pada kertas gambar kosong', 
+      'Menentukan titik hilang tunggal di tengah-tengah kertas', 
+      'Menghitung jumlah total halaman buku materi seni rupa', 
+      'Memilih objek foto atau gambar referensi yang akan disalin'
+    ] 
+  },
+  { 
+    id: 52, 
+    q: 'Jika seorang siswa mendapati hasil pembesaran gambarnya mengalami kecatanatan proporsi (misalnya kepala terlalu besar dibanding badan), di mana letak kesalahan analitis yang mungkin terjadi selama proses grid?...', 
+    img: '', 
+    options: [
+      'Kesalahan dalam menyalin detail isi koordinat kotak grid atau salah menghitung skala perbandingan kotak', 
+      'Menggunakan jenis pensil 2B alih-alih menggunakan pensil HB pada tahap awal pembuatan sketsa', 
+      'Posisi duduk siswa saat menggambar tidak menghadap langsung ke arah cahaya lampu meja', 
+      'Kertas gambar yang digunakan memiliki tekstur terlalu halus untuk teknik grid manual', 
+      'Penghapus yang digunakan meninggalkan noda abu-abu di sudut kertas gambar'
+    ] 
+  },
+  { 
+    id: 53, 
+    q: 'Apa fungsi dari alat bantu penggaris dan pensil dalam tahapan pembuatan jaringan bujur sangkar (grid) pada media kertas?...', 
+    img: '', 
+    options: [
+      'Mengukur tingkat kelembapan udara di dalam ruangan kelas saat praktik seni rupa berlangsung', 
+      'Menghitung berat total kertas gambar sebelum dan sesudah proses penggambaran selesai', 
+      'Memastikan setiap kotak bujur sangkar memiliki ukuran panjang dan lebar yang presisi serta konsisten', 
+      'Memotong kertas gambar menjadi ukuran kecil-kecil sesuai kebutuhan latihan siswa', 
+      'Menghias tepi kertas gambar agar tampak seperti bingkai lukisan profesional'
+    ] 
+  },
+  { 
+    id: 54, 
+    q: 'Manakah pernyataan di bawah ini yang paling tepat menggambarkan filosofi atau pesan moral dari pembelajaran teknik grid dalam seni rupa kelas VIII?...', 
+    img: '', 
+    options: [
+      'Seni lukis murni tidak boleh menggunakan bantuan alat ukur matematis seperti penggaris', 
+      'Ketelitian, kesabaran, dan kedisiplinan adalah kunci utama dalam menerjemahkan proporsi bentuk', 
+      'Kecepatan tangan dalam menyelesaikan gambar jauh lebih penting daripada keakuratan bentuk', 
+      'Pembesaran gambar hanya dapat dilakukan menggunakan mesin fotokopi digital modern', 
+      'Teknik grid adalah cara instan tanpa proses belajar bagi pemula di bidang seni'
+    ] 
+  },
+  { 
+    id: 55, 
+    q: 'Dalam latihan interaktif kalkulator skala grid, jika ukuran asli kotak adalah 3 cm dan skala yang diinginkan adalah 2, berapa ukuran sisi kotak pada grid hasil pembesaran?...', 
+    img: '', 
+    options: [
+      '6 cm', 
+      '1.5 cm', 
+      '5 cm', 
+      '9 cm', 
+      '3 cm'
+    ] 
+  },
+  { 
+    id: 56, 
+    q: 'Mengapa teknik grid sering dianggap sebagai jembatan yang sangat baik antara ilmu matematika (geometri) dan seni rupa?...', 
+    img: '', 
+    options: [
+      'Karena penilaian mata pelajaran seni rupa murni didasarkan sepenuhnya pada rumus aljabar rumit', 
+      'Karena teknik ini menerapkan konsep koordinat ruang, perbandingan skala, dan bangun datar geometri ke dalam karya visual', 
+      'Karena setiap lukisan yang dihasilkan wajib dihitung luas permukaannya dalam satuan meter persegi', 
+      'Karena penggunaan penggaris siku dan busur derajat adalah syarat mutlak kelulusan ujian seni', 
+      'Karena tidak ada unsur kreativitas estetis sama sekali di dalam teknik pembuatan grid'
+    ] 
+  },
+  { 
+    id: 57, 
+    q: 'Apa yang harus dilakukan oleh seorang perupa setelah seluruh proses penyalinan detail gambar per kotak pada grid target selesai dilakukan dengan baik?...', 
+    img: '', 
+    options: [
+      'Membiarkan garis grid tetap terlihat jelas tanpa dihapus agar keaslian teknik tampak', 
+      'Menutup seluruh permukaan gambar menggunakan cat semprot warna hitam legam', 
+      'Melipat kertas gambar menjadi empat bagian untuk memudahkan penyimpanan di tas', 
+      'Merendam kertas gambar ke dalam air hangat agar serat kertas menjadi lebih kuat', 
+      'Menghapus garis-garis grid dengan hati-hati lalu melanjutkan tahap finishing dan arsiran akhir'
+    ] 
+  },
+  { 
+    id: 58, 
+    q: 'Evaluasilah pernyataan berikut: "Semakin besar faktor skala pembesaran yang digunakan, maka jumlah total kotak grid yang harus digambar pada kertas target juga harus semakin banyak." Apakah pernyataan tersebut benar?...', 
+    img: '', 
+    options: [
+      'Salah, jumlah kotak grid pada kertas target selalu tetap sebanyak 4x4 terlepas dari berapapun skala pembesarannya', 
+      'Benar, karena jumlah kotak grid pada media target harus berbanding lurus dengan grid pada objek asli agar koordinat akurat', 
+      'Salah, peningkatan skala pembesaran justru mengharuskan pengurangan jumlah kotak grid agar gambar lebih ringkas', 
+      'Benar, tetapi hanya berlaku jika objek aslinya berbentuk lingkaran atau oval sempurna tanpa sudut', 
+      'Salah, ukuran kotak grid tidak mempengaruhi jumlah keseluruhan kotak di atas bidang kertas gambar'
+    ] 
+  },
+  { 
+    id: 59, 
+    q: 'Ketika siswa menyalin gambar dari kotak asli ke kotak target, kesalahan koordinat (misalnya menggambar isi kotak baris A kolom 1 ke baris B kolom 2) akan mengakibatkan...', 
+    img: '', 
+    options: [
+      'Bentuk objek hasil salinan menjadi berantakan, terdistorsi, dan posisinya kacau balau', 
+      'Ukuran gambar hasil salinan otomatis membesar dua kali lipat dari rencana semula', 
+      'Warna pada gambar tersebut berubah menjadi gradasi monokrom yang indah', 
+      'Garis grid pada kertas target hilang secara otomatis tanpa perlu dihapus', 
+      'Kualitas estetika karya seni meningkat karena menciptakan unsur abstrak modern'
+    ] 
+  },
+  { 
+    id: 60, 
+    q: 'Apa bentuk aplikasi nyata dari teknik grid selain untuk menggambar ilustrasi atau menyalin foto di kertas A4?...', 
+    img: '', 
+    options: [
+      'Perhitungan anggaran biaya pembangunan gedung bertingkat tinggi oleh arsitek', 
+      'Pembuatan peta geografis wilayah, pembesaran mural dinding, dan transfer pola kerajinan', 
+      'Analisis struktur sel biologis menggunakan mikroskop elektron berdaya pembesaran tinggi', 
+      'Pengukuran kecepatan angin dan arah awan meteorologi di stasiun cuaca', 
+      'Penyusunan partitur nada musik klasik pada lembar kertas balok notasi'
+    ] 
+  },
+  { 
+    id: 61, 
+    q: 'Berdasarkan kajian etimologi, kata "Ilustrasi" berasal dari bahasa Latin illustrate atau illustrare yang secara harfiah memiliki makna...', 
+    img: '', 
+    options: [
+      'Menggambarkan bentuk makhluk hidup', 
+      'Menerangkan atau menjelaskan sesuatu', 
+      'Mewarnai bidang datar dengan cat', 
+      'Menarik garis lurus menggunakan mistar', 
+      'Menyusun komposisi simetris ruang'
+    ] 
+  },
+  { 
+    id: 62, 
+    q: 'Perhatikan pendapat ahli seni rupa berikut: "Ilustrasi adalah seni yang diabdikan untuk kepentingan hal lain, memberikan penjelasan, atau mengiringi suatu pengertian." Pendapat ini dikemukakan oleh...', 
+    img: '', 
+    options: [
+      'Ki Hajar Dewantara (1950)', 
+      'Affandi Koesoema (1975)', 
+      'Basuki Abdullah (1980)', 
+      'S. Sudjojono (1965)', 
+      'Soedarso SP. (1990)'
+    ] 
+  },
+  { 
+    id: 63, 
+    q: 'Apa fokus utama yang membedakan gambar ilustrasi dengan jenis karya seni rupa murni lainnya?...', 
+    img: '', 
+    options: [
+      'Kebebasan ekspresi emosi perupa tanpa terikat oleh aturan bentuk objek di dunia nyata', 
+      'Terletak pada fungsinya untuk menerangkan, memperjelas, atau mengiringi suatu teks/narasi', 
+      'Penggunaan media cat minyak mahal di atas kanvas berukuran besar dan megah', 
+      'Ketiadaan unsur garis tepi yang tegas pada setiap objek gambar yang ditampilkan', 
+      'Fokus mutlak pada keindahan dekoratif hiasan tanpa memuat unsur informasi pesan'
+    ] 
+  },
+  { 
+    id: 64, 
+    q: 'Dalam sejarah perkembangan ilustrasi, jejak awal visual berupa catatan gambar pada dinding gua ditemukan pada masa...', 
+    img: '', 
+    options: [
+      'Abad pertengahan di dalam manuskrip kuno', 
+      'Masa revolusi industri abad ke-18 di Eropa', 
+      'Era digital modern abad ke-21 saat ini', 
+      'Zaman prasejarah purba oleh manusia masa lalu', 
+      'Zaman kolonial penjelajahan samudra'
+    ] 
+  },
+  { 
+    id: 65, 
+    q: 'Di Nusantara, tradisi pembuatan ilustrasi pada masa lampau salah satunya dapat ditemukan pada media tradisional berupa...', 
+    img: '', 
+    options: [
+      'Goresan gambar di atas daun lontar untuk menyertai teks ajaran tertentu', 
+      'Ukiran relief batu candi Borobudur bercorak dekoratif murni', 
+      'Tenunan kain tradisional suku pedalaman tanpa makna naratif', 
+      'Anyaman bambu keranjang rumah tangga berbentuk simetris', 
+      'Gerabah tanah liat prasejarah tanpa motif hiasan gambar'
+    ] 
+  },
+  { 
+    id: 66, 
+    q: 'Manakah di antara pilihan berikut yang merupakan contoh pemanfaatan gambar ilustrasi dalam kaitannya dengan mata pelajaran Biologi/IPA di sekolah?...', 
+    img: '', 
+    options: [
+      'Ilustrasi teknik gerakan dasar cara melompat tinggi dalam olahraga atletik', 
+      'Gambar struktur anatomi organ dalam ikan atau sistem pencernaan manusia', 
+      'Sketsa perspektif dua titik hilang bangunan gedung bertingkat perkotaan', 
+      'Tabel perhitungan skala pembesaran peta geografis wilayah administratif', 
+      'Grafik statistik pertumbuhan ekonomi masyarakat pedesaan per tahun'
+    ] 
+  },
+  { 
+    id: 67, 
+    q: 'Apa bentuk penerapan gambar ilustrasi yang tepat apabila digunakan untuk mendukung mata pelajaran Pendidikan Jasmani, Olahraga, dan Kesehatan (PJOK)?..', 
+    img: '', 
+    options: [
+      'Menjelaskan rumus kimia proses fotosintesis pada daun tumbuhan hijau', 
+      'Menggambarkan peta jalur perdagangan rempah-rempah nusantara masa lampau', 
+      'Mengilustrasikan tahapan teknik gerakan olahraga seperti gaya renang atau senam lantai', 
+      'Menampilkan diagram tata surya planet-planet mengitari matahari', 
+      'Membuat karikatur lucu tokoh pahlawan nasional dalam buku sejarah'
+    ] 
+  },
+  { 
+    id: 68, 
+    q: 'Perhatikan jenis-jenis gambar ilustrasi berikut: "Objek gambar dibuat dengan ciri fisik yang dilebih-lebihkan secara lucu untuk menyampaikan kritik atau humor." Jenis ilustrasi ini disebut...', 
+    img: '', 
+    options: [
+      'Karikatur', 
+      'Kartun', 
+      'Naturalis', 
+      'Dekoratif', 
+      'Vignette'
+    ] 
+  },
+  { 
+    id: 69, 
+    q: 'Apa perbedaan mendasar antara jenis ilustrasi "Kartun" dan "Karikatur" dalam seni rupa...', 
+    img: '', 
+    options: [
+      'Kartun selalu dibuat menggunakan cat minyak di atas kanvas, sedangkan karikatur menggunakan pensil hitam di kertas', 
+      'Kartun menampilkan tokoh lucu menghibur dengan bentuk disederhanakan, sedangkan karikatur menekankan distorsi ciri fisik berlebihan pada tokoh nyata', 
+      'Kartun berfungsi untuk pelajaran IPA, sedangkan karikatur khusus untuk pelajaran matematika', 
+      'Kartun tidak memiliki alur cerita, sedangkan karikatur selalu berbentuk buku komik serial panjang', 
+      'Tidak ada perbedaan karena kedua istilah tersebut merujuk pada objek gambar yang persis sama'
+    ] 
+  },
+  { 
+    id: 70, 
+    q: 'Apa yang dimaksud dengan ilustrasi bergaya "Naturalis" dalam pengelompokan jenis gambar ilustrasi?...', 
+    img: '', 
+    options: [
+      'Objek gambar disederhanakan secara geometris menjadi bentuk-bentuk hiasan dekoratif', 
+      'Gambar yang sengaja dibuat abstrak tanpa menyerupai bentuk makhluk hidup satupun', 
+      'Ilustrasi yang hanya menggunakan satu warna monokrom tanpa variasi gradasi', 
+      'Gambar khayalan fantasi yang bersumber dari dunia imajinasi perupa semata', 
+      'Gambar objek yang dibuat sangat mirip dan akurat dengan keadaan benda sesungguhnya di alam'
+    ] 
+  },
+  { 
+    id: 71, 
+    q: 'Urutan langkah-langkah operasional yang paling tepat dalam proses menggambar ilustrasi adalah...', 
+    img: '', 
+    options: [
+      'Persiapan bahan/narasi, penentuan gagasan ide, penyiapan alat media, pembuatan sketsa, penambahan detail, dan penyelesaian (finishing)', 
+      'Pembuatan sketsa akhir langsung dengan cat minyak, penentuan harga jual karya, penyiapan bingkai kayu, dan pameran seni', 
+      'Penghapusan garis horizon, penarikan garis proyeksi titik hilang, dan perhitungan skala grid matematis', 
+      'Pemberian warna kontras mencolok secara acak tanpa membuat draf gagasan awal terlebih dahulu', 
+      'Pemotongan kertas gambar menjadi ukuran kecil sebelum menentukan tema materi pelajaran'
+    ] 
+  },
+  { 
+    id: 72, 
+    q: 'Evaluasilah kriteria penilaian karya ilustrasi dari aspek "Kesesuaian". Pertanyaan apa yang paling tepat diajukan untuk menguji aspek tersebut?...', 
+    img: '', 
+    options: [
+      'Sejauh mana tingkat kerumitan goresan garis dan ketebalan pensil yang digunakan oleh siswa?', 
+      'Apakah gambar ilustrasi tersebut sudah tepat dan sesuai dengan tujuan materi pelajaran yang diterangkan?', 
+      'Apakah warna yang dipilih sudah mencakup seluruh spektrum warna pelangi yang cerah?', 
+      'Berapa lama waktu yang dihabiskan oleh siswa dalam menyelesaikan tugas menggambar tersebut?', 
+      'Apakah ukuran kertas gambar yang digunakan sudah sesuai dengan standar internasional?'
+    ] 
+  },
+  { 
+    id: 73, 
+    q: 'Apa indikator utama dari aspek penilaian "Komposisi" dalam rubrik estetika karya gambar ilustrasi?...', 
+    img: '', 
+    options: [
+      'Keaslian ide gagasan perupa murni dari pemikiran sendiri tanpa meniru karya orang lain', 
+      'Ketepatan pemilihan jenis pensil keras (H) pada saat membuat garis bantu sketsa awal', 
+      'Hubungan keselarasan dan keseimbangan antar unsur/objek di dalam bidang gambar terlihat harmonis', 
+      'Kebersihan permukaan kertas dari noda sisa kotoran penghapus dan coretan grafit', 
+      'Jumlah objek ilustrasi yang digambar memenuhi seluruh sudut tepi bingkai kertas'
+    ] 
+  },
+  { 
+    id: 74, 
+    q: 'Di mana saja kita dapat menemukan penerapan gambar ilustrasi dalam kehidupan sehari-hari selain di dalam buku pelajaran sekolah?...', 
+    img: '', 
+    options: [
+      'Dinding luar bangunan pabrik industri berat dan rambu lalu lintas jalan raya', 
+      'Lembar tagihan pajak bulanan dan dokumen arsip kantor pemerintahan', 
+      'Mesin ATM perbankan digital dan layar monitor perangkat komputer', 
+      'Majalah, koran, karya ilmiah, cerpen, novel, dan media informasi digital', 
+      'Label kemasan makanan ringan pabrikan tanpa teks penjelasan apapun'
+    ] 
+  },
+  { 
+    id: 75, 
+    q: 'Analisislah mengapa ilustrasi sangat penting ketika disematkan ke dalam buku mata pelajaran sains atau sejarah bagi anak-anak usia sekolah menengah...', 
+    img: '', 
+    options: [
+      'Membantu memperjelas konsep abstrak narasi teks sehingga lebih mudah dipahami dan menarik minat baca', 
+      'Mengurangi jumlah halaman teks bacaan yang terlalu panjang dan membosankan', 
+      'Memenuhi syarat administratif kurikulum pendidikan nasional tanpa fungsi edukatif', 
+      'Menambah berat fisik buku agar terasa kokoh saat dibawa di dalam tas siswa', 
+      'Menggantikan peran guru pengajar di dalam kelas secara mutlak dan total'
+    ] 
+  },
+  { 
+    id: 76, 
+    q: 'Apa yang dimaksud dengan ilustrasi "Dekoratif" dalam pengelompokan jenis gambar ilustrasi seni rupa?...', 
+    img: '', 
+    options: [
+      'Gambar yang dibuat secara spontan tanpa perencanaan gagasan tema sama sekali', 
+      'Objek alam atau benda disederhanakan dan digayakan menjadi bentuk hiasan yang indah', 
+      'Ilustrasi khusus yang digunakan untuk menghias dinding ruangan pameran galeri', 
+      'Gambar karikatur tokoh terkenal yang dicetak di atas kain spanduk kain', 
+      'Sketsa teknik arsitektur bangunan rumah tinggal bergaya minimalis modern'
+    ] 
+  },
+  { 
+    id: 77, 
+    q: 'Evaluasilah pernyataan berikut: "Seorang siswa membuat ilustrasi sistem pencernaan manusia untuk pelajaran Biologi dengan mengubah bentuk lambung menjadi karakter kartun tersenyum." Analisis nilai edukatif dan estetikanya...', 
+    img: '', 
+    options: [
+      'Menyalahi aturan mutlak seni rupa murni karena mencampuradukkan ilmu sains dengan komik hiburan', 
+      'Tidak layak dinilai karena bentuk organ tubuh manusia tidak boleh digambar bergaya kartun lucu', 
+      'Menunjukkan kegagalan total dalam memahami materi pelajaran Biologi dan seni rupa sekaligus', 
+      'Kreatif dan menarik minat belajar, namun tetap harus memperhatikan akurasi letak anatomis organ agar tidak keliru secara sains', 
+      'Sangat sempurna tanpa cela karena memenuhi standar estetika komersial majalah anak'
+    ] 
+  },
+  { 
+    id: 78, 
+    q: 'Perhatikan langkah pembuatan ilustrasi: "Menyiapkan draf gambar dengan komposisi letak objek yang diinginkan." Tahap ini dalam proses kreatif disebut sebagai...', 
+    img: '', 
+    options: [
+      'Proses finishing', 
+      'Membuat sketsa', 
+      'Pemilihan tema', 
+      'Pewarnaan akhir', 
+      'Evaluasi karya'
+    ] 
+  },
+  { 
+    id: 79, 
+    q: 'Apa peran dari aspek "Kreativitas" dalam penilaian karya gambar ilustrasi lintas mata pelajaran?...', 
+    img: '', 
+    options: [
+      'Menilai seberapa mirip gambar siswa dengan contoh gambar yang ada di buku pegangan guru', 
+      'Menghitung jumlah warna cat berbeda yang berhasil dicampurkan di atas palet lukis', 
+      'Mencerminkan tingkat keaslian gagasan dan cara unik perupa dalam memvisualisasikan materi', 
+      'Mengukur kecepatan tangan siswa dalam menyelesaikan seluruh rangkaian tugas menggambar', 
+      'Menilai ketepatan ukuran panjang dan lebar kertas gambar sesuai instruksi soal'
+    ] 
+  },
+  { 
+    id: 80, 
+    q: 'Kesimpulan apa yang dapat ditarik mengenai fungsi holistik gambar ilustrasi dalam dunia pendidikan berdasarkan modul seni rupa kelas VIII?...', 
+    img: '', 
+    options: [
+      'Ilustrasi adalah sarana hiburan semata yang tidak memiliki hubungan akademis dengan materi pelajaran sekolah', 
+      'Ilustrasi berfungsi sebagai jembatan visual edukatif yang memperjelas informasi teks lintas mata pelajaran secara estetis dan komunikatif', 
+      'Ilustrasi hanya diperlukan bagi siswa tingkat sekolah dasar dan tidak relevan untuk tingkat sekolah menengah', 
+      'Ilustrasi merupakan pengganti fungsi tulisan tangan dalam menyusun laporan praktikum ilmiah', 
+      'Ilustrasi adalah teknik menggambar mutlak yang wajib dikuasai tanpa harus memperhatikan fungsi pesannya'
+    ] 
+  }
+];
+
+const keysPattern = [
+  "B","A","C","E","B","D","A","C","B","E",
+  "D","A","C","E","B","A","C","E","B","D",
+  "C","B","A","D","E","B","A","C","E","B",
+  "B","A","B","A","E","B","B","C","A","C",
+  "A","C","B","C","C","A","B","B","A","B",
+  "D","A","C","B","A","B","E","B","A","B",
+  "B","E","B","D","A","B","C","A","B","E",
+  "A","B","C","D","A","B","D","B","C","B"
+];
+
+    rawQuestions.forEach((item, index) => {
+      item.key = keysPattern[index];
+    });
+
+    let studentData = [];
+    let randomizedQuestions = [];
+    let userAnswers = [];
+    let currentIdx = 0;
+    let quizActive = false;
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    window.onload = function() {
+      updateAccessTimer();
+      fetchStudentData();
+      setupAntiCheating();
+    };
+
+    function showInfoModal(msg) {
+      document.getElementById("info-modal-msg").innerText = msg;
+      document.getElementById("info-modal").classList.remove("hidden");
+    }
+
+    function closeInfoModal() {
+      document.getElementById("info-modal").classList.add("hidden");
+    }
+
+    function fetchStudentData() {
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({ action: "getStudents" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          studentData = data.students;
+          populateClasses(data.classes);
+        } else {
+          showInfoModal("Gagal mengambil data siswa: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error("Detail Error:", err);
+        showInfoModal("Gagal terhubung ke Backend Spreadsheet!");
+      });
+    }
+
+    function populateClasses(classes) {
+      const selectKelas = document.getElementById("select-kelas");
+      selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+      classes.forEach(c => {
+        selectKelas.innerHTML += `<option value="${c}">${c}</option>`;
+      });
+    }
+
+    function filterNama() {
+      const selectedClass = document.getElementById("select-kelas").value;
+      const selectNama = document.getElementById("select-nama");
+      
+      selectNama.innerHTML = '<option value="">-- Pilih Nama Siswa --</option>';
+      if(!selectedClass) {
+        selectNama.disabled = true;
+        return;
+      }
+
+      const filtered = studentData.filter(s => s.kelas === selectedClass);
+      filtered.forEach(s => {
+        selectNama.innerHTML += `<option value="${s.nama}">${s.nama}</option>`;
+      });
+      selectNama.disabled = false;
+    }
+
+    function setupAntiCheating() {
+      window.addEventListener("blur", function() {
+        if(quizActive) {
+          quizActive = false;
+          document.getElementById("cheat-modal").classList.remove("hidden");
+        }
+      });
+    }
+
+    function startQuiz() {
+      const kelas = document.getElementById("select-kelas").value;
+      const nama = document.getElementById("select-nama").value;
+
+      if(!kelas || !nama) {
+        showInfoModal("Pilih Kelas dan Nama Anda terlebih dahulu!");
+        return;
+      }
+
+      randomizedQuestions = shuffleArray(rawQuestions).map(q => {
+        const originalKeyIndex = ["A", "B", "C", "D", "E"].indexOf(q.key);
+        const correctText = q.options[originalKeyIndex];
+        const shuffledOpts = shuffleArray(q.options);
+
+        return {
+          id: q.id,
+          q: q.q,
+          img: q.img || "",
+          options: shuffledOpts,
+          correctText: correctText
+        };
+      });
+
+      userAnswers = new Array(randomizedQuestions.length).fill(null);
+
+      document.getElementById("login-page").classList.add("hidden");
+      document.getElementById("quiz-page").classList.remove("hidden");
+      
+      quizActive = true;
+      showQuestion(0);
+    }
+
+    function showQuestion(idx) {
+      currentIdx = idx;
+      const total = randomizedQuestions.length;
+      document.getElementById("progress-text").innerText = `Progress: ${idx + 1} / ${total}`;
+      
+      const q = randomizedQuestions[idx];
+      document.getElementById("question-text").innerText = q.q;
+
+      const imgElement = document.getElementById("question-img");
+      if (q.img && q.img.trim() !== "") {
+        imgElement.src = q.img;
+        imgElement.classList.remove("hidden");
+      } else {
+        imgElement.src = "";
+        imgElement.classList.add("hidden");
+      }
+
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+
+      const prefixes = ["A", "B", "C", "D", "E"];
+      q.options.forEach((optText, i) => {
+        const char = prefixes[i];
+        const selectedAns = userAnswers[idx];
+        const isSelected = selectedAns && selectedAns.selectedText === optText;
+        
+        const div = document.createElement("div");
+        div.className = `option-item ${isSelected ? 'selected' : ''}`;
+        div.onclick = () => selectOption(optText);
+        
+        div.innerHTML = `
+          <div class="option-prefix">${char}</div>
+          <div>${optText}</div>
+        `;
+        optionsContainer.appendChild(div);
+      });
+
+      document.getElementById("btn-prev").style.visibility = idx === 0 ? "hidden" : "visible";
+      
+      if(idx === total - 1) {
+        document.getElementById("btn-next").classList.add("hidden");
+        document.getElementById("btn-submit").classList.remove("hidden");
+      } else {
+        document.getElementById("btn-next").classList.remove("hidden");
+        document.getElementById("btn-submit").classList.add("hidden");
+      }
+    }
+
+    function selectOption(optText) {
+      const q = randomizedQuestions[currentIdx];
+      userAnswers[currentIdx] = {
+        questionId: q.id,
+        selectedText: optText,
+        isCorrect: optText === q.correctText
+      };
+      showQuestion(currentIdx);
+    }
+
+    function changeQuestion(dir) {
+      const newIdx = currentIdx + dir;
+      if(newIdx >= 0 && newIdx < randomizedQuestions.length) {
+        showQuestion(newIdx);
+      }
+    }
+
+    function confirmSubmit() {
+      const unanswered = userAnswers.filter(a => a === null).length;
+      const titleEl = document.getElementById("submit-modal-title");
+      const msgEl = document.getElementById("submit-modal-msg");
+
+      if(unanswered > 0) {
+        titleEl.innerText = "Soal Belum Lengkap!";
+        msgEl.innerText = `Masih ada ${unanswered} soal yang belum Anda jawab. Apakah Anda yakin ingin tetap mengirimkan jawaban?`;
+      } else {
+        titleEl.innerText = "Konfirmasi Selesai Ujian";
+        msgEl.innerText = "Apakah Anda yakin ingin menyelesaikan dan mengirim seluruh jawaban Anda sekarang?";
+      }
+
+      document.getElementById("submit-modal").classList.remove("hidden");
+    }
+
+    function closeSubmitModal() {
+      document.getElementById("submit-modal").classList.add("hidden");
+    }
+
+    function executeSubmit() {
+      closeSubmitModal();
+      submitAnswers();
+    }
+
+    function submitAnswers() {
+      quizActive = false;
+      const kelas = document.getElementById("select-kelas").value;
+      const nama = document.getElementById("select-nama").value;
+
+      document.getElementById("quiz-page").classList.add("hidden");
+      document.getElementById("result-page").classList.remove("hidden");
+      document.getElementById("score-display").innerText = "Mengirim Jawaban...";
+
+      let formattedAnswers = new Array(rawQuestions.length).fill("");
+      userAnswers.forEach(ans => {
+        if(ans) {
+          const rawQ = rawQuestions.find(rq => rq.id === ans.questionId);
+          if(rawQ) {
+            const optIndex = rawQ.options.indexOf(ans.selectedText);
+            if(optIndex !== -1) {
+              formattedAnswers[ans.questionId - 1] = ["A", "B", "C", "D", "E"][optIndex];
+            }
+          }
+        }
+      });
+
+      const payload = {
+        action: "submitQuiz",
+        nama: nama,
+        kelas: kelas,
+        jawaban: formattedAnswers
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          document.getElementById("score-display").innerText = `Skor Anda: ${data.score}`;
+        } else {
+          showInfoModal("Error: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error("Detail Error:", err);
+        showInfoModal("Gagal koneksi ke server saat mengirim jawaban.");
+      });
+    }
+  </script>
+</body>
+</html>
