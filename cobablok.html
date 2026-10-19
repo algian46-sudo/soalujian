@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Coder - Interactive Grid & Unplugged Programming Simulator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar styling for workspace */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Block styling ala Scratch/Blockly */
+        .block-card {
+            border-left: 6px solid;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            transition: all 0.15s ease-in-out;
+        }
+        .block-card:hover {
+            transform: translateX(2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+        }
+        
+        .block-event   { border-color: #eab308; background-color: #fef9c3; color: #854d0e; } /* Kuning */
+        .block-motion  { border-color: #3b82f6; background-color: #dbeafe; color: #1e40af; } /* Biru */
+        .block-action  { border-color: #22c55e; background-color: #dcfce7; color: #166534; } /* Hijau */
+        .block-control { border-color: #f97316; background-color: #ffedd5; color: #9a3412; } /* Oranye */
+
+        /* Block running indicator highlight */
+        .block-running {
+            ring: 2px;
+            box-shadow: 0 0 0 3px #3b82f6 !important;
+            transform: scale(1.02);
+        }
+
+        /* Responsive Grid Cell styling */
+        .grid-cell {
+            aspect-ratio: 1 / 1;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 600;
+            user-select: none;
+            transition: background-color 0.15s ease, outline 0.1s ease;
+        }
+
+        /* Active Cursor outline */
+        .cursor-active {
+            outline: 3px solid #ef4444 !important;
+            outline-offset: -3px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Top Navigation / Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-amber-500 to-indigo-600 text-white p-2.5 rounded-xl shadow-md">
+                    🧩
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Pixel Coder Studio</h1>
+                    <p class="text-xs text-slate-500 font-medium">Unplugged Programming & Dynamic Grid Pixel Art Simulator</p>
+                </div>
+            </div>
+
+            <!-- Grid Dynamic Controls in Header -->
+            <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                <span class="text-xs font-semibold text-slate-600 pl-1">Ukuran Grid:</span>
+                
+                <!-- Quick Preset Buttons -->
+                <div class="flex gap-1">
+                    <button onclick="setGridSize(5, 5)" class="px-2 py-1 text-xs font-medium bg-white border border-slate-300 rounded-md hover:bg-slate-100 transition shadow-sm">5x5</button>
+                    <button onclick="setGridSize(8, 8)" class="px-2 py-1 text-xs font-medium bg-white border border-slate-300 rounded-md hover:bg-slate-100 transition shadow-sm">8x8</button>
+                    <button onclick="setGridSize(10, 10)" class="px-2 py-1 text-xs font-medium bg-white border border-slate-300 rounded-md hover:bg-slate-100 transition shadow-sm">10x10</button>
+                    <button onclick="setGridSize(15, 15)" class="px-2 py-1 text-xs font-medium bg-white border border-slate-300 rounded-md hover:bg-slate-100 transition shadow-sm">15x15</button>
+                </div>
+
+                <!-- Custom Grid Dimension Inputs -->
+                <div class="flex items-center gap-1 border-l border-slate-300 pl-2">
+                    <input type="number" id="input-grid-w" min="3" max="20" value="10" 
+                           class="w-11 px-1.5 py-1 text-xs font-bold text-center border border-slate-300 rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <span class="text-xs text-slate-400 font-bold">×</span>
+                    <input type="number" id="input-grid-h" min="3" max="20" value="10" 
+                           class="w-11 px-1.5 py-1 text-xs font-bold text-center border border-slate-300 rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <button onclick="applyCustomGrid()" class="px-2.5 py-1 text-xs font-semibold bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition shadow-sm">Set</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- PANEL KIRI: EDITOR KODE & PALETTE BLOK (7 Columns) -->
+        <section class="lg:col-span-7 flex flex-col gap-5">
+            
+            <!-- 1. Palette Blok Kode -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+                    <span>1. Palette Blok Kode</span>
+                    <span class="text-[10px] normal-case font-normal bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">(Klik tombol untuk menambah ke skrip)</span>
+                </h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                    <!-- EVENT -->
+                    <button onclick="addBlock('EVENT')" class="p-2 text-xs font-bold rounded-xl block-event text-left flex items-center justify-between group">
+                        <span>🟨 Saat Bendera Klik</span>
+                        <span class="opacity-0 group-hover:opacity-100 text-xs">+</span>
+                    </button>
+
+                    <!-- MOTION -->
+                    <button onclick="addBlock('GOTO')" class="p-2 text-xs font-bold rounded-xl block-motion text-left flex items-center justify-between group">
+                        <span>🟦 Pindah ke Posisi (X,Y)</span>
+                        <span class="opacity-0 group-hover:opacity-100 text-xs">+</span>
+                    </button>
+                    <button onclick="addBlock('MOVE_RIGHT')" class="p-2 text-xs font-bold rounded-xl block-motion text-left flex items-center justify-between group">
+                        <span>🟦 Geser Kanan (+1 X)</span>
+                        <span class="opacity-0 group-hover:opacity-100 text-xs">+</span>
+                    </button>
+                    <button onclick="addBlock('MOVE_LEFT')" class="p-2 text-xs font-bold rounded-xl block-motion text-left flex items-center justify-between group">
+                        <span>🟦 Geser Kiri (-1 X)</span>
+                        <span class="opacity-0 group-hover:opacity-100 text-xs">+</span>
+                    </button>
+                    <button onclick="addBlock('MOVE_DOWN')" class="p-2 text-xs font-bold rounded-xl block-motion text-left flex items-center justify-between group">
+                        <span>🟦 Geser Bawah (+1 Y)</span>
+                        <span class="opacity-0 group-hover:opacity-100 text-xs">+</span>
+                    </button>
+                    <button onclick="addBlock('MOVE_UP')" class="p-2 text-xs font-bold rounded-xl block-motion text-left flex items-center justify-between group">
+                        <span>🟦 Geser Atas (-1 Y)</span>
+                        <span class="opacity-0 group-hover:opacity-100 text-xs">+</span>
+                    </button>
+
+                    <!-- ACTION / LOOKS -->
+                    <button onclick="addBlock('COLOR', '#000000')" class="p-2 text-xs font-bold rounded-xl block-action text-left flex items-center justify-between group">
+                        <span>🟩 Warnai HITAM</span>
+                        <span class="w-3 h-3 rounded-full bg-black border border-white/50 inline-block"></span>
+                    </button>
+                    <button onclick="addBlock('COLOR', '#ef4444')" class="p-2 text-xs font-bold rounded-xl block-action text-left flex items-center justify-between group">
+                        <span>🟩 Warnai MERAH</span>
+                        <span class="w-3 h-3 rounded-full bg-red-500 border border-white/50 inline-block"></span>
+                    </button>
+                    <button onclick="addBlock('COLOR', '#3b82f6')" class="p-2 text-xs font-bold rounded-xl block-action text-left flex items-center justify-between group">
+                        <span>🟩 Warnai BIRU</span>
+                        <span class="w-3 h-3 rounded-full bg-blue-500 border border-white/50 inline-block"></span>
+                    </button>
+                    <button onclick="addBlock('COLOR', '#eab308')" class="p-2 text-xs font-bold rounded-xl block-action text-left flex items-center justify-between group">
+                        <span>🟩 Warnai KUNING</span>
+                        <span class="w-3 h-3 rounded-full bg-amber-400 border border-white/50 inline-block"></span>
+                    </button>
+                    <button onclick="addBlock('COLOR', '#ffffff')" class="p-2 text-xs font-bold rounded-xl block-action text-left flex items-center justify-between group">
+                        <span>🟩 Hapus Warna (Putih)</span>
+                        <span class="w-3 h-3 rounded-full bg-white border border-slate-400 inline-block"></span>
+                    </button>
+
+                    <!-- CONTROL -->
+                    <button onclick="addBlock('REPEAT')" class="p-2 text-xs font-bold rounded-xl block-control text-left flex items-center justify-between group">
+                        <span>🟧 Ulangi N kali</span>
+                        <span class="opacity-0 group-hover:opacity-100 text-xs">+</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. Workspace Skrip Kode -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex-1 flex flex-col min-h-[300px]">
+                <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">2. Susunan Kode Saya</h2>
+                        <span id="block-count" class="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full">0 blok</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="loadSampleSmile()" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition">💡 Contoh Kode (Senyum)</button>
+                        <span class="text-slate-300">|</span>
+                        <button onclick="clearCode()" class="text-xs font-semibold text-rose-500 hover:text-rose-700 transition">Hapus Semua</button>
+                    </div>
+                </div>
+
+                <!-- List Blok Terpasang -->
+                <div id="workspace" class="flex-1 bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl p-3 flex flex-col gap-2 overflow-y-auto max-h-[420px]">
+                    <!-- Blok akan ter-render di sini via JS -->
+                </div>
+
+                <!-- Tombol Eksekusi & Kontrol -->
+                <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap gap-3">
+                    <button id="btn-run" onclick="runCode()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold py-2.5 px-4 rounded-xl transition shadow-md shadow-emerald-100 flex items-center justify-center gap-2">
+                        <span>▶️</span> <span>Jalankan Kode</span>
+                    </button>
+                    <button id="btn-stop" onclick="stopExecution()" disabled class="bg-slate-200 text-slate-400 font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-2 cursor-not-allowed">
+                        <span>⏹️</span> <span>Hentikan</span>
+                    </button>
+                    <button onclick="resetGridCanvas()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-4 rounded-xl transition">
+                        🔄 Bersihkan Grid
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- PANEL KANAN: SIMULATOR CANVAS GRID (5 Columns) -->
+        <section class="lg:col-span-5 flex flex-col gap-5">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-between h-full">
+                
+                <div class="w-full flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">3. Canvas Simulator Grid</h2>
+                    <span id="grid-dim-badge" class="text-xs font-bold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-100">10 × 10</span>
+                </div>
+
+                <!-- Dynamic Grid Wrapper -->
+                <div class="w-full flex-1 flex items-center justify-center p-2 min-h-[320px]">
+                    <div id="grid-container" class="w-full max-w-[420px] mx-auto bg-white border-2 border-slate-800 shadow-lg rounded-sm overflow-hidden transition-all duration-300">
+                        <!-- Dynamic cells injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Dynamic Status Bar -->
+                <div class="w-full mt-4 p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex flex-col gap-2 text-xs">
+                    <div class="flex items-center justify-between font-semibold">
+                        <span class="text-slate-500">Posisi Kursor (X, Y):</span>
+                        <span id="pos-info" class="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">X: 1, Y: 1</span>
+                    </div>
+                    <div class="flex items-center justify-between font-semibold">
+                        <span class="text-slate-500">Status Eksekusi:</span>
+                        <span id="status-info" class="text-emerald-600 font-bold">Siap (Ready)</span>
+                    </div>
+                    <!-- Step Progress Bar -->
+                    <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1">
+                        <div id="progress-bar" class="bg-emerald-500 h-full w-0 transition-all duration-150"></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-3 mt-auto text-center text-xs text-slate-400 font-medium">
+        Pixel Coder Studio &copy; Unplugged Computational Thinking & Pixel Art Simulator
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC ENGINE -->
+    <script>
+        // System State Variables
+        let gridWidth = 10;
+        let gridHeight = 10;
+        let currentX = 1;
+        let currentY = 1;
+        let codeSequence = [];
+        let isRunning = false;
+        let shouldStop = false;
+
+        // Initialize Web Application
+        window.onload = function() {
+            setGridSize(10, 10);
+            loadSampleSmile();
+        };
+
+        // Set and Re-render Grid Size dynamically
+        function setGridSize(w, h) {
+            gridWidth = Math.min(20, Math.max(3, parseInt(w) || 10));
+            gridHeight = Math.min(20, Math.max(3, parseInt(h) || 10));
+
+            document.getElementById('input-grid-w').value = gridWidth;
+            document.getElementById('input-grid-h').value = gridHeight;
+            document.getElementById('grid-dim-badge').innerText = `${gridWidth} × ${gridHeight}`;
+
+            // Reset Cursor safely inside new boundaries
+            currentX = Math.min(currentX, gridWidth);
+            currentY = Math.min(currentY, gridHeight);
+
+            initGridCanvas();
+        }
+
+        function applyCustomGrid() {
+            const w = document.getElementById('input-grid-w').value;
+            const h = document.getElementById('input-grid-h').value;
+            setGridSize(w, h);
+        }
+
+        // Render Canvas Grid with Tailwind CSS Grid System
+        function initGridCanvas() {
+            const container = document.getElementById('grid-container');
+            container.innerHTML = '';
+            
+            // Set dynamic column template for grid container
+            container.style.display = 'grid';
+            container.style.gridTemplateColumns = `repeat(${gridWidth}, minmax(0, 1fr))`;
+
+            for (let y = 1; y <= gridHeight; y++) {
+                for (let x = 1; x <= gridWidth; x++) {
+                    const cell = document.createElement('div');
+                    cell.id = `cell-${x}-${y}`;
+                    cell.className = 'grid-cell';
+                    cell.style.backgroundColor = '#ffffff';
+                    
+                    // Display small coordinate guide on hover or empty cell
+                    cell.title = `(${x}, ${y})`;
+
+                    container.appendChild(cell);
+                }
+            }
+            updateCursorDisplay();
+        }
+
+        // Add New Block into Script Sequence
+        function addBlock(type, colorHex = '#000000') {
+            const newBlock = {
+                id: 'blk_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                type: type,
+                x: 1,
+                y: 1,
+                val: 3,
+                color: colorHex
+            };
+
+            if (type === 'EVENT') newBlock.label = '🟨 Saat Bendera Hijau Diklik';
+            else if (type === 'GOTO') newBlock.label = '🟦 Pindah ke Posisi';
+            else if (type === 'MOVE_RIGHT') newBlock.label = '🟦 Geser Kanan (+1 X)';
+            else if (type === 'MOVE_LEFT') newBlock.label = '🟦 Geser Kiri (-1 X)';
+            else if (type === 'MOVE_DOWN') newBlock.label = '🟦 Geser Bawah (+1 Y)';
+            else if (type === 'MOVE_UP') newBlock.label = '🟦 Geser Atas (-1 Y)';
+            else if (type === 'COLOR') {
+                const colorNames = {
+                    '#000000': 'HITAM',
+                    '#ef4444': 'MERAH',
+                    '#3b82f6': 'BIRU',
+                    '#eab308': 'KUNING',
+                    '#ffffff': 'HAPUS (Putih)'
+                };
+                newBlock.label = `🟩 Warnai Kotak ${colorNames[colorHex] || 'WARNA'}`;
+            }
+            else if (type === 'REPEAT') newBlock.label = '🟧 Ulangi Langkah Berikutnya';
+
+            codeSequence.push(newBlock);
+            renderWorkspace();
+        }
+
+        // Remove Block by Index
+        function removeBlock(index) {
+            if (isRunning) return;
+            codeSequence.splice(index, 1);
+            renderWorkspace();
+        }
+
+        // Move Block Up or Down in Workspace
+        function moveBlock(index, direction) {
+            if (isRunning) return;
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= codeSequence.length) return;
+
+            const temp = codeSequence[index];
+            codeSequence[index] = codeSequence[targetIndex];
+            codeSequence[targetIndex] = temp;
+            renderWorkspace();
+        }
+
+        // Clear All Workspace
+        function clearCode() {
+            if (isRunning) return;
+            codeSequence = [];
+            renderWorkspace();
+        }
+
+        // Render Workspace UI
+        function renderWorkspace() {
+            const workspace = document.getElementById('workspace');
+            workspace.innerHTML = '';
+
+            document.getElementById('block-count').innerText = `${codeSequence.length} blok`;
+
+            if (codeSequence.length === 0) {
+                workspace.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-12 text-slate-400">
+                        <span class="text-2xl mb-1">🧩</span>
+                        <p class="text-xs font-semibold">Skrip Kode Masih Kosong</p>
+                        <p class="text-[11px]">Klik blok pada palette di atas untuk menambahkan perintah.</p>
+                    </div>`;
+                return;
+            }
+
+            codeSequence.forEach((block, index) => {
+                const card = document.createElement('div');
+                card.id = `block-ui-${block.id}`;
+                
+                let colorClass = 'block-motion';
+                if (block.type === 'EVENT') colorClass = 'block-event';
+                if (block.type === 'COLOR') colorClass = 'block-action';
+                if (block.type === 'REPEAT') colorClass = 'block-control';
+
+                card.className = `p-2.5 rounded-xl text-xs font-semibold flex items-center justify-between block-card ${colorClass}`;
+
+                // Inline Inputs for GOTO and REPEAT
+                let inputsHTML = '';
+                if (block.type === 'GOTO') {
+                    inputsHTML = `
+                        <div class="flex items-center gap-1.5 ml-2 bg-white/70 px-2 py-0.5 rounded-md border border-blue-200">
+                            <span>X:</span>
+                            <input type="number" min="1" max="${gridWidth}" value="${block.x}" 
+                                   onchange="codeSequence[${index}].x = Math.min(${gridWidth}, Math.max(1, parseInt(this.value)||1))" 
+                                   class="w-9 px-1 text-center bg-white border border-slate-300 rounded text-slate-800 font-bold focus:ring-1 focus:ring-blue-500 outline-none">
+                            <span>Y:</span>
+                            <input type="number" min="1" max="${gridHeight}" value="${block.y}" 
+                                   onchange="codeSequence[${index}].y = Math.min(${gridHeight}, Math.max(1, parseInt(this.value)||1))" 
+                                   class="w-9 px-1 text-center bg-white border border-slate-300 rounded text-slate-800 font-bold focus:ring-1 focus:ring-blue-500 outline-none">
+                        </div>`;
+                } else if (block.type === 'REPEAT') {
+                    inputsHTML = `
+                        <div class="flex items-center gap-1 ml-2 bg-white/70 px-2 py-0.5 rounded-md border border-amber-200">
+                            <input type="number" min="1" max="20" value="${block.val}" 
+                                   onchange="codeSequence[${index}].val = Math.max(1, parseInt(this.value)||1)" 
+                                   class="w-10 px-1 text-center bg-white border border-slate-300 rounded text-slate-800 font-bold focus:ring-1 focus:ring-amber-500 outline-none">
+                            <span>kali</span>
+                        </div>`;
+                } else if (block.type === 'COLOR') {
+                    inputsHTML = `<span class="w-3 h-3 rounded-full ml-1.5 border border-black/20" style="background-color: ${block.color}"></span>`;
+                }
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-1">
+                        <span class="text-slate-400 font-mono text-[10px] pr-1">${index + 1}.</span>
+                        <span>${block.label}</span>
+                        ${inputsHTML}
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="moveBlock(${index}, -1)" ${index === 0 ? 'disabled class="opacity-30"' : ''} class="hover:bg-black/10 px-1.5 py-0.5 rounded font-bold">▲</button>
+                        <button onclick="moveBlock(${index}, 1)" ${index === codeSequence.length - 1 ? 'disabled class="opacity-30"' : ''} class="hover:bg-black/10 px-1.5 py-0.5 rounded font-bold">▼</button>
+                        <button onclick="removeBlock(${index})" class="text-rose-600 hover:bg-rose-100 px-1.5 py-0.5 rounded font-bold ml-1">✕</button>
+                    </div>
+                `;
+                workspace.appendChild(card);
+            });
+        }
+
+        // Highlight active cursor cell in canvas
+        function updateCursorDisplay() {
+            document.querySelectorAll('.grid-cell').forEach(c => c.classList.remove('cursor-active'));
+            const activeCell = document.getElementById(`cell-${currentX}-${currentY}`);
+            if (activeCell) {
+                activeCell.classList.add('cursor-active');
+            }
+            document.getElementById('pos-info').innerText = `X: ${currentX}, Y: ${currentY}`;
+        }
+
+        // Clear Color Pixels on Canvas Grid
+        function resetGridCanvas() {
+            for (let y = 1; y <= gridHeight; y++) {
+                for (let x = 1; x <= gridWidth; x++) {
+                    const cell = document.getElementById(`cell-${x}-${y}`);
+                    if (cell) cell.style.backgroundColor = '#ffffff';
+                }
+            }
+            currentX = 1;
+            currentY = 1;
+            updateCursorDisplay();
+            document.getElementById('status-info').innerText = 'Siap (Ready)';
+            document.getElementById('status-info').className = 'text-emerald-600 font-bold';
+            document.getElementById('progress-bar').style.width = '0%';
+        }
+
+        // Stop Execution Engine
+        function stopExecution() {
+            shouldStop = true;
+        }
+
+        // Main Asynchronous Execution Engine
+        async function runCode() {
+            if (isRunning) return;
+            if (codeSequence.length === 0) {
+                alert('Silakan tambahkan beberapa blok kode terlebih dahulu!');
+                return;
+            }
+
+            // Lock UI & Set Run Mode
+            isRunning = true;
+            shouldStop = false;
+            toggleControlsUI(true);
+
+            resetGridCanvas();
+            document.getElementById('status-info').innerText = 'Sedang Berjalan...';
+            document.getElementById('status-info').className = 'text-amber-600 font-bold';
+
+            let totalSteps = codeSequence.length;
+            let executedSteps = 0;
+
+            let i = 0;
+            while (i < codeSequence.length && !shouldStop) {
+                let block = codeSequence[i];
+
+                // Highlight Active Block in UI Workspace
+                highlightRunningBlock(block.id);
+
+                if (block.type === 'REPEAT') {
+                    const loopCount = block.val;
+                    // Ambil maksimal 2 blok instruksi setelah REPEAT
+                    const subBlocks = codeSequence.slice(i + 1, i + 3);
+
+                    for (let r = 0; r < loopCount && !shouldStop; r++) {
+                        for (let subB of subBlocks) {
+                            if (shouldStop) break;
+                            highlightRunningBlock(subB.id);
+                            await executeSingleBlockLogic(subB);
+                            updateCursorDisplay();
+                            await new Promise(res => setTimeout(res, 180));
+                        }
+                    }
+                    i += 1 + subBlocks.length;
+                } else {
+                    await executeSingleBlockLogic(block);
+                    updateCursorDisplay();
+                    i++;
+                }
+
+                executedSteps++;
+                let progressPercent = Math.min(100, Math.round((executedSteps / totalSteps) * 100));
+                document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+                await new Promise(res => setTimeout(res, 220));
+            }
+
+            // Clear Highlights and Unlock UI
+            clearBlockHighlights();
+            isRunning = false;
+            toggleControlsUI(false);
+
+            if (shouldStop) {
+                document.getElementById('status-info').innerText = 'Dihentikan!';
+                document.getElementById('status-info').className = 'text-rose-600 font-bold';
+            } else {
+                document.getElementById('status-info').innerText = 'Selesai!';
+                document.getElementById('status-info').className = 'text-emerald-600 font-bold';
+                document.getElementById('progress-bar').style.width = '100%';
+            }
+        }
+
+        // Execute Logic per Single Block
+        async function executeSingleBlockLogic(block) {
+            if (block.type === 'GOTO') {
+                currentX = Math.min(gridWidth, Math.max(1, block.x));
+                currentY = Math.min(gridHeight, Math.max(1, block.y));
+            } else if (block.type === 'MOVE_RIGHT') {
+                if (currentX < gridWidth) currentX++;
+            } else if (block.type === 'MOVE_LEFT') {
+                if (currentX > 1) currentX--;
+            } else if (block.type === 'MOVE_DOWN') {
+                if (currentY < gridHeight) currentY++;
+            } else if (block.type === 'MOVE_UP') {
+                if (currentY > 1) currentY--;
+            } else if (block.type === 'COLOR') {
+                const cell = document.getElementById(`cell-${currentX}-${currentY}`);
+                if (cell) cell.style.backgroundColor = block.color;
+            }
+        }
+
+        // Highlight Running Block UI Card
+        function highlightRunningBlock(blockId) {
+            clearBlockHighlights();
+            const el = document.getElementById(`block-ui-${blockId}`);
+            if (el) el.classList.add('block-running');
+        }
+
+        function clearBlockHighlights() {
+            document.querySelectorAll('.block-card').forEach(el => el.classList.remove('block-running'));
+        }
+
+        // Toggle UI Action Buttons Enabled State
+        function toggleControlsUI(running) {
+            document.getElementById('btn-run').disabled = running;
+            document.getElementById('btn-run').className = running 
+                ? 'flex-1 bg-slate-300 text-slate-500 font-bold py-2.5 px-4 rounded-xl cursor-not-allowed flex items-center justify-center gap-2'
+                : 'flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold py-2.5 px-4 rounded-xl transition shadow-md shadow-emerald-100 flex items-center justify-center gap-2';
+
+            document.getElementById('btn-stop').disabled = !running;
+            document.getElementById('btn-stop').className = running
+                ? 'bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-4 rounded-xl transition shadow-md shadow-rose-100 flex items-center justify-center gap-2'
+                : 'bg-slate-200 text-slate-400 font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-2 cursor-not-allowed';
+        }
+
+        // Load Preset Code Example: Smiley Face
+        function loadSampleSmile() {
+            if (isRunning) return;
+
+            setGridSize(10, 10);
+            codeSequence = [
+                { id: 's1', type: 'EVENT', label: '🟨 Saat Bendera Hijau Diklik' },
+                
+                // Mata Kiri
+                { id: 's2', type: 'GOTO', label: '🟦 Pindah ke Posisi', x: 3, y: 3 },
+                { id: 's3', type: 'COLOR', label: '🟩 Warnai Kotak HITAM', color: '#000000' },
+                
+                // Mata Kanan
+                { id: 's4', type: 'GOTO', label: '🟦 Pindah ke Posisi', x: 8, y: 3 },
+                { id: 's5', type: 'COLOR', label: '🟩 Warnai Kotak HITAM', color: '#000000' },
+                
+                // Sudut Kiri Senyum
+                { id: 's6', type: 'GOTO', label: '🟦 Pindah ke Posisi', x: 3, y: 7 },
+                { id: 's7', type: 'COLOR', label: '🟩 Warnai Kotak HITAM', color: '#000000' },
+                
+                // Lengkung Senyum Bawah
+                { id: 's8', type: 'GOTO', label: '🟦 Pindah ke Posisi', x: 4, y: 8 },
+                { id: 's9', type: 'COLOR', label: '🟩 Warnai Kotak HITAM', color: '#000000' },
+                { id: 's10', type: 'REPEAT', label: '🟧 Ulangi Langkah Berikutnya', val: 3 },
+                { id: 's11', type: 'MOVE_RIGHT', label: '🟦 Geser Kanan (+1 X)' },
+                { id: 's12', type: 'COLOR', label: '🟩 Warnai Kotak HITAM', color: '#000000' },
+                
+                // Sudut Kanan Senyum
+                { id: 's13', type: 'GOTO', label: '🟦 Pindah ke Posisi', x: 8, y: 7 },
+                { id: 's14', type: 'COLOR', label: '🟩 Warnai Kotak HITAM', color: '#000000' }
+            ];
+
+            renderWorkspace();
+        }
+    </script>
+</body>
+</html>
