@@ -21,6 +21,11 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      /* Tambahan proteksi agar teks tidak bisa diblokir/disorot */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
 
     body {
@@ -1093,7 +1098,7 @@
     q: "Cairan amnion (ketuban) yang mengelilingi janin di dalam rahim memiliki fungsi fisiologis utama yaitu…",
     img: "",
     options: [
-      "Memasok nutrisi glukosa utama bagi janin",
+      "Mempasok nutrisi glukosa utama bagi janin",
       "Menghasilkan hormon estrogen bagi janin",
       "Menyaring darah ibu sebelum ke plasenta",
       "Melindungi janin dari guncangan & suhu"
@@ -1302,7 +1307,39 @@ const keysPattern = [
     window.onload = function() {
       fetchStudentData();
       setupAntiCheating();
+      setupSecurityProtections(); // Menjalankan fungsi proteksi anti klik kanan / copy
     };
+
+    // Fungsi Tambahan Keamanan (Blokir Klik Kanan, Copy, Paste, & Shortcut F12/Inspect)
+    function setupSecurityProtections() {
+      // 1. Blokir klik kanan
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+      });
+
+      // 2. Blokir kombinasi tombol keyboard (Ctrl+C, Ctrl+X, Ctrl+A, F12, dll)
+      document.addEventListener('keydown', function(e) {
+        if (
+          e.key === 'F12' || 
+          (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+          (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 'c' || e.key === 'C' || e.key === 'x' || e.key === 'X' || e.key === 'a' || e.key === 'A'))
+        ) {
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      // 3. Blokir aksi copy & cut secara langsung
+      document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        showInfoModal("Aksi menyalin (copy) teks dilarang selama ujian!");
+      });
+
+      document.addEventListener('cut', function(e) {
+        e.preventDefault();
+      });
+    }
 
     // Helper Modal UI
     function showInfoModal(msg) {
