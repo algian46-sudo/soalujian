@@ -284,6 +284,71 @@
     .btn-secondary:hover {
       background: rgba(255, 255, 255, 0.15);
     }
+
+    /* GAYA TAMBAHAN UNTUK MODAL HASIL NILAI */
+    .modal-score-card {
+      max-width: 700px !important;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .score-table-container {
+      overflow-y: auto;
+      max-height: 50vh;
+      margin-top: 15px;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+    }
+
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .score-table th, .score-table td {
+      padding: 10px;
+      border: 1px solid var(--card-border);
+      text-align: left;
+    }
+
+    .score-table th {
+      background: rgba(15, 23, 42, 0.9);
+      position: sticky;
+      top: 0;
+      color: #38bdf8;
+    }
+
+    .badge-lolos {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.75rem;
+    }
+
+    .badge-remedial {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.75rem;
+    }
+
+    .countdown-timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #f59e0b;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px dashed #f59e0b;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
@@ -294,12 +359,23 @@
       <p>SMP NEGERI 8 CIKARANG UTARA</p>
     </div>
 
+    <!-- HALAMAN TUTUP / STATUS KONTROL -->
+    <div id="closed-page" class="card hidden" style="text-align: center;">
+      <i class="fa-solid fa-lock" style="font-size: 3rem; color: #ef4444; margin-bottom: 12px;"></i>
+      <h2 id="closed-title">Halaman Ditutup</h2>
+      <p id="closed-msg" style="margin-top: 8px; color: var(--text-muted);"></p>
+      <div id="countdown-container" class="countdown-timer hidden">--:--:--:--</div>
+      <button class="btn-primary" style="margin-top: 15px;" onclick="openScoreModal()">
+        <i class="fa-solid fa-list-check"></i> Lihat Skor Akhir Siswa
+      </button>
+    </div>
+
     <!-- HALAMAN LOGIN (KINI LANGSUNG MUNCUL TANPA TIMER) -->
     <div id="login-page" class="card">
       <h2 style="font-size: 1.1rem; margin-bottom: 15px; text-align: center;">Masuk Ke Ujian</h2>
       
       <div class="warning-box">
-        <i class="fa-solid fa-triangle-exclamation"></i> Dilarang keluar dari layar/tab selama ujian. Jika Anda keluar atau berpindah aplikasi, ujian akan otomatis direset dan soal diacak ulang![cite: 1]
+        <i class="fa-solid fa-triangle-exclamation"></i> Dilarang keluar dari layar/tab selama ujian. Jika Anda keluar atau berpindah aplikasi, ujian akan otomatis direset dan soal diacak ulang!
       </div>
 
       <div class="form-group">
@@ -378,8 +454,45 @@
     </div>
   </div>
 
+  <!-- MODAL SKOR AKHIR SISWA -->
+  <div id="score-modal" class="modal-overlay hidden">
+    <div class="modal-card modal-score-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3><i class="fa-solid fa-trophy" style="color: #f59e0b;"></i> Hasil Skor Siswa</h3>
+        <button class="btn-secondary" style="width: auto; padding: 5px 12px;" onclick="closeScoreModal()">Tutup</button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 10px;">
+        <label>Pilih Kelas:</label>
+        <select id="modal-select-kelas" onchange="renderScoreTable()">
+          <option value="">-- Pilih Kelas --</option>
+        </select>
+      </div>
+
+      <div class="score-table-container">
+        <table class="score-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama</th>
+              <th>Kelas</th>
+              <th>Skor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="score-table-body">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted);">Silakan pilih kelas terlebih dahulu.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbywzzeQlVuHRBaHMH2LEHrVouySpH4A2p6l6c6Twwkr8vEB5KD_4Yi8OmD6ENKm21Jj/exec";
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT80wvzdDT0YLtrBOd5zyt8kBp-sKQL-zYfN-yemVnCg-JOG1mxPGP9W9nHckiBCrD5WEQReUKVuJDR/pub?gid=244395939&single=true&output=csv";
 
     const rawQuestions = [
   { 
@@ -447,7 +560,7 @@
     q: 'Apa fungsi utama dari garis proyeksi atau garis bantu yang ditarik dari sudut objek menuju titik hilang dalam menggambar perspektif?...', 
     img: '', 
     options: [
-      'Menghitung jumlah total bidang datar pada objek tiga dimensi', 
+      'Menhitung jumlah total bidang datar pada objek tiga dimensi', 
       'Menentukan arah jatuhnya bayangan objek akibat sinar matahari', 
       'Membagi bidang kertas menjadi beberapa bagian sama besar', 
       'Menciptakan ilusi kedalaman jarak jauh dan dekat secara visual', 
@@ -595,7 +708,7 @@
       'Menambahkan bayangan hitam pekat di bawah dasar kubus tanpa menggunakan garis proyeksi', 
       'Menggambar kubus dengan ukuran sangat besar menutupi seluruh garis horizon gambar', 
       'Memutar posisi kubus hingga membentuk sudut miring 45 derajat terhadap bidang', 
-      'Menghubungkan setiap sudut bidang depan ke titik hilang lalu memotongnya dengan garis penutup sejajar'
+      'Menhubungkan setiap sudut bidang depan ke titik hilang lalu memotongnya dengan garis penutup sejajar'
     ] 
   },
   { 
@@ -750,7 +863,7 @@
       'Mengukur panjang sisi menggunakan penggaris centimeter lalu membaginya dengan angka dua', 
       'Membuat garis diagonal menyilang dari sudut-sudut bidang, perpotongannya adalah titik tengah', 
       'Menarik garis lurus horizontal dari titik hilang menuju ke tengah-tengah sisi samping', 
-      'Menghitung jumlah kotak grid yang ada di dalam bidang tersebut secara manual', 
+      'Menhitung jumlah kotak grid yang ada di dalam bidang tersebut secara manual', 
       'Memperkirakan letak tengah dengan pandangan mata tanpa bantuan garis diagonal'
     ] 
   },
@@ -855,7 +968,7 @@
     q: 'Bagaimana cara mengevaluasi apakah sebuah karya perspektif dua titik hilang telah dibuat sesuai dengan kaidah geometri yang benar?...', 
     img: '', 
     options: [
-      'Menghitung jumlah total garis vertikal yang ada pada setiap sudut bangunan balok', 
+      'Menhitung jumlah total garis vertikal yang ada pada setiap sudut bangunan balok', 
       'Menilai kecerahan warna yang digunakan pada bagian atap dan dinding bangunan', 
       'Memeriksa apakah semua garis sisi horizontal objek telah ditarik secara akurat menuju ke TH 1 dan TH 2', 
       'Memastikan tidak ada satu pun garis bantu yang tersisa di seluruh permukaan kertas', 
@@ -928,7 +1041,7 @@
     img: '', 
     options: [
       'Memudahkan pelacakan posisi koordinat kotak agar tidak salah saat menyalin detail gambar', 
-      'Menghitung total harga jual karya seni berdasarkan jumlah kotak yang terisi', 
+      'Menhitung total harga jual karya seni berdasarkan jumlah kotak yang terisi', 
       'Menentukan urutan warna cat yang harus diaplikasikan pada setiap bagian gambar', 
       'Menghindari kebingungan saat menghapus garis grid setelah sketsa selesai', 
       'Menandai bagian kertas yang boleh disobek karena mengalami kerusakan'
@@ -990,7 +1103,7 @@
       'Langsung mewarnai kertas target menggunakan cat akrilik tebal', 
       'Menghapus seluruh garis tepi pada kertas gambar kosong', 
       'Menentukan titik hilang tunggal di tengah-tengah kertas', 
-      'Menghitung jumlah total halaman buku materi seni rupa', 
+      'Menhitung jumlah total halaman buku materi seni rupa', 
       'Memilih objek foto atau gambar referensi yang akan disalin'
     ] 
   },
@@ -1012,10 +1125,10 @@
     img: '', 
     options: [
       'Mengukur tingkat kelembapan udara di dalam ruangan kelas saat praktik seni rupa berlangsung', 
-      'Menghitung berat total kertas gambar sebelum dan sesudah proses penggambaran selesai', 
+      'Menhitung berat total kertas gambar sebelum dan sesudah proses penggambaran selesai', 
       'Memastikan setiap kotak bujur sangkar memiliki ukuran panjang dan lebar yang presisi serta konsisten', 
       'Memotong kertas gambar menjadi ukuran kecil-kecil sesuai kebutuhan latihan siswa', 
-      'Menghias tepi kertas gambar agar tampak seperti bingkai lukisan profesional'
+      'Menhias tepi kertas gambar agar tampak seperti bingkai lukisan profesional'
     ] 
   },
   { 
@@ -1324,7 +1437,7 @@
     img: '', 
     options: [
       'Menilai seberapa mirip gambar siswa dengan contoh gambar yang ada di buku pegangan guru', 
-      'Menghitung jumlah warna cat berbeda yang berhasil dicampurkan di atas palet lukis', 
+      'Menhitung jumlah warna cat berbeda yang berhasil dicampurkan di atas palet lukis', 
       'Mencerminkan tingkat keaslian gagasan dan cara unik perupa dalam memvisualisasikan materi', 
       'Mengukur kecepatan tangan siswa dalam menyelesaikan seluruh rangkaian tugas menggambar', 
       'Menilai ketepatan ukuran panjang dan lebar kertas gambar sesuai instruksi soal'
@@ -1364,6 +1477,7 @@ const keysPattern = [
     let userAnswers = [];
     let currentIdx = 0;
     let quizActive = false;
+    let csvScoresData = [];
 
     function shuffleArray(array) {
       let arr = [...array];
@@ -1375,9 +1489,179 @@ const keysPattern = [
     }
 
     window.onload = function() {
+      checkAccessSchedule();
       fetchStudentData();
       setupAntiCheating();
+      setInterval(checkAccessSchedule, 1000);
     };
+
+    /* FITUR KONTROL JADWAL AKSES & HITUNG MUNDUR */
+    function checkAccessSchedule() {
+      const now = new Date();
+      
+      // Target Tanggal
+      const closeTime = new Date('2026-11-03T04:00:00+07:00');
+      const remedStart = new Date('2026-11-06T00:00:00+07:00');
+      const remedEnd = new Date('2026-11-06T23:00:00+07:00');
+
+      const loginPage = document.getElementById("login-page");
+      const closedPage = document.getElementById("closed-page");
+      const closedTitle = document.getElementById("closed-title");
+      const closedMsg = document.getElementById("closed-msg");
+      const countdownEl = document.getElementById("countdown-container");
+
+      if (now >= closeTime && now < remedStart) {
+        // PERIODE TUTUP SEMENTARA (Menunggu Remedial)
+        loginPage.classList.add("hidden");
+        closedPage.classList.remove("hidden");
+        closedTitle.innerText = "Halaman Ujian Ditutup";
+        closedMsg.innerText = "Ujian telah ditutup pada 3 November 2026 pukul 04.00 WIB. Halaman akan dibuka kembali untuk Remedial dalam:";
+        countdownEl.classList.remove("hidden");
+        updateCountdown(remedStart - now);
+      } else if (now >= remedStart && now <= remedEnd) {
+        // PERIODE REMEDIAL (Dibuka Kembali)
+        closedPage.classList.add("hidden");
+        if (!quizActive && document.getElementById("result-page").classList.contains("hidden")) {
+          loginPage.classList.remove("hidden");
+        }
+      } else if (now > remedEnd) {
+        // PERIODE KELUSAN / DITUTUP PERMANEN
+        loginPage.classList.add("hidden");
+        closedPage.classList.remove("hidden");
+        closedTitle.innerText = "Sesi Remedial Telah Berakhir";
+        closedMsg.innerText = "Ujian dan Remedial telah resmi ditutup.";
+        countdownEl.classList.add("hidden");
+      } else {
+        // SEBELUM PENUTUPAN (Normal)
+        closedPage.classList.add("hidden");
+      }
+    }
+
+    function updateCountdown(diffMs) {
+      if (diffMs <= 0) return;
+      const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+      document.getElementById("countdown-container").innerText = 
+        `${days} Hari ${hours} Jam ${minutes} Menit ${seconds} Detik`;
+    }
+
+    /* FITUR MODAL & CSV SCORE */
+    function openScoreModal() {
+      document.getElementById("score-modal").classList.remove("hidden");
+      if (csvScoresData.length === 0) {
+        fetchCSVData();
+      }
+    }
+
+    function closeScoreModal() {
+      document.getElementById("score-modal").classList.add("hidden");
+    }
+
+    function fetchCSVData() {
+      fetch(CSV_URL)
+        .then(res => res.text())
+        .then(csvText => {
+          parseCSV(csvText);
+        })
+        .catch(err => {
+          console.error("Error CSV:", err);
+          showInfoModal("Gagal memuat data nilai dari spreadsheet.");
+        });
+    }
+
+    function parseCSV(text) {
+      const lines = text.split('\n').filter(line => line.trim() !== '');
+      if (lines.length < 2) return;
+
+      const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+      
+      const idxNo = headers.findIndex(h => h.toLowerCase() === 'no');
+      const idxNama = headers.findIndex(h => h.toLowerCase() === 'nama');
+      const idxKelas = headers.findIndex(h => h.toLowerCase() === 'kelas');
+      const idxSkor = headers.findIndex(h => h.toLowerCase() === 'skor');
+
+      csvScoresData = [];
+      const classesSet = new Set();
+
+      for (let i = 1; i < lines.length; i++) {
+        // Menangani pemisahan CSV dasar
+        const row = lines[i].split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
+        if (row.length >= 4) {
+          const item = {
+            no: row[idxNo] || i,
+            nama: row[idxNama] || '',
+            kelas: row[idxKelas] || '',
+            skor: parseFloat(row[idxSkor]) || 0
+          };
+          if(item.kelas) classesSet.add(item.kelas);
+          csvScoresData.push(item);
+        }
+      }
+
+      // Populate Pilihan Kelas di Modal
+      const modalSelect = document.getElementById("modal-select-kelas");
+      modalSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+      Array.from(classesSet).sort().forEach(c => {
+        modalSelect.innerHTML += `<option value="${c}">${c}</option>`;
+      });
+    }
+
+    function renderScoreTable() {
+      const selectedClass = document.getElementById("modal-select-kelas").value;
+      const tbody = document.getElementById("score-table-body");
+      tbody.innerHTML = "";
+
+      if (!selectedClass) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Silakan pilih kelas terlebih dahulu.</td></tr>';
+        return;
+      }
+
+      const filtered = csvScoresData.filter(d => d.kelas === selectedClass);
+      
+      // Pisahkan Lolos (>=75) dan Remedial (<75)
+      const lolosList = filtered.filter(d => d.skor >= 75);
+      const remedList = filtered.filter(d => d.skor < 75);
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Tidak ada data untuk kelas ini.</td></tr>';
+        return;
+      }
+
+      // Render Kelompok Lolos
+      if(lolosList.length > 0) {
+        tbody.innerHTML += `<tr><td colspan="5" style="background: rgba(34, 197, 94, 0.15); font-weight: bold; color: #4ade80;">SISWA LOLOS (SKOR ≥ 75)</td></tr>`;
+        lolosList.forEach((d, index) => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${d.nama}</td>
+              <td>${d.kelas}</td>
+              <td>${d.skor}</td>
+              <td><span class="badge-lolos">Lolos</span></td>
+            </tr>
+          `;
+        });
+      }
+
+      // Render Kelompok Remedial
+      if(remedList.length > 0) {
+        tbody.innerHTML += `<tr><td colspan="5" style="background: rgba(239, 68, 68, 0.15); font-weight: bold; color: #fca5a5;">SISWA REMEDIAL (SKOR < 75)</td></tr>`;
+        remedList.forEach((d, index) => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${d.nama}</td>
+              <td>${d.kelas}</td>
+              <td>${d.skor}</td>
+              <td><span class="badge-remedial">Remedial</span></td>
+            </tr>
+          `;
+        });
+      }
+    }
 
     function showInfoModal(msg) {
       document.getElementById("info-modal-msg").innerText = msg;
