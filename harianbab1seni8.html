@@ -71,67 +71,6 @@
       margin-bottom: 15px;
     }
 
-    /* STYLES Halaman Pengumuman / Maintenance */
-    .announcement-box {
-      text-align: center;
-      padding: 10px 5px;
-    }
-
-    .announcement-icon {
-      font-size: 3.5rem;
-      color: #f59e0b;
-      margin-bottom: 15px;
-    }
-
-    .announcement-text {
-      font-size: 1rem;
-      line-height: 1.6;
-      font-weight: 600;
-      color: #f8fafc;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-    }
-
-    .timer-container {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 20px;
-    }
-
-    .timer-title {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .countdown-display {
-      font-size: 1.6rem;
-      font-weight: bold;
-      color: #38bdf8;
-      letter-spacing: 1px;
-    }
-
-    .btn-result {
-      display: inline-block;
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      background: linear-gradient(90deg, #06b6d4, #3b82f6);
-      color: #ffffff;
-      text-decoration: none;
-      font-weight: 600;
-      text-align: center;
-      transition: all 0.3s;
-      box-sizing: border-box;
-    }
-
-    .btn-result:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-
     .form-group {
       margin-bottom: 15px;
     }
@@ -166,6 +105,9 @@
       font-weight: 600;
       cursor: pointer;
       margin-top: 10px;
+      color: #ffffff;
+      text-decoration: none;
+      text-align: center;
     }
 
     .btn-primary:hover {
@@ -245,6 +187,11 @@
     .btn-nav {
       width: 48%;
       background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
     }
 
     .hidden {
@@ -329,6 +276,9 @@
       border: 1px solid var(--card-border);
       color: var(--text-main);
       cursor: pointer;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
     }
 
     .btn-secondary:hover {
@@ -344,32 +294,12 @@
       <p>SMP NEGERI 8 CIKARANG UTARA</p>
     </div>
 
-    <!-- HALAMAN INFORMASI PENUTUPAN / MAINTENANCE -->
-    <div id="maintenance-page" class="card">
-      <div class="announcement-box">
-        <i class="fa-solid fa-clock-rotate-left announcement-icon"></i>
-        <div class="announcement-text">
-          HALAMAN INI DITUTUP SEMENTARA, DAN AKAN DIBUKA PADA HARI SELASA 13 OKTOBER 2026 PUKUL 14.00
-        </div>
-
-        <div class="timer-container">
-          <div class="timer-title" id="timer-title">WAKTU MENUJU UJIAN DIBUKA:</div>
-          <div class="countdown-display" id="countdown">00 jam 00 menit 00 detik</div>
-        </div>
-
-        <!-- SILAKAN GANTI ALAMAT LINK (href="#") DI BAWAH DENGAN LINK HASIL UJIAN ANDA -->
-        <a href="#" target="_blank" class="btn-result">
-          <i class="fa-solid fa-file-lines"></i> LIHAT HASIL UJIAN
-        </a>
-      </div>
-    </div>
-
-    <!-- HALAMAN LOGIN (AKAN TAMPIL OTOMATIS SAAT WAKTU TIBA) -->
-    <div id="login-page" class="card hidden">
+    <!-- HALAMAN LOGIN (KINI LANGSUNG MUNCUL TANPA TIMER) -->
+    <div id="login-page" class="card">
       <h2 style="font-size: 1.1rem; margin-bottom: 15px; text-align: center;">Masuk Ke Ujian</h2>
       
       <div class="warning-box">
-        <i class="fa-solid fa-triangle-exclamation"></i> Dilarang keluar dari layar/tab selama ujian. Jika Anda keluar atau berpindah aplikasi, ujian akan otomatis direset dan soal diacak ulang!
+        <i class="fa-solid fa-triangle-exclamation"></i> Dilarang keluar dari layar/tab selama ujian. Jika Anda keluar atau berpindah aplikasi, ujian akan otomatis direset dan soal diacak ulang![cite: 1]
       </div>
 
       <div class="form-group">
@@ -423,7 +353,7 @@
       <i class="fa-solid fa-triangle-exclamation modal-icon-danger"></i>
       <h3>Pelanggaran Terdeteksi!</h3>
       <p>Anda terdeteksi meninggalkan layar/tab ujian. Sesuai aturan, ujian Anda direset dan urutan soal telah diacak kembali.</p>
-      <button class="btn-primary" style="background: #ef4444;" onclick="location.reload()">Mengerti & Ulangi Ujian</button>
+      <button class="btn-primary" style="background: #ef4444; width: 100%; padding: 12px; border-radius: 10px;" onclick="location.reload()">Mengerti & Ulangi Ujian</button>
     </div>
   </div>
 
@@ -434,7 +364,7 @@
       <p id="submit-modal-msg">Apakah Anda yakin ingin menyelesaikan dan mengirim jawaban Anda sekarang?</p>
       <div class="modal-buttons">
         <button class="btn-secondary" onclick="closeSubmitModal()">Batal</button>
-        <button class="btn-primary" style="margin-top:0; background: linear-gradient(90deg, #22c55e, #10b981);" onclick="executeSubmit()">Kirim Jawaban</button>
+        <button class="btn-primary" style="margin-top:0; background: linear-gradient(90deg, #22c55e, #10b981); width: 100%; padding: 12px; border-radius: 10px;" onclick="executeSubmit()">Kirim Jawaban</button>
       </div>
     </div>
   </div>
@@ -444,58 +374,12 @@
       <i class="fa-solid fa-circle-info modal-icon-warning"></i>
       <h3>Pemberitahuan</h3>
       <p id="info-modal-msg">Pesan informasi</p>
-      <button class="btn-primary" onclick="closeInfoModal()">OK</button>
+      <button class="btn-primary" style="width: 100%; padding: 12px; border-radius: 10px;" onclick="closeInfoModal()">OK</button>
     </div>
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbywzzeQlVuHRBaHMH2LEHrVouySpH4A2p6l6c6Twwkr8vEB5KD_4Yi8OmD6ENKm21Jj/exec";
-
-    // Konfigurasi Jadwal Buka-Tutup Akses (WIB / GMT+7)
-    const startTime = new Date("2026-10-13T11:00:00+07:00").getTime();
-    const endTime = new Date("2026-10-13T15:50:00+07:00").getTime();
-
-    function updateAccessTimer() {
-      const now = new Date().getTime();
-      const maintenancePage = document.getElementById("maintenance-page");
-      const loginPage = document.getElementById("login-page");
-      const countdownEl = document.getElementById("countdown");
-      const timerTitleEl = document.getElementById("timer-title");
-
-      if (now < startTime) {
-        // Sebelum Waktu Remedial Dibuka
-        maintenancePage.classList.remove("hidden");
-        loginPage.classList.add("hidden");
-        
-        const distance = startTime - now;
-        const hours = Math.floor(distance / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
-        timerTitleEl.innerText = "WAKTU MENUJU REMEDIAL DIBUKA:";
-        countdownEl.innerText = `${hours} jam ${minutes} menit ${seconds} detik`;
-      } 
-      else if (now >= startTime && now <= endTime) {
-        // Waktu Remedial Sedang Berlangsung (Akses Dibuka)
-        maintenancePage.classList.add("hidden");
-        if (document.getElementById("quiz-page").classList.contains("hidden") && 
-            document.getElementById("result-page").classList.contains("hidden")) {
-          loginPage.classList.remove("hidden");
-        }
-      } 
-      else {
-        // Waktu Remedial Telah Berakhir
-        maintenancePage.classList.remove("hidden");
-        loginPage.classList.add("hidden");
-        document.getElementById("quiz-page").classList.add("hidden");
-        
-        timerTitleEl.innerText = "STATUS KEGIATAN:";
-        countdownEl.innerText = "KEGIATAN REMEDIAL TELAH SELESAI DITUTUP";
-      }
-    }
-
-    // Jalankan timer setiap 1 detik
-    setInterval(updateAccessTimer, 1000);
+    const API_URL = "https://script.google.com/macros/s/AKfycbywzzeQlVuHRBaHMH2LEHrVouySpH4A2p6l6c6Twwkr8vEB5KD_4Yi8OmD6ENKm21Jj/exec";[cite: 1]
 
     const rawQuestions = [
   { 
@@ -1491,7 +1375,6 @@ const keysPattern = [
     }
 
     window.onload = function() {
-      updateAccessTimer();
       fetchStudentData();
       setupAntiCheating();
     };
