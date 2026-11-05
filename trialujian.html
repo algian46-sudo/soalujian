@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TRIAL UJIAN</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <!-- Google Fonts untuk Font Arab Standar Utsmani (Amiri & Scheherazade New) -->
+  <!-- Google Fonts untuk Font Arab Standar Utsmani -->
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
   
-  <!-- Pustaka MathJax dengan Konfigurasi Lengkap untuk Render Equation & Arab -->
+  <!-- MathJax untuk Render Persamaan Matematika -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script>
     window.MathJax = {
@@ -21,6 +21,7 @@
   </script>
   <script id="MathJax-Script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <link rel="icon" type="image/png" href="https://i.imgur.com/mRmw86t.jpeg">
+  
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
@@ -102,7 +103,7 @@
       color: var(--text-muted);
     }
 
-    select, button {
+    select, button, textarea {
       width: 100%;
       padding: 12px;
       border-radius: 10px;
@@ -114,7 +115,7 @@
       transition: all 0.3s;
     }
 
-    select:focus {
+    select:focus, textarea:focus {
       border-color: var(--accent-color);
       box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
     }
@@ -135,6 +136,13 @@
       transform: translateY(-1px);
     }
 
+    .btn-disabled {
+      background: rgba(255, 255, 255, 0.05) !important;
+      color: var(--text-muted) !important;
+      cursor: not-allowed !important;
+      border: 1px dashed var(--card-border) !important;
+    }
+
     .progress-bar {
       font-size: 0.85rem;
       color: var(--text-muted);
@@ -149,7 +157,6 @@
       white-space: pre-line;
     }
 
-    /* Styling khusus teks Arab agar tanda baca & font jelas seperti mushaf */
     .arabic-text {
       font-family: 'Amiri', 'Scheherazade New', serif;
       font-size: 1.5rem;
@@ -264,45 +271,16 @@
       max-width: 400px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      animation: modalFadeIn 0.3s ease-out;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
     }
 
-    @keyframes modalFadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
+    .modal-icon-danger { font-size: 3rem; color: #ef4444; margin-bottom: 12px; }
+    .modal-icon-warning { font-size: 3rem; color: #f59e0b; margin-bottom: 12px; }
 
-    .modal-icon-danger {
-      font-size: 3rem;
-      color: #ef4444;
-      margin-bottom: 12px;
-    }
+    .modal-card h3 { font-size: 1.2rem; color: var(--text-main); margin-bottom: 8px; }
+    .modal-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 20px; }
 
-    .modal-icon-warning {
-      font-size: 3rem;
-      color: #f59e0b;
-      margin-bottom: 12px;
-    }
-
-    .modal-card h3 {
-      font-size: 1.2rem;
-      color: var(--text-main);
-      margin-bottom: 8px;
-    }
-
-    .modal-card p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-      margin-bottom: 20px;
-    }
-
-    .modal-buttons {
-      display: flex;
-      gap: 10px;
-    }
-
+    .modal-buttons { display: flex; gap: 10px; }
     .btn-secondary {
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid var(--card-border);
@@ -311,10 +289,6 @@
       width: 100%;
       padding: 12px;
       border-radius: 10px;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
     }
 
     .modal-score-card {
@@ -390,6 +364,7 @@
       <p>SMP NEGERI 8 CIKARANG UTARA</p>
     </div>
 
+    <!-- HALAMAN PENUTUPAN UJIAN (JIKA TERKUNCI JADWAL) -->
     <div id="closed-page" class="card hidden" style="text-align: center;">
       <i class="fa-solid fa-lock" style="font-size: 3rem; color: #ef4444; margin-bottom: 12px;"></i>
       <h2 id="closed-title">Halaman Ditutup</h2>
@@ -400,11 +375,12 @@
       </button>
     </div>
 
+    <!-- 1. HALAMAN LOGIN -->
     <div id="login-page" class="card">
       <h2 style="font-size: 1.1rem; margin-bottom: 15px; text-align: center;">Masuk Ke Ujian</h2>
       
       <div class="warning-box">
-        <i class="fa-solid fa-triangle-exclamation"></i> Dilarang keluar dari layar/tab selama ujian. Jika Anda keluar atau berpindah aplikasi, ujian akan otomatis direset dan soal diacak ulang!
+        <i class="fa-solid fa-triangle-exclamation"></i> Dilarang keluar dari layar/tab selama ujian. Jika Anda keluar atau berpindah aplikasi, ujian akan otomatis direset!
       </div>
 
       <div class="form-group">
@@ -421,11 +397,28 @@
         </select>
       </div>
 
-      <button class="btn-primary" onclick="startQuiz()">Mulai Kerjakan <i class="fa-solid fa-arrow-right"></i></button>
+      <button class="btn-primary" onclick="proceedToMenu()">Lanjutkan <i class="fa-solid fa-arrow-right"></i></button>
     </div>
 
+    <!-- 2. HALAMAN MENU PILIH MODE (PG / ESAI) -->
+    <div id="menu-page" class="card hidden" style="text-align: center;">
+      <h2 style="font-size: 1.1rem; margin-bottom: 5px;">Pilih Bagian Ujian</h2>
+      <p id="student-info-label" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;"></p>
+      
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button class="btn-primary" onclick="startQuiz('pg')" style="padding: 15px;">
+          <i class="fa-solid fa-list-check"></i> Kerjakan Pilihan Ganda (PG)
+        </button>
+        <button id="btn-menu-esai" class="btn-primary" style="padding: 15px; background: linear-gradient(90deg, #f59e0b, #d97706);">
+          <i class="fa-solid fa-pen-to-square"></i> Kerjakan Soal Esai
+        </button>
+      </div>
+      <button class="btn-secondary" style="margin-top: 15px;" onclick="location.reload()">Ganti Akun / Kelas</button>
+    </div>
+
+    <!-- 3. HALAMAN UJIAN -->
     <div id="quiz-page" class="card hidden">
-      <div class="progress-bar" id="progress-text">Progress: 1 / 80</div>
+      <div class="progress-bar" id="progress-text">Progress: 1 / 0</div>
 
       <div class="question-box" id="question-text"></div>
       <img id="question-img" class="question-image hidden" alt="Gambar Soal">
@@ -437,49 +430,54 @@
       </div>
 
       <button class="btn-primary hidden" id="btn-submit" style="margin-top: 15px; background: linear-gradient(90deg, #22c55e, #10b981);" onclick="confirmSubmit()">
-        Kirim Semua Jawaban <i class="fa-solid fa-check"></i>
+        Kirim Jawaban <i class="fa-solid fa-check"></i>
       </button>
     </div>
 
+    <!-- 4. HALAMAN HASIL -->
     <div id="result-page" class="card hidden" style="text-align: center;">
       <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: #22c55e; margin-bottom: 10px;"></i>
-      <h2>Ujian Selesai!</h2>
-      <p style="color: var(--text-muted); margin-top: 5px;">Jawaban Anda telah tersimpan di spreadsheet.</p>
+      <h2 id="result-title">Bagian Selesai!</h2>
+      <p style="color: var(--text-muted); margin-top: 5px;" id="result-subtitle">Jawaban Anda telah tersimpan.</p>
       <div id="score-display" style="font-size: 1.8rem; font-weight: bold; color: #38bdf8; margin: 20px 0;"></div>
-      <button class="btn-primary" onclick="location.reload()">Kembali ke Halaman Utama</button>
+      <button class="btn-primary" onclick="backToMenu()">Kembali ke Menu Utama</button>
     </div>
   </div>
 
+  <!-- MODAL PERINGATAN CURANG -->
   <div id="cheat-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <i class="fa-solid fa-triangle-exclamation modal-icon-danger"></i>
       <h3>Pelanggaran Terdeteksi!</h3>
-      <p>Anda terdeteksi meninggalkan layar/tab ujian. Sesuai aturan, ujian Anda direset dan urutan soal telah diacak kembali.</p>
-      <button class="btn-primary" style="background: #ef4444; width: 100%; padding: 12px; border-radius: 10px;" onclick="location.reload()">Mengerti & Ulangi Ujian</button>
+      <p>Anda terdeteksi meninggalkan layar/tab ujian. Ujian Anda direset.</p>
+      <button class="btn-primary" style="background: #ef4444; width: 100%; padding: 12px; border-radius: 10px;" onclick="location.reload()">Mengerti & Ulangi</button>
     </div>
   </div>
 
+  <!-- MODAL KONFIRMASI SUBMIT -->
   <div id="submit-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <i class="fa-solid fa-circle-question modal-icon-warning"></i>
       <h3 id="submit-modal-title">Konfirmasi Selesai</h3>
-      <p id="submit-modal-msg">Apakah Anda yakin ingin menyelesaikan dan mengirim jawaban Anda sekarang?</p>
+      <p id="submit-modal-msg">Apakah Anda yakin ingin mengirimkan jawaban?</p>
       <div class="modal-buttons">
         <button class="btn-secondary" onclick="closeSubmitModal()">Batal</button>
-        <button class="btn-primary" style="margin-top:0; background: linear-gradient(90deg, #22c55e, #10b981); width: 100%; padding: 12px; border-radius: 10px;" onclick="executeSubmit()">Kirim Jawaban</button>
+        <button class="btn-primary" style="margin-top:0; background: linear-gradient(90deg, #22c55e, #10b981); width: 100%; padding: 12px; border-radius: 10px;" onclick="executeSubmit()">Kirim</button>
       </div>
     </div>
   </div>
 
+  <!-- MODAL INFORMASI -->
   <div id="info-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <i class="fa-solid fa-circle-info modal-icon-warning"></i>
       <h3>Pemberitahuan</h3>
-      <p id="info-modal-msg">Pesan informasi</p>
+      <p id="info-modal-msg">Pesan</p>
       <button class="btn-primary" style="width: 100%; padding: 12px; border-radius: 10px;" onclick="closeInfoModal()">OK</button>
     </div>
   </div>
 
+  <!-- MODAL HASIL SKOR SISWA (DARI CSV) -->
   <div id="score-modal" class="modal-overlay hidden">
     <div class="modal-card modal-score-card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -519,6 +517,7 @@
     const API_URL = "https://script.google.com/macros/s/AKfycby_dY1HBPqXSU-CY-iUfWDk8TnXmEybejWYxZS-gbUs6QxEjEIgq8H_L1gkfnKnnVQk/exec";
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQf6batnTZDvAutuVD2kAWqut6791Gl-tD4h8E6Azy1L9I1TH5OiU01x8p6-n7ZPv_JDTWDzR9sKdcA/pub?gid=480714544&single=true&output=csv";
 
+    // Konfigurasi Jadwal Ujian (Set ke tahun 2099 agar terbuka sekarang)
     const SCHEDULE_CONFIG = {
       closeTime: "2099-12-31T23:59:59+07:00",
       remedStart: "2099-12-31T23:59:59+07:00",
@@ -526,153 +525,175 @@
       closedMsgText: "Ujian telah ditutup."
     };
 
-    const rawQuestions = [
+    // ==========================================
+    // 1. DATA SOAL PILIHAN GANDA (PG) - Diacak
+    // ==========================================
+    const rawQuestionsPG = [
       {
         id: 1,
         q: "Perhatikan pernyataan berikut!\n(1) Gaya dorong pada meja\n(2) Buah kelapa jatuh dari pohonnya\n(3) Sepeda menuruni bukit tanpa diayuh\n(4) Bola yang dilempar ke atas\n\nPernyataan di atas yang merupakan contoh gerak lurus berubah beraturan (GLBB) dipercepat beraturan adalah...",
         img: "",
-        options: ["(1) dan (2)", "(1) dan (4)", "(2) dan (3)", "(3) dan (4)"]
+        options: ["(1) dan (2)", "(1) dan (4)", "(2) dan (3)", "(3) dan (4)"],
+        key: "C"
       },
       {
         id: 2,
         q: "Sebuah balok bermassa $2 \\text{ kg}$ diletakkan di atas lantai. Jika percepatan gravitasi bumi $g = 10 \\text{ m/s}^2$, besar gaya berat yang dialami balok tersebut adalah...",
         img: "",
-        options: ["$5 \\text{ N}$", "$10 \\text{ N}$", "$20 \\text{ N}$", "$200 \\text{ N}$"]
+        options: ["$5 \\text{ N}$", "$10 \\text{ N}$", "$20 \\text{ N}$", "$200 \\text{ N}$"],
+        key: "C"
       },
       {
         id: 3,
         q: "Perundingan yang menghasilkan keputusan bahwa bangsa Indonesia mengakui secara de facto wilayah Republik Indonesia meliputi Sumatera, Jawa, dan Madura adalah Perundingan...",
         img: "",
-        options: ["Linggarjati", "Renville", "Roem-Royen", "KMB"]
+        options: ["Linggarjati", "Renville", "Roem-Royen", "KMB"],
+        key: "A"
       },
       {
         id: 4,
         q: "Kegiatan ekspor dan impor yang dilakukan oleh suatu negara dengan negara lain merupakan bentuk mobilitas atau perdagangan dalam lingkup...",
         img: "",
-        options: ["Lokal", "Regional", "Internasional", "Nasional"]
+        options: ["Lokal", "Regional", "Internasional", "Nasional"],
+        key: "C"
       },
       {
         id: 5,
         q: "Diketahui suatu fungsi kuadrat dinyatakan dengan rumus $f(x) = 2x^2 - 8x + 6$. Nilai diskriminan ($D = b^2 - 4ac$) dari fungsi tersebut adalah...",
         img: "",
-        options: ["$8$", "$16$", "$32$", "$64$"]
+        options: ["$8$", "$16$", "$32$", "$64$"],
+        key: "B"
       },
       {
         id: 6,
         q: "Persamaan garis lurus yang melalui titik $(2, 3)$ dengan kemiringan (gradien) $m = 4$ adalah...",
         img: "",
-        options: ["$y = 4x - 5$", "$y = 4x + 5$", "$y = 4x - 8$", "$y = 4x + 11$"]
+        options: ["$y = 4x - 5$", "$y = 4x + 5$", "$y = 4x - 8$", "$y = 4x + 11$"],
+        key: "A"
       },
       {
         id: 7,
         q: "Komponen utama dalam berpikir komputasional yang melibatkan pemecahan masalah besar dan kompleks menjadi bagian-bagian kecil yang lebih mudah dikelola disebut...",
         img: "",
-        options: ["Abstraksi", "Pengenalan Pola", "Dekomposisi", "Algoritma"]
+        options: ["Abstraksi", "Pengenalan Pola", "Dekomposisi", "Algoritma"],
+        key: "C"
       },
       {
         id: 8,
         q: "Struktur data linier di mana penambahan dan penghapusan elemen hanya dapat dilakukan pada satu ujung saja (prinsip Last In, First Out / LIFO) disebut...",
         img: "",
-        options: ["Queue (Antrean)", "Stack (Tumpukan)", "Array (Larik)", "Tree (Pohon)"]
+        options: ["Queue (Antrean)", "Stack (Tumpukan)", "Array (Larik)", "Tree (Pohon)"],
+        key: "B"
       },
       {
         id: 9,
         q: "Perhatikan potongan ayat Q.S. At-Taubah ayat 105 berikut:\n<span class='arabic-text'>وَقُلِ اعْمَلُوا فَسَيَرَى اللَّهُ عَمَلَكُمْ وَرَسُولُهُ وَالْمُؤْمِنُونَ</span>\nAyat tersebut berisi perintah kepada kita untuk...",
         img: "",
-        options: ["Bersabar dalam menghadapi musibah", "Selalu beramal saleh dan bekerja keras", "Menjaga persatuan dan kesatuan umat", "Berbuat baik kepada kedua orang tua"]
+        options: ["Bersabar dalam menghadapi musibah", "Selalu beramal saleh dan bekerja keras", "Menjaga persatuan dan kesatuan umat", "Berbuat baik kepada kedua orang tua"],
+        key: "B"
       },
       {
         id: 10,
         q: "Iman kepada Kitab-kitab Allah SWT merupakan rukun iman yang ke-...",
         img: "",
-        options: ["Pertama", "Kedua", "Ketiga", "Keempat"]
+        options: ["Pertama", "Kedua", "Ketiga", "Keempat"],
+        key: "C"
       },
       {
         id: 11,
         q: "Hukum bacaan Nun Sukun atau Tanwin apabila bertemu dengan huruf إ (Hamzah) adalah...",
         img: "",
-        options: ["Idgham Bighunnah", "Iqlab", "Izhar Halqi", "Ikhfa' Syafawi"]
+        options: ["Idgham Bighunnah", "Iqlab", "Izhar Halqi", "Ikhfa' Syafawi"],
+        key: "C"
       },
       {
         id: 12,
         q: "Perhatikan lafaz berikut:\n<span class='arabic-text'>مِنْ شَرِّ</span>\nHukum tajwid pada potongan ayat di atas adalah...",
         img: "",
-        options: ["Ikhfa' Haqiqi", "Idgham Bilaghunnah", "Izhar Syafawi", "Idgham Mimi"]
+        options: ["Ikhfa' Haqiqi", "Idgham Bilaghunnah", "Izhar Syafawi", "Idgham Mimi"],
+        key: "A"
       },
       {
         id: 13,
         q: "Kecap sandang anu digunakeun pikeun nuduhkeun jalma anu dipikahormat atawa salaku panyeluk dina basa Sunda lemes nyaéta...",
         img: "",
-        options: ["Si", "Ki", "Sang", "Nyai"]
+        options: ["Si", "Ki", "Sang", "Nyai"],
+        key: "C"
       },
       {
         id: 14,
         q: "Rarangken tengah (seselan) dina basa Sunda anu boga fungsi pikeun ngawangun kecap sipat atawa nuduhkeun kalakuan nyaéta...",
         img: "",
-        options: ["-um- jeung -in-", "-ar- jeung -al-", "-um- jeung -ar-", "-in- jeung -an"]
+        options: ["-um- jeung -in-", "-ar- jeung -al-", "-um- jeung -ar-", "-in- jeung -an"],
+        key: "A"
       },
       {
         id: 15,
         q: "Ciri utama teks berita yang membedakannya dengan jenis teks lain adalah sifatnya yang faktual dan...",
         img: "",
-        options: ["Imajinatif", "Objektif dan aktual", "Subjektif dan persuasif", "Fiktif"]
+        options: ["Imajinatif", "Objektif dan aktual", "Subjektif dan persuasif", "Fiktif"],
+        key: "B"
       },
       {
         id: 16,
         q: "Perhatikan kalimat berikut:\n\"Ibu membeli buah mangga, apel, dan jeruk di pasar.\"\nPenggunaan tanda baca koma (,) pada kalimat tersebut berfungsi untuk...",
         img: "",
-        options: ["Memisahkan anak kalimat dari induk kalimat", "Memisahkan petikan langsung dari bagian lain", "Memisahkan unsur-unsur dalam suatu perincian atau pembilangan", "Mengakhiri kalimat perincian"]
+        options: ["Memisahkan anak kalimat dari induk kalimat", "Memisahkan petikan langsung dari bagian lain", "Memisahkan unsur-unsur dalam suatu perincian atau pembilangan", "Mengakhiri kalimat perincian"],
+        key: "C"
       },
       {
         id: 17,
         q: "Complete the sentence with the correct form of the verb:\n\"Look! The students _____ English grammar in the classroom right now.\"",
         img: "",
-        options: ["study", "studies", "are studying", "studied"]
+        options: ["study", "studies", "are studying", "studied"],
+        key: "C"
       },
       {
         id: 18,
         q: "Choose the correct comparative adjective:\n\"Mount Everest is _____ than any other mountain in the world.\"",
         img: "",
-        options: ["high", "higher", "highest", "more high"]
+        options: ["high", "higher", "highest", "more high"],
+        key: "B"
       },
       {
         id: 19,
         q: "Teknik menggambar atau melukis dengan cara menuangkan cat air dengan komposisi air yang lebih banyak sehingga menghasilkan kesan transparan disebut teknik...",
         img: "",
-        options: ["Plakat", "Aquarel", "Pointilis", "Dussel"]
+        options: ["Plakat", "Aquarel", "Pointilis", "Dussel"],
+        key: "B"
       },
       {
         id: 20,
         q: "Unsur seni rupa dasar yang terbentuk dari gabungan titik-titik yang sambung-menyambung adalah...",
         img: "",
-        options: ["Bidang", "Garis", "Warna", "Tekstur"]
+        options: ["Bidang", "Garis", "Warna", "Tekstur"],
+        key: "B"
       }
     ];
 
-    const keysPattern = [
-      "C", "C", "A", "C", "B", "A", "C", "B", "B", "C",
-      "C", "A", "C", "A", "B", "C", "C", "B", "B", "B"
+    // ========================================================
+    // 2. DATA SOAL ESAI - TIDAK DIAKAP (Urut sesuai urutan di bawah)
+    // ========================================================
+    const rawQuestionsEssay = [
+      {
+        id: 1,
+        q: "Jelaskan proses terjadinya siklus air di bumi secara singkat dan jelas!",
+        img: ""
+      },
+      {
+        id: 2,
+        q: "Sebutkan dan jelaskan 3 contoh penerapan Hukum Newton dalam kehidupan sehari-hari!",
+        img: ""
+      }
     ];
 
-    rawQuestions.forEach((item, index) => {
-      item.key = keysPattern[index];
-    });
-
     let studentData = [];
-    let randomizedQuestions = [];
+    let currentMode = ""; // 'pg' atau 'essay'
+    let activeQuestions = [];
     let userAnswers = [];
     let currentIdx = 0;
     let quizActive = false;
     let csvScoresData = [];
-
-    function shuffleArray(array) {
-      let arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
 
     window.onload = function() {
       checkAccessSchedule();
@@ -682,6 +703,7 @@
       setInterval(checkAccessSchedule, 1000);
     };
 
+    // FUNGSI JADWAL DAN TIMER
     function checkAccessSchedule() {
       const now = new Date();
       const closeTime = new Date(SCHEDULE_CONFIG.closeTime);
@@ -696,6 +718,7 @@
 
       if (now >= closeTime && now < remedStart) {
         loginPage.classList.add("hidden");
+        document.getElementById("menu-page").classList.add("hidden");
         closedPage.classList.remove("hidden");
         closedTitle.innerText = "Halaman Ujian Ditutup";
         closedMsg.innerText = SCHEDULE_CONFIG.closedMsgText;
@@ -708,6 +731,7 @@
         }
       } else if (now > remedEnd) {
         loginPage.classList.add("hidden");
+        document.getElementById("menu-page").classList.add("hidden");
         closedPage.classList.remove("hidden");
         closedTitle.innerText = "Sesi Ujian & Remedial Telah Berakhir";
         closedMsg.innerText = "Ujian dan Remedial telah resmi ditutup secara permanen.";
@@ -728,6 +752,7 @@
         `${days} Hari ${hours} Jam ${minutes} Menit ${seconds} Detik`;
     }
 
+    // FUNGSI LOAD & RENDER MODAL CSV HASIL SKOR
     function openScoreModal() {
       document.getElementById("score-modal").classList.remove("hidden");
       if (csvScoresData.length === 0) {
@@ -835,31 +860,6 @@
       }
     }
 
-    function setupSecurityProtections() {
-      document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
-      document.addEventListener('keydown', e => {
-        if (
-          e.key === 'F12' || 
-          (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
-          (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 'c' || e.key === 'C' || e.key === 'x' || e.key === 'X' || e.key === 'a' || e.key === 'A'))
-        ) {
-          e.preventDefault();
-          return false;
-        }
-      });
-      document.addEventListener('copy', e => { e.preventDefault(); showInfoModal("Aksi menyalin (copy) teks dilarang selama ujian!"); });
-      document.addEventListener('cut', e => { e.preventDefault(); });
-    }
-
-    function showInfoModal(msg) {
-      document.getElementById("info-modal-msg").innerText = msg;
-      document.getElementById("info-modal").classList.remove("hidden");
-    }
-
-    function closeInfoModal() {
-      document.getElementById("info-modal").classList.add("hidden");
-    }
-
     function fetchStudentData() {
       fetch(API_URL, {
         method: "POST",
@@ -906,6 +906,249 @@
       selectNama.disabled = false;
     }
 
+    function proceedToMenu() {
+      const kelas = document.getElementById("select-kelas").value;
+      const nama = document.getElementById("select-nama").value;
+
+      if(!kelas || !nama) {
+        showInfoModal("Pilih Kelas dan Nama Anda terlebih dahulu!");
+        return;
+      }
+
+      document.getElementById("student-info-label").innerText = `Siswa: ${nama} (${kelas})`;
+      document.getElementById("login-page").classList.add("hidden");
+      document.getElementById("menu-page").classList.remove("hidden");
+
+      const btnEsai = document.getElementById("btn-menu-esai");
+      if (rawQuestionsEssay.length === 0) {
+        btnEsai.classList.add("btn-disabled");
+        btnEsai.onclick = () => showInfoModal("Soal esai belum tersedia / kosong untuk ujian ini.");
+      } else {
+        btnEsai.classList.remove("btn-disabled");
+        btnEsai.onclick = () => startQuiz('essay');
+      }
+    }
+
+    function backToMenu() {
+      document.getElementById("result-page").classList.add("hidden");
+      document.getElementById("menu-page").classList.remove("hidden");
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function startQuiz(mode) {
+      currentMode = mode;
+      document.getElementById("menu-page").classList.add("hidden");
+      document.getElementById("quiz-page").classList.remove("hidden");
+
+      if (mode === 'pg') {
+        activeQuestions = shuffleArray(rawQuestionsPG).map(q => {
+          const originalKeyIndex = ["A", "B", "C", "D", "E"].indexOf(q.key);
+          const correctText = q.options[originalKeyIndex];
+          return {
+            id: q.id,
+            q: q.q,
+            img: q.img || "",
+            options: shuffleArray(q.options),
+            correctText: correctText
+          };
+        });
+      } else {
+        activeQuestions = [...rawQuestionsEssay];
+      }
+
+      userAnswers = new Array(activeQuestions.length).fill(null);
+      quizActive = true;
+      showQuestion(0);
+    }
+
+    function showQuestion(idx) {
+      currentIdx = idx;
+      const total = activeQuestions.length;
+      document.getElementById("progress-text").innerText = `Progress: ${idx + 1} / ${total}`;
+      
+      const q = activeQuestions[idx];
+      document.getElementById("question-text").innerHTML = q.q;
+
+      const imgElement = document.getElementById("question-img");
+      if (q.img && q.img.trim() !== "") {
+        imgElement.src = q.img;
+        imgElement.classList.remove("hidden");
+      } else {
+        imgElement.src = "";
+        imgElement.classList.add("hidden");
+      }
+
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+
+      if (currentMode === 'essay') {
+        const savedAnswer = userAnswers[idx] ? userAnswers[idx].selectedText : "";
+        optionsContainer.innerHTML = `
+          <div class="form-group" style="margin-top: 15px;">
+            <label style="color: var(--text-main); font-weight: 600; margin-bottom: 8px;">Jawaban Esai Anda:</label>
+            <textarea id="essay-input" rows="6" placeholder="Ketik jawaban esai Anda di sini..." 
+              oninput="saveEssayAnswer(this.value)">${savedAnswer}</textarea>
+          </div>
+        `;
+      } else {
+        const prefixes = ["A", "B", "C", "D", "E"];
+        q.options.forEach((optText, i) => {
+          const char = prefixes[i];
+          const selectedAns = userAnswers[idx];
+          const isSelected = selectedAns && selectedAns.selectedText === optText;
+          
+          const div = document.createElement("div");
+          div.className = `option-item ${isSelected ? 'selected' : ''}`;
+          div.onclick = () => selectOption(optText);
+          
+          div.innerHTML = `
+            <div class="option-prefix">${char}</div>
+            <div>${optText}</div>
+          `;
+          optionsContainer.appendChild(div);
+        });
+      }
+
+      document.getElementById("btn-prev").style.visibility = idx === 0 ? "hidden" : "visible";
+      
+      if(idx === total - 1) {
+        document.getElementById("btn-next").classList.add("hidden");
+        document.getElementById("btn-submit").classList.remove("hidden");
+      } else {
+        document.getElementById("btn-next").classList.remove("hidden");
+        document.getElementById("btn-submit").classList.add("hidden");
+      }
+
+      if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+        MathJax.typesetPromise().catch((err) => console.log('MathJax error:', err));
+      }
+    }
+
+    function selectOption(optText) {
+      const q = activeQuestions[currentIdx];
+      userAnswers[currentIdx] = {
+        questionId: q.id,
+        selectedText: optText,
+        isCorrect: optText === q.correctText
+      };
+      showQuestion(currentIdx);
+    }
+
+    function saveEssayAnswer(text) {
+      const q = activeQuestions[currentIdx];
+      userAnswers[currentIdx] = {
+        questionId: q.id,
+        selectedText: text,
+        isCorrect: null
+      };
+    }
+
+    function changeQuestion(dir) {
+      const newIdx = currentIdx + dir;
+      if(newIdx >= 0 && newIdx < activeQuestions.length) {
+        showQuestion(newIdx);
+      }
+    }
+
+    function confirmSubmit() {
+      const unanswered = userAnswers.filter(a => a === null || a.selectedText.trim() === "").length;
+      const titleEl = document.getElementById("submit-modal-title");
+      const msgEl = document.getElementById("submit-modal-msg");
+
+      if(unanswered > 0) {
+        titleEl.innerText = "Soal Belum Lengkap!";
+        msgEl.innerText = `Masih ada ${unanswered} soal yang belum Anda isi/jawab. Yakin ingin mengirim sekarang?`;
+      } else {
+        titleEl.innerText = "Konfirmasi Selesai";
+        msgEl.innerText = "Apakah Anda yakin ingin menyelesaikan dan mengirim jawaban ini?";
+      }
+
+      document.getElementById("submit-modal").classList.remove("hidden");
+    }
+
+    function closeSubmitModal() {
+      document.getElementById("submit-modal").classList.add("hidden");
+    }
+
+    function executeSubmit() {
+      closeSubmitModal();
+      quizActive = false;
+      const kelas = document.getElementById("select-kelas").value;
+      const nama = document.getElementById("select-nama").value;
+
+      document.getElementById("quiz-page").classList.add("hidden");
+      document.getElementById("result-page").classList.remove("hidden");
+      
+      let payload = { nama: nama, kelas: kelas };
+
+      if (currentMode === 'pg') {
+        document.getElementById("result-title").innerText = "Pilihan Ganda Selesai!";
+        document.getElementById("score-display").innerText = "Mengirim Nilai PG...";
+        document.getElementById("result-subtitle").innerText = "Jawaban PG Anda telah tersimpan di spreadsheet.";
+
+        let formattedAnswers = new Array(rawQuestionsPG.length).fill("");
+        userAnswers.forEach(ans => {
+          if(ans) {
+            const rawQ = rawQuestionsPG.find(rq => rq.id === ans.questionId);
+            if(rawQ) {
+              const optIndex = rawQ.options.indexOf(ans.selectedText);
+              if(optIndex !== -1) {
+                formattedAnswers[rawQ.id - 1] = ["A", "B", "C", "D", "E"][optIndex];
+              }
+            }
+          }
+        });
+
+        payload.action = "submitQuiz";
+        payload.jawaban = formattedAnswers;
+
+      } else {
+        document.getElementById("result-title").innerText = "Esai Berhasil Dikirim!";
+        document.getElementById("score-display").innerText = "Menunggu Koreksi Guru";
+        document.getElementById("result-subtitle").innerText = "Jawaban esai tersimpan terpisah dan tidak mempengaruhi nilai otomatis PG.";
+
+        let essayAnswersMap = {};
+        userAnswers.forEach(ans => {
+          if(ans) {
+            essayAnswersMap[`Soal_${ans.questionId}`] = ans.selectedText;
+          }
+        });
+
+        payload.action = "submitEssay";
+        payload.jawabanEsai = essayAnswersMap;
+      }
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          if (currentMode === 'pg') {
+            document.getElementById("score-display").innerText = `Skor PG Anda: ${data.score}`;
+          } else {
+            document.getElementById("score-display").innerText = `Esai Tersimpan`;
+          }
+        } else {
+          showInfoModal("Error: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error("Detail Error:", err);
+        showInfoModal("Gagal koneksi ke server saat mengirim jawaban.");
+      });
+    }
+
     function logViolationToSheet(catatanTeks) {
       const kelas = document.getElementById("select-kelas") ? document.getElementById("select-kelas").value : "-";
       const nama = document.getElementById("select-nama") ? document.getElementById("select-nama").value : "Anonim";
@@ -935,179 +1178,18 @@
       });
     }
 
-    function startQuiz() {
-      const kelas = document.getElementById("select-kelas").value;
-      const nama = document.getElementById("select-nama").value;
-
-      if(!kelas || !nama) {
-        showInfoModal("Pilih Kelas dan Nama Anda terlebih dahulu!");
-        return;
-      }
-
-      randomizedQuestions = shuffleArray(rawQuestions).map(q => {
-        const originalKeyIndex = ["A", "B", "C", "D", "E"].indexOf(q.key);
-        const correctText = q.options[originalKeyIndex];
-        const shuffledOpts = shuffleArray(q.options);
-
-        return {
-          id: q.id,
-          q: q.q,
-          img: q.img || "",
-          options: shuffledOpts,
-          correctText: correctText
-        };
-      });
-
-      userAnswers = new Array(randomizedQuestions.length).fill(null);
-
-      document.getElementById("login-page").classList.add("hidden");
-      document.getElementById("quiz-page").classList.remove("hidden");
-      
-      quizActive = true;
-      showQuestion(0);
+    function setupSecurityProtections() {
+      document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+      document.addEventListener('copy', e => { e.preventDefault(); });
     }
 
-    function showQuestion(idx) {
-      currentIdx = idx;
-      const total = randomizedQuestions.length;
-      document.getElementById("progress-text").innerText = `Progress: ${idx + 1} / ${total}`;
-      
-      const q = randomizedQuestions[idx];
-      // Gunakan innerHTML agar tag HTML seperti <span class='arabic-text'> dapat berfungsi dengan baik
-      document.getElementById("question-text").innerHTML = q.q;
-
-      const imgElement = document.getElementById("question-img");
-      if (q.img && q.img.trim() !== "") {
-        imgElement.src = q.img;
-        imgElement.classList.remove("hidden");
-      } else {
-        imgElement.src = "";
-        imgElement.classList.add("hidden");
-      }
-
-      const optionsContainer = document.getElementById("options-container");
-      optionsContainer.innerHTML = "";
-
-      const prefixes = ["A", "B", "C", "D", "E"];
-      q.options.forEach((optText, i) => {
-        const char = prefixes[i];
-        const selectedAns = userAnswers[idx];
-        const isSelected = selectedAns && selectedAns.selectedText === optText;
-        
-        const div = document.createElement("div");
-        div.className = `option-item ${isSelected ? 'selected' : ''}`;
-        div.onclick = () => selectOption(optText);
-        
-        div.innerHTML = `
-          <div class="option-prefix">${char}</div>
-          <div>${optText}</div>
-        `;
-        optionsContainer.appendChild(div);
-      });
-
-      document.getElementById("btn-prev").style.visibility = idx === 0 ? "hidden" : "visible";
-      
-      if(idx === total - 1) {
-        document.getElementById("btn-next").classList.add("hidden");
-        document.getElementById("btn-submit").classList.remove("hidden");
-      } else {
-        document.getElementById("btn-next").classList.remove("hidden");
-        document.getElementById("btn-submit").classList.add("hidden");
-      }
-
-      if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
-        MathJax.typesetPromise().catch((err) => console.log('MathJax error:', err));
-      }
+    function showInfoModal(msg) {
+      document.getElementById("info-modal-msg").innerText = msg;
+      document.getElementById("info-modal").classList.remove("hidden");
     }
 
-    function selectOption(optText) {
-      const q = randomizedQuestions[currentIdx];
-      userAnswers[currentIdx] = {
-        questionId: q.id,
-        selectedText: optText,
-        isCorrect: optText === q.correctText
-      };
-      showQuestion(currentIdx);
-    }
-
-    function changeQuestion(dir) {
-      const newIdx = currentIdx + dir;
-      if(newIdx >= 0 && newIdx < randomizedQuestions.length) {
-        showQuestion(newIdx);
-      }
-    }
-
-    function confirmSubmit() {
-      const unanswered = userAnswers.filter(a => a === null).length;
-      const titleEl = document.getElementById("submit-modal-title");
-      const msgEl = document.getElementById("submit-modal-msg");
-
-      if(unanswered > 0) {
-        titleEl.innerText = "Soal Belum Lengkap!";
-        msgEl.innerText = `Masih ada ${unanswered} soal yang belum Anda jawab. Apakah Anda yakin ingin tetap mengirimkan jawaban?`;
-      } else {
-        titleEl.innerText = "Konfirmasi Selesai Ujian";
-        msgEl.innerText = "Apakah Anda yakin ingin menyelesaikan dan mengirim seluruh jawaban Anda sekarang?";
-      }
-
-      document.getElementById("submit-modal").classList.remove("hidden");
-    }
-
-    function closeSubmitModal() {
-      document.getElementById("submit-modal").classList.add("hidden");
-    }
-
-    function executeSubmit() {
-      closeSubmitModal();
-      submitAnswers();
-    }
-
-    function submitAnswers() {
-      quizActive = false;
-      const kelas = document.getElementById("select-kelas").value;
-      const nama = document.getElementById("select-nama").value;
-
-      document.getElementById("quiz-page").classList.add("hidden");
-      document.getElementById("result-page").classList.remove("hidden");
-      document.getElementById("score-display").innerText = "Mengirim Jawaban...";
-
-      let formattedAnswers = new Array(rawQuestions.length).filter(() => "").fill(""); // Perbaikan inisialisasi array
-      userAnswers.forEach(ans => {
-        if(ans) {
-          const rawQ = rawQuestions.find(rq => rq.id === ans.questionId);
-          if(rawQ) {
-            const optIndex = rawQ.options.indexOf(ans.selectedText);
-            if(optIndex !== -1) {
-              formattedAnswers[ans.questionId - 1] = ["A", "B", "C", "D", "E"][optIndex];
-            }
-          }
-        }
-      });
-
-      const payload = {
-        action: "submitQuiz",
-        nama: nama,
-        kelas: kelas,
-        jawaban: formattedAnswers
-      };
-
-      fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data.status === "success") {
-          document.getElementById("score-display").innerText = `Skor Anda: ${data.score}`;
-        } else {
-          showInfoModal("Error: " + data.message);
-        }
-      })
-      .catch(err => {
-        console.error("Detail Error:", err);
-        showInfoModal("Gagal koneksi ke server saat mengirim jawaban.");
-      });
+    function closeInfoModal() {
+      document.getElementById("info-modal").classList.add("hidden");
     }
   </script>
 </body>
