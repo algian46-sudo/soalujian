@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desain Dekorasi Pameran - Seni Rupa Kelas IX</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="https://i.imgur.com/mRmw86t.jpeg">
+  <style>
+    body {
+      box-sizing: border-box;
+      background-color: #ffffff !important;
+      color: #000000 !important;
+    }
+    
+    .font-display { font-family: 'Playfair Display', serif; }
+    .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    .gradient-bg {
+      background: #ffffff !important;
+    }
+    
+    .card-glass {
+      background: #f9fafb !important;
+      backdrop-filter: none;
+      border: 2px solid #000000 !important;
+      color: #000000 !important;
+    }
+    
+    .nav-item {
+      transition: all 0.3s ease;
+    }
+    
+    .nav-item:hover, .nav-item.active {
+      background: #000000 !important;
+      color: #ffffff !important;
+      transform: translateY(-2px);
+    }
+    
+    .slide-enter {
+      animation: slideIn 0.5s ease forwards;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .quiz-option {
+      transition: all 0.3s ease;
+      border-color: #000000 !important;
+      color: #000000 !important;
+    }
+    
+    .quiz-option:hover:not(.disabled) {
+      transform: translateX(5px);
+      background: #e5e7eb !important;
+    }
+    
+    .quiz-option.correct {
+      background: #d1fae5 !important;
+      border-color: #059669 !important;
+      color: #065f46 !important;
+    }
+    
+    .quiz-option.incorrect {
+      background: #fee2e2 !important;
+      border-color: #dc2626 !important;
+      color: #991b1b !important;
+    }
+    
+    .progress-bar {
+      transition: width 0.5s ease;
+    }
+    
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f3f4f6;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #000000;
+      border-radius: 4px;
+    }
+    
+    .illustration-frame {
+      background: #f3f4f6 !important;
+      border: 2px solid #000000 !important;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body text-black bg-white overflow-auto">
+  <div id="app" class="h-full w-full flex flex-col"><!-- Header Navigation -->
+   <header class="sticky top-0 z-50 bg-white bg-opacity-95 backdrop-blur-lg border-b-2 border-black px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center text-xl font-bold">
+       🎨
+      </div>
+      <div>
+       <h1 id="header-title" class="font-display font-bold text-lg leading-tight text-black">Desain Dekorasi Pameran</h1>
+       <p id="header-subtitle" class="text-xs text-gray-700">Seni Rupa Kelas IX - Algian Manggara, S.Agr</p>
+      </div>
+     </div>
+     <div class="flex items-center gap-2"><span id="slide-indicator" class="text-sm text-black font-semibold mr-2">1 / 9</span> <button onclick="prevSlide()" class="w-8 h-8 rounded-lg bg-gray-200 hover:bg-black hover:text-white flex items-center justify-center transition border border-black">
+       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+       </svg></button> <button onclick="nextSlide()" class="w-8 h-8 rounded-lg bg-black text-white hover:opacity-90 flex items-center justify-center transition border border-black">
+       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+       </svg></button>
+     </div>
+    </div>
+   </header><!-- Progress Bar -->
+   <div class="w-full h-1 bg-gray-200">
+    <div id="progress-bar" class="progress-bar h-full bg-black" style="width: 11.11%"></div>
+   </div><!-- Main Content -->
+   <main class="flex-1 overflow-auto bg-white">
+    <div class="max-w-6xl mx-auto px-4 py-6"><!-- Slide 1: Cover -->
+     <section id="slide-1" class="slide slide-enter min-h-[70%]">
+      <div class="flex flex-col items-center justify-center text-center py-12">
+       <div class="float-animation mb-8">
+        <div class="w-32 h-32 rounded-3xl bg-white border-4 border-black flex items-center justify-center text-6xl shadow-xl">
+         🖼️
+        </div>
+       </div>
+       <h1 id="main-title" class="font-display text-5xl md:text-6xl font-bold mb-4 text-black">Desain Dekorasi Pameran</h1>
+       <p id="main-subtitle" class="text-xl md:text-2xl text-gray-800 mb-8 font-medium">Seni Rupa Kelas IX - Algian Manggara, S.Agr</p>
+       <div class="flex flex-wrap justify-center gap-4 mb-12"><span class="px-4 py-2 rounded-full bg-gray-100 border border-black text-sm font-semibold text-black">📐 Prinsip Desain</span> <span class="px-4 py-2 rounded-full bg-gray-100 border border-black text-sm font-semibold text-black">🎪 Penataan Ruang</span> <span class="px-4 py-2 rounded-full bg-gray-100 border border-black text-sm font-semibold text-black">♻️ Bahan Bekas</span>
+       </div><button onclick="nextSlide()" class="px-8 py-4 rounded-2xl bg-black text-white font-semibold text-lg hover:bg-gray-800 transition-all hover:scale-105 border-2 border-black"> Mulai Belajar → </button>
+      </div>
+     </section><!-- Slide 2: Pendahuluan -->
+     <section id="slide-2" class="slide hidden">
+      <div class="slide-enter">
+       <div class="flex items-center gap-3 mb-6"><span class="text-4xl">📖</span>
+        <h2 class="font-display text-3xl font-bold text-black">Pendahuluan &amp; Deskripsi</h2>
+       </div>
+       <div class="grid md:grid-cols-2 gap-6">
+        <div class="space-y-4">
+         <div class="card-glass rounded-2xl p-6">
+          <h3 class="font-semibold text-black mb-2 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-gray-200 border border-black flex items-center justify-center">📌</span> Definisi Dekorasi</h3>
+          <p class="text-gray-900 leading-relaxed font-medium">Seni menghias ruang pameran agar lebih <span class="text-black font-bold underline">menarik</span> dan <span class="text-black font-bold underline">komunikatif</span> bagi pengunjung.</p>
+         </div>
+         <div class="card-glass rounded-2xl p-6">
+          <h3 class="font-semibold text-black mb-2 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-gray-200 border border-black flex items-center justify-center">🎯</span> Tujuan Utama</h3>
+          <p class="text-gray-900 leading-relaxed font-medium">Menerapkan prinsip desain dekoratif dalam ruang untuk menarik perhatian pengunjung dan menyampaikan pesan karya seni.</p>
+         </div>
+         <div class="card-glass rounded-2xl p-6">
+          <h3 class="font-semibold text-black mb-2 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-gray-200 border border-black flex items-center justify-center">♻️</span> Pemanfaatan Bahan</h3>
+          <p class="text-gray-900 leading-relaxed font-medium">Dekorasi dapat dibuat menggunakan <span class="text-black font-bold">benda sekitar</span> atau <span class="text-black font-bold">barang bekas</span> - ramah lingkungan!</p>
+         </div>
+        </div>
+        <div class="illustration-frame rounded-2xl p-6 flex flex-col items-center justify-center">
+         <svg viewbox="0 0 300 250" class="w-full max-w-sm"><!-- Gallery Room --> <rect x="20" y="30" width="260" height="180" fill="#ffffff" stroke="#000000" stroke-width="2" rx="5" /> <!-- Floor --> <rect x="20" y="180" width="260" height="30" fill="#e5e7eb" stroke="#000000" stroke-width="2" /> <!-- Artworks on wall --> <rect x="40" y="50" width="50" height="70" fill="#f3f4f6" stroke="#000000" stroke-width="2" rx="3" /> <rect x="110" y="60" width="80" height="90" fill="#f3f4f6" stroke="#000000" stroke-width="2" rx="3" /> <rect x="210" y="50" width="50" height="70" fill="#f3f4f6" stroke="#000000" stroke-width="2" rx="3" /> <!-- Decorations --> <circle cx="65" cy="85" r="15" fill="#000000" opacity="0.2" /> <circle cx="150" cy="105" r="25" fill="#000000" opacity="0.2" /> <circle cx="235" cy="85" r="15" fill="#000000" opacity="0.2" /> <!-- Plants --> <ellipse cx="50" cy="195" rx="15" ry="10" fill="#000000" /> <ellipse cx="250" cy="195" rx="15" ry="10" fill="#000000" /> <!-- Visitors --> <circle cx="120" cy="185" r="8" fill="#000000" /> <rect x="116" y="193" width="8" height="15" fill="#000000" rx="2" /> <circle cx="180" cy="185" r="8" fill="#000000" /> <rect x="176" y="193" width="8" height="15" fill="#000000" rx="2" /> <!-- Spotlight effects --> <ellipse cx="65" cy="140" rx="30" ry="5" fill="#000" opacity="0.05" /> <ellipse cx="150" cy="145" rx="45" ry="8" fill="#000" opacity="0.05" /> <ellipse cx="235" cy="140" rx="30" ry="5" fill="#000" opacity="0.05" />
+         </svg>
+         <p class="text-center text-black font-semibold mt-4 text-sm">Ilustrasi: Ruang Pameran Seni yang Terdekorasi</p>
+        </div>
+       </div>
+       <div class="mt-6 p-4 rounded-xl bg-gray-100 border-2 border-black">
+        <p class="text-center text-sm font-bold text-black">💡 <strong>Tahukah kamu?</strong> Dekorasi pameran yang baik dapat meningkatkan apresiasi pengunjung terhadap karya seni hingga 70%!</p>
+       </div>
+      </div>
+     </section><!-- Slide 3: Kosakata -->
+     <section id="slide-3" class="slide hidden">
+      <div class="slide-enter">
+       <div class="flex items-center gap-3 mb-6"><span class="text-4xl">📚</span>
+        <h2 class="font-display text-3xl font-bold text-black">Kosakata Penting Seni Rupa</h2>
+       </div>
+       <div class="grid md:grid-cols-3 gap-6">
+        <div class="card-glass rounded-2xl p-6 hover:scale-105 transition-transform cursor-pointer" onclick="showVocabDetail('hierarki')">
+         <div class="w-16 h-16 rounded-2xl bg-white border-2 border-black flex items-center justify-center text-3xl mb-4 mx-auto">
+          📊
+         </div>
+         <h3 class="font-display text-xl font-bold text-center mb-2 text-black">Hierarki</h3>
+         <p class="text-black text-center text-sm font-medium">Tata urutan letak gambar atau tulisan dalam sebuah karya</p>
+         <div class="mt-4 p-3 rounded-lg bg-white border border-black">
+          <p class="text-xs text-center text-black font-bold">Contoh: Ukuran judul lebih besar dari sub-judul dalam poster</p>
+         </div>
+        </div>
+        <div class="card-glass rounded-2xl p-6 hover:scale-105 transition-transform cursor-pointer" onclick="showVocabDetail('properti')">
+         <div class="w-16 h-16 rounded-2xl bg-white border-2 border-black flex items-center justify-center text-3xl mb-4 mx-auto">
+          🔧
+         </div>
+         <h3 class="font-display text-xl font-bold text-center mb-2 text-black">Properti</h3>
+         <p class="text-black text-center text-sm font-medium">Peralatan pendukung untuk mewujudkan dekorasi</p>
+         <div class="mt-4 p-3 rounded-lg bg-white border border-black">
+          <p class="text-xs text-center text-black font-bold">Contoh: Kain, tali, bambu, kardus, lampu</p>
+         </div>
+        </div>
+        <div class="card-glass rounded-2xl p-6 hover:scale-105 transition-transform cursor-pointer" onclick="showVocabDetail('dekorasi')">
+         <div class="w-16 h-16 rounded-2xl bg-white border-2 border-black flex items-center justify-center text-3xl mb-4 mx-auto">
+          ✨
+         </div>
+         <h3 class="font-display text-xl font-bold text-center mb-2 text-black">Dekorasi</h3>
+         <p class="text-black text-center text-sm font-medium">Upaya memperindah ruang pameran</p>
+         <div class="mt-4 p-3 rounded-lg bg-white border border-black">
+          <p class="text-xs text-center text-black font-bold">Contoh: Hiasan dinding, backdrop, instalasi</p>
+         </div>
+        </div>
+       </div><!-- Tambahan Kosakata -->
+       <div class="mt-8">
+        <h3 class="font-semibold text-lg mb-4 text-black">📝 Kosakata Tambahan:</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+         <div class="card-glass rounded-xl p-4 flex items-center gap-4"><span class="text-2xl">🖼️</span>
+          <div>
+           <h4 class="font-bold text-black">Display</h4>
+           <p class="text-sm text-black font-medium">Cara menampilkan/memamerkan karya seni</p>
+          </div>
+         </div>
+         <div class="card-glass rounded-xl p-4 flex items-center gap-4"><span class="text-2xl">🎨</span>
+          <div>
+           <h4 class="font-bold text-black">Instalasi</h4>
+           <p class="text-sm text-black font-medium">Karya seni 3D yang mengisi dan berinteraksi dengan ruang</p>
+          </div>
+         </div>
+         <div class="card-glass rounded-xl p-4 flex items-center gap-4"><span class="text-2xl">🎭</span>
+          <div>
+           <h4 class="font-bold text-black">Backdrop</h4>
+           <p class="text-sm text-black font-medium">Latar belakang untuk memamerkan karya</p>
+          </div>
+         </div>
+         <div class="card-glass rounded-xl p-4 flex items-center gap-4"><span class="text-2xl">💫</span>
+          <div>
+           <h4 class="font-bold text-black">Estetika</h4>
+           <p class="text-sm text-black font-medium">Nilai keindahan dalam sebuah karya atau ruang</p>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </section><!-- Slide 4: Perencanaan Properti -->
+     <section id="slide-4" class="slide hidden">
+      <div class="slide-enter">
+       <div class="flex items-center gap-3 mb-6"><span class="text-4xl">📋</span>
+        <h2 class="font-display text-3xl font-bold text-black">Perencanaan Properti Pameran</h2>
+       </div>
+       <p class="text-black font-medium mb-6">Sebelum membuat dekorasi, siswa perlu mendata peralatan yang dibutuhkan. Berikut contoh perencanaan:</p>
+       <div class="grid md:grid-cols-2 gap-6">
+        <div class="space-y-4">
+         <div class="card-glass rounded-2xl p-5 border-l-8 border-black">
+          <div class="flex items-start gap-4">
+           <div class="w-12 h-12 rounded-xl bg-white border border-black flex items-center justify-center text-2xl flex-shrink-0">
+            🧵
+           </div>
+           <div>
+            <h3 class="font-bold text-black mb-1">Kain &amp; Tali</h3>
+            <p class="text-sm text-black font-medium">Digunakan sebagai backdrop pameran</p>
+            <div class="mt-2 flex flex-wrap gap-2"><span class="px-2 py-1 text-xs rounded bg-white border border-black font-semibold text-black">Kain polos</span> <span class="px-2 py-1 text-xs rounded bg-white border border-black font-semibold text-black">Tali rafia</span> <span class="px-2 py-1 text-xs rounded bg-white border border-black font-semibold text-black">Tali pramuka</span>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="card-glass rounded-2xl p-5 border-l-8 border-black">
+          <div class="flex items-start gap-4">
+           <div class="w-12 h-12 rounded-xl bg-white border border-black flex items-center justify-center text-2xl flex-shrink-0">
+            🌿
+           </div>
+           <div>
+            <h3 class="font-bold text-black mb-1">Dedaunan</h3>
+            <p class="text-sm text-black font-medium">Digunakan sebagai hiasan di area pintu masuk</p>
+            <div class="mt-2 flex flex-wrap gap-2"><span class="px-2 py-1 text-xs rounded bg-white border border-black font-semibold text-black">Daun kelapa</span> <span class="px-2 py-1 text-xs rounded bg-white border border-black font-semibold text-black">Daun pisang</span> <span class="px-2 py-1 text-xs rounded bg-white border border-black font-semibold text-black">Ranting kering</span>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="card-glass rounded-2xl p-5 border-l-8 border-black">
+          <div class="flex items-start gap-4">
+           <div class="w-12 h-12 rounded-xl bg-white border border-black flex items-center justify-center text-2xl flex-shrink-0">
+            🎋
+           </div>
+           <div>
+            <h3 class="font-bold text-black mb-1">Bambu / Kayu Palet &amp; Tali</h3>
+            <p class="text-sm text-black font-medium">Digunakan sebagai struktur untuk menggantung karya</p>
+            <div class="mt-2 flex flex-wrap gap-2"><span class="px-2 py-1 text-xs rounded bg-white border border-black font-semibold text-black">Bambu kecil</span> <span class="px-2 py-1 text-xs rounded bg-white border border-black font-semibold text-black">Palet bekas</span>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="card-glass rounded-2xl p-5 border-l-8 border-black">
+          <div class="flex items-start gap-4">
+           <div class="w-12 h-12 rounded-xl bg-white border border-black flex items-center justify-center text-2xl flex-shrink-0">
+            📦
+           </div>
+           <div>
+            <h3 class="font-bold text-black mb-1">Kardus Bekas Besar</h3>
+            <p class="text-sm text-black font-medium">Digunakan sebagai media untuk menempelkan karya</p>
+            <div class="mt-2 flex flex-wrap gap-2"><span class="px-2 py-1 text-xs rounded bg-white border border-black font-semibold text-black">Kardus TV</span> <span class="px-2 py-1 text-xs rounded bg-white border border-black font-semibold text-black">Kardus kulkas</span>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="illustration-frame rounded-2xl p-6">
+         <svg viewbox="0 0 280 320" class="w-full max-w-xs mx-auto"><!-- Backdrop/Kain --> <rect x="40" y="20" width="200" height="120" fill="#f3f4f6" stroke="#000000" stroke-width="2" rx="5" /> <text x="140" y="85" text-anchor="middle" fill="#000000" font-weight="bold" font-size="12">
+           BACKDROP
+          </text> <!-- Bambu Frame --> <line x1="60" y1="20" x2="60" y2="140" stroke="#000000" stroke-width="6" stroke-linecap="round" /> <line x1="220" y1="20" x2="220" y2="140" stroke="#000000" stroke-width="6" stroke-linecap="round" /> <line x1="60" y1="20" x2="220" y2="20" stroke="#000000" stroke-width="6" stroke-linecap="round" /> <!-- Hanging Artworks --> <line x1="100" y1="20" x2="100" y2="60" stroke="#000" stroke-width="1" /> <rect x="80" y="60" width="40" height="50" fill="#ffffff" stroke="#000000" stroke-width="2" rx="2" /> <line x1="180" y1="20" x2="180" y2="50" stroke="#000" stroke-width="1" /> <rect x="155" y="50" width="50" height="60" fill="#ffffff" stroke="#000000" stroke-width="2" rx="2" /> <!-- Kardus Display --> <rect x="30" y="180" width="80" height="100" fill="#e5e7eb" stroke="#000000" stroke-width="2" rx="3" /> <rect x="40" y="195" width="60" height="40" fill="#ffffff" stroke="#000" stroke-width="1" /> <text x="70" y="265" text-anchor="middle" fill="#000000" font-weight="bold" font-size="10">
+           KARDUS
+          </text> <!-- Dedaunan --> <ellipse cx="230" cy="200" rx="25" ry="15" fill="#000000" /> <ellipse cx="245" cy="215" rx="20" ry="12" fill="#333333" /> <ellipse cx="220" cy="225" rx="22" ry="13" fill="#000000" /> <rect x="225" y="225" width="5" height="40" fill="#000000" /> <text x="230" y="285" text-anchor="middle" fill="#000000" font-weight="bold" font-size="10">
+           TANAMAN
+          </text> <!-- Labels --> <text x="140" y="310" text-anchor="middle" fill="#000000" font-weight="bold" font-size="11">
+           Ilustrasi Properti Pameran
+          </text>
+         </svg>
+        </div>
+       </div>
+      </div>
+     </section><!-- Slide 5: Metode Display -->
+     <section id="slide-5" class="slide hidden">
+      <div class="slide-enter">
+       <div class="flex items-center gap-3 mb-6"><span class="text-4xl">🖼️</span>
+        <h2 class="font-display text-3xl font-bold text-black">Metode Display (Penataan Karya)</h2>
+       </div>
+       <div class="grid md:grid-cols-2 gap-8"><!-- Cara Menggantung -->
+        <div class="card-glass rounded-2xl overflow-hidden">
+         <div class="bg-black text-white p-4">
+          <h3 class="font-display text-xl font-bold flex items-center gap-2"><span>🪢</span> Cara Menggantung</h3>
+         </div>
+         <div class="p-6">
+          <div class="mb-4">
+           <h4 class="font-bold text-black mb-2">Bahan yang Digunakan:</h4>
+           <div class="flex flex-wrap gap-2"><span class="px-3 py-1 rounded-full bg-white border border-black text-black font-semibold text-sm">Tali pancing</span> <span class="px-3 py-1 rounded-full bg-white border border-black text-black font-semibold text-sm">Selotip</span> <span class="px-3 py-1 rounded-full bg-white border border-black text-black font-semibold text-sm">Tongkat pramuka</span>
+           </div>
+          </div>
+          <div class="mb-4">
+           <h4 class="font-bold text-black mb-2">Teknik:</h4>
+           <ul class="space-y-2 text-sm text-black font-medium">
+            <li class="flex items-start gap-2"><span class="text-black font-bold">•</span> Digantung di langit-langit ruangan</li>
+            <li class="flex items-start gap-2"><span class="text-black font-bold">•</span> Digantung di batang pohon (luar ruangan)</li>
+            <li class="flex items-start gap-2"><span class="text-black font-bold">•</span> Menggunakan struktur tongkat pramuka</li>
+           </ul>
+          </div>
+          <div class="illustration-frame rounded-xl p-4">
+           <svg viewbox="0 0 200 150" class="w-full"><!-- Ceiling --> <rect x="0" y="0" width="200" height="15" fill="#000000" /> <!-- Strings --> <line x1="50" y1="15" x2="50" y2="50" stroke="#000" stroke-width="1" /> <line x1="100" y1="15" x2="100" y2="40" stroke="#000" stroke-width="1" /> <line x1="150" y1="15" x2="150" y2="55" stroke="#000" stroke-width="1" /> <!-- Frames --> <rect x="30" y="50" width="40" height="50" fill="#ffffff" stroke="#000000" stroke-width="2" rx="2" /> <rect x="80" y="40" width="40" height="60" fill="#ffffff" stroke="#000000" stroke-width="2" rx="2" /> <rect x="130" y="55" width="40" height="45" fill="#ffffff" stroke="#000000" stroke-width="2" rx="2" /> <!-- Light effect --> <ellipse cx="100" cy="130" rx="80" ry="10" fill="#000" opacity="0.1" />
+           </svg>
+          </div>
+         </div>
+        </div><!-- Cara Berdiri -->
+        <div class="card-glass rounded-2xl overflow-hidden">
+         <div class="bg-black text-white p-4">
+          <h3 class="font-display text-xl font-bold flex items-center gap-2"><span>🧍</span> Cara Meletakkan Berdiri</h3>
+         </div>
+         <div class="p-6">
+          <div class="mb-4">
+           <h4 class="font-bold text-black mb-2">Bahan yang Digunakan:</h4>
+           <div class="flex flex-wrap gap-2"><span class="px-3 py-1 rounded-full bg-white border border-black text-black font-semibold text-sm">Kardus bekas</span> <span class="px-3 py-1 rounded-full bg-white border border-black text-black font-semibold text-sm">Pipa PVC</span> <span class="px-3 py-1 rounded-full bg-white border border-black text-black font-semibold text-sm">Kawat ayam</span> <span class="px-3 py-1 rounded-full bg-white border border-black text-black font-semibold text-sm">Tripleks</span>
+           </div>
+          </div>
+          <div class="mb-4">
+           <h4 class="font-bold text-black mb-2">Teknik:</h4>
+           <ul class="space-y-2 text-sm text-black font-medium">
+            <li class="flex items-start gap-2"><span class="text-black font-bold">•</span> Menempel karya pada kardus yang sudah dihias</li>
+            <li class="flex items-start gap-2"><span class="text-black font-bold">•</span> Menggunakan pipa PVC dilapisi kawat ayam</li>
+            <li class="flex items-start gap-2"><span class="text-black font-bold">•</span> Membuat panel dari tripleks</li>
+           </ul>
+          </div>
+          <div class="illustration-frame rounded-xl p-4">
+           <svg viewbox="0 0 200 150" class="w-full"><!-- Floor --> <rect x="0" y="130" width="200" height="20" fill="#000000" /> <!-- Standing displays --> <rect x="20" y="40" width="50" height="90" fill="#e5e7eb" stroke="#000000" stroke-width="2" rx="3" /> <rect x="30" y="50" width="30" height="40" fill="#ffffff" stroke="#000" stroke-width="1" /> <rect x="90" y="30" width="40" height="100" fill="#d1d5db" stroke="#000000" stroke-width="2" rx="3" /> <rect x="95" y="40" width="30" height="45" fill="#ffffff" stroke="#000" stroke-width="1" /> <rect x="150" y="50" width="35" height="80" fill="#e5e7eb" stroke="#000000" stroke-width="2" rx="3" /> <rect x="157" y="60" width="21" height="30" fill="#ffffff" stroke="#000" stroke-width="1" />
+           </svg>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="mt-6 p-4 rounded-xl bg-gray-100 border-2 border-black">
+        <p class="text-center text-sm font-bold text-black">💡 <strong>Tips:</strong> Pilih metode display berdasarkan jenis karya, ukuran ruangan, dan bahan yang tersedia!</p>
+       </div>
+      </div>
+     </section><!-- Slide 6: Langkah Pelaksanaan -->
+     <section id="slide-6" class="slide hidden">
+      <div class="slide-enter">
+       <div class="flex items-center gap-3 mb-6"><span class="text-4xl">📝</span>
+        <h2 class="font-display text-3xl font-bold text-black">Langkah-Langkah Pelaksanaan</h2>
+       </div>
+       <div class="relative"><!-- Timeline line -->
+        <div class="absolute left-8 top-0 bottom-0 w-1 bg-black rounded-full hidden md:block"></div>
+        <div class="space-y-6">
+         <div class="flex items-start gap-6">
+          <div class="w-16 h-16 rounded-2xl bg-black text-white flex items-center justify-center text-2xl font-bold flex-shrink-0 z-10 border-2 border-black">
+           1
+          </div>
+          <div class="card-glass rounded-2xl p-5 flex-1">
+           <h3 class="font-bold text-black text-lg mb-2">Observasi</h3>
+           <p class="text-black font-medium">Melihat dan mengamati contoh-contoh pameran seni rupa yang sudah ada untuk mendapatkan inspirasi dan referensi.</p>
+          </div>
+         </div>
+         <div class="flex items-start gap-6">
+          <div class="w-16 h-16 rounded-2xl bg-black text-white flex items-center justify-center text-2xl font-bold flex-shrink-0 z-10 border-2 border-black">
+           2
+          </div>
+          <div class="card-glass rounded-2xl p-5 flex-1">
+           <h3 class="font-bold text-black text-lg mb-2">Penentuan Tema</h3>
+           <p class="text-black font-medium">Menentukan tema besar pameran secara kolektif (bersama-sama) dengan semua anggota kelas.</p>
+          </div>
+         </div>
+         <div class="flex items-start gap-6">
+          <div class="w-16 h-16 rounded-2xl bg-black text-white flex items-center justify-center text-2xl font-bold flex-shrink-0 z-10 border-2 border-black">
+           3
+          </div>
+          <div class="card-glass rounded-2xl p-5 flex-1">
+           <h3 class="font-bold text-black text-lg mb-2">Memahami Prinsip</h3>
+           <p class="text-black font-medium">Mendengarkan dan memahami penjelasan guru mengenai prinsip-prinsip desain yang akan diterapkan.</p>
+          </div>
+         </div>
+         <div class="flex items-start gap-6">
+          <div class="w-16 h-16 rounded-2xl bg-black text-white flex items-center justify-center text-2xl font-bold flex-shrink-0 z-10 border-2 border-black">
+           4
+          </div>
+          <div class="card-glass rounded-2xl p-5 flex-1">
+           <h3 class="font-bold text-black text-lg mb-2">Organisasi</h3>
+           <p class="text-black font-medium">Menunjuk ketua panitia dan membagi peran (pembuat poster, dekorasi ruang, dokumentasi, dll.).</p>
+          </div>
+         </div>
+         <div class="flex items-start gap-6">
+          <div class="w-16 h-16 rounded-2xl bg-black text-white flex items-center justify-center text-2xl font-bold flex-shrink-0 z-10 border-2 border-black">
+           5
+          </div>
+          <div class="card-glass rounded-2xl p-5 flex-1">
+           <h3 class="font-bold text-black text-lg mb-2">Produksi Kolaboratif</h3>
+           <p class="text-black font-medium">Membuat desain dekorasi secara bersama-sama dengan pembagian tugas yang jelas.</p>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </section><!-- Slide 7: Kriteria Penilaian -->
+     <section id="slide-7" class="slide hidden">
+      <div class="slide-enter">
+       <div class="flex items-center gap-3 mb-6"><span class="text-4xl">⭐</span>
+        <h2 class="font-display text-3xl font-bold text-black">Kriteria Penilaian (5 Prinsip Utama)</h2>
+       </div>
+       <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="card-glass rounded-2xl p-5 text-center hover:scale-105 transition-transform">
+         <div class="w-16 h-16 rounded-full bg-white border-2 border-black flex items-center justify-center text-3xl mx-auto mb-3">
+          ⚖️
+         </div>
+         <h3 class="font-display text-lg font-bold text-black mb-2">1. Keseimbangan</h3>
+         <p class="text-sm text-black font-medium">Distribusi elemen visual yang merata dan harmonis dalam ruang pameran</p>
+         <div class="mt-3 p-2 rounded-lg bg-white border border-black">
+          <p class="text-xs text-black font-bold">💡 Simetris atau Asimetris</p>
+         </div>
+        </div>
+        <div class="card-glass rounded-2xl p-5 text-center hover:scale-105 transition-transform">
+         <div class="w-16 h-16 rounded-full bg-white border-2 border-black flex items-center justify-center text-3xl mx-auto mb-3">
+          🎭
+         </div>
+         <h3 class="font-display text-lg font-bold text-black mb-2">2. Kontras</h3>
+         <p class="text-sm text-black font-medium">Perbedaan yang mencolok antar elemen untuk menciptakan fokus perhatian</p>
+         <div class="mt-3 p-2 rounded-lg bg-white border border-black">
+          <p class="text-xs text-black font-bold">💡 Warna, ukuran, bentuk</p>
+         </div>
+        </div>
+        <div class="card-glass rounded-2xl p-5 text-center hover:scale-105 transition-transform">
+         <div class="w-16 h-16 rounded-full bg-white border-2 border-black flex items-center justify-center text-3xl mx-auto mb-3">
+          📏
+         </div>
+         <h3 class="font-display text-lg font-bold text-black mb-2">3. Kesejajaran</h3>
+         <p class="text-sm text-black font-medium">Penataan elemen secara sejajar untuk menciptakan keteraturan visual</p>
+         <div class="mt-3 p-2 rounded-lg bg-white border border-black">
+          <p class="text-xs text-black font-bold">💡 Alignment yang rapi</p>
+         </div>
+        </div>
+       </div>
+       <div class="grid md:grid-cols-2 gap-4">
+        <div class="card-glass rounded-2xl p-5 text-center hover:scale-105 transition-transform">
+         <div class="w-16 h-16 rounded-full bg-white border-2 border-black flex items-center justify-center text-3xl mx-auto mb-3">
+          🤝
+         </div>
+         <h3 class="font-display text-lg font-bold text-black mb-2">4. Kedekatan</h3>
+         <p class="text-sm text-black font-medium">Pengelompokan elemen yang berhubungan secara berdekatan untuk menunjukkan keterkaitan</p>
+         <div class="mt-3 p-2 rounded-lg bg-white border border-black">
+          <p class="text-xs text-black font-bold">💡 Grouping elemen sejenis</p>
+         </div>
+        </div>
+        <div class="card-glass rounded-2xl p-5 text-center hover:scale-105 transition-transform">
+         <div class="w-16 h-16 rounded-full bg-white border-2 border-black flex items-center justify-center text-3xl mx-auto mb-3">
+          📊
+         </div>
+         <h3 class="font-display text-lg font-bold text-black mb-2">5. Hierarki</h3>
+         <p class="text-sm text-black font-medium">Tata urutan elemen berdasarkan tingkat kepentingannya dari yang utama hingga pendukung</p>
+         <div class="mt-3 p-2 rounded-lg bg-white border border-black">
+          <p class="text-xs text-black font-bold">💡 Prioritas visual</p>
+         </div>
+        </div>
+       </div><!-- Ilustrasi Prinsip -->
+       <div class="mt-6 illustration-frame rounded-2xl p-6">
+        <h4 class="text-center font-bold mb-4 text-black">Ilustrasi 5 Prinsip Desain</h4>
+        <svg viewbox="0 0 600 120" class="w-full"><!-- Keseimbangan --> <g transform="translate(0, 10)">
+          <rect x="10" y="30" width="30" height="50" fill="#000" rx="3" />
+          <rect x="70" y="30" width="30" height="50" fill="#000" rx="3" />
+          <line x1="55" y1="25" x2="55" y2="90" stroke="#000" stroke-width="2" stroke-dasharray="5,5" />
+          <text x="55" y="110" text-anchor="middle" fill="#000000" font-weight="bold" font-size="10">
+           Seimbang
+          </text>
+         </g> <!-- Kontras --> <g transform="translate(120, 10)">
+          <rect x="10" y="20" width="50" height="60" fill="#000" rx="3" />
+          <rect x="70" y="50" width="20" height="25" fill="#666" rx="3" />
+          <text x="55" y="110" text-anchor="middle" fill="#000000" font-weight="bold" font-size="10">
+           Kontras
+          </text>
+         </g> <!-- Kesejajaran --> <g transform="translate(240, 10)">
+          <rect x="10" y="25" width="80" height="15" fill="#000" rx="2" />
+          <rect x="10" y="45" width="80" height="15" fill="#000" rx="2" />
+          <rect x="10" y="65" width="80" height="15" fill="#000" rx="2" />
+          <text x="55" y="110" text-anchor="middle" fill="#000000" font-weight="bold" font-size="10">
+           Sejajar
+          </text>
+         </g> <!-- Kedekatan --> <g transform="translate(360, 10)">
+          <rect x="10" y="25" width="20" height="20" fill="#000" rx="2" />
+          <rect x="35" y="25" width="20" height="20" fill="#000" rx="2" />
+          <rect x="10" y="50" width="20" height="20" fill="#000" rx="2" />
+          <rect x="35" y="50" width="20" height="20" fill="#000" rx="2" />
+          <rect x="75" y="35" width="15" height="15" fill="#666" rx="2" />
+          <text x="55" y="110" text-anchor="middle" fill="#000000" font-weight="bold" font-size="10">
+           Kedekatan
+          </text>
+         </g> <!-- Hierarki --> <g transform="translate(480, 10)">
+          <rect x="25" y="15" width="50" height="25" fill="#000" rx="2" />
+          <rect x="30" y="45" width="40" height="18" fill="#444" rx="2" />
+          <rect x="35" y="68" width="30" height="12" fill="#888" rx="2" />
+          <text x="55" y="110" text-anchor="middle" fill="#000000" font-weight="bold" font-size="10">
+           Hierarki
+          </text>
+         </g>
+        </svg>
+       </div>
+      </div>
+     </section><!-- Slide 8: Aktivitas Interaktif -->
+     <section id="slide-8" class="slide hidden">
+      <div class="slide-enter">
+       <div class="flex items-center gap-3 mb-6"><span class="text-4xl">🎮</span>
+        <h2 class="font-display text-3xl font-bold text-black">Aktivitas Interaktif</h2>
+       </div>
+       <div class="grid md:grid-cols-2 gap-6"><!-- Activity 1: Drag & Match -->
+        <div class="card-glass rounded-2xl p-6">
+         <h3 class="font-bold text-lg mb-4 flex items-center gap-2 text-black"><span class="w-8 h-8 rounded-lg bg-white border border-black flex items-center justify-center">🎯</span> Cocokkan Prinsip Desain</h3>
+         <div id="matching-game" class="space-y-3">
+          <div class="flex items-center gap-3"><span class="px-3 py-2 rounded-lg bg-white border border-black text-sm font-bold w-28 text-center text-black">Keseimbangan</span> <select class="match-select flex-1 bg-white border-2 border-black rounded-lg px-3 py-2 text-sm font-semibold text-black" data-answer="distribusi"> <option value="">Pilih definisi...</option> <option value="distribusi">Distribusi elemen yang merata</option> <option value="perbedaan">Perbedaan yang mencolok</option> <option value="urutan">Tata urutan kepentingan</option> <option value="kelompok">Pengelompokan elemen terkait</option> </select>
+          </div>
+          <div class="flex items-center gap-3"><span class="px-3 py-2 rounded-lg bg-white border border-black text-sm font-bold w-28 text-center text-black">Kontras</span> <select class="match-select flex-1 bg-white border-2 border-black rounded-lg px-3 py-2 text-sm font-semibold text-black" data-answer="perbedaan"> <option value="">Pilih definisi...</option> <option value="distribusi">Distribusi elemen yang merata</option> <option value="perbedaan">Perbedaan yang mencolok</option> <option value="urutan">Tata urutan kepentingan</option> <option value="kelompok">Pengelompokan elemen terkait</option> </select>
+          </div>
+          <div class="flex items-center gap-3"><span class="px-3 py-2 rounded-lg bg-white border border-black text-sm font-bold w-28 text-center text-black">Hierarki</span> <select class="match-select flex-1 bg-white border-2 border-black rounded-lg px-3 py-2 text-sm font-semibold text-black" data-answer="urutan"> <option value="">Pilih definisi...</option> <option value="distribusi">Distribusi elemen yang merata</option> <option value="perbedaan">Perbedaan yang mencolok</option> <option value="urutan">Tata urutan kepentingan</option> <option value="kelompok">Pengelompokan elemen terkait</option> </select>
+          </div>
+          <div class="flex items-center gap-3"><span class="px-3 py-2 rounded-lg bg-white border border-black text-sm font-bold w-28 text-center text-black">Kedekatan</span> <select class="match-select flex-1 bg-white border-2 border-black rounded-lg px-3 py-2 text-sm font-semibold text-black" data-answer="kelompok"> <option value="">Pilih definisi...</option> <option value="distribusi">Distribusi elemen yang merata</option> <option value="perbedaan">Perbedaan yang mencolok</option> <option value="urutan">Tata urutan kepentingan</option> <option value="kelompok">Pengelompokan elemen terkait</option> </select>
+          </div>
+         </div><button onclick="checkMatching()" class="mt-4 w-full py-2 rounded-lg bg-black text-white font-bold hover:bg-gray-800 transition border-2 border-black"> Periksa Jawaban </button>
+         <div id="matching-result" class="mt-3 text-center hidden font-bold"></div>
+        </div><!-- Activity 2: Design Challenge -->
+        <div class="card-glass rounded-2xl p-6">
+         <h3 class="font-bold text-lg mb-4 flex items-center gap-2 text-black"><span class="w-8 h-8 rounded-lg bg-white border border-black flex items-center justify-center">✏️</span> Tantangan Desain</h3>
+         <p class="text-black font-medium text-sm mb-4">Pilih tema dan buat daftar properti yang dibutuhkan:</p>
+         <div class="space-y-3">
+          <div><label class="text-sm font-bold text-black mb-1 block">Tema Pameran:</label> <select id="theme-select" class="w-full bg-white border-2 border-black rounded-lg px-3 py-2 font-semibold text-black"> <option value="">Pilih tema...</option> <option value="alam">🌿 Alam &amp; Lingkungan</option> <option value="budaya">🎭 Budaya Nusantara</option> <option value="modern">🏙️ Kehidupan Modern</option> <option value="fantasi">🦄 Dunia Fantasi</option> </select>
+          </div>
+          <div id="property-checklist" class="hidden"><label class="text-sm font-bold text-black mb-2 block">Pilih properti yang sesuai:</label>
+           <div class="grid grid-cols-2 gap-2 text-sm font-semibold"><label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-black cursor-pointer hover:bg-gray-100"> <input type="checkbox" class="property-check" value="kain"> 🧵 Kain </label> <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-black cursor-pointer hover:bg-gray-100"> <input type="checkbox" class="property-check" value="bambu"> 🎋 Bambu </label> <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-black cursor-pointer hover:bg-gray-100"> <input type="checkbox" class="property-check" value="daun"> 🌿 Dedaunan </label> <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-black cursor-pointer hover:bg-gray-100"> <input type="checkbox" class="property-check" value="kardus"> 📦 Kardus </label> <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-black cursor-pointer hover:bg-gray-100"> <input type="checkbox" class="property-check" value="lampu"> 💡 Lampu </label> <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-black cursor-pointer hover:bg-gray-100"> <input type="checkbox" class="property-check" value="kertas"> 📄 Kertas Warna </label>
+           </div>
+          </div>
+         </div><button onclick="submitDesign()" class="mt-4 w-full py-2 rounded-lg bg-black text-white font-bold hover:bg-gray-800 transition border-2 border-black"> Lihat Rekomendasi </button>
+         <div id="design-result" class="mt-3 hidden font-semibold"></div>
+        </div>
+       </div><!-- Quick Poll -->
+       <div class="mt-6 card-glass rounded-2xl p-6">
+        <h3 class="font-bold text-lg mb-4 flex items-center gap-2 text-black"><span class="w-8 h-8 rounded-lg bg-white border border-black flex items-center justify-center">📊</span> Polling Kelas: Prinsip Desain Favoritmu?</h3>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3"><button onclick="vote('keseimbangan')" class="poll-btn p-3 rounded-xl bg-white border-2 border-black hover:bg-black hover:text-white transition"> <span class="text-2xl mb-1 block">⚖️</span> <span class="text-xs font-bold">Keseimbangan</span> <span class="poll-count block mt-1 text-lg font-extrabold" data-type="keseimbangan">0</span> </button> <button onclick="vote('kontras')" class="poll-btn p-3 rounded-xl bg-white border-2 border-black hover:bg-black hover:text-white transition"> <span class="text-2xl mb-1 block">🎭</span> <span class="text-xs font-bold">Kontras</span> <span class="poll-count block mt-1 text-lg font-extrabold" data-type="kontras">0</span> </button> <button onclick="vote('kesejajaran')" class="poll-btn p-3 rounded-xl bg-white border-2 border-black hover:bg-black hover:text-white transition"> <span class="text-2xl mb-1 block">📏</span> <span class="text-xs font-bold">Kesejajaran</span> <span class="poll-count block mt-1 text-lg font-extrabold" data-type="kesejajaran">0</span> </button> <button onclick="vote('kedekatan')" class="poll-btn p-3 rounded-xl bg-white border-2 border-black hover:bg-black hover:text-white transition"> <span class="text-2xl mb-1 block">🤝</span> <span class="text-xs font-bold">Kedekatan</span> <span class="poll-count block mt-1 text-lg font-extrabold" data-type="kedekatan">0</span> </button> <button onclick="vote('hierarki')" class="poll-btn p-3 rounded-xl bg-white border-2 border-black hover:bg-black hover:text-white transition"> <span class="text-2xl mb-1 block">📊</span> <span class="text-xs font-bold">Hierarki</span> <span class="poll-count block mt-1 text-lg font-extrabold" data-type="hierarki">0</span> </button>
+        </div>
+       </div>
+      </div>
+     </section><!-- Slide 9: Quiz HOTS -->
+     <section id="slide-9" class="slide hidden">
+      <div class="slide-enter">
+       <div class="flex items-center gap-3 mb-6"><span class="text-4xl">🧠</span>
+        <h2 class="font-display text-3xl font-bold text-black">Kuis HOTS (10 Soal)</h2>
+       </div>
+       <div class="card-glass rounded-2xl p-6"><!-- Quiz Progress -->
+        <div class="flex items-center justify-between mb-4"><span class="text-sm font-bold text-black">Soal <span id="quiz-current">1</span> dari 10</span> <span class="text-sm font-bold text-black">Skor: <span id="quiz-score">0</span>/10</span>
+        </div>
+        <div class="w-full h-2 bg-gray-300 rounded-full mb-6 border border-black">
+         <div id="quiz-progress" class="h-full bg-black rounded-full transition-all" style="width: 10%"></div>
+        </div><!-- Question Container -->
+        <div id="quiz-container">
+         <div id="quiz-question" class="text-lg font-bold mb-6 text-black"></div>
+         <div id="quiz-options" class="space-y-3"></div>
+        </div><!-- Quiz Result -->
+        <div id="quiz-result" class="hidden text-center py-8">
+         <div class="text-6xl mb-4">
+          🎉
+         </div>
+         <h3 class="font-display text-2xl font-bold mb-2 text-black">Kuis Selesai!</h3>
+         <p class="text-black font-semibold mb-4">Skor Akhir: <span id="final-score" class="text-2xl font-extrabold text-black"></span>/10</p>
+         <div id="score-message" class="text-lg mb-6 font-bold"></div><button onclick="resetQuiz()" class="px-6 py-3 rounded-xl bg-black text-white font-bold hover:bg-gray-800 transition border-2 border-black"> Ulangi Kuis </button>
+        </div><!-- Navigation -->
+        <div id="quiz-nav" class="flex justify-between mt-6"><button onclick="prevQuestion()" id="prev-q-btn" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-black hover:text-white transition disabled:opacity-50 border border-black font-semibold"> ← Sebelumnya </button> <button onclick="nextQuestion()" id="next-q-btn" class="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-800 transition border border-black font-semibold"> Selanjutnya → </button>
+        </div>
+       </div>
+      </div>
+     </section>
+    </div>
+   </main><!-- Navigation Dots -->
+   <footer class="sticky bottom-0 bg-white bg-opacity-95 backdrop-blur-lg border-t-2 border-black px-4 py-3">
+    <div class="max-w-4xl mx-auto flex justify-center gap-2"><button onclick="goToSlide(1)" class="nav-dot w-3 h-3 rounded-full bg-black transition border border-black" data-slide="1"></button> <button onclick="goToSlide(2)" class="nav-dot w-3 h-3 rounded-full bg-gray-300 hover:bg-black transition border border-black" data-slide="2"></button> <button onclick="goToSlide(3)" class="nav-dot w-3 h-3 rounded-full bg-gray-300 hover:bg-black transition border border-black" data-slide="3"></button> <button onclick="goToSlide(4)" class="nav-dot w-3 h-3 rounded-full bg-gray-300 hover:bg-black transition border border-black" data-slide="4"></button> <button onclick="goToSlide(5)" class="nav-dot w-3 h-3 rounded-full bg-gray-300 hover:bg-black transition border border-black" data-slide="5"></button> <button onclick="goToSlide(6)" class="nav-dot w-3 h-3 rounded-full bg-gray-300 hover:bg-black transition border border-black" data-slide="6"></button> <button onclick="goToSlide(7)" class="nav-dot w-3 h-3 rounded-full bg-gray-300 hover:bg-black transition border border-black" data-slide="7"></button> <button onclick="goToSlide(8)" class="nav-dot w-3 h-3 rounded-full bg-gray-300 hover:bg-black transition border border-black" data-slide="8"></button> <button onclick="goToSlide(9)" class="nav-dot w-3 h-3 rounded-full bg-gray-300 hover:bg-black transition border border-black" data-slide="9"></button>
+    </div>
+   </footer>
+  </div>
+  <script>
+    // Default Config
+    const defaultConfig = {
+      main_title: 'Desain Dekorasi Pameran',
+      subtitle: 'Seni Rupa Kelas IX - Algian Manggara, S.Agr',
+      background_color: '#ffffff',
+      accent_color: '#000000',
+      text_color: '#000000'
+    };
+    
+    let config = { ...defaultConfig };
+    
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (newConfig) => {
+          config = { ...defaultConfig, ...newConfig };
+          applyConfig();
+        },
+        mapToCapabilities: (cfg) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (cfg) => new Map([
+          ['main_title', cfg.main_title || defaultConfig.main_title],
+          ['subtitle', cfg.subtitle || defaultConfig.subtitle]
+        ])
+      });
+    }
+    
+    function applyConfig() {
+      document.getElementById('main-title').textContent = config.main_title;
+      document.getElementById('main-subtitle').textContent = config.subtitle;
+      document.getElementById('header-title').textContent = config.main_title;
+      document.getElementById('header-subtitle').textContent = config.subtitle;
+    }
+    
+    // Slide Navigation
+    let currentSlide = 1;
+    const totalSlides = 9;
+    
+    function showSlide(n) {
+      document.querySelectorAll('.slide').forEach(s => s.classList.add('hidden'));
+      document.getElementById(`slide-${n}`).classList.remove('hidden');
+      document.getElementById(`slide-${n}`).classList.add('slide-enter');
+      
+      // Update indicator
+      document.getElementById('slide-indicator').textContent = `${n} / ${totalSlides}`;
+      
+      // Update progress bar
+      document.getElementById('progress-bar').style.width = `${(n / totalSlides) * 100}%`;
+      
+      // Update nav dots
+      document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+        if (i + 1 === n) {
+          dot.classList.remove('bg-gray-300');
+          dot.classList.add('bg-black');
+        } else {
+          dot.classList.remove('bg-black');
+          dot.classList.add('bg-gray-300');
+        }
+      });
+      
+      currentSlide = n;
+    }
+    
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide + 1);
+      }
+    }
+    
+    function prevSlide() {
+      if (currentSlide > 1) {
+        showSlide(currentSlide - 1);
+      }
+    }
+    
+    function goToSlide(n) {
+      showSlide(n);
+    }
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevSlide();
+      }
+    });
+    
+    // Matching Game
+    function checkMatching() {
+      const selects = document.querySelectorAll('.match-select');
+      let correct = 0;
+      
+      selects.forEach(select => {
+        const answer = select.dataset.answer;
+        if (select.value === answer) {
+          select.classList.add('border-black', 'bg-emerald-100');
+          select.classList.remove('border-black');
+          correct++;
+        } else {
+          select.classList.add('border-black', 'bg-red-100');
+          select.classList.remove('border-black');
+        }
+      });
+      
+      const result = document.getElementById('matching-result');
+      result.classList.remove('hidden');
+      if (correct === 4) {
+        result.innerHTML = '<span class="text-black">🎉 Sempurna! Semua jawaban benar!</span>';
+      } else {
+        result.innerHTML = `<span class="text-black">Kamu mendapat ${correct}/4 benar. Coba lagi!</span>`;
+      }
+    }
+    
+    // Design Challenge
+    document.getElementById('theme-select').addEventListener('change', function() {
+      if (this.value) {
+        document.getElementById('property-checklist').classList.remove('hidden');
+      } else {
+        document.getElementById('property-checklist').classList.add('hidden');
+      }
+    });
+    
+    function submitDesign() {
+      const theme = document.getElementById('theme-select').value;
+      const checks = document.querySelectorAll('.property-check:checked');
+      const result = document.getElementById('design-result');
+      
+      if (!theme) {
+        result.classList.remove('hidden');
+        result.innerHTML = '<p class="text-black font-bold">⚠️ Pilih tema terlebih dahulu!</p>';
+        return;
+      }
+      
+      if (checks.length === 0) {
+        result.classList.remove('hidden');
+        result.innerHTML = '<p class="text-black font-bold">⚠️ Pilih minimal satu properti!</p>';
+        return;
+      }
+      
+      const recommendations = {
+        alam: { ideal: ['daun', 'bambu', 'kain'], message: 'Tema alam cocok dengan dedaunan, bambu, dan kain natural!' },
+        budaya: { ideal: ['kain', 'bambu', 'kertas'], message: 'Tema budaya bisa menggunakan kain batik, bambu, dan kertas warna!' },
+        modern: { ideal: ['kardus', 'lampu', 'kertas'], message: 'Tema modern cocok dengan kardus minimalis, lampu, dan kertas!' },
+        fantasi: { ideal: ['kertas', 'lampu', 'kain'], message: 'Tema fantasi bisa menggunakan kertas warna-warni dan pencahayaan!' }
+      };
+      
+      const rec = recommendations[theme];
+      const selected = Array.from(checks).map(c => c.value);
+      const matches = selected.filter(s => rec.ideal.includes(s)).length;
+      
+      result.classList.remove('hidden');
+      result.innerHTML = `
+        <div class="p-3 rounded-lg bg-gray-100 border-2 border-black">
+          <p class="text-black font-bold mb-2">💡 Rekomendasi:</p>
+          <p class="text-sm text-black font-medium">${rec.message}</p>
+          <p class="text-sm mt-2 text-black font-bold">Kecocokan pilihanmu: <span>${Math.round((matches / rec.ideal.length) * 100)}%</span></p>
+        </div>
+      `;
+    }
+    
+    // Polling
+    const pollVotes = {
+      keseimbangan: 0,
+      kontras: 0,
+      kesejajaran: 0,
+      kedekatan: 0,
+      hierarki: 0
+    };
+    
+    function vote(type) {
+      pollVotes[type]++;
+      document.querySelector(`.poll-count[data-type="${type}"]`).textContent = pollVotes[type];
+    }
+    
+    // Quiz Data - HOTS Questions
+    const quizData = [
+      {
+        question: "Sebuah pameran seni memiliki karya berukuran besar di satu sisi dan banyak karya kecil di sisi lain. Prinsip desain apa yang PALING tepat untuk menyeimbangkan tampilan ini?",
+        options: [
+          "Menambah karya besar di sisi yang penuh karya kecil",
+          "Mengatur keseimbangan asimetris dengan mempertimbangkan bobot visual",
+          "Memindahkan semua karya kecil ke tengah ruangan",
+          "Menghilangkan beberapa karya kecil"
+        ],
+        correct: 1,
+        explanation: "Keseimbangan asimetris mempertimbangkan bobot visual, bukan jumlah atau ukuran yang sama persis."
+      },
+      {
+        question: "Dalam membuat poster pameran, judul utama berukuran 72pt, subjudul 36pt, dan informasi detail 12pt. Prinsip desain apa yang diterapkan?",
+        options: [
+          "Kedekatan karena semua teks berdekatan",
+          "Kontras karena ada perbedaan warna",
+          "Hierarki karena ada urutan kepentingan berdasarkan ukuran",
+          "Kesejajaran karena semua teks rata kiri"
+        ],
+        correct: 2,
+        explanation: "Hierarki visual ditunjukkan melalui perbedaan ukuran font yang menunjukkan tingkat kepentingan informasi."
+      },
+      {
+        question: "Tim dekorasi hanya memiliki kardus bekas dan tali. Metode display manakah yang PALING efektif?",
+        options: [
+          "Menggantung karya dari langit-langit",
+          "Membuat panel berdiri dari kardus yang ditumpuk dan diikat",
+          "Menempelkan karya langsung ke dinding",
+          "Menaruh karya di lantai"
+        ],
+        correct: 1,
+        explanation: "Kardus bekas dapat dibentuk menjadi panel berdiri yang kokoh dengan bantuan tali sebagai pengikat struktur."
+      },
+      {
+        question: "Sebuah pameran bertema 'Lingkungan Hijau' ingin menggunakan bahan bekas. Kombinasi properti mana yang PALING sesuai dengan tema dan ramah lingkungan?",
+        options: [
+          "Kardus, botol plastik, dan lampu neon",
+          "Dedaunan kering, bambu bekas, dan kain perca",
+          "Tripleks baru, cat semprot, dan tali plastik",
+          "Kertas HVS baru, selotip, dan kawat baru"
+        ],
+        correct: 1,
+        explanation: "Dedaunan, bambu bekas, dan kain perca sesuai tema lingkungan dan merupakan bahan bekas yang ramah lingkungan."
+      },
+      {
+        question: "Pengunjung pameran kesulitan menemukan informasi penting karena semua elemen terlihat sama. Prinsip desain apa yang perlu diperbaiki?",
+        options: [
+          "Keseimbangan - perlu distribusi elemen yang lebih merata",
+          "Kedekatan - perlu pengelompokan elemen yang lebih baik",
+          "Kontras - perlu perbedaan yang lebih mencolok antar elemen",
+          "Kesejajaran - perlu penataan yang lebih rapi"
+        ],
+        correct: 2,
+        explanation: "Kontras diperlukan untuk menciptakan fokus perhatian dan membedakan elemen penting dari yang kurang penting."
+      },
+      {
+        question: "Dalam langkah pelaksanaan pameran, mengapa 'Observasi' dilakukan sebelum 'Penentuan Tema'?",
+        options: [
+          "Karena observasi lebih mudah dilakukan",
+          "Agar siswa mendapat inspirasi dan referensi sebelum menentukan tema",
+          "Karena tema harus sama dengan pameran yang diobservasi",
+          "Agar guru bisa menilai kemampuan siswa"
+        ],
+        correct: 1,
+        explanation: "Observasi memberikan inspirasi dan referensi visual yang membantu dalam menentukan tema yang sesuai."
+      },
+      {
+        question: "Sebuah karya lukisan dan caption-nya dipajang berjauhan sehingga pengunjung bingung. Prinsip desain apa yang dilanggar?",
+        options: [
+          "Hierarki - caption seharusnya lebih besar",
+          "Kedekatan - elemen yang berhubungan harus berdekatan",
+          "Kontras - caption kurang mencolok",
+          "Keseimbangan - posisi caption tidak seimbang"
+        ],
+        correct: 1,
+        explanation: "Prinsip kedekatan menyatakan bahwa elemen yang berhubungan (lukisan dan caption-nya) harus diletakkan berdekatan."
+      },
+      {
+        question: "Ketua panitia ingin semua anggota terlibat dalam dekorasi. Pendekatan mana yang mencerminkan 'Produksi Kolaboratif' dengan baik?",
+        options: [
+          "Ketua mengerjakan semua sendiri agar hasilnya bagus",
+          "Membagi tugas sesuai kemampuan: tim poster, tim backdrop, tim properti",
+          "Semua anggota mengerjakan hal yang sama",
+          "Bergantian mengerjakan satu per satu"
+        ],
+        correct: 1,
+        explanation: "Produksi kolaboratif yang efektif melibatkan pembagian tugas berdasarkan kemampuan dan minat masing-masing."
+      },
+      {
+        question: "Display karya menggunakan kawat ayam yang dilapisi pada pipa PVC bertujuan untuk...",
+        options: [
+          "Membuat karya terlihat lebih artistik",
+          "Mengurangi biaya produksi",
+          "Menciptakan struktur yang kuat untuk menggantung atau menempel karya",
+          "Menambah efek pencahayaan"
+        ],
+        correct: 2,
+        explanation: "Kawat ayam pada pipa PVC menciptakan permukaan yang kuat dan fleksibel untuk menggantung atau menempel karya."
+      },
+      {
+        question: "Sebuah pameran akan dinilai berdasarkan 5 prinsip desain. Karya A memiliki: judul besar-kecil teratur (hierarki), warna kontras, elemen sejajar, tapi tidak ada pengelompokan dan terasa berat di satu sisi. Aspek mana yang perlu diperbaiki?",
+        options: [
+          "Hierarki dan kontras",
+          "Kesejajaran dan hierarki",
+          "Kedekatan dan keseimbangan",
+          "Kontras dan kesejajaran"
+        ],
+        correct: 2,
+        explanation: "Karya A memerlukan perbaikan pada kedekatan (pengelompokan elemen) dan keseimbangan (distribusi visual yang merata)."
+      }
+    ];
+    
+    let currentQuestion = 0;
+    let score = 0;
+    let answered = new Array(quizData.length).fill(false);
+    let userAnswers = new Array(quizData.length).fill(null);
+    
+    function loadQuestion(index) {
+      const q = quizData[index];
+      document.getElementById('quiz-question').innerHTML = `<span class="text-black font-bold">${index + 1}.</span> ${q.question}`;
+      
+      const optionsHtml = q.options.map((opt, i) => {
+        let classes = 'quiz-option p-4 rounded-xl border-2 cursor-pointer font-medium';
+        if (userAnswers[index] !== null) {
+          if (i === q.correct) {
+            classes += ' correct';
+          } else if (i === userAnswers[index]) {
+            classes += ' incorrect';
+          } else {
+            classes += ' border-gray-300 disabled opacity-60';
+          }
+        } else {
+          classes += ' border-black hover:bg-gray-100';
+        }
+        return `
+          <div class="${classes}" onclick="selectAnswer(${i})" data-index="${i}">
+            <span class="font-bold text-black mr-2">${String.fromCharCode(65 + i)}.</span>
+            ${opt}
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById('quiz-options').innerHTML = optionsHtml;
+      document.getElementById('quiz-current').textContent = index + 1;
+      document.getElementById('quiz-progress').style.width = `${((index + 1) / quizData.length) * 100}%`;
+      
+      // Update navigation
+      document.getElementById('prev-q-btn').disabled = index === 0;
+      document.getElementById('next-q-btn').textContent = index === quizData.length - 1 ? 'Selesai' : 'Selanjutnya →';
+    }
+    
+    function selectAnswer(answerIndex) {
+      if (userAnswers[currentQuestion] !== null) return;
+      
+      userAnswers[currentQuestion] = answerIndex;
+      const correct = quizData[currentQuestion].correct;
+      
+      if (answerIndex === correct) {
+        score++;
+        document.getElementById('quiz-score').textContent = score;
+      }
+      
+      answered[currentQuestion] = true;
+      loadQuestion(currentQuestion);
+      
+      // Show explanation
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML += `
+        <div class="mt-4 p-4 rounded-xl bg-gray-100 border-2 border-black">
+          <p class="text-sm font-semibold text-black"><span class="font-bold">💡 Penjelasan:</span> ${quizData[currentQuestion].explanation}</p>
+        </div>
+      `;
+    }
+    
+    function nextQuestion() {
+      if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        loadQuestion(currentQuestion);
+      } else {
+        showQuizResult();
+      }
+    }
+    
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        loadQuestion(currentQuestion);
+      }
+    }
+    
+    function showQuizResult() {
+      document.getElementById('quiz-container').classList.add('hidden');
+      document.getElementById('quiz-nav').classList.add('hidden');
+      document.getElementById('quiz-result').classList.remove('hidden');
+      document.getElementById('final-score').textContent = score;
+      
+      let message = '';
+      if (score >= 9) {
+        message = '<span class="text-black font-bold">🌟 Luar biasa! Kamu sangat memahami materi ini!</span>';
+      } else if (score >= 7) {
+        message = '<span class="text-black font-bold">👏 Bagus sekali! Pemahaman yang baik!</span>';
+      } else if (score >= 5) {
+        message = '<span class="text-black font-bold">📚 Cukup baik! Terus belajar ya!</span>';
+      } else {
+        message = '<span class="text-black font-bold">💪 Jangan menyerah! Coba pelajari lagi materinya.</span>';
+      }
+      document.getElementById('score-message').innerHTML = message;
+    }
+    
+    function resetQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      answered = new Array(quizData.length).fill(false);
+      userAnswers = new Array(quizData.length).fill(null);
+      document.getElementById('quiz-score').textContent = '0';
+      document.getElementById('quiz-container').classList.remove('hidden');
+      document.getElementById('quiz-nav').classList.remove('hidden');
+      document.getElementById('quiz-result').classList.add('hidden');
+      loadQuestion(0);
+    }
+    
+    // Initialize
+    loadQuestion(0);
+    applyConfig();
+  </script>
+ </body>
+</html>

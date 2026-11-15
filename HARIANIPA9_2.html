@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PENILAIAN HARIAN IPA - 9 bab 2</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Pustaka MathJax untuk merender rumus matematika -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-Script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
@@ -282,6 +285,15 @@
     .btn-secondary:hover {
       background: rgba(255, 255, 255, 0.15);
     }
+
+    /* CSS untuk teks Arab */
+.arabic-text {
+  font-family: 'Traditional Arabic', 'Amiri', 'Scheherazade', 'Tahoma', serif;
+  font-size: 1.4rem;
+  direction: rtl;
+  text-align: right;
+  line-height: 1.8;
+}
   </style>
 </head>
 <body>
@@ -391,18 +403,18 @@
     const rawQuestions = [
   {
     id: 1,
-    q: "Seorang atlet lari segera bersiap setelah mendengar suara letusan pistol start. Urutan penjalaran impuls saraf yang benar pada peristiwa gerak sadar tersebut adalah…",
+    q: "Artinya adalah... √(2&6) ذٰلِكَ الْكِتٰبُ لَا رَيْبَ ۛ فِيْهِ ۛ هُدًى لِّلْمُتَّقِيْنَ", // Contoh teks Arab pada soal
     img: "",
     options: [
-      "Reseptor → Saraf Motorik → Otak → Saraf Sensorik → Efektor",
-      "Reseptor → Saraf Sensorik → Otak → Saraf Motorik → Efektor",
-      "Efektor → Saraf Sensorik → Sumsum Tulang → Saraf Motorik",
-      "Reseptor → Saraf Sensorik → Sumsum Tulang → Saraf Motorik"
+      "Pintu gerbang sekolah",
+      "Halaman sekolah",
+      "Kepala sekolah",
+      "Pagar sekolah"
     ]
   },
   {
     id: 2,
-    q: "Ketika jari tangan seseorang tidak sengaja menyentuh wajan panas, tangan akan terangkat secara spontan sebelum otak menyadari rasa sakit. Bagian yang bertindak sebagai pusat kendali pada gerak refleks tersebut adalah…",
+    q: "Tentukan hasil dari nilai akar kuadrat berikut: $$\\sqrt{x^2 + y^2}$$ jika diketahui $x = 3$ dan $y = 4$?",
     img: "",
     options: [
       "Cerebrum",
@@ -1488,7 +1500,10 @@ const keysPattern = [
         document.getElementById("btn-next").classList.remove("hidden");
         document.getElementById("btn-submit").classList.add("hidden");
       }
+      if (window.MathJax) {
+    MathJax.typesetPromise().catch((err) => console.log('MathJax error:', err));
     }
+  }
 
     function selectOption(optText) {
       const q = randomizedQuestions[currentIdx];

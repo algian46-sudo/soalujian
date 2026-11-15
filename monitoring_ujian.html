@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+<link rel="icon" type="image/png" href="https://i.imgur.com/mRmw86t.jpeg">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Live Catatan Pelanggaran Siswa Ujian</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- PapaParse for robust CSV parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f5ff',
+              100: '#e0ebff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            }
+          },
+          animation: {
+            'pulse-fast': 'pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'bounce-short': 'bounce 0.8s ease-in-out 1',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans min-h-full transition-colors duration-200">
+
+  <div class="min-h-screen flex flex-col">
+    <!-- Header Navbar -->
+    <header class="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center text-white shadow-md shadow-rose-500/20">
+            <i data-lucide="shield-alert" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h1 class="font-bold text-lg sm:text-xl text-slate-900 dark:text-white leading-tight flex items-center gap-2">
+              Live Monitoring Ujian
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-200 dark:border-rose-900 hidden sm:inline-block">Pelanggaran Multi-Kelas</span>
+            </h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Pengawasan Pelanggaran Siswa Real-Time (Dinamis via Sheet)</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-4">
+          <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+            <span id="liveStatusText">Live Sync (10s)</span>
+          </div>
+
+          <button id="btnRefresh" onclick="fetchAllCSVData(true)" title="Perbarui Data Sekarang" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium transition">
+            <i data-lucide="refresh-cw" id="refreshIcon" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">Refresh</span>
+          </button>
+
+          <button id="btnSound" onclick="toggleSound()" title="Toggle Suara Notifikasi" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition">
+            <i data-lucide="bell" id="soundIcon" class="w-4 h-4"></i>
+          </button>
+
+          <button id="btnTheme" onclick="toggleTheme()" title="Ubah Tema" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition">
+            <i data-lucide="moon" id="themeIcon" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+      <!-- Realtime Toast Banner -->
+      <div id="newViolationToast" class="hidden transition-all duration-300 transform translate-y-[-10px] opacity-0 bg-gradient-to-r from-rose-600 to-amber-600 text-white p-4 rounded-xl shadow-lg flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-white/20 rounded-lg">
+            <i data-lucide="alert-triangle" class="w-6 h-6 animate-bounce"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-sm sm:text-base">Terdeteksi Laporan Pelanggaran Baru!</h4>
+            <p id="toastMessage" class="text-xs sm:text-sm text-white/90">Siswa baru saja tercatat melakukan pelanggaran.</p>
+          </div>
+        </div>
+        <button onclick="dismissToast()" class="p-1 hover:bg-white/20 rounded-lg transition text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Quick Summary Metric Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Total Pelanggaran</p>
+            <h3 id="statTotal" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">0</h3>
+            <p class="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
+              <i data-lucide="clock" class="w-3 h-3"></i> Updated: <span id="lastUpdatedTime">-</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+            <i data-lucide="file-warning" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Kelas Terdaftar</p>
+            <h3 id="statTotalClass" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">0</h3>
+            <p class="text-[11px] text-slate-400 mt-1">Aktif dipantau</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+            <i data-lucide="users" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Kelas Catatan Terbanyak</p>
+            <h3 id="statTopClass" class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 truncate max-w-[140px]">-</h3>
+            <p id="statTopClassCount" class="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-1">0 Catatan</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <i data-lucide="alert-octagon" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Pelanggaran Terakhir</p>
+            <h3 id="statLatestTime" class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1 truncate max-w-[150px]">-</h3>
+            <p id="statLatestStudent" class="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[150px] mt-1">-</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+            <i data-lucide="activity" class="w-6 h-6"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters & Dynamic Tabs Bar -->
+      <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar" id="classTabsContainer">
+            <button onclick="selectClassTab('ALL')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 bg-brand-600 text-white shadow-sm shadow-brand-500/30">
+              Semua Kelas (<span id="countAll">0</span>)
+            </button>
+          </div>
+
+          <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+            <div class="relative flex-1 sm:w-64">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" id="searchInput" oninput="handleFilter()" placeholder="Cari Nama, Kelas, Catatan..." class="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
+              <button id="btnClearSearch" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+
+            <select id="sortSelect" onchange="handleFilter()" class="px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
+              <option value="NEWEST">Waktu: Terbaru</option>
+              <option value="OLDEST">Waktu: Terlama</option>
+              <option value="NAME_ASC">Nama: A - Z</option>
+              <option value="CLASS_ASC">Kelas: Urut</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Data Table & Mobile Cards -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-700/60 flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base">Daftar Catatan Pelanggaran</h3>
+            <span id="filteredBadge" class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold px-2.5 py-0.5 rounded-full">
+              0 Data
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">Sumber: <span id="dataSourceLabel">Google Sheets Config</span></p>
+        </div>
+
+        <div class="hidden md:block overflow-x-auto custom-scrollbar">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-slate-50/80 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 uppercase font-semibold text-[11px] tracking-wider border-b border-slate-200 dark:border-slate-700/80">
+                <th class="py-3.5 px-4 w-16 text-center">No</th>
+                <th class="py-3.5 px-4 w-44">Waktu</th>
+                <th class="py-3.5 px-4 w-52">Nama Siswa</th>
+                <th class="py-3.5 px-4 w-32">Kelas</th>
+                <th class="py-3.5 px-4">Catatan / Detail Pelanggaran</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody" class="divide-y divide-slate-100 dark:divide-slate-700/50 text-slate-700 dark:text-slate-200">
+            </tbody>
+          </table>
+        </div>
+
+        <div id="mobileCardsContainer" class="md:hidden divide-y divide-slate-100 dark:divide-slate-700/60">
+        </div>
+
+        <div id="loadingState" class="py-16 text-center">
+          <div class="inline-flex items-center justify-center p-4 bg-brand-50 dark:bg-slate-700/50 text-brand-600 dark:text-brand-400 rounded-full mb-3 animate-spin">
+            <i data-lucide="loader-2" class="w-8 h-8"></i>
+          </div>
+          <p class="text-sm font-semibold text-slate-700 dark:text-slate-200">Mengambil Data Pelanggaran via Google Apps Script...</p>
+          <p class="text-xs text-slate-400 mt-1">Membaca tautan CSV dari sheet konfigurasi...</p>
+        </div>
+
+        <div id="emptyState" class="hidden py-16 text-center px-4">
+          <div class="inline-flex items-center justify-center p-4 bg-slate-100 dark:bg-slate-700 text-slate-400 rounded-full mb-3">
+            <i data-lucide="inbox" class="w-8 h-8"></i>
+          </div>
+          <h4 class="font-bold text-slate-700 dark:text-slate-200 text-base">Tidak Ada Data Pelanggaran</h4>
+          <p id="emptyStateSub" class="text-xs text-slate-400 max-w-md mx-auto mt-1">Belum ada catatan pelanggaran yang dilaporkan atau tidak ada hasil yang cocok dengan kata kunci pencarian Anda.</p>
+        </div>
+
+      </div>
+
+    </main>
+
+    <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-4">
+      <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <p>© 2026 Live Monitoring Ujian - SMP Negeri 8 Cikarang Utara</p>
+        <p class="flex items-center gap-1">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Auto-Sync Google Sheets GAS
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <audio id="notificationSound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRl9vAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQ9vAAAAAAB4/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94/3j/eP94" type="audio/wav">
+  </audio>
+
+  <script>
+    // URL Web App Google Apps Script Anda
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyWyBtVgEKR4Z_ZN36ZzLWTVhmzOgllREAoexxQH6T9ZMMAWM7TCVAde7pWW2buT77I/exec';
+
+    let allViolations = [];
+    let filteredViolations = [];
+    let selectedClass = 'ALL';
+    let previousDataLength = 0;
+    let isFirstLoad = true;
+    let autoRefreshTimer = null;
+    let isSoundEnabled = false;
+    let availableSources = [];
+
+    const tableBody = document.getElementById('tableBody');
+    const mobileCardsContainer = document.getElementById('mobileCardsContainer');
+    const loadingState = document.getElementById('loadingState');
+    const emptyState = document.getElementById('emptyState');
+    const classTabsContainer = document.getElementById('classTabsContainer');
+    const searchInput = document.getElementById('searchInput');
+    const btnClearSearch = document.getElementById('btnClearSearch');
+    const sortSelect = document.getElementById('sortSelect');
+    const filteredBadge = document.getElementById('filteredBadge');
+
+    const statTotal = document.getElementById('statTotal');
+    const statTotalClass = document.getElementById('statTotalClass');
+    const statTopClass = document.getElementById('statTopClass');
+    const statTopClassCount = document.getElementById('statTopClassCount');
+    const statLatestTime = document.getElementById('statLatestTime');
+    const statLatestStudent = document.getElementById('statLatestStudent');
+    const lastUpdatedTime = document.getElementById('lastUpdatedTime');
+    const dataSourceLabel = document.getElementById('dataSourceLabel');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      initTheme();
+      fetchAllCSVData();
+
+      autoRefreshTimer = setInterval(() => {
+        fetchAllCSVData(false);
+      }, 10000);
+    });
+
+    function initTheme() {
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        updateThemeIcon(true);
+      } else {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcon(false);
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.theme = isDark ? 'dark' : 'light';
+      updateThemeIcon(isDark);
+    }
+
+    function updateThemeIcon(isDark) {
+      const iconContainer = document.getElementById('btnTheme');
+      if (isDark) {
+        iconContainer.innerHTML = `<i data-lucide="sun" class="w-4 h-4 text-amber-400"></i>`;
+      } else {
+        iconContainer.innerHTML = `<i data-lucide="moon" class="w-4 h-4"></i>`;
+      }
+      lucide.createIcons();
+    }
+
+    function toggleSound() {
+      isSoundEnabled = !isSoundEnabled;
+      const soundBtn = document.getElementById('btnSound');
+      if (isSoundEnabled) {
+        soundBtn.classList.add('bg-emerald-100', 'text-emerald-700', 'dark:bg-emerald-950', 'dark:text-emerald-400');
+        soundBtn.innerHTML = `<i data-lucide="bell-ring" class="w-4 h-4"></i>`;
+        playAlertSound();
+      } else {
+        soundBtn.classList.remove('bg-emerald-100', 'text-emerald-700', 'dark:bg-emerald-950', 'dark:text-emerald-400');
+        soundBtn.innerHTML = `<i data-lucide="bell-off" class="w-4 h-4"></i>`;
+      }
+      lucide.createIcons();
+    }
+
+    function playAlertSound() {
+      if (!isSoundEnabled) return;
+      try {
+        const audio = document.getElementById('notificationSound');
+        audio.currentTime = 0;
+        audio.play().catch(e => console.log('Audio playback prevented:', e));
+      } catch (err) {
+        console.warn('Audio play error:', err);
+      }
+    }
+
+    // Mengambil data terpusat melalui Google Apps Script Web App
+    async function fetchAllCSVData(isManual = false) {
+      const refreshIcon = document.getElementById('refreshIcon');
+      if (isManual && refreshIcon) refreshIcon.classList.add('animate-spin');
+
+      try {
+        const fetchUrl = `${WEB_APP_URL}?_nocache=${new Date().getTime()}`;
+        const response = await fetch(fetchUrl);
+        const jsonResult = await response.json();
+
+        if (isManual && refreshIcon) {
+          setTimeout(() => refreshIcon.classList.remove('animate-spin'), 500);
+        }
+
+        if (jsonResult && jsonResult.status === 'success') {
+          availableSources = jsonResult.sources || [];
+          const mergedData = jsonResult.data || [];
+          
+          dataSourceLabel.innerText = `${availableSources.length} Sumber Kelas Terhubung`;
+          processMergedData(mergedData);
+        } else {
+          console.error('Gagal memuat data dari GAS:', jsonResult.message);
+          dataSourceLabel.innerText = 'Error Mengambil Data';
+        }
+      } catch (err) {
+        console.error('Gagal koneksi ke Web App GAS:', err);
+        if (isManual && refreshIcon) refreshIcon.classList.remove('animate-spin');
+        dataSourceLabel.innerText = 'Koneksi Gagal';
+      }
+    }
+
+    function processMergedData(mappedData) {
+      if (!isFirstLoad && mappedData.length > previousDataLength) {
+        const newCount = mappedData.length - previousDataLength;
+        showToastNotification(`Ada ${newCount} catatan pelanggaran baru ditambahkan!`);
+        playAlertSound();
+      }
+
+      previousDataLength = mappedData.length;
+      allViolations = mappedData;
+      isFirstLoad = false;
+
+      const now = new Date();
+      lastUpdatedTime.innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      renderClassTabs();
+      calculateStats();
+      handleFilter();
+
+      loadingState.classList.add('hidden');
+    }
+
+    function calculateStats() {
+      const total = allViolations.length;
+      statTotal.innerText = total;
+
+      const classesMap = {};
+      allViolations.forEach(v => {
+        classesMap[v.kelas] = (classesMap[v.kelas] || 0) + 1;
+      });
+
+      const classKeys = Object.keys(classesMap);
+      statTotalClass.innerText = classKeys.length;
+
+      let topClass = '-';
+      let maxCount = 0;
+      for (const [cls, count] of Object.entries(classesMap)) {
+        if (count > maxCount) {
+          maxCount = count;
+          topClass = cls;
+        }
+      }
+      statTopClass.innerText = topClass;
+      statTopClassCount.innerText = maxCount > 0 ? `${maxCount} Catatan` : '0 Catatan';
+
+      if (total > 0) {
+        const latest = allViolations[allViolations.length - 1];
+        statLatestTime.innerText = latest.waktu || 'Baru Saja';
+        statLatestStudent.innerText = `${latest.nama} (${latest.kelas})`;
+      } else {
+        statLatestTime.innerText = '-';
+        statLatestStudent.innerText = '-';
+      }
+    }
+
+    function renderClassTabs() {
+      const classes = [...new Set(allViolations.map(v => v.kelas))].sort();
+
+      let tabsHTML = `
+        <button onclick="selectClassTab('ALL')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${selectedClass === 'ALL' ? 'bg-brand-600 text-white shadow-sm shadow-brand-500/30' : 'bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'}">
+          Semua Kelas (${allViolations.length})
+        </button>
+      `;
+
+      classes.forEach(cls => {
+        const count = allViolations.filter(v => v.kelas === cls).length;
+        const isActive = selectedClass === cls;
+        tabsHTML += `
+          <button onclick="selectClassTab('${cls}')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${isActive ? 'bg-brand-600 text-white shadow-sm shadow-brand-500/30' : 'bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'}">
+            ${cls} (${count})
+          </button>
+        `;
+      });
+
+      classTabsContainer.innerHTML = tabsHTML;
+    }
+
+    function selectClassTab(className) {
+      selectedClass = className;
+      renderClassTabs();
+      handleFilter();
+    }
+
+    function handleFilter() {
+      const query = searchInput.value.toLowerCase().trim();
+      btnClearSearch.classList.toggle('hidden', query === '');
+
+      let result = selectedClass === 'ALL' 
+        ? [...allViolations] 
+        : allViolations.filter(v => v.kelas === selectedClass);
+
+      if (query !== '') {
+        result = result.filter(v => 
+          v.nama.toLowerCase().includes(query) ||
+          v.kelas.toLowerCase().includes(query) ||
+          v.catatan.toLowerCase().includes(query) ||
+          v.waktu.toLowerCase().includes(query)
+        );
+      }
+
+      const sortType = sortSelect.value;
+      if (sortType === 'NEWEST') {
+        result.reverse();
+      } else if (sortType === 'OLDEST') {
+        // Standard chronological
+      } else if (sortType === 'NAME_ASC') {
+        result.sort((a, b) => a.nama.localeCompare(b.nama));
+      } else if (sortType === 'CLASS_ASC') {
+        result.sort((a, b) => a.kelas.localeCompare(b.kelas));
+      }
+
+      filteredViolations = result;
+      filteredBadge.innerText = `${filteredViolations.length} Data`;
+
+      renderTableAndCards();
+    }
+
+    function clearSearch() {
+      searchInput.value = '';
+      handleFilter();
+    }
+
+    function renderTableAndCards() {
+      tableBody.innerHTML = '';
+      mobileCardsContainer.innerHTML = '';
+
+      if (filteredViolations.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      filteredViolations.forEach((item, index) => {
+        const rowNo = index + 1;
+        const categoryBadge = getViolationSeverityBadge(item.catatan);
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50/80 dark:hover:bg-slate-700/30 transition-colors duration-150';
+        tr.innerHTML = `
+          <td class="py-3.5 px-4 text-center font-semibold text-slate-400 text-xs">${rowNo}</td>
+          <td class="py-3.5 px-4 font-mono text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
+              ${escapeHTML(item.waktu || '-')}
+            </div>
+          </td>
+          <td class="py-3.5 px-4 font-semibold text-slate-900 dark:text-white">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold flex items-center justify-center text-xs border border-slate-200 dark:border-slate-600">
+                ${item.nama ? item.nama.charAt(0).toUpperCase() : '?'}
+              </div>
+              <span>${escapeHTML(item.nama)}</span>
+            </div>
+          </td>
+          <td class="py-3.5 px-4">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+              ${escapeHTML(item.kelas)}
+            </span>
+          </td>
+          <td class="py-3.5 px-4">
+            <div class="flex flex-col gap-1">
+              <span class="text-slate-800 dark:text-slate-200 font-medium">${escapeHTML(item.catatan)}</span>
+              ${categoryBadge}
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+
+        const card = document.createElement('div');
+        card.className = 'p-4 space-y-2 hover:bg-slate-50 dark:hover:bg-slate-700/20 transition';
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-400">#${rowNo}</span>
+              <h4 class="font-bold text-slate-900 dark:text-white text-sm">${escapeHTML(item.nama)}</h4>
+            </div>
+            <span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+              ${escapeHTML(item.kelas)}
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-700 dark:text-slate-300 font-medium bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/50">
+            ${escapeHTML(item.catatan)}
+          </p>
+
+          <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+            <span class="flex items-center gap-1 font-mono">
+              <i data-lucide="clock" class="w-3 h-3"></i> ${escapeHTML(item.waktu || '-')}
+            </span>
+            ${categoryBadge}
+          </div>
+        `;
+        mobileCardsContainer.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    function getViolationSeverityBadge(note) {
+      const text = note.toLowerCase();
+      if (text.includes('hp') || text.includes('ponsel') || text.includes('smartphone') || text.includes('menyontek') || text.includes('buka google') || text.includes('browsing') || text.includes('catatan')) {
+        return `<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-950/70 dark:text-rose-300"><i data-lucide="alert-circle" class="w-3 h-3"></i> Berat / Menyontek</span>`;
+      } else if (text.includes('bicara') || text.includes('ngobrol') || text.includes('berisik') || text.includes('tengok') || text.includes('kerjasama')) {
+        return `<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Sedang / Ketenangan</span>`;
+      } else if (text.includes('terlambat') || text.includes('telat') || text.includes('atribut') || text.includes('seragam')) {
+        return `<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-950/70 dark:text-blue-300"><i data-lucide="info" class="w-3 h-3"></i> Ringan / Kedisiplinan</span>`;
+      }
+      return '';
+    }
+
+    function showToastNotification(msg) {
+      const toast = document.getElementById('newViolationToast');
+      const toastMsg = document.getElementById('toastMessage');
+      
+      toastMsg.innerText = msg;
+      toast.classList.remove('hidden');
+      
+      setTimeout(() => {
+        toast.classList.remove('translate-y-[-10px]', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+      }, 50);
+
+      setTimeout(() => {
+        dismissToast();
+      }, 7000);
+    }
+
+    function dismissToast() {
+      const toast = document.getElementById('newViolationToast');
+      toast.classList.remove('opacity-100');
+      toast.classList.add('opacity-0');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 300);
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
