@@ -69,9 +69,9 @@
           <div>
             <h1 class="font-bold text-lg sm:text-xl text-slate-900 dark:text-white leading-tight flex items-center gap-2">
               Live Monitoring Ujian
-              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-200 dark:border-rose-900 hidden sm:inline-block">Pelanggaran Multi-Kelas</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-200 dark:border-rose-900 hidden sm:inline-block">Multi-Kelas Aktif</span>
             </h1>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Pengawasan Pelanggaran Siswa Real-Time (Dinamis via Sheet)</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Pengawasan Pelanggaran Siswa Real-Time (Sheet: csv_link)</p>
           </div>
         </div>
 
@@ -136,9 +136,9 @@
 
         <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex items-center justify-between">
           <div>
-            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Kelas Terdaftar</p>
+            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Sesi Aktif Dipantau</p>
             <h3 id="statTotalClass" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">0</h3>
-            <p class="text-[11px] text-slate-400 mt-1">Aktif dipantau</p>
+            <p class="text-[11px] text-slate-400 mt-1">Status Aktif di csv_link</p>
           </div>
           <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
             <i data-lucide="users" class="w-6 h-6"></i>
@@ -180,7 +180,7 @@
           <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
             <div class="relative flex-1 sm:w-64">
               <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="text" id="searchInput" oninput="handleFilter()" placeholder="Cari Nama, Kelas, Catatan..." class="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
+              <input type="text" id="searchInput" oninput="handleFilter()" placeholder="Cari Nama, Kelas, Mapel, Catatan..." class="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
               <button id="btnClearSearch" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                 <i data-lucide="x" class="w-3.5 h-3.5"></i>
               </button>
@@ -205,7 +205,7 @@
               0 Data
             </span>
           </div>
-          <p class="text-xs text-slate-400">Sumber: <span id="dataSourceLabel">Google Sheets Config</span></p>
+          <p class="text-xs text-slate-400">Sumber: <span id="dataSourceLabel">Sheet csv_link (Aktif)</span></p>
         </div>
 
         <div class="hidden md:block overflow-x-auto custom-scrollbar">
@@ -213,9 +213,10 @@
             <thead>
               <tr class="bg-slate-50/80 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 uppercase font-semibold text-[11px] tracking-wider border-b border-slate-200 dark:border-slate-700/80">
                 <th class="py-3.5 px-4 w-16 text-center">No</th>
-                <th class="py-3.5 px-4 w-44">Waktu</th>
-                <th class="py-3.5 px-4 w-52">Nama Siswa</th>
-                <th class="py-3.5 px-4 w-32">Kelas</th>
+                <th class="py-3.5 px-4 w-40">Waktu</th>
+                <th class="py-3.5 px-4 w-48">Nama Siswa</th>
+                <th class="py-3.5 px-4 w-28">Kelas</th>
+                <th class="py-3.5 px-4 w-40">Mata Pelajaran</th>
                 <th class="py-3.5 px-4">Catatan / Detail Pelanggaran</th>
               </tr>
             </thead>
@@ -232,7 +233,7 @@
             <i data-lucide="loader-2" class="w-8 h-8"></i>
           </div>
           <p class="text-sm font-semibold text-slate-700 dark:text-slate-200">Mengambil Data Pelanggaran via Google Apps Script...</p>
-          <p class="text-xs text-slate-400 mt-1">Membaca tautan CSV dari sheet konfigurasi...</p>
+          <p class="text-xs text-slate-400 mt-1">Menyaring sesi ujian berstatus Aktif dari sheet csv_link...</p>
         </div>
 
         <div id="emptyState" class="hidden py-16 text-center px-4">
@@ -240,7 +241,7 @@
             <i data-lucide="inbox" class="w-8 h-8"></i>
           </div>
           <h4 class="font-bold text-slate-700 dark:text-slate-200 text-base">Tidak Ada Data Pelanggaran</h4>
-          <p id="emptyStateSub" class="text-xs text-slate-400 max-w-md mx-auto mt-1">Belum ada catatan pelanggaran yang dilaporkan atau tidak ada hasil yang cocok dengan kata kunci pencarian Anda.</p>
+          <p id="emptyStateSub" class="text-xs text-slate-400 max-w-md mx-auto mt-1">Belum ada catatan pelanggaran yang dilaporkan dari sesi ujian aktif atau tidak ada hasil yang cocok dengan kata kunci pencarian Anda.</p>
         </div>
 
       </div>
@@ -262,8 +263,8 @@
   </audio>
 
   <script>
-    // URL Web App Google Apps Script Anda
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyWyBtVgEKR4Z_ZN36ZzLWTVhmzOgllREAoexxQH6T9ZMMAWM7TCVAde7pWW2buT77I/exec';
+    // URL Web App Google Apps Script terbaru Anda
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz_fdZgdJFmzRrN9-Pznxyt5egxTXrLhjKjSszU9nBBMTz246VXLR1uupnvor8UX7cC/exec';
 
     let allViolations = [];
     let filteredViolations = [];
@@ -354,7 +355,7 @@
       }
     }
 
-    // Mengambil data terpusat melalui Google Apps Script Web App
+    // Mengambil data terpusat melalui Google Apps Script Web App (Sheet csv_link filter Aktif)
     async function fetchAllCSVData(isManual = false) {
       const refreshIcon = document.getElementById('refreshIcon');
       if (isManual && refreshIcon) refreshIcon.classList.add('animate-spin');
@@ -372,7 +373,7 @@
           availableSources = jsonResult.sources || [];
           const mergedData = jsonResult.data || [];
           
-          dataSourceLabel.innerText = `${availableSources.length} Sumber Kelas Terhubung`;
+          dataSourceLabel.innerText = `${availableSources.length} Sesi Ujian Aktif Dipantau`;
           processMergedData(mergedData);
         } else {
           console.error('Gagal memuat data dari GAS:', jsonResult.message);
@@ -416,7 +417,7 @@
       });
 
       const classKeys = Object.keys(classesMap);
-      statTotalClass.innerText = classKeys.length;
+      statTotalClass.innerText = availableSources.length; // Menampilkan jumlah sesi aktif dari csv_link
 
       let topClass = '-';
       let maxCount = 0;
@@ -479,6 +480,7 @@
         result = result.filter(v => 
           v.nama.toLowerCase().includes(query) ||
           v.kelas.toLowerCase().includes(query) ||
+          v.mapel.toLowerCase().includes(query) ||
           v.catatan.toLowerCase().includes(query) ||
           v.waktu.toLowerCase().includes(query)
         );
@@ -545,6 +547,11 @@
             </span>
           </td>
           <td class="py-3.5 px-4">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-700/60 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+              ${escapeHTML(item.mapel)}
+            </span>
+          </td>
+          <td class="py-3.5 px-4">
             <div class="flex flex-col gap-1">
               <span class="text-slate-800 dark:text-slate-200 font-medium">${escapeHTML(item.catatan)}</span>
               ${categoryBadge}
@@ -561,8 +568,16 @@
               <span class="text-xs font-bold text-slate-400">#${rowNo}</span>
               <h4 class="font-bold text-slate-900 dark:text-white text-sm">${escapeHTML(item.nama)}</h4>
             </div>
-            <span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
-              ${escapeHTML(item.kelas)}
+            <div class="flex items-center gap-1.5">
+              <span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                ${escapeHTML(item.kelas)}
+              </span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <span class="font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700/50 px-2 py-0.5 rounded">
+              Mapel: ${escapeHTML(item.mapel)}
             </span>
           </div>
 
