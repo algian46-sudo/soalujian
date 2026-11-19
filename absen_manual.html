@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  <link rel="icon" type="image/png" href="https://i.imgur.com/mRmw86t.jpeg">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Input Manual Ketidakhadiran - SMP Negeri 8 Cikarang Utara</title>
@@ -423,7 +424,13 @@
       const errText = await res.text().catch(() => "");
       throw new Error(`HTTP ${res.status} ${errText}`);
     }
-    return res.status === 204 ? null : res.json();
+    const text = await res.text().catch(() => "");
+    if (!text) return null;
+    try {
+      return JSON.parse(text);
+    } catch (_) {
+      return text;
+    }
   }
 
   async function muatData() {
