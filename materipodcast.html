@@ -554,7 +554,7 @@
           <input
             type="url"
             id="webhook-url-input"
-            placeholder="https://script.google.com/macros/s/AKfycbxhk1gNZ7CmeEMJGoyPKn92fQjVMlefY4DdbOJNOemUhsq1gyKNdi4AfRmzgWraIDE/exec"
+            placeholder="https://script.google.com/macros/s/AKfycbx.../exec"
             class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
           />
           <p class="text-xs text-slate-500 mt-1.5">
@@ -974,8 +974,9 @@
     // =========================================================
     // STATE APLIKASI & PENYIMPANAN LOKAL
     // =========================================================
+    const DEFAULT_GAS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwWspRBkd4SE-7Os4s8i530q1H9ghCadOSbv9h0MduHcFU_EroEoWarmAD5nc7hhR4/exec';
     let taskSubmissions = JSON.parse(localStorage.getItem('podcast_school_tasks_v1') || '[]');
-    let savedWebhookUrl = localStorage.getItem('podcast_sheets_webhook_v1') || '';
+    let savedWebhookUrl = localStorage.getItem('podcast_sheets_webhook_v1') || DEFAULT_GAS_WEBHOOK_URL;
 
     // =========================================================
     // RENDER KARTU MATERI & VIDEO YOUTUBE 30 DETIK
@@ -1497,11 +1498,11 @@ Host: "Terima kasih banyak untuk narasumber dan teman-teman yang sudah menyimak.
 
     function saveWebhookUrl() {
       const val = document.getElementById('webhook-url-input').value.trim();
-      savedWebhookUrl = val;
-      localStorage.setItem('podcast_sheets_webhook_v1', val);
+      savedWebhookUrl = val || DEFAULT_GAS_WEBHOOK_URL;
+      localStorage.setItem('podcast_sheets_webhook_v1', savedWebhookUrl);
       updateWebhookIndicator();
       closeSpreadsheetModal();
-      showToast(val ? 'URL Google Spreadsheet berhasil disimpan!' : 'Beralih ke Mode Simulasi Spreadsheet.', 'success');
+      showToast(val ? 'URL Google Spreadsheet berhasil diperbarui!' : 'Menggunakan URL Google Spreadsheet default kelas.', 'success');
     }
 
     function updateWebhookIndicator() {
@@ -1530,29 +1531,24 @@ Host: "Terima kasih banyak untuk narasumber dan teman-teman yang sudah menyimak.
       btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengirim ke Spreadsheet...</span>`;
 
       try {
-        if (savedWebhookUrl) {
-          // Kirim nyata ke Google Apps Script Web App
-          await fetch(savedWebhookUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ rows: taskSubmissions })
-          });
-        } else {
-          // Simulasi jeda pengiriman jaringan jika guru belum menautkan URL Webhook
-          await new Promise(resolve => setTimeout(resolve, 900));
-        }
+        const targetUrl = savedWebhookUrl || DEFAULT_GAS_WEBHOOK_URL;
+        const rowsToSend = taskSubmissions.filter(item => !item.synced);
+        const payloadRows = rowsToSend.length > 0 ? rowsToSend : taskSubmissions;
+
+        // Kirim ke Google Apps Script Web App menggunakan text/plain agar bebas blokir preflight CORS
+        await fetch(targetUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ rows: payloadRows })
+        });
 
         // Tandai semua baris sebagai terkirim
         taskSubmissions = taskSubmissions.map(item => ({ ...item, synced: true }));
         saveTasksToLocal();
         renderRecapTable();
 
-        if (savedWebhookUrl) {
-          showToast(`Berhasil mengirim ${taskSubmissions.length} data kelompok ke Google Spreadsheet!`, 'success');
-        } else {
-          showToast(`Simulasi berhasil! ${taskSubmissions.length} data ditandai Terkirim. (Atur URL Webhook jika ingin sinkron otomatis ke Google Sheets guru).`, 'success');
-        }
+        showToast(`Berhasil mengirim ${payloadRows.length} data kelompok ke Google Spreadsheet!`, 'success');
       } catch (error) {
         showToast('Terjadi kendala koneksi saat mengirim ke Spreadsheet. Gunakan tombol Unduh CSV sebagai cadangan.', 'error');
       } finally {
