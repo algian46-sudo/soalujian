@@ -299,6 +299,22 @@
   let currentCamIndex = 0;
   let isCameraRunning = false;
 
+  function readStorage(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function writeStorage(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (_) {
+      // Abaikan jika penyimpanan browser diblokir oleh Tracking Prevention
+    }
+  }
+
   // Format tanggal M/D/YYYY (contoh: 11/19/2026)
   function getFormattedDate() {
     const now = new Date();
@@ -322,26 +338,36 @@
   // Ambil master siswa sekali ke cache browser; klik Refresh jika ada pembaruan data siswa
   async function loadMasterSiswa(forceRefresh = false) {
     if (!forceRefresh) {
-      const saved = localStorage.getItem(CACHE_KEY);
+      const saved = readStorage(CACHE_KEY);
       if (saved) {
-        siswaDB = JSON.parse(saved);
-        renderSiswaCount();
-        return;
+        try {
+          siswaDB = JSON.parse(saved);
+          renderSiswaCount();
+          return;
+        } catch (_) {
+          // Lanjut ambil ulang dari server jika cache rusak
+        }
       }
     }
 
     document.getElementById('siswaCount').innerText = "Mengambil data siswa...";
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/siswa?select=id_siswa,nama_siswa,kelas,qr_code&limit=5000`, {
+      const url = `${SUPABASE_URL}/rest/v1/siswa?select=id_siswa,nama_siswa,kelas,qr_code&limit=5000`;
+      const res = await fetch(url, {
+        method: "GET",
         headers: {
           "apikey": SUPABASE_ANON_KEY,
-          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+          "Accept": "application/json"
         }
       });
 
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const rows = await res.json();
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => "");
+        throw new Error(`HTTP ${res.status} ${errBody}`);
+      }
 
+      const rows = await res.json();
       const map = {};
       for (const row of rows) {
         const id = String(row.id_siswa || '').trim();
@@ -357,10 +383,10 @@
       }
 
       siswaDB = map;
-      localStorage.setItem(CACHE_KEY, JSON.stringify(siswaDB));
+      writeStorage(CACHE_KEY, JSON.stringify(siswaDB));
       renderSiswaCount();
     } catch (err) {
-      document.getElementById('siswaCount').innerText = "Gagal memuat data siswa";
+      document.getElementById('siswaCount').innerText = `Gagal memuat data siswa (${err.message})`;
     }
   }
 
