@@ -11,7 +11,6 @@
       --card-bg: #1e293b;
       --accent: #3b82f6;
       --success: #10b981;
-      --pulang: #06b6d4;
       --warning: #f59e0b;
       --danger: #ef4444;
       --text-main: #f8fafc;
@@ -69,11 +68,10 @@
       padding: 14px;
       border-radius: 16px;
       border: 2px solid rgba(59, 130, 246, 0.3);
-      transition: border-color 0.15s ease;
+      transition: border-color 0.12s ease;
     }
 
     .scanner-card.scan-success { border-color: var(--success); box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
-    .scanner-card.scan-pulang { border-color: var(--pulang); box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); }
     .scanner-card.scan-error { border-color: var(--danger); box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
 
     #reader {
@@ -199,7 +197,6 @@
       font-size: 0.85rem;
       border-left: 3px solid var(--success);
     }
-    .log-item.is-pulang { border-left-color: var(--pulang); }
 
     .log-name { font-weight: 600; color: #fff; }
     .log-meta { font-size: 0.75rem; color: var(--text-muted); }
@@ -211,10 +208,6 @@
       background: rgba(16, 185, 129, 0.18);
       color: var(--success);
     }
-    .is-pulang .status-pill {
-      background: rgba(6, 182, 212, 0.18);
-      color: var(--pulang);
-    }
   </style>
 </head>
 <body>
@@ -223,7 +216,7 @@
   <div class="header">
     <div>
       <h1>Absensi Barcode Siswa</h1>
-      <p id="siswaCount">Memuat data siswa...</p>
+      <p id="siswaCount">Memuat cache siswa...</p>
     </div>
     <div id="netBadge" class="badge badge-idle">Siap Kirim</div>
   </div>
@@ -247,8 +240,8 @@
 
   <div class="log-card">
     <div class="log-header">
-      <span>Terproses (<span id="totalScanned">0</span>)</span>
-      <button class="btn-refresh" onclick="loadMasterSiswa()">Refresh Data Siswa</button>
+      <span>Terkirim (<span id="totalScanned">0</span>)</span>
+      <button class="btn-refresh" onclick="loadMasterSiswa(true)">Refresh Cache Siswa</button>
     </div>
     <ul class="log-list" id="logList"></ul>
   </div>
@@ -256,15 +249,13 @@
 
 <script>
   // ================= KONFIGURASI =================
-  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-KF6Zfo_hYBRGlWzD4WZxvftWUAKH1eN_2EcMb9eqmvi1l8e1M-do_Rs6dIZozlIm/exec";
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz0zNJnjLae4dLP9iCeZht3fI-h9CTDXyDsf2SBguDWbTr6JpW1W5_3-Q_aD4OnNbWy/exec";
+  const CACHE_KEY = "siswa_cache_v1";
 
   let siswaDB = {};
-  let recentCooldown = {};
-  let isScanCooldown = false;
   let totalTerkirim = 0;
-
-  let requestChain = Promise.resolve();
-  let activeRequests = 0;
+  let lastScannedCode = "";
+  let lastScannedTime = 0;
 
   let html5QrCode = null;
   let availableCameras = [];
@@ -285,20 +276,35 @@
     badge.innerText = text;
   }
 
-  async function loadMasterSiswa() {
-    document.getElementById('siswaCount').innerText = "Mengambil data siswa dari Sheet...";
+  function renderSiswaCount() {
+    const uniqueIds = new Set(Object.values(siswaDB).map(s => s.id));
+    document.getElementById('siswaCount').innerText = `${uniqueIds.size} Siswa (Cache)`;
+  }
+
+  // Ambil data siswa dari cache jika sudah ada; hanya fetch dari Sheet saat cache kosong atau tombol Refresh diklik
+  async function loadMasterSiswa(forceRefresh = false) {
+    if (!forceRefresh) {
+      const saved = localStorage.getItem(CACHE_KEY);
+      if (saved) {
+        siswaDB = JSON.parse(saved);
+        renderSiswaCount();
+        return;
+      }
+    }
+
+    document.getElementById('siswaCount').innerText = "Mengambil data siswa...";
     try {
       const res = await fetch(`${GAS_WEB_APP_URL}?action=getSiswa`);
       const json = await res.json();
       if (json.status === 'success') {
         siswaDB = json.data;
-        const uniqueIds = new Set(Object.values(siswaDB).map(s => s.id));
-        document.getElementById('siswaCount').innerText = `${uniqueIds.size} Siswa Terdaftar`;
+        localStorage.setItem(CACHE_KEY, JSON.stringify(siswaDB));
+        renderSiswaCount();
       } else {
         document.getElementById('siswaCount').innerText = "Gagal memuat data siswa";
       }
     } catch (err) {
-      document.getElementById('siswaCount').innerText = "Koneksi terputus saat memuat siswa";
+      document.getElementById('siswaCount').innerText = "Gagal mengambil data siswa";
     }
   }
 
@@ -307,7 +313,7 @@
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'id-ID';
-      utterance.rate = 1.15;
+      utterance.rate = 1.2;
       window.speechSynthesis.speak(utterance);
     }
   }
@@ -315,14 +321,11 @@
   function flashStatus(type, message, speechMsg) {
     const box = document.getElementById('scannerBox');
     const statusEl = document.getElementById('scanStatus');
-    box.classList.remove('scan-success', 'scan-pulang', 'scan-error');
+    box.classList.remove('scan-success', 'scan-error');
 
-    if (type === 'masuk') {
+    if (type === 'ok') {
       box.classList.add('scan-success');
       statusEl.style.color = 'var(--success)';
-    } else if (type === 'pulang') {
-      box.classList.add('scan-pulang');
-      statusEl.style.color = 'var(--pulang)';
     } else {
       box.classList.add('scan-error');
       statusEl.style.color = 'var(--danger)';
@@ -332,79 +335,66 @@
     if (speechMsg) speakText(speechMsg);
 
     setTimeout(() => {
-      box.classList.remove('scan-success', 'scan-pulang', 'scan-error');
+      box.classList.remove('scan-success', 'scan-error');
       statusEl.style.color = 'var(--accent)';
       statusEl.innerText = isCameraRunning
         ? "Kamera aktif — siap scan berikutnya"
         : "Klik 'Buka Kamera' untuk memulai scan";
-    }, 1200);
+    }, 900);
   }
 
-  function submitAttendanceDirect(rawCode) {
+  // Kirim langsung tanpa jeda atau antrean
+  function kirimAbsenLangsung(rawCode) {
     const code = String(rawCode).trim();
     if (!code) return;
 
     const now = Date.now();
-    if (recentCooldown[code] && (now - recentCooldown[code] < 3000)) {
+    // Cegah pembacaan barcode yang sama persis dalam 1.5 detik
+    if (code === lastScannedCode && (now - lastScannedTime < 1500)) {
       return;
     }
+    lastScannedCode = code;
+    lastScannedTime = now;
 
     const siswa = siswaDB[code];
     if (!siswa) {
-      flashStatus('error', `NISN / Kode "${code}" tidak terdaftar!`, "Data tidak ditemukan");
+      flashStatus('error', `NISN / Kode "${code}" tidak terdaftar!`, "Tidak terdaftar");
       return;
     }
 
-    recentCooldown[code] = now;
-    const todayStr = getFormattedDate();
+    const timestamp = getFormattedDate();
+    const status = "Hadir";
+    const triggerSuara = `Terima kasih, ${siswa.nama}`;
 
-    flashStatus('masuk', `✓ ${siswa.nama} (${siswa.kelas}) — mengirim...`, `Terima kasih, ${siswa.nama}`);
+    const payload = {
+      timestamp: timestamp,
+      id_siswa: String(siswa.id),
+      nama_siswa: siswa.nama,
+      status: status,
+      kelas: siswa.kelas,
+      trigger_suara: triggerSuara
+    };
 
-    activeRequests++;
-    setNetBadge('sending', `Kirim (${activeRequests})`);
+    flashStatus('ok', `✓ ${siswa.nama} (${siswa.kelas})`, triggerSuara);
+    addLogItem(payload);
+    setNetBadge('sending', 'Mengirim...');
 
-    requestChain = requestChain.then(async () => {
-      try {
-        const response = await fetch(GAS_WEB_APP_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            timestamp: todayStr,
-            id_siswa: String(siswa.id),
-            nama_siswa: siswa.nama,
-            kelas: siswa.kelas
-          })
-        });
-
-        const result = await response.json();
-
+    // Fire-and-forget langsung ke Sheet tanpa menunggu atau antrean
+    fetch(GAS_WEB_APP_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    })
+      .then(res => res.json())
+      .then(result => {
         if (result.status === 'success') {
-          const saved = result.data;
-          flashStatus(
-            saved.status === 'Pulang' ? 'pulang' : 'masuk',
-            `✓ ${saved.nama_siswa} (${saved.kelas}) — ${saved.status}`,
-            saved.status === 'Pulang' ? `Absen pulang, ${saved.nama_siswa}` : null
-          );
-          addLogItem(saved);
-        } else if (result.status === 'already_complete') {
-          flashStatus(
-            'error',
-            `${siswa.nama} sudah absen Masuk & Pulang hari ini!`,
-            `${siswa.nama} sudah lengkap hari ini`
-          );
+          setNetBadge('ok', 'Terkirim');
         } else {
-          flashStatus('error', result.message || "Gagal menyimpan ke Sheet", null);
+          setNetBadge('idle', 'Cek Sheet');
         }
-      } catch (err) {
-        flashStatus('error', `Gagal kirim ${siswa.nama} ke Sheet`, null);
-      } finally {
-        activeRequests = Math.max(0, activeRequests - 1);
-        if (activeRequests > 0) {
-          setNetBadge('sending', `Kirim (${activeRequests})`);
-        } else {
-          setNetBadge('ok', 'Tersimpan');
-        }
-      }
-    });
+      })
+      .catch(() => {
+        setNetBadge('idle', 'Gagal Kirim');
+      });
   }
 
   function handleManualSubmit(e) {
@@ -413,7 +403,7 @@
     const val = input.value;
     input.value = '';
     input.focus();
-    submitAttendanceDirect(val);
+    kirimAbsenLangsung(val);
   }
 
   function addLogItem(record) {
@@ -421,7 +411,7 @@
     document.getElementById('totalScanned').innerText = totalTerkirim;
     const list = document.getElementById('logList');
     const li = document.createElement('li');
-    li.className = `log-item ${record.status === 'Pulang' ? 'is-pulang' : ''}`;
+    li.className = 'log-item';
     li.innerHTML = `
       <div>
         <div class="log-name">${record.nama_siswa}</div>
@@ -433,11 +423,7 @@
   }
 
   function onBarcodeDetected(decodedText) {
-    if (!isScanCooldown) {
-      isScanCooldown = true;
-      submitAttendanceDirect(decodedText);
-      setTimeout(() => { isScanCooldown = false; }, 1100);
-    }
+    kirimAbsenLangsung(decodedText);
   }
 
   async function initCameraList() {
@@ -480,7 +466,7 @@
     }
 
     const config = {
-      fps: 20,
+      fps: 24,
       qrbox: { width: 260, height: 160 }
     };
 
@@ -527,7 +513,7 @@
   }
 
   window.onload = async () => {
-    await loadMasterSiswa();
+    await loadMasterSiswa(false);
     await initCameraList();
   };
 </script>
