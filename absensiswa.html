@@ -240,7 +240,7 @@
 
   <div class="log-card">
     <div class="log-header">
-      <span>Terkirim (<span id="totalScanned">0</span>)</span>
+      <span>Terproses (<span id="totalScanned">0</span>)</span>
       <button class="btn-refresh" onclick="loadMasterSiswa(true)">Refresh Cache Siswa</button>
     </div>
     <ul class="log-list" id="logList"></ul>
@@ -249,13 +249,16 @@
 
 <script>
   // ================= KONFIGURASI =================
-  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz0zNJnjLae4dLP9iCeZht3fI-h9CTDXyDsf2SBguDWbTr6JpW1W5_3-Q_aD4OnNbWy/exec";
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx5-mNCAQ2pmYO9fS1hjgGvS34DDh2CCVvd6mxeZCohOoeFJqZoo603_WHDhnaDmkk8/exec";
   const CACHE_KEY = "siswa_cache_v1";
 
   let siswaDB = {};
   let totalTerkirim = 0;
   let lastScannedCode = "";
   let lastScannedTime = 0;
+
+  let sendQueue = [];
+  let isFlushing = false;
 
   let html5QrCode = null;
   let availableCameras = [];
@@ -281,7 +284,6 @@
     document.getElementById('siswaCount').innerText = `${uniqueIds.size} Siswa (Cache)`;
   }
 
-  // Ambil data siswa dari cache jika sudah ada; hanya fetch dari Sheet saat cache kosong atau tombol Refresh diklik
   async function loadMasterSiswa(forceRefresh = false) {
     if (!forceRefresh) {
       const saved = localStorage.getItem(CACHE_KEY);
@@ -340,17 +342,57 @@
       statusEl.innerText = isCameraRunning
         ? "Kamera aktif — siap scan berikutnya"
         : "Klik 'Buka Kamera' untuk memulai scan";
-    }, 900);
+    }, 800);
   }
 
-  // Kirim langsung tanpa jeda atau antrean
+  // Kirim langsung tanpa jeda antar-scan; jika ada beberapa data masuk cepat, digabung dalam 1 batch
+  async function flushQueue() {
+    if (isFlushing || sendQueue.length === 0) return;
+    isFlushing = true;
+
+    while (sendQueue.length > 0) {
+      const batch = sendQueue.splice(0, sendQueue.length);
+      setNetBadge('sending', `Kirim (${batch.length})`);
+
+      let sent = false;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const response = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify({ records: batch })
+          });
+          const result = await response.json();
+          if (result.status === 'success') {
+            sent = true;
+            break;
+          }
+        } catch (err) {
+          // Coba ulang sebentar jika jaringan/GAS sibuk
+          await new Promise(r => setTimeout(r, 300));
+        }
+      }
+
+      if (!sent) {
+        // Kembalikan ke depan antrean jika gagal semua percobaan
+        sendQueue.unshift(...batch);
+        setNetBadge('idle', 'Ulangi...');
+        await new Promise(r => setTimeout(r, 1000));
+        break;
+      }
+    }
+
+    if (sendQueue.length === 0) {
+      setNetBadge('ok', 'Terkirim');
+    }
+    isFlushing = false;
+  }
+
   function kirimAbsenLangsung(rawCode) {
     const code = String(rawCode).trim();
     if (!code) return;
 
     const now = Date.now();
-    // Cegah pembacaan barcode yang sama persis dalam 1.5 detik
-    if (code === lastScannedCode && (now - lastScannedTime < 1500)) {
+    if (code === lastScannedCode && (now - lastScannedTime < 1200)) {
       return;
     }
     lastScannedCode = code;
@@ -377,24 +419,9 @@
 
     flashStatus('ok', `✓ ${siswa.nama} (${siswa.kelas})`, triggerSuara);
     addLogItem(payload);
-    setNetBadge('sending', 'Mengirim...');
 
-    // Fire-and-forget langsung ke Sheet tanpa menunggu atau antrean
-    fetch(GAS_WEB_APP_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    })
-      .then(res => res.json())
-      .then(result => {
-        if (result.status === 'success') {
-          setNetBadge('ok', 'Terkirim');
-        } else {
-          setNetBadge('idle', 'Cek Sheet');
-        }
-      })
-      .catch(() => {
-        setNetBadge('idle', 'Gagal Kirim');
-      });
+    sendQueue.push(payload);
+    flushQueue();
   }
 
   function handleManualSubmit(e) {
