@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Absensi Barcode Siswa</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #3b82f6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header {
+      background: var(--card-bg);
+      padding: 14px 18px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .badge-idle { background: rgba(59, 130, 246, 0.15); color: var(--accent); }
+    .badge-sending { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .badge-ok { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+
+    .scanner-card {
+      background: var(--card-bg);
+      padding: 14px;
+      border-radius: 16px;
+      border: 2px solid rgba(59, 130, 246, 0.3);
+      transition: border-color 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .scanner-card.scan-success {
+      border-color: var(--success);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .scanner-card.scan-error {
+      border-color: var(--danger);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+    }
+
+    #reader {
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
+      min-height: 200px;
+    }
+
+    .scan-status {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-height: 24px;
+      color: var(--accent);
+    }
+
+    .cam-controls {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-cam {
+      padding: 8px 14px;
+      font-size: 0.8rem;
+    }
+
+    .btn-switch {
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      background: #334155;
+      display: none;
+    }
+
+    .manual-card {
+      background: var(--card-bg);
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .manual-card label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+    }
+
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:active {
+      opacity: 0.8;
+    }
+
+    .log-card {
+      background: var(--card-bg);
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .log-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .btn-refresh {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      border-radius: 6px;
+    }
+
+    .log-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .log-item {
+      background: rgba(15, 23, 42, 0.6);
+      padding: 10px 12px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      border-left: 3px solid var(--success);
+    }
+
+    .log-name {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .log-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .status-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.18);
+      color: var(--success);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>Absensi Barcode Siswa</h1>
+      <p id="siswaCount">Memuat cache siswa...</p>
+    </div>
+    <div id="netBadge" class="badge badge-idle">Siap Kirim</div>
+  </div>
+
+  <div class="scanner-card" id="scannerBox">
+    <div id="reader"></div>
+    <div class="scan-status" id="scanStatus">Menyiapkan kamera...</div>
+    <div class="cam-controls">
+      <button type="button" class="btn-cam" id="btnToggleCam" onclick="toggleCamera()">Buka Kamera</button>
+      <button type="button" class="btn-switch" id="btnSwitchCam" onclick="switchCamera()">Ganti Kamera</button>
+    </div>
+  </div>
+
+  <div class="manual-card">
+    <label for="manualNisn">Input NISN Manual (jika kartu rusak / tidak terbaca)</label>
+    <form class="input-group" onsubmit="handleManualSubmit(event)">
+      <input type="text" id="manualNisn" inputmode="numeric" placeholder="Ketik NISN (contoh: 0081234567)..." autocomplete="off">
+      <button type="submit">Absen</button>
+    </form>
+  </div>
+
+  <div class="log-card">
+    <div class="log-header">
+      <span>Terkirim (<span id="totalScanned">0</span>)</span>
+      <button type="button" class="btn-refresh" onclick="loadMasterSiswa(true)">Refresh Cache Siswa</button>
+    </div>
+    <ul class="log-list" id="logList"></ul>
+  </div>
+</div>
+
+<script>
+  // ================= KONFIGURASI SUPABASE =================
+  const SUPABASE_URL = "TEMPEL_SUPABASE_URL_ANDA";
+  const SUPABASE_ANON_KEY = "TEMPEL_SUPABASE_ANON_KEY_ANDA";
+  const CACHE_KEY = "siswa_supabase_cache_v1";
+
+  let siswaDB = {};
+  let totalTerkirim = 0;
+  let lastScannedCode = "";
+  let lastScannedTime = 0;
+
+  let html5QrCode = null;
+  let availableCameras = [];
+  let currentCamIndex = 0;
+  let isCameraRunning = false;
+
+  // Format tanggal M/D/YYYY (contoh: 11/19/2026)
+  function getFormattedDate() {
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const year = now.getFullYear();
+    return `${month}/${day}/${year}`;
+  }
+
+  function setNetBadge(state, text) {
+    const badge = document.getElementById('netBadge');
+    badge.className = `badge badge-${state}`;
+    badge.innerText = text;
+  }
+
+  function renderSiswaCount() {
+    const uniqueIds = new Set(Object.values(siswaDB).map(s => s.id));
+    document.getElementById('siswaCount').innerText = `${uniqueIds.size} Siswa (Cache)`;
+  }
+
+  // Ambil master siswa sekali ke cache browser; klik Refresh jika ada pembaruan data siswa
+  async function loadMasterSiswa(forceRefresh = false) {
+    if (!forceRefresh) {
+      const saved = localStorage.getItem(CACHE_KEY);
+      if (saved) {
+        siswaDB = JSON.parse(saved);
+        renderSiswaCount();
+        return;
+      }
+    }
+
+    document.getElementById('siswaCount').innerText = "Mengambil data siswa...";
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/siswa?select=id_siswa,nama_siswa,kelas,qr_code&limit=5000`, {
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+        }
+      });
+
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const rows = await res.json();
+
+      const map = {};
+      for (const row of rows) {
+        const id = String(row.id_siswa || '').trim();
+        const nama = String(row.nama_siswa || '').trim();
+        const kelas = String(row.kelas || '').trim();
+        const qr = String(row.qr_code || '').trim() || id;
+
+        if (id) {
+          const obj = { id, nama, kelas };
+          map[qr] = obj;
+          map[id] = obj;
+        }
+      }
+
+      siswaDB = map;
+      localStorage.setItem(CACHE_KEY, JSON.stringify(siswaDB));
+      renderSiswaCount();
+    } catch (err) {
+      document.getElementById('siswaCount').innerText = "Gagal memuat data siswa";
+    }
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'id-ID';
+      utterance.rate = 1.2;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function flashStatus(type, message, speechMsg) {
+    const box = document.getElementById('scannerBox');
+    const statusEl = document.getElementById('scanStatus');
+    box.classList.remove('scan-success', 'scan-error');
+
+    if (type === 'ok') {
+      box.classList.add('scan-success');
+      statusEl.style.color = 'var(--success)';
+    } else {
+      box.classList.add('scan-error');
+      statusEl.style.color = 'var(--danger)';
+    }
+
+    statusEl.innerText = message;
+    if (speechMsg) speakText(speechMsg);
+
+    setTimeout(() => {
+      box.classList.remove('scan-success', 'scan-error');
+      statusEl.style.color = 'var(--accent)';
+      statusEl.innerText = isCameraRunning
+        ? "Kamera aktif — siap scan berikutnya"
+        : "Klik 'Buka Kamera' untuk memulai scan";
+    }, 800);
+  }
+
+  // Kirim langsung ke tabel 'absensi' Supabase
+  async function kirimAbsenLangsung(rawCode) {
+    const code = String(rawCode).trim();
+    if (!code) return;
+
+    const now = Date.now();
+    if (code === lastScannedCode && (now - lastScannedTime < 1200)) {
+      return;
+    }
+    lastScannedCode = code;
+    lastScannedTime = now;
+
+    const siswa = siswaDB[code];
+    if (!siswa) {
+      flashStatus('error', `NISN / Kode "${code}" tidak terdaftar!`, "Tidak terdaftar");
+      return;
+    }
+
+    const triggerSuara = `Terima kasih, ${siswa.nama}`;
+    const payload = {
+      timestamp: getFormattedDate(),
+      id_siswa: String(siswa.id),
+      nama_siswa: siswa.nama,
+      status: "Hadir",
+      kelas: siswa.kelas,
+      trigger_suara: triggerSuara
+    };
+
+    flashStatus('ok', `✓ ${siswa.nama} (${siswa.kelas})`, triggerSuara);
+    addLogItem(payload);
+    setNetBadge('sending', 'Mengirim...');
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/absensi`, {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        setNetBadge('ok', 'Terkirim');
+      } else {
+        setNetBadge('idle', 'Gagal Simpan');
+      }
+    } catch (err) {
+      setNetBadge('idle', 'Koneksi Error');
+    }
+  }
+
+  function handleManualSubmit(e) {
+    e.preventDefault();
+    const input = document.getElementById('manualNisn');
+    const val = input.value;
+    input.value = '';
+    input.focus();
+    kirimAbsenLangsung(val);
+  }
+
+  function addLogItem(record) {
+    totalTerkirim++;
+    document.getElementById('totalScanned').innerText = totalTerkirim;
+    const list = document.getElementById('logList');
+    const li = document.createElement('li');
+    li.className = 'log-item';
+    li.innerHTML = `
+      <div>
+        <div class="log-name">${record.nama_siswa}</div>
+        <div class="log-meta">NISN: ${record.id_siswa} • Kelas ${record.kelas} • ${record.timestamp}</div>
+      </div>
+      <span class="status-pill">${record.status}</span>
+    `;
+    list.prepend(li);
+  }
+
+  function onBarcodeDetected(decodedText) {
+    kirimAbsenLangsung(decodedText);
+  }
+
+  async function initCameraList() {
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        document.getElementById('scanStatus').innerText = "Browser tidak mendukung akses kamera (gunakan HTTPS).";
+        return;
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream.getTracks().forEach(track => track.stop());
+
+      availableCameras = await Html5Qrcode.getCameras();
+      if (availableCameras && availableCameras.length > 0) {
+        const backIdx = availableCameras.findIndex(c =>
+          /back|rear|environment|belakang/i.test(c.label)
+        );
+        currentCamIndex = backIdx >= 0 ? backIdx : 0;
+
+        if (availableCameras.length > 1) {
+          document.getElementById('btnSwitchCam').style.display = 'inline-block';
+        }
+        await startScannerById(availableCameras[currentCamIndex].id);
+      } else {
+        document.getElementById('scanStatus').innerText = "Kamera tidak terdeteksi. Gunakan input NISN manual.";
+      }
+    } catch (err) {
+      document.getElementById('btnToggleCam').innerText = "Izinkan & Buka Kamera";
+      document.getElementById('scanStatus').innerText = "Izin kamera ditolak/diblokir. Klik 'Izinkan & Buka Kamera'.";
+    }
+  }
+
+  async function startScannerById(cameraId) {
+    if (!html5QrCode) {
+      html5QrCode = new Html5Qrcode("reader");
+    }
+    if (isCameraRunning) {
+      await html5QrCode.stop();
+      isCameraRunning = false;
+    }
+
+    const config = {
+      fps: 24,
+      qrbox: { width: 260, height: 160 }
+    };
+
+    try {
+      await html5QrCode.start(cameraId, config, onBarcodeDetected, () => {});
+      isCameraRunning = true;
+      document.getElementById('btnToggleCam').innerText = "Matikan Kamera";
+      document.getElementById('scanStatus').style.color = 'var(--accent)';
+      document.getElementById('scanStatus').innerText = "Kamera aktif — arahkan Barcode / QR Code";
+    } catch (err) {
+      isCameraRunning = false;
+      document.getElementById('btnToggleCam').innerText = "Buka Kamera";
+      document.getElementById('scanStatus').innerText = "Gagal memulai kamera. Klik 'Buka Kamera'.";
+    }
+  }
+
+  async function toggleCamera() {
+    if (!html5QrCode) {
+      html5QrCode = new Html5Qrcode("reader");
+    }
+    if (isCameraRunning) {
+      await html5QrCode.stop();
+      isCameraRunning = false;
+      document.getElementById('btnToggleCam').innerText = "Buka Kamera";
+      document.getElementById('scanStatus').innerText = "Kamera dimatikan.";
+    } else {
+      if (availableCameras.length === 0) {
+        await initCameraList();
+      } else {
+        await startScannerById(availableCameras[currentCamIndex].id);
+      }
+    }
+  }
+
+  async function switchCamera() {
+    if (availableCameras.length < 2) return;
+    currentCamIndex = (currentCamIndex + 1) % availableCameras.length;
+    await startScannerById(availableCameras[currentCamIndex].id);
+  }
+
+  window.onload = async () => {
+    await loadMasterSiswa(false);
+    await initCameraList();
+  };
+</script>
+
+</body>
+</html>
