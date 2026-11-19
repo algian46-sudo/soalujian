@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Manual Ketidakhadiran - SMP Negeri 8 Cikarang Utara</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #3b82f6;
+      --success: #10b981;
+      --izin: #0ea5e9;
+      --sakit: #f59e0b;
+      --alpa: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .header {
+      background: rgba(30, 41, 59, 0.88);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .header h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button, .btn-link {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 13px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    button:active, .btn-link:active {
+      opacity: 0.85;
+      transform: scale(0.98);
+    }
+
+    .btn-secondary { background: #334155; }
+
+    .filter-card {
+      background: rgba(30, 41, 59, 0.88);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 10px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+
+    input, select {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 9px 12px;
+      border-radius: 9px;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    input:focus, select:focus { border-color: var(--accent); }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: rgba(30, 41, 59, 0.88);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 9px 14px;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .hint-bar {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding: 0 4px;
+    }
+
+    .student-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .student-card {
+      background: rgba(30, 41, 59, 0.88);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .student-card:hover {
+      border-color: var(--accent);
+      background: rgba(30, 41, 59, 1);
+    }
+
+    .student-name {
+      font-size: 0.94rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .student-meta {
+      font-size: 0.77rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge-belum { background: rgba(148, 163, 184, 0.18); color: #cbd5e1; }
+    .badge-Hadir { background: rgba(16, 185, 129, 0.18); color: var(--success); }
+    .badge-Izin { background: rgba(14, 165, 233, 0.2); color: var(--izin); }
+    .badge-Sakit { background: rgba(245, 158, 11, 0.2); color: var(--sakit); }
+    .badge-Alpa { background: rgba(239, 68, 68, 0.2); color: var(--alpa); }
+
+    .empty-box {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    /* Modal Pilih Status */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.78);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 400px;
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .modal-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .status-choices {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 9px;
+    }
+
+    .choice-btn {
+      width: 100%;
+      justify-content: center;
+      padding: 12px 14px;
+      font-size: 0.92rem;
+      border-radius: 11px;
+    }
+
+    .btn-izin { background: var(--izin); }
+    .btn-sakit { background: var(--sakit); color: #0f172a; }
+    .btn-alpa { background: var(--alpa); }
+    .btn-hadir { background: var(--success); color: #0f172a; }
+    .btn-hapus {
+      background: transparent;
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #fca5a5;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      border: 1px solid var(--success);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+      display: none;
+      z-index: 60;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>Input Manual Ketidakhadiran</h1>
+      <p id="statusInfo">Memuat data siswa...</p>
+    </div>
+    <div class="nav-actions">
+      <a href="index.html" class="btn-link btn-secondary">← Scan</a>
+      <a href="rekap.html" class="btn-link btn-secondary">📊 Rekap</a>
+      <button type="button" onclick="muatData()">Refresh</button>
+    </div>
+  </div>
+
+  <div class="filter-card">
+    <div class="field">
+      <label for="filterTanggal">Tanggal Absensi</label>
+      <input type="date" id="filterTanggal" onchange="renderDaftar()">
+    </div>
+    <div class="field">
+      <label for="filterKelas">Kelas</label>
+      <select id="filterKelas" onchange="renderDaftar()">
+        <option value="">Semua Kelas</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="filterCari">Cari Nama / NISN</label>
+      <input type="text" id="filterCari" placeholder="Ketik nama atau NISN..." oninput="renderDaftar()">
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button type="button" class="tab-btn active" id="tabBelum" onclick="gantiTab('belum')">
+      Belum Absen (<span id="countBelum">0</span>)
+    </button>
+    <button type="button" class="tab-btn" id="tabSudah" onclick="gantiTab('sudah')">
+      Sudah Tercatat / Ubah Status (<span id="countSudah">0</span>)
+    </button>
+  </div>
+
+  <div class="hint-bar" id="hintBar">
+    Klik pada nama siswa di bawah untuk menetapkan status <strong>Izin</strong>, <strong>Sakit</strong>, atau <strong>Alpa</strong>.
+  </div>
+
+  <div class="student-list" id="studentList">
+    <div class="empty-box">Memuat daftar siswa...</div>
+  </div>
+
+  <div class="footer-note">
+    Sistem Absensi Digital • SMP Negeri 8 Cikarang Utara • Algian Manggara, S.Agr
+  </div>
+</div>
+
+<!-- Modal Pilih / Perbaiki Status -->
+<div class="modal-backdrop" id="modalStatus" onclick="tutupModalBackdrop(event)">
+  <div class="modal-box">
+    <div>
+      <div class="modal-title" id="modalNama">Nama Siswa</div>
+      <div class="modal-sub" id="modalDetail">NISN • Kelas • Tanggal</div>
+    </div>
+
+    <div class="status-choices">
+      <button type="button" class="choice-btn btn-izin" onclick="simpanStatus('Izin')">Izin</button>
+      <button type="button" class="choice-btn btn-sakit" onclick="simpanStatus('Sakit')">Sakit</button>
+      <button type="button" class="choice-btn btn-alpa" onclick="simpanStatus('Alpa')">Alpa</button>
+      <button type="button" class="choice-btn btn-hadir" id="btnSetHadir" style="display:none;" onclick="simpanStatus('Hadir')">Ubah ke Hadir</button>
+      <button type="button" class="choice-btn btn-hapus" id="btnHapusCatatan" style="display:none;" onclick="hapusCatatan()">Hapus Catatan (Kembalikan ke Belum Absen)</button>
+    </div>
+
+    <button type="button" class="btn-secondary" style="width:100%; justify-content:center;" onclick="tutupModal()">Batal</button>
+  </div>
+</div>
+
+<div class="toast" id="toastMsg">Tersimpan</div>
+
+<script>
+  const SUPABASE_URL = "https://cwisgbufupnyacdvrloo.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3aXNnYnVmdXBueWFjZHZybG9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUwNTE4MzQsImV4cCI6MjExMDYyNzgzNH0.pdPSv8_V8yv5e5vZM7gJIzsdTw3yu7h-j6xMPMbFTWA";
+
+  let semuaSiswa = [];
+  let semuaAbsensi = [];
+  let tabAktif = "belum";
+  let siswaTerpilih = null;
+  let sedangMenyimpan = false;
+
+  function setDefaultDate() {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    document.getElementById('filterTanggal').value = `${yyyy}-${mm}-${dd}`;
+  }
+
+  function isoToMDY(isoDate) {
+    if (!isoDate) return "";
+    const [y, m, d] = isoDate.split("-");
+    return `${parseInt(m, 10)}/${parseInt(d, 10)}/${y}`;
+  }
+
+  function showToast(text, isError = false) {
+    const toast = document.getElementById('toastMsg');
+    toast.innerText = text;
+    toast.style.borderColor = isError ? 'var(--alpa)' : 'var(--success)';
+    toast.style.display = 'block';
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => {
+      toast.style.display = 'none';
+    }, 2400);
+  }
+
+  async function fetchSupabase(endpoint, options = {}) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
+      ...options,
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+      }
+    });
+    if (!res.ok) {
+      const errText = await res.text().catch(() => "");
+      throw new Error(`HTTP ${res.status} ${errText}`);
+    }
+    return res.status === 204 ? null : res.json();
+  }
+
+  async function muatData() {
+    const info = document.getElementById('statusInfo');
+    info.innerText = "Memuat data siswa & absensi...";
+    try {
+      const [siswaRows, absenRows] = await Promise.all([
+        fetchSupabase("siswa?select=id_siswa,nama_siswa,kelas&limit=5000"),
+        fetchSupabase("absensi?select=id,timestamp,id_siswa,nama_siswa,status,kelas&order=id.desc&limit=10000")
+      ]);
+
+      semuaSiswa = siswaRows.map(s => ({
+        id_siswa: String(s.id_siswa || "").trim(),
+        nama_siswa: String(s.nama_siswa || "").trim(),
+        kelas: String(s.kelas || "").trim()
+      })).filter(s => s.id_siswa);
+
+      semuaAbsensi = absenRows.map(a => ({
+        id: a.id,
+        timestamp: String(a.timestamp || "").trim(),
+        id_siswa: String(a.id_siswa || "").trim(),
+        nama_siswa: String(a.nama_siswa || "").trim(),
+        status: String(a.status || "Hadir").trim(),
+        kelas: String(a.kelas || "").trim()
+      }));
+
+      isiDropdownKelas();
+      renderDaftar();
+
+      const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      info.innerText = `Terakhir diperbarui pukul ${waktu}`;
+    } catch (err) {
+      info.innerText = `Gagal memuat data (${err.message})`;
+    }
+  }
+
+  function isiDropdownKelas() {
+    const select = document.getElementById('filterKelas');
+    const nilaiLama = select.value;
+    const kelasSet = new Set(semuaSiswa.map(s => s.kelas).filter(Boolean));
+    const daftarKelas = Array.from(kelasSet).sort((a, b) => a.localeCompare(b, 'id', { numeric: true }));
+
+    select.innerHTML = `<option value="">Semua Kelas</option>`;
+    for (const k of daftarKelas) {
+      const opt = document.createElement('option');
+      opt.value = k;
+      opt.textContent = k;
+      select.appendChild(opt);
+    }
+    if (kelasSet.has(nilaiLama)) select.value = nilaiLama;
+  }
+
+  function gantiTab(tab) {
+    tabAktif = tab;
+    document.getElementById('tabBelum').classList.toggle('active', tab === 'belum');
+    document.getElementById('tabSudah').classList.toggle('active', tab === 'sudah');
+    document.getElementById('hintBar').innerHTML = tab === 'belum'
+      ? `Klik pada nama siswa di bawah untuk menetapkan status <strong>Izin</strong>, <strong>Sakit</strong>, atau <strong>Alpa</strong>.`
+      : `Klik pada nama siswa jika ingin <strong>memperbaiki</strong> status kehadiran pada tanggal ini.`;
+    renderDaftar();
+  }
+
+  function renderDaftar() {
+    const tglTarget = isoToMDY(document.getElementById('filterTanggal').value);
+    const kelasFilter = document.getElementById('filterKelas').value;
+    const cari = document.getElementById('filterCari').value.trim().toLowerCase();
+
+    const siswaKelas = semuaSiswa.filter(s => !kelasFilter || s.kelas === kelasFilter);
+
+    // Peta catatan absensi pada tanggal terpilih (ambil catatan terbaru per id_siswa)
+    const catatanMap = new Map();
+    for (const row of semuaAbsensi) {
+      if (tglTarget && row.timestamp !== tglTarget) continue;
+      if (!catatanMap.has(row.id_siswa)) {
+        catatanMap.set(row.id_siswa, row);
+      }
+    }
+
+    const daftarBelum = [];
+    const daftarSudah = [];
+
+    for (const s of siswaKelas) {
+      const catatan = catatanMap.get(s.id_siswa);
+      if (catatan) {
+        daftarSudah.push({ ...s, catatan });
+      } else {
+        daftarBelum.push({ ...s, catatan: null });
+      }
+    }
+
+    const urutkan = (a, b) =>
+      a.kelas.localeCompare(b.kelas, 'id', { numeric: true }) || a.nama_siswa.localeCompare(b.nama_siswa, 'id');
+
+    daftarBelum.sort(urutkan);
+    daftarSudah.sort(urutkan);
+
+    document.getElementById('countBelum').innerText = daftarBelum.length;
+    document.getElementById('countSudah').innerText = daftarSudah.length;
+
+    const sumber = tabAktif === 'belum' ? daftarBelum : daftarSudah;
+    const tersaring = sumber.filter(item =>
+      !cari ||
+      item.nama_siswa.toLowerCase().includes(cari) ||
+      item.id_siswa.toLowerCase().includes(cari)
+    );
+
+    const listEl = document.getElementById('studentList');
+    if (tersaring.length === 0) {
+      listEl.innerHTML = `<div class="empty-box">${
+        tabAktif === 'belum'
+          ? "Semua siswa pada filter ini sudah memiliki status absensi."
+          : "Belum ada data siswa yang tercatat pada tanggal & filter ini."
+      }</div>`;
+      return;
+    }
+
+    listEl.innerHTML = tersaring.map(item => {
+      const statusText = item.catatan ? item.catatan.status : "Belum Absen";
+      const badgeClass = item.catatan ? `badge-${item.catatan.status}` : "badge-belum";
+      const safeData = encodeURIComponent(JSON.stringify(item));
+      return `
+        <div class="student-card" onclick="bukaModal('${safeData}')">
+          <div>
+            <div class="student-name">${item.nama_siswa}</div>
+            <div class="student-meta">NISN: ${item.id_siswa} • Kelas ${item.kelas}</div>
+          </div>
+          <span class="status-badge ${badgeClass}">${statusText}</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function bukaModal(encodedItem) {
+    siswaTerpilih = JSON.parse(decodeURIComponent(encodedItem));
+    const tglTarget = isoToMDY(document.getElementById('filterTanggal').value);
+
+    document.getElementById('modalNama').innerText = siswaTerpilih.nama_siswa;
+    document.getElementById('modalDetail').innerText =
+      `NISN: ${siswaTerpilih.id_siswa} • Kelas ${siswaTerpilih.kelas} • Tanggal ${tglTarget}`;
+
+    const sudahAda = Boolean(siswaTerpilih.catatan);
+    document.getElementById('btnSetHadir').style.display = sudahAda ? 'inline-flex' : 'none';
+    document.getElementById('btnHapusCatatan').style.display = sudahAda ? 'inline-flex' : 'none';
+
+    document.getElementById('modalStatus').classList.add('open');
+  }
+
+  function tutupModal() {
+    document.getElementById('modalStatus').classList.remove('open');
+    siswaTerpilih = null;
+  }
+
+  function tutupModalBackdrop(e) {
+    if (e.target.id === 'modalStatus') tutupModal();
+  }
+
+  async function simpanStatus(statusBaru) {
+    if (!siswaTerpilih || sedangMenyimpan) return;
+    sedangMenyimpan = true;
+
+    const tglTarget = isoToMDY(document.getElementById('filterTanggal').value);
+    const nama = siswaTerpilih.nama_siswa;
+
+    try {
+      if (siswaTerpilih.catatan && siswaTerpilih.catatan.id) {
+        // Perbarui status yang sudah ada (misal salah pilih Izin -> Sakit)
+        await fetchSupabase(`absensi?id=eq.${siswaTerpilih.catatan.id}`, {
+          method: "PATCH",
+          headers: { "Prefer": "return=minimal" },
+          body: JSON.stringify({
+            status: statusBaru,
+            trigger_suara: `Status ${nama}: ${statusBaru}`
+          })
+        });
+      } else {
+        // Tambah catatan ketidakhadiran baru
+        await fetchSupabase("absensi", {
+          method: "POST",
+          headers: { "Prefer": "return=minimal" },
+          body: JSON.stringify({
+            timestamp: tglTarget,
+            id_siswa: String(siswaTerpilih.id_siswa),
+            nama_siswa: nama,
+            status: statusBaru,
+            kelas: siswaTerpilih.kelas,
+            trigger_suara: `Status ${nama}: ${statusBaru}`
+          })
+        });
+      }
+
+      tutupModal();
+      showToast(`✓ ${nama} dicatat: ${statusBaru}`);
+      await muatData();
+    } catch (err) {
+      showToast(`Gagal menyimpan: ${err.message}`, true);
+    } finally {
+      sedangMenyimpan = false;
+    }
+  }
+
+  async function hapusCatatan() {
+    if (!siswaTerpilih || !siswaTerpilih.catatan || sedangMenyimpan) return;
+    sedangMenyimpan = true;
+    const nama = siswaTerpilih.nama_siswa;
+
+    try {
+      await fetchSupabase(`absensi?id=eq.${siswaTerpilih.catatan.id}`, {
+        method: "DELETE",
+        headers: { "Prefer": "return=minimal" }
+      });
+
+      tutupModal();
+      showToast(`Catatan ${nama} dihapus`);
+      await muatData();
+    } catch (err) {
+      showToast(`Gagal menghapus: ${err.message}`, true);
+    } finally {
+      sedangMenyimpan = false;
+    }
+  }
+
+  window.onload = () => {
+    setDefaultDate();
+    muatData();
+  };
+</script>
+
+</body>
+</html>
