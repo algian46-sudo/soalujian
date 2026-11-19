@@ -69,7 +69,7 @@
       padding: 14px;
       border-radius: 16px;
       border: 2px solid rgba(59, 130, 246, 0.3);
-      transition: border-color 0.2s ease;
+      transition: border-color 0.15s ease;
     }
 
     .scanner-card.scan-success { border-color: var(--success); box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
@@ -247,7 +247,7 @@
 
   <div class="log-card">
     <div class="log-header">
-      <span>Terkirim ke Sheet (<span id="totalScanned">0</span>)</span>
+      <span>Terproses (<span id="totalScanned">0</span>)</span>
       <button class="btn-refresh" onclick="loadMasterSiswa()">Refresh Data Siswa</button>
     </div>
     <ul class="log-list" id="logList"></ul>
@@ -256,19 +256,21 @@
 
 <script>
   // ================= KONFIGURASI =================
-  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxcEXMzPjuoCMm8s-zAKolYX5_YRYFSUFjH1jyfnWeX-kjEO-ae9pDbA0-CGrJnYnIk/exec";
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-KF6Zfo_hYBRGlWzD4WZxvftWUAKH1eN_2EcMb9eqmvi1l8e1M-do_Rs6dIZozlIm/exec";
 
   let siswaDB = {};
-  let isSending = false;
+  let recentCooldown = {};
   let isScanCooldown = false;
   let totalTerkirim = 0;
+
+  let requestChain = Promise.resolve();
+  let activeRequests = 0;
 
   let html5QrCode = null;
   let availableCameras = [];
   let currentCamIndex = 0;
   let isCameraRunning = false;
 
-  // Format tanggal M/D/YYYY (contoh: 11/19/2026)
   function getFormattedDate() {
     const now = new Date();
     const month = now.getMonth() + 1;
@@ -305,7 +307,7 @@
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'id-ID';
-      utterance.rate = 1.1;
+      utterance.rate = 1.15;
       window.speechSynthesis.speak(utterance);
     }
   }
@@ -335,15 +337,15 @@
       statusEl.innerText = isCameraRunning
         ? "Kamera aktif — siap scan berikutnya"
         : "Klik 'Buka Kamera' untuk memulai scan";
-    }, 1800);
+    }, 1200);
   }
 
-  async function submitAttendanceDirect(rawCode) {
+  function submitAttendanceDirect(rawCode) {
     const code = String(rawCode).trim();
     if (!code) return;
 
-    if (isSending) {
-      flashStatus('error', "Sedang memproses scan sebelumnya, tunggu sebentar...", null);
+    const now = Date.now();
+    if (recentCooldown[code] && (now - recentCooldown[code] < 3000)) {
       return;
     }
 
@@ -353,52 +355,56 @@
       return;
     }
 
-    isSending = true;
-    setNetBadge('sending', 'Mengirim...');
-    document.getElementById('scanStatus').style.color = 'var(--warning)';
-    document.getElementById('scanStatus').innerText = `Mengecek & mengirim data ${siswa.nama}...`;
-
+    recentCooldown[code] = now;
     const todayStr = getFormattedDate();
 
-    try {
-      const response = await fetch(GAS_WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({
-          timestamp: todayStr,
-          id_siswa: String(siswa.id),
-          nama_siswa: siswa.nama,
-          kelas: siswa.kelas
-        })
-      });
+    flashStatus('masuk', `✓ ${siswa.nama} (${siswa.kelas}) — mengirim...`, `Terima kasih, ${siswa.nama}`);
 
-      const result = await response.json();
+    activeRequests++;
+    setNetBadge('sending', `Kirim (${activeRequests})`);
 
-      if (result.status === 'success') {
-        const saved = result.data;
-        setNetBadge('ok', 'Tersimpan');
-        flashStatus(
-          saved.status === 'Pulang' ? 'pulang' : 'masuk',
-          `✓ ${saved.nama_siswa} (${saved.kelas}) — ${saved.status}`,
-          saved.trigger_suara
-        );
-        addLogItem(saved);
-      } else if (result.status === 'already_complete') {
-        setNetBadge('idle', 'Siap Kirim');
-        flashStatus(
-          'error',
-          `${siswa.nama} sudah absen Masuk & Pulang hari ini!`,
-          `${siswa.nama} sudah absen lengkap hari ini`
-        );
-      } else {
-        setNetBadge('idle', 'Siap Kirim');
-        flashStatus('error', result.message || "Gagal menyimpan ke Sheet", "Gagal menyimpan");
+    requestChain = requestChain.then(async () => {
+      try {
+        const response = await fetch(GAS_WEB_APP_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            timestamp: todayStr,
+            id_siswa: String(siswa.id),
+            nama_siswa: siswa.nama,
+            kelas: siswa.kelas
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          const saved = result.data;
+          flashStatus(
+            saved.status === 'Pulang' ? 'pulang' : 'masuk',
+            `✓ ${saved.nama_siswa} (${saved.kelas}) — ${saved.status}`,
+            saved.status === 'Pulang' ? `Absen pulang, ${saved.nama_siswa}` : null
+          );
+          addLogItem(saved);
+        } else if (result.status === 'already_complete') {
+          flashStatus(
+            'error',
+            `${siswa.nama} sudah absen Masuk & Pulang hari ini!`,
+            `${siswa.nama} sudah lengkap hari ini`
+          );
+        } else {
+          flashStatus('error', result.message || "Gagal menyimpan ke Sheet", null);
+        }
+      } catch (err) {
+        flashStatus('error', `Gagal kirim ${siswa.nama} ke Sheet`, null);
+      } finally {
+        activeRequests = Math.max(0, activeRequests - 1);
+        if (activeRequests > 0) {
+          setNetBadge('sending', `Kirim (${activeRequests})`);
+        } else {
+          setNetBadge('ok', 'Tersimpan');
+        }
       }
-    } catch (err) {
-      setNetBadge('idle', 'Siap Kirim');
-      flashStatus('error', "Gagal terhubung ke Sheet. Coba scan lagi.", "Koneksi gagal");
-    } finally {
-      isSending = false;
-    }
+    });
   }
 
   function handleManualSubmit(e) {
@@ -427,10 +433,10 @@
   }
 
   function onBarcodeDetected(decodedText) {
-    if (!isScanCooldown && !isSending) {
+    if (!isScanCooldown) {
       isScanCooldown = true;
       submitAttendanceDirect(decodedText);
-      setTimeout(() => { isScanCooldown = false; }, 2000);
+      setTimeout(() => { isScanCooldown = false; }, 1100);
     }
   }
 
@@ -474,7 +480,7 @@
     }
 
     const config = {
-      fps: 15,
+      fps: 20,
       qrbox: { width: 260, height: 160 }
     };
 
