@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Absensi Barcode</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #3b82f6;
+      --success: #10b981;
+      --pulang: #06b6d4;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header {
+      background: var(--card-bg);
+      padding: 14px 18px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .header h1 { font-size: 1.1rem; font-weight: 700; }
+    .header p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge-idle { background: rgba(59, 130, 246, 0.15); color: var(--accent); }
+    .badge-sending { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .badge-ok { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+
+    .scanner-card {
+      background: var(--card-bg);
+      padding: 14px;
+      border-radius: 16px;
+      border: 2px solid rgba(59, 130, 246, 0.3);
+      transition: border-color 0.2s ease;
+    }
+
+    .scanner-card.scan-success { border-color: var(--success); box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+    .scanner-card.scan-pulang { border-color: var(--pulang); box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); }
+    .scanner-card.scan-error { border-color: var(--danger); box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+
+    #reader {
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .scan-status {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-height: 24px;
+      color: var(--accent);
+    }
+
+    .manual-card {
+      background: var(--card-bg);
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .manual-card label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+    }
+    input[type="text"]:focus { border-color: var(--accent); }
+
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    button:active { opacity: 0.8; }
+
+    .log-card {
+      background: var(--card-bg);
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .log-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .btn-refresh {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      border-radius: 6px;
+    }
+
+    .log-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .log-item {
+      background: rgba(15, 23, 42, 0.6);
+      padding: 10px 12px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      border-left: 3px solid var(--success);
+    }
+    .log-item.is-pulang { border-left-color: var(--pulang); }
+
+    .log-name { font-weight: 600; color: #fff; }
+    .log-meta { font-size: 0.75rem; color: var(--text-muted); }
+    .status-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.18);
+      color: var(--success);
+    }
+    .is-pulang .status-pill {
+      background: rgba(6, 182, 212, 0.18);
+      color: var(--pulang);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>Absensi Barcode Siswa</h1>
+      <p id="siswaCount">Memuat data siswa...</p>
+    </div>
+    <div id="netBadge" class="badge badge-idle">Siap Kirim</div>
+  </div>
+
+  <div class="scanner-card" id="scannerBox">
+    <div id="reader"></div>
+    <div class="scan-status" id="scanStatus">Arahkan Barcode / QR Code ke kamera</div>
+  </div>
+
+  <div class="manual-card">
+    <label for="manualNisn">Input NISN Manual (jika kartu rusak / tidak terbaca)</label>
+    <form class="input-group" onsubmit="handleManualSubmit(event)">
+      <input type="text" id="manualNisn" inputmode="numeric" placeholder="Ketik NISN (contoh: 0081234567)..." autocomplete="off">
+      <button type="submit">Absen</button>
+    </form>
+  </div>
+
+  <div class="log-card">
+    <div class="log-header">
+      <span>Terkirim ke Sheet (<span id="totalScanned">0</span>)</span>
+      <button class="btn-refresh" onclick="loadMasterSiswa()">Refresh Data Siswa</button>
+    </div>
+    <ul class="log-list" id="logList"></ul>
+  </div>
+</div>
+
+<script>
+  // ================= KONFIGURASI =================
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxcEXMzPjuoCMm8s-zAKolYX5_YRYFSUFjH1jyfnWeX-kjEO-ae9pDbA0-CGrJnYnIk/exec";
+
+  let siswaDB = {};
+  let isSending = false;
+  let isScanCooldown = false;
+  let totalTerkirim = 0;
+
+  // Format tanggal M/D/YYYY (contoh: 11/19/2026)
+  function getFormattedDate() {
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const year = now.getFullYear();
+    return `${month}/${day}/${year}`;
+  }
+
+  function setNetBadge(state, text) {
+    const badge = document.getElementById('netBadge');
+    badge.className = `badge badge-${state}`;
+    badge.innerText = text;
+  }
+
+  // Ambil master siswa langsung dari Sheet 'Siswa'
+  async function loadMasterSiswa() {
+    document.getElementById('siswaCount').innerText = "Mengambil data siswa dari Sheet...";
+    try {
+      const res = await fetch(`${GAS_WEB_APP_URL}?action=getSiswa`);
+      const json = await res.json();
+      if (json.status === 'success') {
+        siswaDB = json.data;
+        const uniqueIds = new Set(Object.values(siswaDB).map(s => s.id));
+        document.getElementById('siswaCount').innerText = `${uniqueIds.size} Siswa Terdaftar`;
+      } else {
+        document.getElementById('siswaCount').innerText = "Gagal memuat data siswa";
+      }
+    } catch (err) {
+      document.getElementById('siswaCount').innerText = "Koneksi terputus saat memuat siswa";
+    }
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'id-ID';
+      utterance.rate = 1.1;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function flashStatus(type, message, speechMsg) {
+    const box = document.getElementById('scannerBox');
+    const statusEl = document.getElementById('scanStatus');
+    box.classList.remove('scan-success', 'scan-pulang', 'scan-error');
+
+    if (type === 'masuk') {
+      box.classList.add('scan-success');
+      statusEl.style.color = 'var(--success)';
+    } else if (type === 'pulang') {
+      box.classList.add('scan-pulang');
+      statusEl.style.color = 'var(--pulang)';
+    } else {
+      box.classList.add('scan-error');
+      statusEl.style.color = 'var(--danger)';
+    }
+
+    statusEl.innerText = message;
+    if (speechMsg) speakText(speechMsg);
+
+    setTimeout(() => {
+      box.classList.remove('scan-success', 'scan-pulang', 'scan-error');
+      statusEl.style.color = 'var(--accent)';
+      statusEl.innerText = "Kamera aktif — siap scan berikutnya";
+    }, 1800);
+  }
+
+  // Kirim langsung ke Sheet dan cek status Masuk/Pulang di Sheet pada tanggal yang sama
+  async function submitAttendanceDirect(rawCode) {
+    const code = String(rawCode).trim();
+    if (!code) return;
+
+    if (isSending) {
+      flashStatus('error', "Sedang memproses scan sebelumnya, tunggu sebentar...", null);
+      return;
+    }
+
+    const siswa = siswaDB[code];
+    if (!siswa) {
+      flashStatus('error', `NISN / Kode "${code}" tidak terdaftar!`, "Data tidak ditemukan");
+      return;
+    }
+
+    isSending = true;
+    setNetBadge('sending', 'Mengirim...');
+    document.getElementById('scanStatus').style.color = 'var(--warning)';
+    document.getElementById('scanStatus').innerText = `Mengecek & mengirim data ${siswa.nama}...`;
+
+    const todayStr = getFormattedDate();
+
+    try {
+      const response = await fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          timestamp: todayStr,
+          id_siswa: String(siswa.id),
+          nama_siswa: siswa.nama,
+          kelas: siswa.kelas
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        const saved = result.data;
+        setNetBadge('ok', 'Tersimpan');
+        flashStatus(
+          saved.status === 'Pulang' ? 'pulang' : 'masuk',
+          `✓ ${saved.nama_siswa} (${saved.kelas}) — ${saved.status}`,
+          saved.trigger_suara
+        );
+        addLogItem(saved);
+      } else if (result.status === 'already_complete') {
+        setNetBadge('idle', 'Siap Kirim');
+        flashStatus(
+          'error',
+          `${siswa.nama} sudah absen Masuk & Pulang hari ini!`,
+          `${siswa.nama} sudah absen lengkap hari ini`
+        );
+      } else {
+        setNetBadge('idle', 'Siap Kirim');
+        flashStatus('error', result.message || "Gagal menyimpan ke Sheet", "Gagal menyimpan");
+      }
+    } catch (err) {
+      setNetBadge('idle', 'Siap Kirim');
+      flashStatus('error', "Gagal terhubung ke Sheet. Coba scan lagi.", "Koneksi gagal");
+    } finally {
+      isSending = false;
+    }
+  }
+
+  function handleManualSubmit(e) {
+    e.preventDefault();
+    const input = document.getElementById('manualNisn');
+    const val = input.value;
+    input.value = '';
+    input.focus();
+    submitAttendanceDirect(val);
+  }
+
+  function addLogItem(record) {
+    totalTerkirim++;
+    document.getElementById('totalScanned').innerText = totalTerkirim;
+    const list = document.getElementById('logList');
+    const li = document.createElement('li');
+    li.className = `log-item ${record.status === 'Pulang' ? 'is-pulang' : ''}`;
+    li.innerHTML = `
+      <div>
+        <div class="log-name">${record.nama_siswa}</div>
+        <div class="log-meta">NISN: ${record.id_siswa} • Kelas ${record.kelas} • ${record.timestamp}</div>
+      </div>
+      <span class="status-pill">${record.status}</span>
+    `;
+    list.prepend(li);
+  }
+
+  // Kamera tetap terbuka terus-menerus untuk scan berikutnya
+  function startScanner() {
+    const html5QrCode = new Html5Qrcode("reader");
+    const config = {
+      fps: 15,
+      qrbox: { width: 260, height: 160 }
+    };
+
+    html5QrCode.start(
+      { facingMode: "environment" },
+      config,
+      (decodedText) => {
+        if (!isScanCooldown && !isSending) {
+          isScanCooldown = true;
+          submitAttendanceDirect(decodedText);
+          setTimeout(() => { isScanCooldown = false; }, 2000);
+        }
+      },
+      (errorMessage) => {}
+    ).catch(err => {
+      document.getElementById('scanStatus').innerText = "Kamera tidak dapat diakses. Gunakan input manual.";
+    });
+  }
+
+  window.onload = async () => {
+    await loadMasterSiswa();
+    startScanner();
+  };
+</script>
+
+</body>
+</html>
