@@ -81,6 +81,7 @@
       border-radius: 10px;
       overflow: hidden;
       background: #000;
+      min-height: 200px;
     }
 
     .scan-status {
@@ -90,6 +91,26 @@
       font-weight: 600;
       min-height: 24px;
       color: var(--accent);
+    }
+
+    .cam-controls {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-cam {
+      padding: 8px 14px;
+      font-size: 0.8rem;
+    }
+
+    .btn-switch {
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      background: #334155;
+      display: none;
     }
 
     .manual-card {
@@ -209,7 +230,11 @@
 
   <div class="scanner-card" id="scannerBox">
     <div id="reader"></div>
-    <div class="scan-status" id="scanStatus">Arahkan Barcode / QR Code ke kamera</div>
+    <div class="scan-status" id="scanStatus">Menyiapkan kamera...</div>
+    <div class="cam-controls">
+      <button type="button" class="btn-cam" id="btnToggleCam" onclick="toggleCamera()">Buka Kamera</button>
+      <button type="button" class="btn-switch" id="btnSwitchCam" onclick="switchCamera()">Ganti Kamera</button>
+    </div>
   </div>
 
   <div class="manual-card">
@@ -238,6 +263,11 @@
   let isScanCooldown = false;
   let totalTerkirim = 0;
 
+  let html5QrCode = null;
+  let availableCameras = [];
+  let currentCamIndex = 0;
+  let isCameraRunning = false;
+
   // Format tanggal M/D/YYYY (contoh: 11/19/2026)
   function getFormattedDate() {
     const now = new Date();
@@ -253,7 +283,6 @@
     badge.innerText = text;
   }
 
-  // Ambil master siswa langsung dari Sheet 'Siswa'
   async function loadMasterSiswa() {
     document.getElementById('siswaCount').innerText = "Mengambil data siswa dari Sheet...";
     try {
@@ -303,11 +332,12 @@
     setTimeout(() => {
       box.classList.remove('scan-success', 'scan-pulang', 'scan-error');
       statusEl.style.color = 'var(--accent)';
-      statusEl.innerText = "Kamera aktif — siap scan berikutnya";
+      statusEl.innerText = isCameraRunning
+        ? "Kamera aktif — siap scan berikutnya"
+        : "Klik 'Buka Kamera' untuk memulai scan";
     }, 1800);
   }
 
-  // Kirim langsung ke Sheet dan cek status Masuk/Pulang di Sheet pada tanggal yang sama
   async function submitAttendanceDirect(rawCode) {
     const code = String(rawCode).trim();
     if (!code) return;
@@ -396,33 +426,103 @@
     list.prepend(li);
   }
 
-  // Kamera tetap terbuka terus-menerus untuk scan berikutnya
-  function startScanner() {
-    const html5QrCode = new Html5Qrcode("reader");
+  function onBarcodeDetected(decodedText) {
+    if (!isScanCooldown && !isSending) {
+      isScanCooldown = true;
+      submitAttendanceDirect(decodedText);
+      setTimeout(() => { isScanCooldown = false; }, 2000);
+    }
+  }
+
+  async function initCameraList() {
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        document.getElementById('scanStatus').innerText = "Browser tidak mendukung akses kamera (gunakan HTTPS).";
+        return;
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream.getTracks().forEach(track => track.stop());
+
+      availableCameras = await Html5Qrcode.getCameras();
+      if (availableCameras && availableCameras.length > 0) {
+        const backIdx = availableCameras.findIndex(c =>
+          /back|rear|environment|belakang/i.test(c.label)
+        );
+        currentCamIndex = backIdx >= 0 ? backIdx : 0;
+
+        if (availableCameras.length > 1) {
+          document.getElementById('btnSwitchCam').style.display = 'inline-block';
+        }
+        await startScannerById(availableCameras[currentCamIndex].id);
+      } else {
+        document.getElementById('scanStatus').innerText = "Kamera tidak terdeteksi. Gunakan input NISN manual.";
+      }
+    } catch (err) {
+      document.getElementById('btnToggleCam').innerText = "Izinkan & Buka Kamera";
+      document.getElementById('scanStatus').innerText = "Izin kamera ditolak/diblokir. Klik 'Izinkan & Buka Kamera'.";
+    }
+  }
+
+  async function startScannerById(cameraId) {
+    if (!html5QrCode) {
+      html5QrCode = new Html5Qrcode("reader");
+    }
+    if (isCameraRunning) {
+      await html5QrCode.stop();
+      isCameraRunning = false;
+    }
+
     const config = {
       fps: 15,
       qrbox: { width: 260, height: 160 }
     };
 
-    html5QrCode.start(
-      { facingMode: "environment" },
-      config,
-      (decodedText) => {
-        if (!isScanCooldown && !isSending) {
-          isScanCooldown = true;
-          submitAttendanceDirect(decodedText);
-          setTimeout(() => { isScanCooldown = false; }, 2000);
-        }
-      },
-      (errorMessage) => {}
-    ).catch(err => {
-      document.getElementById('scanStatus').innerText = "Kamera tidak dapat diakses. Gunakan input manual.";
-    });
+    try {
+      await html5QrCode.start(
+        cameraId,
+        config,
+        onBarcodeDetected,
+        () => {}
+      );
+      isCameraRunning = true;
+      document.getElementById('btnToggleCam').innerText = "Matikan Kamera";
+      document.getElementById('scanStatus').style.color = 'var(--accent)';
+      document.getElementById('scanStatus').innerText = "Kamera aktif — arahkan Barcode / QR Code";
+    } catch (err) {
+      isCameraRunning = false;
+      document.getElementById('btnToggleCam').innerText = "Buka Kamera";
+      document.getElementById('scanStatus').innerText = "Gagal memulai kamera. Klik 'Buka Kamera'.";
+    }
+  }
+
+  async function toggleCamera() {
+    if (!html5QrCode) {
+      html5QrCode = new Html5Qrcode("reader");
+    }
+    if (isCameraRunning) {
+      await html5QrCode.stop();
+      isCameraRunning = false;
+      document.getElementById('btnToggleCam').innerText = "Buka Kamera";
+      document.getElementById('scanStatus').innerText = "Kamera dimatikan.";
+    } else {
+      if (availableCameras.length === 0) {
+        await initCameraList();
+      } else {
+        await startScannerById(availableCameras[currentCamIndex].id);
+      }
+    }
+  }
+
+  async function switchCamera() {
+    if (availableCameras.length < 2) return;
+    currentCamIndex = (currentCamIndex + 1) % availableCameras.length;
+    await startScannerById(availableCameras[currentCamIndex].id);
   }
 
   window.onload = async () => {
     await loadMasterSiswa();
-    startScanner();
+    await initCameraList();
   };
 </script>
 
