@@ -582,18 +582,36 @@
           </ol>
           <pre id="apps-script-snippet" class="bg-slate-900 text-emerald-300 p-3 rounded-xl text-xs overflow-x-auto font-mono leading-relaxed">function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  data.rows.forEach(function(row) {
+  var p = (e && e.parameter) ? e.parameter : {};
+  var jsonData = {};
+  if (e && e.postData && e.postData.contents) {
+    try { jsonData = JSON.parse(e.postData.contents); } catch (err) {}
+  }
+
+  if (jsonData.rows && Array.isArray(jsonData.rows)) {
+    jsonData.rows.forEach(function(row) {
+      sheet.appendRow([
+        new Date(),
+        row.anggota || "",
+        row.kelas || "",
+        row.kelompok || "",
+        row.jenis || row.jenisPodcast || "",
+        row.narasumber || "",
+        row.naskah || ""
+      ]);
+    });
+  } else {
     sheet.appendRow([
       new Date(),
-      row.anggota,
-      row.kelas,
-      row.kelompok,
-      row.jenis,
-      row.narasumber,
-      row.naskah
+      p.anggota || jsonData.anggota || "",
+      p.kelas || jsonData.kelas || "",
+      p.kelompok || jsonData.kelompok || "",
+      p.jenisPodcast || p.jenis || jsonData.jenisPodcast || jsonData.jenis || "",
+      p.narasumber || jsonData.narasumber || "",
+      p.naskah || jsonData.naskah || ""
     ]);
-  });
+  }
+
   return ContentService.createTextOutput(JSON.stringify({status: "success"}))
     .setMimeType(ContentService.MimeType.JSON);
 }</pre>
@@ -974,7 +992,7 @@
     // =========================================================
     // STATE APLIKASI & PENYIMPANAN LOKAL
     // =========================================================
-    const DEFAULT_GAS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwWspRBkd4SE-7Os4s8i530q1H9ghCadOSbv9h0MduHcFU_EroEoWarmAD5nc7hhR4/exec';
+    const DEFAULT_GAS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyiQA70keP7BCpJ2VHMfRS1aLqLCNL1x5HdwM1UJmCgFn7L7NqOVU1-rBzauLL1tos/exec';
     let taskSubmissions = JSON.parse(localStorage.getItem('podcast_school_tasks_v1') || '[]');
     let savedWebhookUrl = localStorage.getItem('podcast_sheets_webhook_v1') || DEFAULT_GAS_WEBHOOK_URL;
 
@@ -1535,13 +1553,23 @@ Host: "Terima kasih banyak untuk narasumber dan teman-teman yang sudah menyimak.
         const rowsToSend = taskSubmissions.filter(item => !item.synced);
         const payloadRows = rowsToSend.length > 0 ? rowsToSend : taskSubmissions;
 
-        // Kirim ke Google Apps Script Web App menggunakan text/plain agar bebas blokir preflight CORS
-        await fetch(targetUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ rows: payloadRows })
-        });
+        // Kirim satu per satu via URLSearchParams agar konsisten terbaca oleh e.parameter maupun e.postData di GAS
+        for (const r of payloadRows) {
+          const params = new URLSearchParams();
+          params.append('anggota', r.anggota || '');
+          params.append('kelas', r.kelas || '');
+          params.append('kelompok', r.kelompok || '');
+          params.append('jenisPodcast', r.jenis || '');
+          params.append('narasumber', r.narasumber || '');
+          params.append('naskah', r.naskah || '');
+          params.append('waktuInput', r.createdAt || new Date().toLocaleString('id-ID'));
+
+          await fetch(targetUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: params
+          });
+        }
 
         // Tandai semua baris sebagai terkirim
         taskSubmissions = taskSubmissions.map(item => ({ ...item, synced: true }));
