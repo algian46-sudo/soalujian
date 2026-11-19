@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>6 Format Podcast Populer & Tugas Kelompok Sekolah</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <!-- Font Awesome untuk Ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+            accent: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Kustomisasi Scrollbar & Animasi Gelombang Suara */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #c4b5fd;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8b5cf6;
+    }
+
+    @keyframes eq-bounce {
+      0%, 100% { transform: scaleY(0.35); }
+      50% { transform: scaleY(1); }
+    }
+    .eq-bar {
+      animation: eq-bounce 1.2s ease-in-out infinite;
+      transform-origin: bottom;
+    }
+    .eq-bar:nth-child(2) { animation-delay: 0.2s; }
+    .eq-bar:nth-child(3) { animation-delay: 0.4s; }
+    .eq-bar:nth-child(4) { animation-delay: 0.1s; }
+    .eq-bar:nth-child(5) { animation-delay: 0.35s; }
+
+    .tab-fade-in {
+      animation: fadeSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-600 selection:text-white min-h-screen flex flex-col">
+
+  <!-- Toast / Message Box Pengganti Alert -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- Header & Hero Banner -->
+  <header class="bg-gradient-to-br from-brand-900 via-indigo-900 to-slate-900 text-white relative overflow-hidden shadow-lg">
+    <!-- Dekorasi Latar Belakang Gelombang -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none">
+      <svg class="w-full h-full" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="#f59e0b" d="M0,192L60,186.7C120,181,240,171,360,181.3C480,192,600,224,720,213.3C840,203,960,149,1080,138.7C1200,128,1320,160,1380,176L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+      </svg>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-6 relative z-10">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div class="space-y-3 max-w-2xl">
+          <div class="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-md border border-white/15 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium text-amber-300">
+            <span class="flex items-end gap-0.5 h-3.5">
+              <span class="w-1 h-full bg-amber-400 rounded-full eq-bar"></span>
+              <span class="w-1 h-full bg-amber-400 rounded-full eq-bar"></span>
+              <span class="w-1 h-full bg-amber-400 rounded-full eq-bar"></span>
+              <span class="w-1 h-full bg-amber-400 rounded-full eq-bar"></span>
+            </span>
+            <span>Modul Pembelajaran Media Audio & Literasi Digital</span>
+          </div>
+          <h1 class="font-display text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+            6 Format Podcast Populer <span class="text-amber-400">& Rekomendasi untuk Sekolah</span>
+          </h1>
+          <p class="text-indigo-100/90 text-sm sm:text-base leading-relaxed">
+            Pelajari ragam gaya siaran podcast lengkap dengan ilustrasi studio, cuplikan video contoh 30 detik, dan kirimkan hasil resume naskah kelompokmu langsung ke Spreadsheet kelas.
+          </p>
+        </div>
+
+        <!-- Kartu Mini Statistik Cepat -->
+        <div class="flex sm:inline-flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/15 p-4 rounded-2xl shrink-0">
+          <div class="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-xl shadow-md">
+            <i class="fa-solid fa-microphone-lines"></i>
+          </div>
+          <div>
+            <div class="text-xs text-indigo-200 uppercase tracking-wider font-semibold">Studio Kelas</div>
+            <div class="text-lg font-bold text-white">6 Format + Tugas Kelompok</div>
+            <div class="text-xs text-amber-300 flex items-center gap-1 mt-0.5">
+              <i class="fa-solid fa-circle-play"></i> Klip Contoh 30 Detik Tersedia
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigasi Tab Utama -->
+      <nav class="mt-8 flex flex-col sm:flex-row gap-2 sm:gap-3 border-b border-white/15 pb-0" aria-label="Navigasi Utama">
+        <button
+          id="tab-btn-materi"
+          onclick="switchTab('materi')"
+          class="tab-trigger group flex items-center justify-center sm:justify-start gap-2.5 px-5 py-3.5 rounded-t-xl font-semibold text-sm sm:text-base transition-all bg-slate-50 text-brand-800 shadow-sm"
+        >
+          <i class="fa-solid fa-headphones-simple text-brand-600"></i>
+          <span>Materi & Contoh Podcast</span>
+          <span class="ml-1 bg-brand-100 text-brand-700 text-xs font-bold px-2 py-0.5 rounded-full">6 Format</span>
+        </button>
+
+        <button
+          id="tab-btn-tugas"
+          onclick="switchTab('tugas')"
+          class="tab-trigger group flex items-center justify-center sm:justify-start gap-2.5 px-5 py-3.5 rounded-t-xl font-semibold text-sm sm:text-base transition-all bg-white/10 text-white hover:bg-white/20"
+        >
+          <i class="fa-solid fa-file-pen text-amber-400"></i>
+          <span>Tugas Kelompok (Input Naskah)</span>
+          <span id="badge-jumlah-tugas" class="ml-1 bg-amber-500 text-slate-950 text-xs font-extrabold px-2 py-0.5 rounded-full">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Konten Utama -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- =========================================================
+         TAB 1: MATERI & CONTOH PODCAST
+    ========================================================= -->
+    <section id="section-materi" class="tab-fade-in space-y-12">
+
+      <!-- Filter Cepat Format Podcast -->
+      <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="font-display font-bold text-lg text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-layer-group text-brand-600"></i>
+            Eksplorasi 6 Format Podcast
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">Klik tombol contoh video 30 detik pada setiap kartu untuk memutar cuplikan referensi dari YouTube.</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2" id="format-filter-buttons">
+          <button onclick="filterCards('all')" data-filter="all" class="filter-chip active px-3.5 py-2 rounded-xl text-xs font-semibold bg-brand-600 text-white shadow-sm transition">
+            Semua (6)
+          </button>
+          <button onclick="filterCards('2-orang')" data-filter="2-orang" class="filter-chip px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition">
+            2 Orang
+          </button>
+          <button onclick="filterCards('kelompok')" data-filter="kelompok" class="filter-chip px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition">
+            Kelompok (3+ Orang)
+          </button>
+          <button onclick="filterCards('kreatif')" data-filter="kreatif" class="filter-chip px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition">
+            Drama & Debat
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid 6 Kartu Format Podcast -->
+      <div id="podcast-cards-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-7">
+        <!-- Kartu akan dirender secara dinamis melalui JavaScript -->
+      </div>
+
+      <!-- Tabel Rekomendasi Sekolah Interaktif -->
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200/90 overflow-hidden">
+        <div class="bg-gradient-to-r from-brand-700 to-indigo-800 px-6 py-5 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-amber-400 text-slate-900 flex items-center justify-center text-xl shrink-0 shadow">
+              <i class="fa-solid fa-school"></i>
+            </div>
+            <div>
+              <h2 class="font-display font-bold text-lg sm:text-xl">Untuk Sekolah, Format yang Paling Menarik</h2>
+              <p class="text-xs sm:text-sm text-indigo-100">Panduan pemilihan format berdasarkan jumlah anggota kelompok dan tujuan pembelajaran.</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label for="school-table-search" class="sr-only">Cari tujuan pembelajaran</label>
+            <div class="relative w-full sm:w-64">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-indigo-200 text-xs"></i>
+              <input
+                type="text"
+                id="school-table-search"
+                oninput="filterSchoolTable(this.value)"
+                placeholder="Cari format / cocok untuk..."
+                class="w-full pl-9 pr-3 py-2 rounded-xl bg-white/15 border border-white/20 text-white placeholder-indigo-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-100/80 border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-600">
+                <th class="py-4 px-6">Format Podcast</th>
+                <th class="py-4 px-6">Jumlah Orang</th>
+                <th class="py-4 px-6">Cocok Untuk</th>
+                <th class="py-4 px-6 text-right">Aksi Cepat</th>
+              </tr>
+            </thead>
+            <tbody id="school-recommendation-tbody" class="divide-y divide-slate-100 text-sm">
+              <!-- Baris tabel diisi melalui JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =========================================================
+         TAB 2: TUGAS KELOMPOK (INPUT NASKAH & SPREADSHEET)
+    ========================================================= -->
+    <section id="section-tugas" class="hidden tab-fade-in space-y-8">
+
+      <!-- Banner Panduan & Konfigurasi Google Spreadsheet -->
+      <div class="bg-gradient-to-r from-indigo-900 to-brand-900 text-white rounded-3xl p-5 sm:p-6 shadow-md flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+        <div class="space-y-1.5 max-w-2xl">
+          <div class="inline-flex items-center gap-2 text-amber-300 text-xs font-bold uppercase tracking-wider">
+            <i class="fa-solid fa-table-cells"></i> Lembar Kerja Digital & Integrasi Google Sheets
+          </div>
+          <h2 class="font-display font-bold text-xl sm:text-2xl">Input Resume Hasil Prompting Naskah Podcast</h2>
+          <p class="text-xs sm:text-sm text-indigo-100/90 leading-relaxed">
+            Lengkapi identitas kelompok, pilih jenis podcast, tentukan narasumber, dan tempelkan naskah hasil prompting AI kelompokmu. Kamu bisa menyalin naskah sekali klik (copas) dan mengirim rekap data langsung ke Google Spreadsheet.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+          <button
+            type="button"
+            onclick="openSpreadsheetModal()"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 text-white text-xs sm:text-sm font-semibold transition"
+          >
+            <i class="fa-solid fa-gear text-amber-400"></i>
+            <span>Atur Link Google Spreadsheet</span>
+            <span id="webhook-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400" title="Mode Simulasi / Belum terhubung Webhook"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Form Input Tugas Kelompok -->
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200/90 p-5 sm:p-8">
+        <form id="podcast-task-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- Kelas -->
+            <div>
+              <label for="input-kelas" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                Kelas <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative">
+                <i class="fa-solid fa-graduation-cap absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input
+                  type="text"
+                  id="input-kelas"
+                  required
+                  placeholder="Contoh: XI IPA 2 / X-B"
+                  class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition"
+                />
+              </div>
+            </div>
+
+            <!-- Kelompok -->
+            <div>
+              <label for="input-kelompok" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                Nama / Nomor Kelompok <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative">
+                <i class="fa-solid fa-users-rectangle absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input
+                  type="text"
+                  id="input-kelompok"
+                  required
+                  placeholder="Contoh: Kelompok 3 (Suara Muda)"
+                  class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition"
+                />
+              </div>
+            </div>
+
+            <!-- Jenis Podcast -->
+            <div>
+              <label for="input-jenis" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                Jenis Format Podcast <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative">
+                <i class="fa-solid fa-podcast absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-600"></i>
+                <select
+                  id="input-jenis"
+                  required
+                  class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition"
+                >
+                  <option value="" disabled selected>-- Pilih Jenis Podcast --</option>
+                  <option value="1. Co-Host Podcast (2 Orang)">1. Co-Host Podcast (2 Orang)</option>
+                  <option value="2. Interview Podcast (2 Orang atau Lebih)">2. Interview Podcast (2 Orang atau Lebih)</option>
+                  <option value="3. Panel Discussion Podcast (3-6 Orang)">3. Panel Discussion Podcast (3-6 Orang)</option>
+                  <option value="4. Round Table Podcast">4. Round Table Podcast</option>
+                  <option value="5. Storytelling Drama Podcast">5. Storytelling Drama Podcast</option>
+                  <option value="6. Debate Podcast">6. Debate Podcast</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nama Anggota (Dinamis bisa tambah/hapus anggota) & Narasumber -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+            <!-- Daftar Anggota Kelompok -->
+            <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-3">
+              <div class="flex items-center justify-between">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                  <i class="fa-solid fa-user-group text-brand-600 mr-1"></i> Nama Anggota Kelompok <span class="text-rose-500">*</span>
+                </label>
+                <button
+                  type="button"
+                  onclick="addMemberField()"
+                  class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 bg-brand-100 hover:bg-brand-200 px-3 py-1.5 rounded-lg transition"
+                >
+                  <i class="fa-solid fa-plus"></i> Tambah Anggota
+                </button>
+              </div>
+              <p class="text-xs text-slate-500">Masukkan nama lengkap seluruh anggota yang terlibat dalam produksi podcast.</p>
+
+              <div id="members-container" class="space-y-2.5">
+                <div class="flex items-center gap-2 member-row">
+                  <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center shrink-0">1</span>
+                  <input
+                    type="text"
+                    name="anggota[]"
+                    required
+                    placeholder="Nama Anggota 1 (Ketua Kelompok)"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  />
+                </div>
+                <div class="flex items-center gap-2 member-row">
+                  <span class="w-7 h-7 rounded-lg bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center shrink-0">2</span>
+                  <input
+                    type="text"
+                    name="anggota[]"
+                    placeholder="Nama Anggota 2"
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  />
+                  <button type="button" onclick="removeMemberField(this)" class="p-2.5 text-slate-400 hover:text-rose-600 rounded-lg transition" title="Hapus baris">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tentukan Narasumber / Pembagian Peran -->
+            <div class="bg-amber-50/60 p-4 sm:p-5 rounded-2xl border border-amber-200/80 flex flex-col justify-between space-y-3">
+              <div>
+                <label for="input-narasumber" class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1.5">
+                  <i class="fa-solid fa-microphone text-amber-600 mr-1"></i> Tentukan Narasumber / Pembagian Peran <span class="text-rose-500">*</span>
+                </label>
+                <p class="text-xs text-amber-800/80 mb-3">
+                  Tuliskan siapa yang menjadi Host, Narasumber (misal: Kepala Sekolah, Guru BK, Siswa Berprestasi), Panelis, atau Pemeran Karakter.
+                </p>
+                <textarea
+                  id="input-narasumber"
+                  rows="4"
+                  required
+                  placeholder="Contoh:&#10;- Host: Siti Aminah&#10;- Narasumber: Bapak Ahmad Fauzi, S.Pd (Waka Kesiswaan)&#10;- Topik: Strategi Siswa Berprestasi di Era Digital"
+                  class="w-full p-3.5 rounded-xl border border-amber-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Isian Naskah / Resume Hasil Prompting -->
+          <div class="space-y-2">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <label for="input-naskah" class="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                <i class="fa-solid fa-scroll text-brand-600 mr-1"></i> Isian Naskah / Resume Hasil Prompting Podcast <span class="text-rose-500">*</span>
+              </label>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onclick="insertSamplePromptScript()"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                >
+                  <i class="fa-solid fa-wand-magic-sparkles text-brand-600"></i> Isi Contoh Template Naskah
+                </button>
+                <button
+                  type="button"
+                  onclick="copyTextFromElement('input-naskah', 'Naskah berhasil disalin ke clipboard!')"
+                  class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-brand-100 hover:bg-brand-200 text-brand-800 transition"
+                >
+                  <i class="fa-regular fa-copy"></i> Salin Naskah (Copas)
+                </button>
+              </div>
+            </div>
+
+            <textarea
+              id="input-naskah"
+              rows="7"
+              required
+              placeholder="Tempelkan (paste) hasil prompting naskah podcast kelompokmu di sini (Opening, Pertanyaan Inti/Dialog, Closing)..."
+              class="w-full p-4 rounded-2xl border border-slate-300 text-sm font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition bg-slate-50/50"
+            ></textarea>
+          </div>
+
+          <!-- Tombol Aksi Form -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2 border-t border-slate-100">
+            <button
+              type="reset"
+              onclick="resetFormMembers()"
+              class="px-5 py-3 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold text-sm transition"
+            >
+              Reset Form
+            </button>
+            <button
+              type="submit"
+              class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md shadow-brand-600/20 transition"
+            >
+              <i class="fa-solid fa-plus-circle"></i>
+              <span>Simpan ke Tabel Rekapitulasi</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tabel Rekapitulasi Tugas Kelompok & Kirim ke Google Spreadsheet -->
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200/90 overflow-hidden">
+        <div class="p-5 sm:p-6 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50/70">
+          <div>
+            <h3 class="font-display font-bold text-lg text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-table-list text-brand-600"></i>
+              Tabel Rekapitulasi Tugas Kelompok
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Klik ikon salin pada kolom naskah untuk mencopas langsung, atau kirim seluruh data ke Google Spreadsheet.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button
+              type="button"
+              onclick="exportToCSV()"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs sm:text-sm font-bold transition"
+            >
+              <i class="fa-solid fa-file-excel"></i>
+              <span>Unduh CSV / Excel</span>
+            </button>
+
+            <button
+              type="button"
+              id="btn-send-sheets"
+              onclick="sendAllToGoogleSheets()"
+              class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 text-xs sm:text-sm font-extrabold shadow-md shadow-amber-500/20 transition"
+            >
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>Kirim ke Google Spreadsheet</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-100 border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-600">
+                <th class="py-3.5 px-4 w-12 text-center">No</th>
+                <th class="py-3.5 px-4 min-w-[180px]">Nama Anggota</th>
+                <th class="py-3.5 px-4 min-w-[100px]">Kelas</th>
+                <th class="py-3.5 px-4 min-w-[140px]">Kelompok</th>
+                <th class="py-3.5 px-4 min-w-[170px]">Jenis Podcast</th>
+                <th class="py-3.5 px-4 min-w-[180px]">Narasumber / Peran</th>
+                <th class="py-3.5 px-4 min-w-[260px]">Isian Naskah (Siap Copas)</th>
+                <th class="py-3.5 px-4 text-center">Status & Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="recap-tbody" class="divide-y divide-slate-100 text-sm">
+              <!-- Diisi dinamis oleh JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-400 py-6 mt-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+      <div class="flex items-center gap-2 text-slate-300 font-medium">
+        <i class="fa-solid fa-podcast text-amber-400 text-base"></i>
+        <span>Media Pembelajaran Interaktif — 6 Format Podcast Sekolah</span>
+      </div>
+      <div>
+        Mendukung pembelajaran kolaboratif, literasi digital, dan produksi konten audio kreatif siswa.
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================
+       MODAL PENGATURAN GOOGLE SPREADSHEET (APPS SCRIPT WEBHOOK)
+  ========================================================= -->
+  <div id="spreadsheet-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden tab-fade-in max-h-[90vh] flex flex-col">
+      <div class="bg-gradient-to-r from-brand-800 to-indigo-900 px-6 py-4 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <i class="fa-solid fa-table text-amber-400 text-lg"></i>
+          <h3 class="font-display font-bold text-lg">Integrasi Google Spreadsheet</h3>
+        </div>
+        <button onclick="closeSpreadsheetModal()" class="text-white/80 hover:text-white p-1.5 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-5 text-sm text-slate-700">
+        <div>
+          <label for="webhook-url-input" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+            URL Web App Google Apps Script (Opsional untuk Guru)
+          </label>
+          <input
+            type="url"
+            id="webhook-url-input"
+            placeholder="https://script.google.com/macros/s/AKfycbxhk1gNZ7CmeEMJGoyPKn92fQjVMlefY4DdbOJNOemUhsq1gyKNdi4AfRmzgWraIDE/exec"
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+          />
+          <p class="text-xs text-slate-500 mt-1.5">
+            Jika dikosongkan, tombol <strong>"Kirim ke Google Spreadsheet"</strong> tetap berfungsi dalam <strong>Mode Simulasi Kelas</strong> (menyimpan rekap & siap diunduh ke CSV/Excel).
+          </p>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-xs uppercase tracking-wider text-brand-800">
+              <i class="fa-solid fa-code mr-1"></i> Panduan Cepat Untuk Guru (Google Apps Script)
+            </span>
+            <button
+              type="button"
+              onclick="copyAppsScriptCode()"
+              class="text-xs font-bold bg-brand-100 hover:bg-brand-200 text-brand-800 px-3 py-1 rounded-lg transition"
+            >
+              <i class="fa-regular fa-copy mr-1"></i> Salin Kode Script
+            </button>
+          </div>
+          <ol class="list-decimal list-inside text-xs text-slate-600 space-y-1">
+            <li>Buka <strong>Google Sheets</strong> baru, buat header kolom: <code>Waktu | Nama Anggota | Kelas | Kelompok | Jenis Podcast | Narasumber | Naskah</code>.</li>
+            <li>Klik menu <strong>Ekstensi (Extensions) &gt; Apps Script</strong>, lalu tempel kode di bawah ini.</li>
+            <li>Klik <strong>Terapkan (Deploy) &gt; Deployment baru &gt; Aplikasi Web</strong> (Akses: <em>Siapa saja / Anyone</em>), lalu salin URL-nya ke kolom di atas.</li>
+          </ol>
+          <pre id="apps-script-snippet" class="bg-slate-900 text-emerald-300 p-3 rounded-xl text-xs overflow-x-auto font-mono leading-relaxed">function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  data.rows.forEach(function(row) {
+    sheet.appendRow([
+      new Date(),
+      row.anggota,
+      row.kelas,
+      row.kelompok,
+      row.jenis,
+      row.narasumber,
+      row.naskah
+    ]);
+  });
+  return ContentService.createTextOutput(JSON.stringify({status: "success"}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+        </div>
+      </div>
+
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-3">
+        <button onclick="closeSpreadsheetModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold text-xs sm:text-sm hover:bg-slate-100">
+          Tutup
+        </button>
+        <button onclick="saveWebhookUrl()" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm shadow">
+          Simpan Pengaturan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL BACA NASKAH LENGKAP
+  ========================================================= -->
+  <div id="script-preview-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden tab-fade-in">
+      <div class="bg-slate-900 px-6 py-4 text-white flex items-center justify-between">
+        <h3 id="preview-modal-title" class="font-display font-bold text-base sm:text-lg truncate pr-4">Detail Naskah Podcast</h3>
+        <button onclick="closePreviewModal()" class="text-white/80 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div id="preview-modal-meta" class="text-xs text-slate-500 bg-slate-100 p-3 rounded-xl"></div>
+        <pre id="preview-modal-body" class="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-xs sm:text-sm font-mono whitespace-pre-wrap max-h-80 overflow-y-auto text-slate-800"></pre>
+        <div class="flex justify-end gap-2">
+          <button onclick="closePreviewModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm font-semibold text-slate-700">Tutup</button>
+          <button id="preview-modal-copy-btn" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-bold flex items-center gap-2">
+            <i class="fa-regular fa-copy"></i> Salin Naskah
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================
+    // DATA 6 FORMAT PODCAST + ILUSTRASI SVG + VIDEO YOUTUBE 30 DETIK
+    // =========================================================
+    const podcastFormats = [
+      {
+        id: 1,
+        emoji: "👥",
+        title: "1. Co-Host Podcast (2 Orang)",
+        category: "2-orang",
+        badge: "2 Orang • Santai & Interaktif",
+        description: "Dibawakan oleh dua host yang berdiskusi tentang suatu topik secara mengalir dan akrab.",
+        examples: [
+          "Guru A dan Guru B membahas metode pembelajaran.",
+          "Dua sahabat membahas teknologi atau film."
+        ],
+        listTitle: "Kelebihan",
+        listIcon: "fa-circle-check text-emerald-500",
+        highlights: [
+          "Percakapan lebih hidup.",
+          "Tidak terlalu formal.",
+          "Beban berbicara terbagi."
+        ],
+        // Video contoh diskusi santai dua co-host (30 detik: start=120&end=150)
+        videoId: "ojPJv96toIc",
+        startSec: 120,
+        endSec: 150,
+        videoCaption: "Cuplikan 30 detik (02:00 - 02:30): Obrolan dua co-host yang cair dan saling menimpali.",
+        svgIllustration: `
+          <svg viewBox="0 0 360 150" class="w-full h-36 rounded-2xl bg-gradient-to-br from-violet-900 via-indigo-900 to-purple-950 p-2" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="desk1" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#d97706"/>
+              </linearGradient>
+            </defs>
+            <!-- Gelombang suara tengah -->
+            <g stroke="#fbbf24" stroke-width="3" stroke-linecap="round" opacity="0.75">
+              <line x1="168" y1="65" x2="168" y2="85"/>
+              <line x1="176" y1="52" x2="176" y2="98"/>
+              <line x1="184" y1="58" x2="184" y2="92"/>
+              <line x1="192" y1="68" x2="192" y2="82"/>
+            </g>
+            <!-- Host Kiri -->
+            <circle cx="95" cy="54" r="20" fill="#fde68a"/>
+            <path d="M75 50 Q95 28 115 50" stroke="#f59e0b" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <rect x="70" y="45" width="7" height="14" rx="3" fill="#f59e0b"/>
+            <rect x="113" y="45" width="7" height="14" rx="3" fill="#f59e0b"/>
+            <path d="M63 115 C63 86, 127 86, 127 115 Z" fill="#8b5cf6"/>
+            <!-- Mic Kiri -->
+            <rect x="128" y="76" width="8" height="16" rx="4" fill="#e2e8f0"/>
+            <line x1="132" y1="92" x2="132" y2="115" stroke="#94a3b8" stroke-width="3"/>
+
+            <!-- Host Kanan -->
+            <circle cx="265" cy="54" r="20" fill="#fed7aa"/>
+            <path d="M245 50 Q265 28 285 50" stroke="#38bdf8" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <rect x="240" y="45" width="7" height="14" rx="3" fill="#38bdf8"/>
+            <rect x="283" y="45" width="7" height="14" rx="3" fill="#38bdf8"/>
+            <path d="M233 115 C233 86, 297 86, 297 115 Z" fill="#ec4899"/>
+            <!-- Mic Kanan -->
+            <rect x="224" y="76" width="8" height="16" rx="4" fill="#e2e8f0"/>
+            <line x1="228" y1="92" x2="228" y2="115" stroke="#94a3b8" stroke-width="3"/>
+
+            <!-- Meja Studio -->
+            <rect x="40" y="115" width="280" height="12" rx="6" fill="url(#desk1)"/>
+            <text x="180" y="141" text-anchor="middle" fill="#ddd6fe" font-size="10" font-family="sans-serif" font-weight="bold">CO-HOST STUDIO • 2 HOST SETARA</text>
+          </svg>
+        `
+      },
+      {
+        id: 2,
+        emoji: "🎤",
+        title: "2. Interview Podcast (2 Orang atau Lebih)",
+        category: "2-orang",
+        badge: "2–3 Orang • Tanya Jawab",
+        description: "Terdiri dari seorang host dan satu narasumber atau lebih untuk menggali pengalaman maupun keahlian.",
+        examples: [
+          "Wawancara kepala sekolah.",
+          "Wawancara siswa berprestasi.",
+          "Wawancara alumni sukses."
+        ],
+        listTitle: "Struktur",
+        listIcon: "fa-sitemap text-amber-500",
+        highlights: [
+          "1 host + 1 narasumber",
+          "1 host + beberapa narasumber"
+        ],
+        // Video contoh wawancara tokoh inspiratif (30 detik: start=60&end=90)
+        videoId: "rfzTgTPlB-8",
+        startSec: 60,
+        endSec: 90,
+        videoCaption: "Cuplikan 30 detik (01:00 - 01:30): Host menggali kisah inspiratif narasumber pendidikan.",
+        svgIllustration: `
+          <svg viewBox="0 0 360 150" class="w-full h-36 rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-brand-900 p-2" xmlns="http://www.w3.org/2000/svg">
+            <!-- Label Peran -->
+            <rect x="52" y="14" width="66" height="18" rx="9" fill="#7c3aed"/>
+            <text x="85" y="26" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold" font-family="sans-serif">HOST</text>
+
+            <rect x="215" y="14" width="95" height="18" rx="9" fill="#f59e0b"/>
+            <text x="262" y="26" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="bold" font-family="sans-serif">NARASUMBER</text>
+
+            <!-- Host -->
+            <circle cx="85" cy="58" r="19" fill="#fde68a"/>
+            <path d="M55 115 C55 88, 115 88, 115 115 Z" fill="#6366f1"/>
+            <!-- Clipboard Pertanyaan -->
+            <rect x="108" y="82" width="16" height="22" rx="3" fill="#f8fafc" transform="rotate(-12 108 82)"/>
+
+            <!-- Panah Tanya Jawab -->
+            <path d="M145 64 L205 64" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="5,4"/>
+            <polygon points="205,60 214,64 205,68" fill="#fbbf24"/>
+
+            <!-- Narasumber -->
+            <circle cx="262" cy="58" r="19" fill="#fed7aa"/>
+            <path d="M232 115 C232 88, 292 88, 292 115 Z" fill="#10b981"/>
+            <!-- Mic Narasumber -->
+            <rect x="216" y="75" width="9" height="18" rx="4.5" fill="#f8fafc"/>
+            <line x1="220.5" y1="93" x2="220.5" y2="115" stroke="#cbd5e1" stroke-width="3"/>
+
+            <rect x="35" y="115" width="290" height="11" rx="5.5" fill="#475569"/>
+            <text x="180" y="141" text-anchor="middle" fill="#fde68a" font-size="10" font-family="sans-serif" font-weight="bold">INTERVIEW • GALI WAWASAN TOKOH</text>
+          </svg>
+        `
+      },
+      {
+        id: 3,
+        emoji: "🗣️",
+        title: "3. Panel Discussion Podcast (3-6 Orang)",
+        category: "kelompok",
+        badge: "3–6 Orang • Multiperspektif",
+        description: "Beberapa orang mendiskusikan satu tema dari sudut pandang berbeda yang dipandu seorang moderator.",
+        examples: [
+          "Guru IPA, Seni, dan BK membahas profil pelajar.",
+          "Beberapa siswa membahas penggunaan media sosial."
+        ],
+        listTitle: "Kelebihan",
+        listIcon: "fa-circle-check text-emerald-500",
+        highlights: [
+          "Perspektif lebih beragam.",
+          "Cocok untuk tema yang kompleks."
+        ],
+        // Video contoh diskusi panel pendidikan (30 detik: start=180&end=210)
+        videoId: "hN-V0YYDSak",
+        startSec: 180,
+        endSec: 210,
+        videoCaption: "Cuplikan 30 detik (03:00 - 03:30): Diskusi multi-perspektif seputar isu pendidikan.",
+        svgIllustration: `
+          <svg viewBox="0 0 360 150" class="w-full h-36 rounded-2xl bg-gradient-to-br from-indigo-950 via-brand-900 to-slate-900 p-2" xmlns="http://www.w3.org/2000/svg">
+            <!-- Topik Utama di Atas -->
+            <rect x="115" y="10" width="130" height="20" rx="10" fill="#f59e0b"/>
+            <text x="180" y="23" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="bold" font-family="sans-serif">1 TEMA • BANYAK SUDUT</text>
+
+            <!-- 4 Panelis -->
+            <g>
+              <circle cx="65" cy="64" r="15" fill="#fde68a"/>
+              <path d="M43 114 C43 90, 87 90, 87 114 Z" fill="#8b5cf6"/>
+            </g>
+            <g>
+              <circle cx="142" cy="64" r="15" fill="#fed7aa"/>
+              <path d="M120 114 C120 90, 164 90, 164 114 Z" fill="#06b6d4"/>
+            </g>
+            <g>
+              <circle cx="218" cy="64" r="15" fill="#fecdd3"/>
+              <path d="M196 114 C196 90, 240 90, 240 114 Z" fill="#ec4899"/>
+            </g>
+            <g>
+              <circle cx="295" cy="64" r="15" fill="#bbf7d0"/>
+              <path d="M273 114 C273 90, 317 90, 317 114 Z" fill="#10b981"/>
+            </g>
+
+            <!-- Garis Koneksi ke Tema -->
+            <line x1="65" y1="45" x2="145" y2="31" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <line x1="142" y1="45" x2="168" y2="31" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <line x1="218" y1="45" x2="192" y2="31" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <line x1="295" y1="45" x2="215" y2="31" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+            <rect x="25" y="114" width="310" height="10" rx="5" fill="#f59e0b"/>
+            <text x="180" y="141" text-anchor="middle" fill="#e0e7ff" font-size="10" font-family="sans-serif" font-weight="bold">PANEL DISCUSSION • 3–6 PANELIS</text>
+          </svg>
+        `
+      },
+      {
+        id: 4,
+        emoji: "🎓",
+        title: "4. Round Table Podcast",
+        category: "kelompok",
+        badge: "3–8 Orang • Meja Bundar",
+        description: "Semua peserta memiliki kedudukan yang setara dan berdiskusi layaknya rapat santai tanpa hierarki kaku.",
+        examples: [
+          "Empat guru saling berbagi praktik baik pembelajaran.",
+          "Kelompok siswa mendiskusikan isu lingkungan sekolah."
+        ],
+        listTitle: "Ciri Khas",
+        listIcon: "fa-star text-amber-500",
+        highlights: [
+          "Kedudukan semua peserta setara.",
+          "Suasana seperti rapat santai & berbagi praktik baik."
+        ],
+        // Video contoh diskusi berbagi praktik pendidikan (30 detik: start=90&end=120)
+        videoId: "JFtp45zHuuk",
+        startSec: 90,
+        endSec: 120,
+        videoCaption: "Cuplikan 30 detik (01:30 - 02:00): Diskusi reflektif berbagi gagasan pendidikan secara setara.",
+        svgIllustration: `
+          <svg viewBox="0 0 360 150" class="w-full h-36 rounded-2xl bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 p-2" xmlns="http://www.w3.org/2000/svg">
+            <!-- Meja Bundar Perspektif Elips -->
+            <ellipse cx="180" cy="96" rx="115" ry="24" fill="#f59e0b" opacity="0.9"/>
+            <ellipse cx="180" cy="93" rx="102" ry="18" fill="#fef3c7"/>
+
+            <!-- Peserta Mengelilingi Meja -->
+            <circle cx="95" cy="64" r="14" fill="#fde68a"/>
+            <path d="M77 92 C77 78, 113 78, 113 92 Z" fill="#6366f1"/>
+
+            <circle cx="152" cy="52" r="14" fill="#fed7aa"/>
+            <path d="M134 80 C134 66, 170 66, 170 80 Z" fill="#ec4899"/>
+
+            <circle cx="208" cy="52" r="14" fill="#fecdd3"/>
+            <path d="M190 80 C190 66, 226 66, 226 80 Z" fill="#14b8a6"/>
+
+            <circle cx="265" cy="64" r="14" fill="#bbf7d0"/>
+            <path d="M247 92 C247 78, 283 78, 283 92 Z" fill="#8b5cf6"/>
+
+            <!-- Mic Tengah Meja -->
+            <rect x="176" y="76" width="8" height="14" rx="4" fill="#1e293b"/>
+            <line x1="180" y1="90" x2="180" y2="96" stroke="#1e293b" stroke-width="3"/>
+
+            <text x="180" y="141" text-anchor="middle" fill="#a7f3d0" font-size="10" font-family="sans-serif" font-weight="bold">ROUND TABLE • SETARA & KOLABORATIF</text>
+          </svg>
+        `
+      },
+      {
+        id: 5,
+        emoji: "🎭",
+        title: "5. Storytelling Drama Podcast",
+        category: "kreatif",
+        badge: "3+ Orang • Sandiwara Audio",
+        description: "Melibatkan beberapa pengisi suara yang memerankan karakter berbeda disertai narasi dan efek suara.",
+        examples: [
+          "Drama sejarah.",
+          "Cerita rakyat.",
+          "Sandiwara pendidikan karakter."
+        ],
+        listTitle: "Keunggulan",
+        listIcon: "fa-masks-theater text-purple-500",
+        highlights: [
+          "Melatih ekspresi vokal & penghayatan peran.",
+          "Menyampaikan pesan moral lewat alur cerita yang hidup."
+        ],
+        // Video contoh sandiwara audio cerita rakyat Indonesia (30 detik: start=45&end=75)
+        videoId: "7LldHVcwMwo",
+        startSec: 45,
+        endSec: 75,
+        videoCaption: "Cuplikan 30 detik (00:45 - 01:15): Contoh sandiwara audio/radio cerita rakyat dengan pemeran karakter.",
+        svgIllustration: `
+          <svg viewBox="0 0 360 150" class="w-full h-36 rounded-2xl bg-gradient-to-br from-fuchsia-950 via-purple-900 to-indigo-950 p-2" xmlns="http://www.w3.org/2000/svg">
+            <!-- Topeng Drama & Bintang -->
+            <circle cx="95" cy="65" r="24" fill="#fbbf24" opacity="0.2"/>
+            <rect x="75" y="45" width="40" height="44" rx="16" fill="#fde68a"/>
+            <circle cx="88" cy="60" r="3" fill="#1e293b"/>
+            <circle cx="102" cy="60" r="3" fill="#1e293b"/>
+            <path d="M87 72 Q95 80 103 72" stroke="#1e293b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <text x="95" y="106" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="bold" font-family="sans-serif">KARAKTER A</text>
+
+            <!-- Narator Tengah -->
+            <rect x="155" y="34" width="50" height="62" rx="12" fill="#8b5cf6" stroke="#ddd6fe" stroke-width="2"/>
+            <text x="180" y="60" text-anchor="middle" fill="#fff" font-size="18">📖</text>
+            <text x="180" y="82" text-anchor="middle" fill="#fef3c7" font-size="8" font-weight="bold" font-family="sans-serif">NARATOR</text>
+
+            <!-- Karakter B -->
+            <circle cx="265" cy="65" r="24" fill="#38bdf8" opacity="0.2"/>
+            <rect x="245" y="45" width="40" height="44" rx="16" fill="#fed7aa"/>
+            <circle cx="258" cy="60" r="3" fill="#1e293b"/>
+            <circle cx="272" cy="60" r="3" fill="#1e293b"/>
+            <path d="M258 75 Q265 69 272 75" stroke="#1e293b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <text x="265" y="106" text-anchor="middle" fill="#bae6fd" font-size="9" font-weight="bold" font-family="sans-serif">KARAKTER B</text>
+
+            <text x="180" y="141" text-anchor="middle" fill="#f5d0fe" font-size="10" font-family="sans-serif" font-weight="bold">STORYTELLING DRAMA • VOICE ACTING</text>
+          </svg>
+        `
+      },
+      {
+        id: 6,
+        emoji: "🎬",
+        title: "6. Debate Podcast",
+        category: "kreatif",
+        badge: "2–4 Orang • Pro vs Kontra",
+        description: "Dua atau lebih pembicara menyampaikan pendapat yang berbeda secara argumentatif tentang suatu topik.",
+        examples: [
+          "Pro dan kontra penggunaan AI di sekolah.",
+          "Pro dan kontra penggunaan seragam bebas."
+        ],
+        listTitle: "Manfaat",
+        listIcon: "fa-scale-balanced text-rose-500",
+        highlights: [
+          "Melatih kemampuan berpikir kritis & menyusun argumen.",
+          "Belajar menghargai perbedaan sudut pandang secara santun."
+        ],
+        // Video contoh diskusi/opini pro kontra AI dalam pendidikan (30 detik: start=60&end=90)
+        videoId: "Mqn0yLrxjpU",
+        startSec: 60,
+        endSec: 90,
+        videoCaption: "Cuplikan 30 detik (01:00 - 01:30): Paparan argumen pro dan kontra penggunaan AI dalam pendidikan.",
+        svgIllustration: `
+          <svg viewBox="0 0 360 150" class="w-full h-36 rounded-2xl bg-gradient-to-br from-rose-950 via-slate-900 to-indigo-950 p-2" xmlns="http://www.w3.org/2000/svg">
+            <!-- Sisi PRO -->
+            <rect x="35" y="20" width="90" height="22" rx="11" fill="#10b981"/>
+            <text x="80" y="34" text-anchor="middle" fill="#064e3b" font-size="10" font-weight="bold" font-family="sans-serif">TIM PRO (+)</text>
+            <circle cx="80" cy="68" r="18" fill="#bbf7d0"/>
+            <path d="M52 115 C52 90, 108 90, 108 115 Z" fill="#059669"/>
+
+            <!-- Lencana VS Tengah -->
+            <circle cx="180" cy="68" r="22" fill="#f59e0b" stroke="#fef3c7" stroke-width="3"/>
+            <text x="180" y="73" text-anchor="middle" fill="#0f172a" font-size="13" font-weight="900" font-family="sans-serif">VS</text>
+
+            <!-- Sisi KONTRA -->
+            <rect x="235" y="20" width="90" height="22" rx="11" fill="#f43f5e"/>
+            <text x="280" y="34" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold" font-family="sans-serif">TIM KONTRA (-)</text>
+            <circle cx="280" cy="68" r="18" fill="#fecdd3"/>
+            <path d="M252 115 C252 90, 308 90, 308 115 Z" fill="#e11d48"/>
+
+            <rect x="30" y="115" width="300" height="10" rx="5" fill="#334155"/>
+            <text x="180" y="141" text-anchor="middle" fill="#fecdd3" font-size="10" font-family="sans-serif" font-weight="bold">DEBATE PODCAST • BERPIKIR KRITIS</text>
+          </svg>
+        `
+      }
+    ];
+
+    // Data Tabel Rekomendasi Sekolah
+    const schoolRecommendations = [
+      { format: "Co-host", fullFormat: "1. Co-Host Podcast (2 Orang)", people: "2", suitableFor: "Obrolan santai guru", color: "bg-violet-100 text-violet-800" },
+      { format: "Interview", fullFormat: "2. Interview Podcast (2 Orang atau Lebih)", people: "2–3", suitableFor: "Wawancara tokoh sekolah", color: "bg-amber-100 text-amber-800" },
+      { format: "Panel Discussion", fullFormat: "3. Panel Discussion Podcast (3-6 Orang)", people: "3–6", suitableFor: "Diskusi tema pendidikan", color: "bg-sky-100 text-sky-800" },
+      { format: "Round Table", fullFormat: "4. Round Table Podcast", people: "3–8", suitableFor: "Berbagi pengalaman", color: "bg-emerald-100 text-emerald-800" },
+      { format: "Debate", fullFormat: "6. Debate Podcast", people: "2–4", suitableFor: "Melatih berpikir kritis siswa", color: "bg-rose-100 text-rose-800" },
+      { format: "Drama Podcast", fullFormat: "5. Storytelling Drama Podcast", people: "3+", suitableFor: "Cerita dan pembelajaran karakter", color: "bg-fuchsia-100 text-fuchsia-800" }
+    ];
+
+    // =========================================================
+    // STATE APLIKASI & PENYIMPANAN LOKAL
+    // =========================================================
+    let taskSubmissions = JSON.parse(localStorage.getItem('podcast_school_tasks_v1') || '[]');
+    let savedWebhookUrl = localStorage.getItem('podcast_sheets_webhook_v1') || '';
+
+    // =========================================================
+    // RENDER KARTU MATERI & VIDEO YOUTUBE 30 DETIK
+    // =========================================================
+    function renderPodcastCards(filterCategory = 'all') {
+      const grid = document.getElementById('podcast-cards-grid');
+      const filtered = filterCategory === 'all'
+        ? podcastFormats
+        : podcastFormats.filter(item => item.category === filterCategory);
+
+      grid.innerHTML = filtered.map(item => `
+        <article class="bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200/90 overflow-hidden flex flex-col justify-between group">
+          <div>
+            <!-- Ilustrasi SVG Kustom -->
+            <div class="p-4 pb-0">
+              ${item.svgIllustration}
+            </div>
+
+            <div class="p-6 space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-50 text-brand-700 border border-brand-200/70">
+                  ${item.badge}
+                </span>
+                <button
+                  type="button"
+                  onclick="selectFormatForTask('${item.title}')"
+                  class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1 transition"
+                  title="Gunakan format ini untuk tugas kelompok"
+                >
+                  <span>Pilih untuk Tugas</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+
+              <div>
+                <h3 class="font-display font-extrabold text-xl text-slate-900 group-hover:text-brand-700 transition">
+                  ${item.title}
+                </h3>
+                <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+                  ${item.description}
+                </p>
+              </div>
+
+              <!-- Contoh & Kelebihan/Struktur -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-100">
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i> Contoh Penerapan
+                  </div>
+                  <ul class="space-y-1.5 text-xs text-slate-700">
+                    ${item.examples.map(ex => `
+                      <li class="flex items-start gap-2">
+                        <span class="text-brand-600 font-bold mt-0.5">•</span>
+                        <span>${ex}</span>
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+
+                <div class="bg-brand-50/50 rounded-2xl p-3.5 border border-brand-100/80">
+                  <div class="text-xs font-bold uppercase tracking-wider text-brand-800 mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-sparkles text-brand-600"></i> ${item.listTitle}
+                  </div>
+                  <ul class="space-y-1.5 text-xs text-slate-700">
+                    ${item.highlights.map(hl => `
+                      <li class="flex items-start gap-2">
+                        <i class="fa-solid ${item.listIcon} mt-0.5 text-[11px]"></i>
+                        <span>${hl}</span>
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Area Pemutar Cuplikan Video YouTube 30 Detik -->
+          <div class="px-6 pb-6 pt-1">
+            <div class="bg-slate-900 rounded-2xl p-3.5 text-white space-y-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 text-xs font-bold text-amber-400">
+                  <i class="fa-brands fa-youtube text-rose-500 text-base"></i>
+                  <span>Contoh Klip Video (Durasi 30 Detik)</span>
+                </div>
+                <span class="text-[11px] bg-white/10 px-2.5 py-0.5 rounded-full text-slate-300 font-mono">
+                  00:${String(item.startSec).padStart(2, '0')} – 00:${String(item.endSec).padStart(2, '0')}s
+                </span>
+              </div>
+
+              <!-- Embed YouTube dengan Parameter start & end (30 detik) -->
+              <div id="video-wrapper-${item.id}" class="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 border border-white/10">
+                <iframe
+                  class="w-full h-full"
+                  src="https://www.youtube.com/embed/${item.videoId}?start=${item.startSec}&end=${item.endSec}&rel=0&modestbranding=1"
+                  title="Contoh ${item.title}"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"
+                ></iframe>
+              </div>
+
+              <div class="flex items-center justify-between gap-2 text-[11px] text-slate-300">
+                <span class="line-clamp-1">${item.videoCaption}</span>
+                <button
+                  type="button"
+                  onclick="replayClip(${item.id}, '${item.videoId}', ${item.startSec}, ${item.endSec})"
+                  class="shrink-0 text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1"
+                  title="Ulangi klip 30 detik"
+                >
+                  <i class="fa-solid fa-rotate-right"></i> Ulangi 30s
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // Ulangi cuplikan video 30 detik dengan memuat ulang parameter start & end
+    function replayClip(cardId, videoId, startSec, endSec) {
+      const wrapper = document.getElementById(`video-wrapper-${cardId}`);
+      if (!wrapper) return;
+      wrapper.innerHTML = `
+        <iframe
+          class="w-full h-full"
+          src="https://www.youtube.com/embed/${videoId}?start=${startSec}&end=${endSec}&autoplay=1&rel=0&modestbranding=1"
+          title="Contoh Klip 30 Detik"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      `;
+      showToast('Memutar ulang cuplikan contoh 30 detik...', 'info');
+    }
+
+    // Filter Kartu berdasarkan kategori
+    function filterCards(category) {
+      document.querySelectorAll('.filter-chip').forEach(btn => {
+        if (btn.dataset.filter === category) {
+          btn.classList.remove('bg-slate-100', 'text-slate-700');
+          btn.classList.add('bg-brand-600', 'text-white', 'shadow-sm');
+        } else {
+          btn.classList.add('bg-slate-100', 'text-slate-700');
+          btn.classList.remove('bg-brand-600', 'text-white', 'shadow-sm');
+        }
+      });
+      renderPodcastCards(category);
+    }
+
+    // =========================================================
+    // RENDER TABEL REKOMENDASI SEKOLAH
+    // =========================================================
+    function renderSchoolTable(query = '') {
+      const tbody = document.getElementById('school-recommendation-tbody');
+      const q = query.toLowerCase().trim();
+      const filtered = schoolRecommendations.filter(row =>
+        row.format.toLowerCase().includes(q) ||
+        row.people.toLowerCase().includes(q) ||
+        row.suitableFor.toLowerCase().includes(q)
+      );
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="py-8 text-center text-slate-400 text-sm">
+              Tidak ditemukan format yang cocok dengan kata kunci "${escapeHtml(query)}".
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(row => `
+        <tr class="hover:bg-brand-50/40 transition">
+          <td class="py-4 px-6 font-bold text-slate-900">
+            <span class="inline-block px-3 py-1 rounded-lg text-xs font-extrabold ${row.color}">
+              ${row.format}
+            </span>
+          </td>
+          <td class="py-4 px-6 font-semibold text-slate-700">
+            <i class="fa-solid fa-users text-slate-400 mr-1.5"></i>${row.people} Orang
+          </td>
+          <td class="py-4 px-6 text-slate-700 font-medium">
+            ${row.suitableFor}
+          </td>
+          <td class="py-4 px-6 text-right">
+            <button
+              type="button"
+              onclick="selectFormatForTask('${row.fullFormat}')"
+              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-brand-100 hover:bg-brand-600 text-brand-800 hover:text-white text-xs font-bold transition"
+            >
+              <i class="fa-solid fa-pen-to-square"></i> Buat Tugas
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterSchoolTable(val) {
+      renderSchoolTable(val);
+    }
+
+    // =========================================================
+    // NAVIGASI TAB & PINTASAN PILIH FORMAT
+    // =========================================================
+    function switchTab(tabName) {
+      const secMateri = document.getElementById('section-materi');
+      const secTugas = document.getElementById('section-tugas');
+      const btnMateri = document.getElementById('tab-btn-materi');
+      const btnTugas = document.getElementById('tab-btn-tugas');
+
+      if (tabName === 'materi') {
+        secMateri.classList.remove('hidden');
+        secTugas.classList.add('hidden');
+
+        btnMateri.className = "tab-trigger group flex items-center justify-center sm:justify-start gap-2.5 px-5 py-3.5 rounded-t-xl font-semibold text-sm sm:text-base transition-all bg-slate-50 text-brand-800 shadow-sm";
+        btnTugas.className = "tab-trigger group flex items-center justify-center sm:justify-start gap-2.5 px-5 py-3.5 rounded-t-xl font-semibold text-sm sm:text-base transition-all bg-white/10 text-white hover:bg-white/20";
+      } else {
+        secMateri.classList.add('hidden');
+        secTugas.classList.remove('hidden');
+
+        btnTugas.className = "tab-trigger group flex items-center justify-center sm:justify-start gap-2.5 px-5 py-3.5 rounded-t-xl font-semibold text-sm sm:text-base transition-all bg-slate-50 text-brand-800 shadow-sm";
+        btnMateri.className = "tab-trigger group flex items-center justify-center sm:justify-start gap-2.5 px-5 py-3.5 rounded-t-xl font-semibold text-sm sm:text-base transition-all bg-white/10 text-white hover:bg-white/20";
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function selectFormatForTask(fullFormatTitle) {
+      switchTab('tugas');
+      const selectEl = document.getElementById('input-jenis');
+      selectEl.value = fullFormatTitle;
+      showToast(`Format "${fullFormatTitle}" dipilih pada form tugas!`, 'success');
+    }
+
+    // =========================================================
+    // FORM DINAMIS ANGGOTA KELOMPOK & TEMPLATE NASKAH
+    // =========================================================
+    function addMemberField() {
+      const container = document.getElementById('members-container');
+      const count = container.querySelectorAll('.member-row').length + 1;
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-2 member-row';
+      div.innerHTML = `
+        <span class="w-7 h-7 rounded-lg bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center shrink-0 member-num">${count}</span>
+        <input
+          type="text"
+          name="anggota[]"
+          placeholder="Nama Anggota ${count}"
+          class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+        />
+        <button type="button" onclick="removeMemberField(this)" class="p-2.5 text-slate-400 hover:text-rose-600 rounded-lg transition" title="Hapus baris">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      `;
+      container.appendChild(div);
+    }
+
+    function removeMemberField(btn) {
+      const row = btn.closest('.member-row');
+      row.remove();
+      // Perbarui nomor urut anggota
+      document.querySelectorAll('#members-container .member-row').forEach((r, idx) => {
+        const badge = r.querySelector('span');
+        if (badge) badge.textContent = idx + 1;
+      });
+    }
+
+    function resetFormMembers() {
+      const container = document.getElementById('members-container');
+      container.innerHTML = `
+        <div class="flex items-center gap-2 member-row">
+          <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs font-bold flex items-center justify-center shrink-0">1</span>
+          <input type="text" name="anggota[]" required placeholder="Nama Anggota 1 (Ketua Kelompok)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+        </div>
+        <div class="flex items-center gap-2 member-row">
+          <span class="w-7 h-7 rounded-lg bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center shrink-0">2</span>
+          <input type="text" name="anggota[]" placeholder="Nama Anggota 2" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+          <button type="button" onclick="removeMemberField(this)" class="p-2.5 text-slate-400 hover:text-rose-600 rounded-lg transition" title="Hapus baris">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      `;
+    }
+
+    function insertSamplePromptScript() {
+      const jenis = document.getElementById('input-jenis').value || "Interview Podcast";
+      const template = `[JUDUL EPISODE]: Suara Kreatif Pelajar di Era Digital
+[FORMAT]: ${jenis}
+[DURASI TARGET]: 5 - 7 Menit
+
+1. OPENING (00:00 - 01:00)
+Host: "Halo Sobat Podcast Sekolah! Selamat datang kembali di ruang suara kita. Hari ini kita akan membahas topik yang dekat banget dengan keseharian kita..."
+
+2. INTI DISKUSI / PERTANYAAN KUNCI (01:00 - 05:30)
+- Poin 1: Latar belakang masalah & pengalaman nyata di sekolah.
+- Poin 2: Tantangan yang dihadapi siswa/guru dan solusinya.
+- Poin 3: Pesan inspiratif atau tips praktis untuk pendengar.
+
+3. CLOSING (05:30 - 06:30)
+Host: "Terima kasih banyak untuk narasumber dan teman-teman yang sudah menyimak. Jangan lupa bagikan episode ini jika bermanfaat. Sampai jumpa!"`;
+
+      document.getElementById('input-naskah').value = template;
+      showToast('Template naskah berhasil dimasukkan! Silakan sesuaikan.', 'info');
+    }
+
+    // =========================================================
+    // PENYIMPANAN DATA TUGAS & TABEL REKAPITULASI
+    // =========================================================
+    function handleFormSubmit(e) {
+      e.preventDefault();
+
+      const kelas = document.getElementById('input-kelas').value.trim();
+      const kelompok = document.getElementById('input-kelompok').value.trim();
+      const jenis = document.getElementById('input-jenis').value;
+      const narasumber = document.getElementById('input-narasumber').value.trim();
+      const naskah = document.getElementById('input-naskah').value.trim();
+
+      const memberInputs = Array.from(document.querySelectorAll('input[name="anggota[]"]'));
+      const anggotaList = memberInputs.map(inp => inp.value.trim()).filter(Boolean);
+
+      if (anggotaList.length === 0) {
+        showToast('Minimal masukkan 1 nama anggota kelompok!', 'error');
+        return;
+      }
+
+      const newEntry = {
+        id: Date.now(),
+        anggota: anggotaList.join(', '),
+        kelas,
+        kelompok,
+        jenis,
+        narasumber,
+        naskah,
+        synced: false,
+        createdAt: new Date().toLocaleString('id-ID')
+      };
+
+      taskSubmissions.unshift(newEntry);
+      saveTasksToLocal();
+      renderRecapTable();
+
+      // Reset form setelah simpan
+      e.target.reset();
+      resetFormMembers();
+      showToast('Data tugas kelompok berhasil ditambahkan ke tabel rekap!', 'success');
+    }
+
+    function saveTasksToLocal() {
+      localStorage.setItem('podcast_school_tasks_v1', JSON.stringify(taskSubmissions));
+      document.getElementById('badge-jumlah-tugas').textContent = taskSubmissions.length;
+    }
+
+    function renderRecapTable() {
+      const tbody = document.getElementById('recap-tbody');
+      document.getElementById('badge-jumlah-tugas').textContent = taskSubmissions.length;
+
+      if (taskSubmissions.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="py-12 px-4 text-center">
+              <div class="max-w-md mx-auto space-y-2">
+                <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-xl">
+                  <i class="fa-solid fa-folder-open"></i>
+                </div>
+                <div class="font-bold text-slate-700 text-sm">Belum Ada Data Tugas Kelompok</div>
+                <p class="text-xs text-slate-500">
+                  Silakan isi form di atas untuk menambahkan resume naskah podcast kelompokmu ke dalam tabel ini.
+                </p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = taskSubmissions.map((item, index) => `
+        <tr class="hover:bg-slate-50/90 transition align-top">
+          <td class="py-4 px-4 text-center font-bold text-slate-500">${index + 1}</td>
+          <td class="py-4 px-4 font-semibold text-slate-800">${escapeHtml(item.anggota)}</td>
+          <td class="py-4 px-4">
+            <span class="inline-block px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-bold text-xs">
+              ${escapeHtml(item.kelas)}
+            </span>
+          </td>
+          <td class="py-4 px-4 font-bold text-brand-800">${escapeHtml(item.kelompok)}</td>
+          <td class="py-4 px-4">
+            <span class="inline-block px-2.5 py-1 rounded-lg bg-brand-50 text-brand-700 border border-brand-200/70 text-xs font-semibold">
+              ${escapeHtml(item.jenis)}
+            </span>
+          </td>
+          <td class="py-4 px-4 text-xs text-slate-700 whitespace-pre-line">${escapeHtml(item.narasumber)}</td>
+          <td class="py-4 px-4">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-2">
+              <p class="text-xs text-slate-700 font-mono line-clamp-3 whitespace-pre-line">${escapeHtml(item.naskah)}</p>
+              <div class="flex items-center gap-2 pt-1 border-t border-slate-200/70">
+                <button
+                  type="button"
+                  onclick="copyDirectText(${item.id})"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-[11px] font-bold transition"
+                >
+                  <i class="fa-regular fa-copy"></i> Copas Naskah
+                </button>
+                <button
+                  type="button"
+                  onclick="openPreviewModal(${item.id})"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-[11px] font-semibold transition"
+                >
+                  <i class="fa-solid fa-expand"></i> Lihat Penuh
+                </button>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-4 text-center space-y-2">
+            <div>
+              ${item.synced
+                ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold"><i class="fa-solid fa-check-circle"></i> Terkirim</span>`
+                : `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-bold"><i class="fa-solid fa-clock"></i> Siap Kirim</span>`
+              }
+            </div>
+            <button
+              type="button"
+              onclick="deleteTaskItem(${item.id})"
+              class="text-xs text-rose-500 hover:text-rose-700 font-semibold inline-flex items-center gap-1"
+              title="Hapus data ini"
+            >
+              <i class="fa-solid fa-trash-can"></i> Hapus
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteTaskItem(id) {
+      taskSubmissions = taskSubmissions.filter(item => item.id !== id);
+      saveTasksToLocal();
+      renderRecapTable();
+      showToast('Baris tugas dihapus dari tabel.', 'info');
+    }
+
+    // =========================================================
+    // FITUR SALIN / COPAS SEKALI KLIK (EXEC COMMAND COMPATIBLE)
+    // =========================================================
+    function copyRawString(text, successMsg = 'Teks berhasil disalin!') {
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.value = text;
+      tempTextArea.style.position = 'fixed';
+      tempTextArea.style.left = '-9999px';
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      try {
+        document.execCommand('copy');
+        showToast(successMsg, 'success');
+      } catch (err) {
+        showToast('Gagal menyalin teks otomatis. Silakan salin manual.', 'error');
+      }
+      document.body.removeChild(tempTextArea);
+    }
+
+    function copyTextFromElement(elementId, successMsg) {
+      const el = document.getElementById(elementId);
+      if (!el || !el.value.trim()) {
+        showToast('Kolom naskah masih kosong!', 'error');
+        return;
+      }
+      copyRawString(el.value, successMsg);
+    }
+
+    function copyDirectText(itemId) {
+      const item = taskSubmissions.find(t => t.id === itemId);
+      if (!item) return;
+      copyRawString(item.naskah, `Naskah ${item.kelompok} berhasil dicopas!`);
+    }
+
+    function copyAppsScriptCode() {
+      const code = document.getElementById('apps-script-snippet').textContent;
+      copyRawString(code, 'Kode Google Apps Script berhasil disalin!');
+    }
+
+    // =========================================================
+    // MODAL PREVIEW NASKAH & PENGATURAN GOOGLE SPREADSHEET
+    // =========================================================
+    function openPreviewModal(itemId) {
+      const item = taskSubmissions.find(t => t.id === itemId);
+      if (!item) return;
+      document.getElementById('preview-modal-title').textContent = `${item.kelompok} — ${item.jenis}`;
+      document.getElementById('preview-modal-meta').innerHTML = `
+        <strong>Anggota:</strong> ${escapeHtml(item.anggota)} &nbsp;|&nbsp;
+        <strong>Kelas:</strong> ${escapeHtml(item.kelas)}<br/>
+        <strong>Narasumber/Peran:</strong> ${escapeHtml(item.narasumber)}
+      `;
+      document.getElementById('preview-modal-body').textContent = item.naskah;
+      const copyBtn = document.getElementById('preview-modal-copy-btn');
+      copyBtn.onclick = () => copyRawString(item.naskah, 'Naskah lengkap berhasil disalin!');
+
+      const modal = document.getElementById('script-preview-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closePreviewModal() {
+      const modal = document.getElementById('script-preview-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function openSpreadsheetModal() {
+      document.getElementById('webhook-url-input').value = savedWebhookUrl;
+      const modal = document.getElementById('spreadsheet-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeSpreadsheetModal() {
+      const modal = document.getElementById('spreadsheet-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function saveWebhookUrl() {
+      const val = document.getElementById('webhook-url-input').value.trim();
+      savedWebhookUrl = val;
+      localStorage.setItem('podcast_sheets_webhook_v1', val);
+      updateWebhookIndicator();
+      closeSpreadsheetModal();
+      showToast(val ? 'URL Google Spreadsheet berhasil disimpan!' : 'Beralih ke Mode Simulasi Spreadsheet.', 'success');
+    }
+
+    function updateWebhookIndicator() {
+      const dot = document.getElementById('webhook-status-dot');
+      if (savedWebhookUrl) {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+        dot.title = 'Terhubung ke URL Google Apps Script';
+      } else {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
+        dot.title = 'Mode Simulasi / Belum ada URL Webhook';
+      }
+    }
+
+    // =========================================================
+    // KIRIM KE GOOGLE SPREADSHEET & EKSPOR CSV/EXCEL
+    // =========================================================
+    async function sendAllToGoogleSheets() {
+      if (taskSubmissions.length === 0) {
+        showToast('Tabel masih kosong! Tambahkan data kelompok terlebih dahulu.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btn-send-sheets');
+      const originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengirim ke Spreadsheet...</span>`;
+
+      try {
+        if (savedWebhookUrl) {
+          // Kirim nyata ke Google Apps Script Web App
+          await fetch(savedWebhookUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rows: taskSubmissions })
+          });
+        } else {
+          // Simulasi jeda pengiriman jaringan jika guru belum menautkan URL Webhook
+          await new Promise(resolve => setTimeout(resolve, 900));
+        }
+
+        // Tandai semua baris sebagai terkirim
+        taskSubmissions = taskSubmissions.map(item => ({ ...item, synced: true }));
+        saveTasksToLocal();
+        renderRecapTable();
+
+        if (savedWebhookUrl) {
+          showToast(`Berhasil mengirim ${taskSubmissions.length} data kelompok ke Google Spreadsheet!`, 'success');
+        } else {
+          showToast(`Simulasi berhasil! ${taskSubmissions.length} data ditandai Terkirim. (Atur URL Webhook jika ingin sinkron otomatis ke Google Sheets guru).`, 'success');
+        }
+      } catch (error) {
+        showToast('Terjadi kendala koneksi saat mengirim ke Spreadsheet. Gunakan tombol Unduh CSV sebagai cadangan.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      }
+    }
+
+    function exportToCSV() {
+      if (taskSubmissions.length === 0) {
+        showToast('Tidak ada data untuk diunduh.', 'error');
+        return;
+      }
+
+      const headers = ['No', 'Nama Anggota', 'Kelas', 'Kelompok', 'Jenis Podcast', 'Narasumber / Peran', 'Isian Naskah', 'Waktu Input'];
+      const rows = taskSubmissions.map((item, idx) => [
+        idx + 1,
+        `"${item.anggota.replace(/"/g, '""')}"`,
+        `"${item.kelas.replace(/"/g, '""')}"`,
+        `"${item.kelompok.replace(/"/g, '""')}"`,
+        `"${item.jenis.replace(/"/g, '""')}"`,
+        `"${item.narasumber.replace(/"/g, '""')}"`,
+        `"${item.naskah.replace(/"/g, '""')}"`,
+        `"${item.createdAt}"`
+      ]);
+
+      const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Rekap_Tugas_Podcast_Kelompok_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      showToast('File CSV/Excel berhasil diunduh! Siap dibuka di Google Sheets / Excel.', 'success');
+    }
+
+    // =========================================================
+    // UTILITAS TOAST NOTIFICATION & SANITASI HTML
+    // =========================================================
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+
+      const styles = {
+        success: 'bg-emerald-900 border-emerald-500 text-white',
+        error: 'bg-rose-900 border-rose-500 text-white',
+        info: 'bg-slate-900 border-brand-500 text-white'
+      };
+      const icons = {
+        success: 'fa-circle-check text-emerald-400',
+        error: 'fa-circle-exclamation text-rose-400',
+        info: 'fa-circle-info text-amber-400'
+      };
+
+      toast.className = `pointer-events-auto flex items-start gap-3 px-4 py-3.5 rounded-2xl border-l-4 shadow-xl text-xs sm:text-sm font-medium tab-fade-in ${styles[type] || styles.info}`;
+      toast.innerHTML = `
+        <i class="fa-solid ${icons[type] || icons.info} mt-0.5 text-base shrink-0"></i>
+        <div class="leading-snug">${escapeHtml(message)}</div>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3600);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // =========================================================
+    // INISIALISASI SAAT HALAMAN DIMUAT
+    // =========================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      renderPodcastCards('all');
+      renderSchoolTable();
+      renderRecapTable();
+      updateWebhookIndicator();
+    });
+  </script>
+</body>
+</html>
