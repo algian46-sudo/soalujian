@@ -4,7 +4,7 @@
   <link rel="icon" type="image/png" href="https://i.imgur.com/mRmw86t.jpeg">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Input Manual Ketidakhadiran - SMP Negeri 8 Cikarang Utara</title>
+  <title>Input Manual Absensi - SMP Negeri 8 Cikarang Utara</title>
   <style>
     :root {
       --bg-dark: #0f172a;
@@ -264,10 +264,10 @@
       border-radius: 11px;
     }
 
+    .btn-hadir { background: var(--success); color: #0f172a; }
     .btn-izin { background: var(--izin); }
     .btn-sakit { background: var(--sakit); color: #0f172a; }
     .btn-alpa { background: var(--alpa); }
-    .btn-hadir { background: var(--success); color: #0f172a; }
     .btn-hapus {
       background: transparent;
       border: 1px solid rgba(239, 68, 68, 0.45);
@@ -304,7 +304,7 @@
 <div class="container">
   <div class="header">
     <div>
-      <h1>Input Manual Ketidakhadiran</h1>
+      <h1>Input Manual Absensi Siswa</h1>
       <p id="statusInfo">Memuat data siswa...</p>
     </div>
     <div class="nav-actions">
@@ -341,7 +341,7 @@
   </div>
 
   <div class="hint-bar" id="hintBar">
-    Klik pada nama siswa di bawah untuk menetapkan status <strong>Izin</strong>, <strong>Sakit</strong>, atau <strong>Alpa</strong>.
+    Klik pada nama siswa di bawah untuk memilih status <strong>Hadir (Masuk)</strong>, <strong>Izin</strong>, <strong>Sakit</strong>, atau <strong>Alpa</strong>.
   </div>
 
   <div class="student-list" id="studentList">
@@ -362,10 +362,10 @@
     </div>
 
     <div class="status-choices">
+      <button type="button" class="choice-btn btn-hadir" onclick="simpanStatus('Hadir')">✓ Hadir (Masuk)</button>
       <button type="button" class="choice-btn btn-izin" onclick="simpanStatus('Izin')">Izin</button>
       <button type="button" class="choice-btn btn-sakit" onclick="simpanStatus('Sakit')">Sakit</button>
       <button type="button" class="choice-btn btn-alpa" onclick="simpanStatus('Alpa')">Alpa</button>
-      <button type="button" class="choice-btn btn-hadir" id="btnSetHadir" style="display:none;" onclick="simpanStatus('Hadir')">Ubah ke Hadir</button>
       <button type="button" class="choice-btn btn-hapus" id="btnHapusCatatan" style="display:none;" onclick="hapusCatatan()">Hapus Catatan (Kembalikan ke Belum Absen)</button>
     </div>
 
@@ -488,7 +488,7 @@
     document.getElementById('tabBelum').classList.toggle('active', tab === 'belum');
     document.getElementById('tabSudah').classList.toggle('active', tab === 'sudah');
     document.getElementById('hintBar').innerHTML = tab === 'belum'
-      ? `Klik pada nama siswa di bawah untuk menetapkan status <strong>Izin</strong>, <strong>Sakit</strong>, atau <strong>Alpa</strong>.`
+      ? `Klik pada nama siswa di bawah untuk memilih status <strong>Hadir (Masuk)</strong>, <strong>Izin</strong>, <strong>Sakit</strong>, atau <strong>Alpa</strong>.`
       : `Klik pada nama siswa jika ingin <strong>memperbaiki</strong> status kehadiran pada tanggal ini.`;
     renderDaftar();
   }
@@ -500,7 +500,6 @@
 
     const siswaKelas = semuaSiswa.filter(s => !kelasFilter || s.kelas === kelasFilter);
 
-    // Peta catatan absensi pada tanggal terpilih (ambil catatan terbaru per id_siswa)
     const catatanMap = new Map();
     for (const row of semuaAbsensi) {
       if (tglTarget && row.timestamp !== tglTarget) continue;
@@ -572,7 +571,6 @@
       `NISN: ${siswaTerpilih.id_siswa} • Kelas ${siswaTerpilih.kelas} • Tanggal ${tglTarget}`;
 
     const sudahAda = Boolean(siswaTerpilih.catatan);
-    document.getElementById('btnSetHadir').style.display = sudahAda ? 'inline-flex' : 'none';
     document.getElementById('btnHapusCatatan').style.display = sudahAda ? 'inline-flex' : 'none';
 
     document.getElementById('modalStatus').classList.add('open');
@@ -593,20 +591,21 @@
 
     const tglTarget = isoToMDY(document.getElementById('filterTanggal').value);
     const nama = siswaTerpilih.nama_siswa;
+    const suaraText = statusBaru === 'Hadir'
+      ? `Terima kasih, ${nama}`
+      : `Status ${nama}: ${statusBaru}`;
 
     try {
       if (siswaTerpilih.catatan && siswaTerpilih.catatan.id) {
-        // Perbarui status yang sudah ada (misal salah pilih Izin -> Sakit)
         await fetchSupabase(`absensi?id=eq.${siswaTerpilih.catatan.id}`, {
           method: "PATCH",
           headers: { "Prefer": "return=minimal" },
           body: JSON.stringify({
             status: statusBaru,
-            trigger_suara: `Status ${nama}: ${statusBaru}`
+            trigger_suara: suaraText
           })
         });
       } else {
-        // Tambah catatan ketidakhadiran baru
         await fetchSupabase("absensi", {
           method: "POST",
           headers: { "Prefer": "return=minimal" },
@@ -616,7 +615,7 @@
             nama_siswa: nama,
             status: statusBaru,
             kelas: siswaTerpilih.kelas,
-            trigger_suara: `Status ${nama}: ${statusBaru}`
+            trigger_suara: suaraText
           })
         });
       }
