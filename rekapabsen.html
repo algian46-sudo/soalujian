@@ -245,6 +245,15 @@
       margin-top: 4px;
     }
 
+    /* Area khusus cetak matriks landscape & TTD portrait */
+    #landscapePrintArea {
+      display: none;
+    }
+
+    .portrait-ttd-wrap {
+      display: none;
+    }
+
     /* Modal Pengaturan Cetak */
     .modal-backdrop {
       display: none;
@@ -264,15 +273,17 @@
 
     .modal-box {
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       background: #1e293b;
       border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 16px;
       padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      max-height: 92vh;
+      overflow-y: auto;
     }
 
     .modal-header {
@@ -284,6 +295,17 @@
     .modal-header h2 {
       font-size: 1.05rem;
       font-weight: 700;
+    }
+
+    .modal-divider {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 8px;
+      margin-top: 2px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .btn-close {
@@ -300,26 +322,127 @@
       margin-top: 6px;
     }
 
+    .helper-hint {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+
     @media print {
-      @page { size: A4 portrait; margin: 14mm; }
       body { background: #fff; color: #000; padding: 0; }
-      .header, .stat-card, .table-card {
+      .header-actions, .filter-card, .tabs, .modal-backdrop { display: none !important; }
+
+      /* MODE PORTRAIT (default seperti sebelumnya + TTD Wali Kelas) */
+      body.print-portrait .container { max-width: 100%; }
+      body.print-portrait .header,
+      body.print-portrait .stat-card,
+      body.print-portrait .table-card {
         background: #fff;
         color: #000;
         border: 1px solid #cbd5e1;
         box-shadow: none;
       }
-      .header-actions, .filter-card, .tabs, .modal-backdrop { display: none !important; }
-      .print-meta { display: block; }
-      th { background: #f1f5f9; color: #000; }
-      td { border-bottom: 1px solid #e2e8f0; color: #000; }
-      .stat-value { color: #000 !important; }
-      .pill { border: 1px solid #94a3b8; color: #000 !important; background: #f8fafc !important; }
-      .footer-note { color: #334155; }
+      body.print-portrait .print-meta { display: block; }
+      body.print-portrait th { background: #f1f5f9; color: #000; }
+      body.print-portrait td { border-bottom: 1px solid #e2e8f0; color: #000; }
+      body.print-portrait .stat-value { color: #000 !important; }
+      body.print-portrait .pill { border: 1px solid #94a3b8; color: #000 !important; background: #f8fafc !important; }
+      body.print-portrait .footer-note { color: #334155; }
+      body.print-portrait #landscapePrintArea { display: none !important; }
+      body.print-portrait .portrait-ttd-wrap {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 18px;
+        font-size: 9pt;
+        color: #000;
+      }
+      .portrait-ttd-box {
+        text-align: center;
+        width: 220px;
+      }
+
+      /* MODE LANDSCAPE (Matriks Bulanan Satu Lembar Penuh) */
+      body.print-landscape .container { display: none !important; }
+      body.print-landscape #landscapePrintArea {
+        display: block !important;
+        width: 100%;
+        color: #000;
+        background: #fff;
+      }
+      .ls-kop {
+        text-align: center;
+        margin-bottom: 8px;
+        border-bottom: 2px solid #000;
+        padding-bottom: 5px;
+      }
+      .ls-kop h2 {
+        font-size: 12pt;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .ls-kop p {
+        font-size: 8.5pt;
+        margin-top: 2px;
+      }
+      table.ls-matrix {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        font-size: 6.8pt;
+      }
+      table.ls-matrix th,
+      table.ls-matrix td {
+        border: 1px solid #334155;
+        padding: 2.5px 2px;
+        text-align: center;
+        color: #000;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      table.ls-matrix tr.ls-row-bulan th {
+        background: #e9d5ff !important;
+        font-weight: 800;
+        font-size: 7.5pt;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      table.ls-matrix tr.ls-row-header th {
+        background: #f3e8ff !important;
+        font-weight: 700;
+        font-size: 6.5pt;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      table.ls-matrix td.ls-col-nama,
+      table.ls-matrix th.ls-col-nama {
+        text-align: left;
+        padding-left: 4px;
+      }
+      .ls-mark-h { font-weight: 700; color: #065f46; }
+      .ls-mark-i { font-weight: 700; color: #0369a1; }
+      .ls-mark-s { font-weight: 700; color: #b45309; }
+      .ls-mark-a { font-weight: 700; color: #b91c1c; }
+      .ls-footer {
+        margin-top: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        font-size: 7.5pt;
+      }
+      .ls-ttd {
+        text-align: center;
+        width: 210px;
+      }
     }
   </style>
+  <style id="dynamicPageStyle">
+    @page { size: A4 portrait; margin: 14mm; }
+  </style>
 </head>
-<body>
+<body class="print-portrait">
 
 <div class="container">
   <div class="header">
@@ -329,7 +452,6 @@
       <div class="print-meta" id="printMeta"></div>
     </div>
     <div class="header-actions">
-      <a href="https://algian46-sudo.github.io/soalujian/absen1.html" class="btn-link btn-secondary">← Halaman Scan</a>
       <button type="button" onclick="muatData()">Refresh</button>
       <button type="button" class="btn-purple" onclick="bukaModalCetak()">🖨️ Menu Cetak</button>
       <button type="button" class="btn-success" onclick="exportCSV()">Export CSV</button>
@@ -409,10 +531,15 @@
     </div>
   </div>
 
+  <div class="portrait-ttd-wrap" id="portraitTtdWrap"></div>
+
   <div class="footer-note">
     Sistem Absensi Digital • SMP Negeri 8 Cikarang Utara • Algian Manggara, S.Agr
   </div>
 </div>
+
+<!-- Area Khusus Cetak Landscape (Matriks Tanggal Berbaris ke Kanan) -->
+<div id="landscapePrintArea"></div>
 
 <!-- Modal Menu Cetak -->
 <div class="modal-backdrop" id="modalCetak" onclick="tutupModalBackdrop(event)">
@@ -420,6 +547,17 @@
     <div class="modal-header">
       <h2>Pengaturan Cetak Rekap</h2>
       <button type="button" class="btn-close" onclick="tutupModalCetak()">✕</button>
+    </div>
+
+    <div class="field">
+      <label for="cetakOrientasi">Orientasi & Format Cetak</label>
+      <select id="cetakOrientasi" onchange="ubahOrientasiCetak()">
+        <option value="portrait">Portrait (Daftar Vertikal)</option>
+        <option value="landscape">Landscape (Matriks Bulanan ke Kanan • 1 Lembar Penuh)</option>
+      </select>
+      <div class="helper-hint" id="hintOrientasi">
+        Menampilkan daftar vertikal sesuai pilihan Sudah Hadir / Belum Hadir.
+      </div>
     </div>
 
     <div class="field">
@@ -436,12 +574,24 @@
       </select>
     </div>
 
-    <div class="field">
+    <div class="field" id="fieldCetakTab">
       <label for="cetakTab">Jenis Daftar</label>
       <select id="cetakTab">
         <option value="hadir">Sudah Hadir</option>
         <option value="belum">Belum Hadir</option>
       </select>
+    </div>
+
+    <div class="modal-divider">Tanda Tangan Wali Kelas</div>
+
+    <div class="field">
+      <label for="cetakNamaWaliKelas">Nama Wali Kelas</label>
+      <input type="text" id="cetakNamaWaliKelas" value="Algian Manggara, S.Agr" placeholder="Masukkan nama wali kelas">
+    </div>
+
+    <div class="field">
+      <label for="cetakNipWaliKelas">NIP Wali Kelas</label>
+      <input type="text" id="cetakNipWaliKelas" value="199404122025211046" placeholder="Masukkan NIP wali kelas">
     </div>
 
     <div class="modal-actions">
@@ -465,6 +615,11 @@
     "Juli", "Agustus", "September", "Oktober", "November", "Desember"
   ];
 
+  const BULAN_SINGKAT = [
+    "", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+    "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
+  ];
+
   function setDefaultPeriod() {
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -481,30 +636,54 @@
     return `${parseInt(m, 10)}/${parseInt(d, 10)}/${y}`;
   }
 
-  // Parsing timestamp M/D/YYYY atau YYYY-MM-DD menjadi objek { year, month, ymKey }
-  function parseTimestampYM(ts) {
+  // Parsing timestamp M/D/YYYY atau YYYY-MM-DD menjadi objek lengkap { year, month, day, ymKey, dateKey, labelPendek }
+  function parseTimestampFull(ts) {
     if (!ts) return null;
     const clean = String(ts).trim().split(" ")[0];
     if (clean.includes("/")) {
       const parts = clean.split("/");
       if (parts.length >= 3) {
         const m = parseInt(parts[0], 10);
+        const d = parseInt(parts[1], 10);
         const y = parseInt(parts[2], 10);
-        if (y && m >= 1 && m <= 12) {
-          return { year: y, month: m, ymKey: `${y}-${String(m).padStart(2, '0')}` };
+        if (y && m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+          const ymKey = `${y}-${String(m).padStart(2, '0')}`;
+          const dateKey = `${ymKey}-${String(d).padStart(2, '0')}`;
+          return {
+            year: y,
+            month: m,
+            day: d,
+            ymKey,
+            dateKey,
+            labelPendek: `${d}-${BULAN_SINGKAT[m]}`
+          };
         }
       }
     } else if (clean.includes("-")) {
       const parts = clean.split("-");
-      if (parts.length >= 2) {
+      if (parts.length >= 3) {
         const y = parseInt(parts[0], 10);
         const m = parseInt(parts[1], 10);
-        if (y && m >= 1 && m <= 12) {
-          return { year: y, month: m, ymKey: `${y}-${String(m).padStart(2, '0')}` };
+        const d = parseInt(parts[2], 10);
+        if (y && m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+          const ymKey = `${y}-${String(m).padStart(2, '0')}`;
+          const dateKey = `${ymKey}-${String(d).padStart(2, '0')}`;
+          return {
+            year: y,
+            month: m,
+            day: d,
+            ymKey,
+            dateKey,
+            labelPendek: `${d}-${BULAN_SINGKAT[m]}`
+          };
         }
       }
     }
     return null;
+  }
+
+  function parseTimestampYM(ts) {
+    return parseTimestampFull(ts);
   }
 
   function formatLabelBulan(ymKey) {
@@ -512,6 +691,12 @@
     const [y, m] = ymKey.split("-");
     const namaBulan = NAMA_BULAN[parseInt(m, 10)] || m;
     return `${namaBulan} ${y}`;
+  }
+
+  function formatNamaBulanSaja(ymKey) {
+    if (!ymKey) return "Semua Bulan";
+    const [, m] = ymKey.split("-");
+    return NAMA_BULAN[parseInt(m, 10)] || m;
   }
 
   function ubahModePeriode() {
@@ -624,6 +809,20 @@
     if (kelasSet.has(kelasLama)) selectKelas.value = kelasLama;
   }
 
+  function ubahOrientasiCetak() {
+    const orientasi = document.getElementById('cetakOrientasi').value;
+    const fieldTab = document.getElementById('fieldCetakTab');
+    const hint = document.getElementById('hintOrientasi');
+
+    if (orientasi === 'landscape') {
+      fieldTab.style.display = 'none';
+      hint.innerText = 'Format matriks bulanan 1 lembar penuh (Nama/Tanggal, Kelas, dan tanggal-tanggal berbaris ke kanan).';
+    } else {
+      fieldTab.style.display = 'block';
+      hint.innerText = 'Menampilkan daftar vertikal sesuai pilihan Sudah Hadir / Belum Hadir.';
+    }
+  }
+
   function bukaModalCetak() {
     isiOpsiCetak();
     const mode = document.getElementById('filterModePeriode').value;
@@ -634,6 +833,7 @@
     }
     document.getElementById('cetakKelas').value = document.getElementById('filterKelas').value;
     document.getElementById('cetakTab').value = tabAktif;
+    ubahOrientasiCetak();
     document.getElementById('modalCetak').classList.add('open');
   }
 
@@ -645,12 +845,199 @@
     if (e.target.id === 'modalCetak') tutupModalCetak();
   }
 
+  function ringkasKodeStatus(statusRaw) {
+    const s = String(statusRaw || '').trim().toUpperCase();
+    if (!s) return '';
+    if (s.includes('HADIR')) return 'H';
+    if (s.includes('IZIN')) return 'I';
+    if (s.includes('SAKIT')) return 'S';
+    if (s.includes('ALPA') || s.includes('ALFA')) return 'A';
+    return s.charAt(0);
+  }
+
+  function buildTtdHTML(namaWali, nipWali, isLandscape = false) {
+    const tanggalCetak = new Date().toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+    const namaTampil = namaWali || "............................................";
+    const nipLine = nipWali ? `<div>NIP. ${nipWali}</div>` : `<div>NIP. .................................</div>`;
+
+    if (isLandscape) {
+      return `
+        <div class="ls-ttd">
+          <div>Cikarang Utara, ${tanggalCetak}</div>
+          <div style="margin-bottom:32px;">Wali Kelas</div>
+          <div style="text-decoration:underline;"><strong>${namaTampil}</strong></div>
+          ${nipLine}
+        </div>
+      `;
+    }
+
+    return `
+      <div class="portrait-ttd-box">
+        <div>Cikarang Utara, ${tanggalCetak}</div>
+        <div style="margin-bottom:44px;">Wali Kelas</div>
+        <div style="text-decoration:underline;"><strong>${namaTampil}</strong></div>
+        ${nipLine}
+      </div>
+    `;
+  }
+
+  function buildLandscapeMatrixHTML(bulanDipilih, kelasDipilih, namaWali, nipWali) {
+    const siswaTarget = semuaSiswa
+      .filter(s => !kelasDipilih || s.kelas === kelasDipilih)
+      .sort((a, b) =>
+        a.kelas.localeCompare(b.kelas, 'id', { numeric: true }) ||
+        a.nama_siswa.localeCompare(b.nama_siswa, 'id')
+      );
+
+    const tanggalMap = new Map();
+    const absensiBySiswaTanggal = new Map();
+
+    for (const row of semuaAbsensi) {
+      if (kelasDipilih && row.kelas !== kelasDipilih) continue;
+      const parsed = parseTimestampFull(row.timestamp);
+      if (!parsed) continue;
+      if (bulanDipilih && parsed.ymKey !== bulanDipilih) continue;
+
+      if (!tanggalMap.has(parsed.dateKey)) {
+        tanggalMap.set(parsed.dateKey, parsed);
+      }
+
+      const key = `${row.id_siswa}__${parsed.dateKey}`;
+      if (!absensiBySiswaTanggal.has(key)) {
+        absensiBySiswaTanggal.set(key, ringkasKodeStatus(row.status));
+      }
+    }
+
+    const daftarTanggal = Array.from(tanggalMap.values()).sort((a, b) =>
+      a.dateKey.localeCompare(b.dateKey)
+    );
+
+    const labelBulanHeader = bulanDipilih ? formatNamaBulanSaja(bulanDipilih) : "Semua Bulan";
+    const labelBulanLengkap = bulanDipilih ? formatLabelBulan(bulanDipilih) : "Semua Bulan";
+    const labelKelas = kelasDipilih ? `Kelas ${kelasDipilih}` : "Semua Kelas";
+    const totalColTanggal = Math.max(daftarTanggal.length, 1);
+
+    const fontSizePt = daftarTanggal.length > 24 ? "5.8pt" : (daftarTanggal.length > 16 ? "6.3pt" : "7pt");
+    const namaWidth = daftarTanggal.length > 22 ? "20%" : "24%";
+
+    let headerTanggalCells = "";
+    if (daftarTanggal.length === 0) {
+      headerTanggalCells = `<th>Belum ada data tanggal</th>`;
+    } else {
+      headerTanggalCells = daftarTanggal.map(t => `<th>${t.labelPendek}</th>`).join("");
+    }
+
+    let bodyRows = "";
+    if (siswaTarget.length === 0) {
+      bodyRows = `<tr><td colspan="${totalColTanggal + 7}">Tidak ada data siswa untuk kelas terpilih.</td></tr>`;
+    } else {
+      bodyRows = siswaTarget.map((s, idx) => {
+        let countH = 0, countI = 0, countS = 0, countA = 0;
+        let selTanggal = "";
+
+        if (daftarTanggal.length === 0) {
+          selTanggal = `<td>-</td>`;
+        } else {
+          selTanggal = daftarTanggal.map(t => {
+            const kode = absensiBySiswaTanggal.get(`${s.id_siswa}__${t.dateKey}`) || "";
+            if (kode === 'H') countH++;
+            else if (kode === 'I') countI++;
+            else if (kode === 'S') countS++;
+            else if (kode === 'A') countA++;
+
+            const cls =
+              kode === 'H' ? 'ls-mark-h' :
+              kode === 'I' ? 'ls-mark-i' :
+              kode === 'S' ? 'ls-mark-s' :
+              kode === 'A' ? 'ls-mark-a' : '';
+
+            return `<td class="${cls}">${kode}</td>`;
+          }).join("");
+        }
+
+        return `
+          <tr>
+            <td>${idx + 1}</td>
+            <td class="ls-col-nama"><strong>${s.nama_siswa}</strong></td>
+            <td>${s.kelas}</td>
+            ${selTanggal}
+            <td><strong>${countH}</strong></td>
+            <td>${countI}</td>
+            <td>${countS}</td>
+            <td>${countA}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    return `
+      <div class="ls-kop">
+        <h2>REKAPITULASI KEHADIRAN SISWA BULANAN — SMP NEGERI 8 CIKARANG UTARA</h2>
+        <p>Periode: <strong>${labelBulanLengkap}</strong> &nbsp;|&nbsp; Kelas: <strong>${labelKelas}</strong></p>
+      </div>
+      <table class="ls-matrix" style="font-size:${fontSizePt};">
+        <thead>
+          <tr class="ls-row-bulan">
+            <th style="width:24px;" rowspan="2">No</th>
+            <th class="ls-col-nama" style="width:${namaWidth};">Bulan</th>
+            <th style="width:38px;"></th>
+            <th colspan="${totalColTanggal}">${labelBulanHeader}</th>
+            <th colspan="4" style="width:68px;">Jumlah</th>
+          </tr>
+          <tr class="ls-row-header">
+            <th class="ls-col-nama">Nama/Tanggal</th>
+            <th>Kelas</th>
+            ${headerTanggalCells}
+            <th style="width:17px;">H</th>
+            <th style="width:17px;">I</th>
+            <th style="width:17px;">S</th>
+            <th style="width:17px;">A</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${bodyRows}
+        </tbody>
+      </table>
+      <div class="ls-footer">
+        <div>
+          <strong>Keterangan:</strong> H = Hadir, I = Izin, S = Sakit, A = Alpa (Kosong = Belum tercatat)
+        </div>
+        ${buildTtdHTML(namaWali, nipWali, true)}
+      </div>
+    `;
+  }
+
   function prosesCetak() {
+    const orientasi = document.getElementById('cetakOrientasi').value;
     const bulanDipilih = document.getElementById('cetakBulan').value;
     const kelasDipilih = document.getElementById('cetakKelas').value;
     const jenisDipilih = document.getElementById('cetakTab').value;
+    const namaWali = document.getElementById('cetakNamaWaliKelas').value.trim();
+    const nipWali = document.getElementById('cetakNipWaliKelas').value.trim();
+    const pageStyle = document.getElementById('dynamicPageStyle');
 
-    // Sinkronkan ke filter utama agar tampilan & data cetak konsisten
+    if (orientasi === 'landscape') {
+      pageStyle.innerHTML = `@page { size: A4 landscape; margin: 8mm; }`;
+      document.body.classList.remove('print-portrait');
+      document.body.classList.add('print-landscape');
+
+      const area = document.getElementById('landscapePrintArea');
+      area.innerHTML = buildLandscapeMatrixHTML(bulanDipilih, kelasDipilih, namaWali, nipWali);
+
+      tutupModalCetak();
+      setTimeout(() => window.print(), 150);
+      return;
+    }
+
+    // Mode Portrait (tetap seperti sebelumnya + TTD Wali Kelas)
+    pageStyle.innerHTML = `@page { size: A4 portrait; margin: 14mm; }`;
+    document.body.classList.remove('print-landscape');
+    document.body.classList.add('print-portrait');
+
     if (bulanDipilih) {
       document.getElementById('filterModePeriode').value = 'bulan';
       document.getElementById('filterBulan').value = bulanDipilih;
@@ -661,6 +1048,8 @@
 
     document.getElementById('filterKelas').value = kelasDipilih;
     gantiTab(jenisDipilih);
+
+    document.getElementById('portraitTtdWrap').innerHTML = buildTtdHTML(namaWali, nipWali, false);
 
     const labelBulan = bulanDipilih ? formatLabelBulan(bulanDipilih) : "Semua Bulan";
     const labelKelas = kelasDipilih ? `Kelas ${kelasDipilih}` : "Semua Kelas";
@@ -707,8 +1096,6 @@
       return true;
     });
 
-    // Jika mode tanggal, 1 siswa dihitung 1 kali hadir pada hari tersebut;
-    // jika mode bulan/semua, tampilkan seluruh catatan kehadiran pada periode terpilih.
     let daftarHadirAll = [];
     const hadirIdsSet = new Set();
 
