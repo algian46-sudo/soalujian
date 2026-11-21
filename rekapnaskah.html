@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekap Pengumpulan Naskah Podcast</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PapaParse via CDN untuk parsing CSV yang akurat (termasuk multiline) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+        <div class="max-w-6xl mx-auto px-3.5 sm:px-6 py-2.5 sm:py-3.5 flex items-center justify-between gap-2.5">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <div class="bg-indigo-600 text-white p-2 sm:p-2.5 rounded-xl shadow-xs flex-shrink-0">
+                    <!-- Icon Mikrofon / Podcast -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <h1 class="text-base sm:text-xl font-bold text-slate-900 tracking-tight truncate">Portal Naskah Podcast</h1>
+                    <p class="text-[11px] sm:text-xs text-slate-500 truncate">Rekapitulasi Pengumpulan Naskah</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2.5 flex-shrink-0">
+                <span id="lastUpdated" class="text-xs text-slate-400 hidden md:inline">Memuat waktu...</span>
+                <button id="refreshBtn" onclick="fetchCSVData()" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs sm:text-sm font-medium rounded-xl shadow-xs transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 disabled:opacity-60 disabled:cursor-not-allowed min-h-[38px]">
+                    <svg id="refreshIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span id="refreshText" class="hidden sm:inline">Muat Ulang Data</span>
+                    <span id="refreshTextMobile" class="sm:hidden">Muat Ulang</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-3.5 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-5">
+
+        <!-- Alert / Error Banner (Tersembunyi secara default) -->
+        <div id="errorBanner" class="hidden bg-rose-50 border border-rose-200 rounded-2xl p-3.5 sm:p-5 text-rose-800 shadow-xs">
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-rose-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div class="flex-1">
+                    <h3 class="text-sm font-semibold text-rose-900">Gagal Mengambil Data dari Google Sheets</h3>
+                    <p id="errorMessage" class="text-sm text-rose-700 mt-1">Terjadi kendala saat menghubungkan ke server Google Sheets.</p>
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        <button onclick="fetchCSVData()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-medium rounded-lg transition">Coba Lagi</button>
+                        <button onclick="loadDemoFallback()" class="px-3 py-1.5 bg-white border border-rose-300 hover:bg-rose-100 text-rose-800 text-xs font-medium rounded-lg transition">Gunakan Data Simulasi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Banner Mode Simulasi (Tersembunyi secara default) -->
+        <div id="demoBanner" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-3 sm:p-4 text-amber-800 text-xs sm:text-sm flex items-center justify-between gap-3">
+            <span>Menampilkan data simulasi karena koneksi ke Google Sheets terputus.</span>
+            <button onclick="fetchCSVData()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium rounded-lg flex-shrink-0 transition">Sambungkan Ulang</button>
+        </div>
+
+        <!-- Ringkasan Statistik (3 kolom sejajar ringkas di HP & Desktop) -->
+        <section class="grid grid-cols-3 gap-2 sm:gap-4">
+            <!-- Card 1: Total Pengumpulan -->
+            <div class="bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-4 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3.5">
+                <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-[10px] sm:text-xs font-medium text-slate-500 uppercase tracking-wide truncate">Total Data</p>
+                    <p id="statTotal" class="text-lg sm:text-2xl font-bold text-slate-900 leading-tight mt-0.5">-</p>
+                    <p class="text-[10px] sm:text-xs text-slate-400 truncate hidden sm:block">Kelompok terdaftar</p>
+                </div>
+            </div>
+
+            <!-- Card 2: Jumlah Kelas -->
+            <div class="bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-4 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3.5">
+                <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-[10px] sm:text-xs font-medium text-slate-500 uppercase tracking-wide truncate">Jumlah Kelas</p>
+                    <p id="statClasses" class="text-lg sm:text-2xl font-bold text-slate-900 leading-tight mt-0.5">-</p>
+                    <p class="text-[10px] sm:text-xs text-slate-400 truncate hidden sm:block">Kelas berpartisipasi</p>
+                </div>
+            </div>
+
+            <!-- Card 3: Jenis Podcast Terbanyak -->
+            <div class="bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-4 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3.5">
+                <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-[10px] sm:text-xs font-medium text-slate-500 uppercase tracking-wide truncate">Terpopuler</p>
+                    <p id="statTopType" class="text-sm sm:text-lg font-bold text-slate-900 leading-tight mt-0.5 truncate">-</p>
+                    <p id="statTopTypeCount" class="text-[10px] sm:text-xs text-slate-400 truncate mt-0.5">-</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter & Pencarian -->
+        <section class="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200/80 shadow-xs space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <!-- Search Input -->
+                <div class="relative">
+                    <label for="searchInput" class="sr-only">Cari data</label>
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" id="searchInput" placeholder="Cari anggota, kelompok, naskah..." 
+                        class="w-full min-h-[42px] pl-10 pr-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                </div>
+
+                <!-- Filter Kelas -->
+                <div>
+                    <label for="filterKelas" class="sr-only">Filter Kelas</label>
+                    <select id="filterKelas" class="w-full min-h-[42px] px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        <option value="">Semua Kelas</option>
+                    </select>
+                </div>
+
+                <!-- Filter Jenis Podcast -->
+                <div>
+                    <label for="filterJenis" class="sr-only">Filter Jenis Podcast</label>
+                    <select id="filterJenis" class="w-full min-h-[42px] px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        <option value="">Semua Jenis Podcast</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Info hasil filter & tombol reset -->
+            <div class="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+                <span id="resultCount">Menampilkan 0 data</span>
+                <button id="resetFilterBtn" onclick="resetFilters()" class="hidden text-indigo-600 hover:text-indigo-800 font-semibold py-0.5">
+                    Reset Filter
+                </button>
+            </div>
+        </section>
+
+        <!-- Container Data (Hybrid: Mobile Card View & Desktop Table View) -->
+        <section id="dataSection">
+            <!-- Loading State -->
+            <div id="loadingState" class="bg-white rounded-2xl border border-slate-200/80 shadow-xs py-14 px-4 text-center">
+                <div class="inline-block animate-spin rounded-full h-9 w-9 border-4 border-indigo-200 border-t-indigo-600 mb-3"></div>
+                <p class="text-sm font-medium text-slate-700">Mengambil data dari Google Sheets...</p>
+                <p class="text-xs text-slate-400 mt-1">Mohon tunggu sebentar</p>
+            </div>
+
+            <!-- Empty State (Jika hasil pencarian kosong) -->
+            <div id="emptyState" class="hidden bg-white rounded-2xl border border-slate-200/80 shadow-xs py-14 px-4 text-center">
+                <div class="mx-auto w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-sm font-semibold text-slate-800">Tidak ada data ditemukan</h3>
+                <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Coba ubah kata kunci pencarian atau pilih opsi filter kelas/jenis podcast yang berbeda.</p>
+                <button onclick="resetFilters()" class="mt-4 px-4 py-2.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 text-xs font-semibold rounded-xl transition">
+                    Tampilkan Semua Data
+                </button>
+            </div>
+
+            <!-- Konten Data Responsif (Tersembunyi saat loading / kosong) -->
+            <div id="dataContainer" class="hidden">
+                <!-- 1. Tampilan Kartu Vertikal Khusus HP (< 768px) -->
+                <div id="mobileCardList" class="md:hidden space-y-3">
+                    <!-- Kartu data untuk HP diisi via JavaScript -->
+                </div>
+
+                <!-- 2. Tampilan Tabel Proporsional Khusus Tablet & Desktop (>= 768px) -->
+                <div class="hidden md:block bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full table-fixed text-left border-collapse">
+                            <colgroup>
+                                <col class="w-12">
+                                <col class="w-[135px]">
+                                <col class="w-[22%]">
+                                <col class="w-[135px]">
+                                <col class="w-[145px]">
+                                <col class="w-[22%]">
+                                <col class="w-[165px]">
+                            </colgroup>
+                            <thead>
+                                <tr class="bg-slate-50/95 border-b border-slate-200 text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
+                                    <th class="py-3 px-3 text-center">No</th>
+                                    <th class="py-3 px-3">Waktu Kirim</th>
+                                    <th class="py-3 px-3">Nama Anggota</th>
+                                    <th class="py-3 px-3">Kelas & Kelompok</th>
+                                    <th class="py-3 px-3">Jenis Podcast</th>
+                                    <th class="py-3 px-3">Narasumber / Peran</th>
+                                    <th class="py-3 px-3 text-right">Naskah Podcast</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody" class="divide-y divide-slate-100 text-sm text-slate-700">
+                                <!-- Baris data desktop diisi via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 mt-6">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-1.5 text-xs text-slate-500 text-center sm:text-left">
+            <p>Portal Naskah Podcast • Sinkronisasi CSV Google Sheets</p>
+            <p>Ketuk <span class="font-medium text-slate-700">"Lihat Penuh Naskah"</span> untuk membaca naskah lengkap.</p>
+        </div>
+    </footer>
+
+    <!-- Modal Pop-up Naskah Lengkap (Bottom-Sheet di HP, Centered Modal di Desktop) -->
+    <div id="scriptModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div id="modalBackdrop" onclick="closeModal()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"></div>
+
+        <!-- Modal Container -->
+        <div class="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-6">
+            <div class="relative w-full sm:max-w-3xl bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl border-t sm:border border-slate-200 overflow-hidden transform transition-all flex flex-col h-[92vh] sm:h-auto sm:max-h-[85vh]">
+                
+                <!-- Drag Handle Visual Khusus HP -->
+                <div class="sm:hidden pt-2.5 pb-1 flex justify-center bg-slate-50">
+                    <div class="w-10 h-1 rounded-full bg-slate-300"></div>
+                </div>
+
+                <!-- Modal Header -->
+                <div class="px-4 sm:px-6 py-3 sm:py-4 bg-slate-50 border-b border-slate-200 flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <div class="flex flex-wrap items-center gap-1.5 mb-1">
+                            <span id="modalBadgeJenis" class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-700">Jenis Podcast</span>
+                            <span id="modalKelasKelompok" class="text-xs font-medium text-slate-600">Kelas • Kelompok</span>
+                        </div>
+                        <h2 id="modal-title" class="text-base sm:text-lg font-bold text-slate-900 truncate">Naskah Lengkap Podcast</h2>
+                    </div>
+                    <button onclick="closeModal()" class="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-200/70 transition focus:outline-none flex-shrink-0" aria-label="Tutup modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Detail Metadata Pengirim -->
+                <div class="px-4 sm:px-6 py-2.5 sm:py-3.5 bg-indigo-50/50 border-b border-slate-200/80 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 text-xs">
+                    <div>
+                        <span class="text-slate-400 font-medium">Nama Anggota: </span>
+                        <span id="modalAnggota" class="font-semibold text-slate-800 break-words">-</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 font-medium">Narasumber / Peran: </span>
+                        <span id="modalNarasumber" class="font-semibold text-slate-800 break-words">-</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 font-medium">Waktu Kirim: </span>
+                        <span id="modalWaktu" class="font-semibold text-slate-800">-</span>
+                    </div>
+                </div>
+
+                <!-- Isi Naskah (Scrollable dengan ukuran baca nyaman di HP) -->
+                <div class="p-4 sm:p-6 overflow-y-auto flex-grow bg-white">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Isi Naskah Podcast</span>
+                        <span id="modalWordCount" class="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">0 kata</span>
+                    </div>
+                    <div id="modalNaskahContent" class="p-3.5 sm:p-5 bg-slate-50 border border-slate-200/90 rounded-xl text-[15px] sm:text-base text-slate-800 leading-relaxed whitespace-pre-wrap font-normal selection:bg-indigo-100 selection:text-indigo-900">
+                        <!-- Teks naskah akan dimuat di sini -->
+                    </div>
+                </div>
+
+                <!-- Modal Footer (Mudah dijangkau ibu jari di HP) -->
+                <div class="px-4 sm:px-6 py-3 sm:py-3.5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                    <!-- Notifikasi Salin -->
+                    <div id="copyFeedback" class="text-xs font-medium text-emerald-600 flex items-center justify-center sm:justify-start gap-1.5 hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Naskah berhasil disalin ke clipboard!</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:flex items-center gap-2.5 sm:ml-auto w-full sm:w-auto">
+                        <button onclick="copyScriptText()" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-sm font-medium rounded-xl shadow-xs transition focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                            </svg>
+                            <span>Salin Naskah</span>
+                        </button>
+                        <button onclick="closeModal()" class="inline-flex items-center justify-center px-4 py-2.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 text-sm font-medium rounded-xl transition focus:outline-none">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // URL Google Sheets CSV langsung
+        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlnTSm1LodfaLSdQiiog0rk-LhISdxMJifdEov5XBi4EXfgm-HtI8Jfoo3M7W08TDk_udE2HLbckAo/pub?gid=0&single=true&output=csv";
+
+        // State Aplikasi
+        let allPodcastData = [];
+        let filteredData = [];
+        let currentModalScript = "";
+
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchCSVData();
+
+            // Event listeners untuk pencarian dan filter real-time
+            document.getElementById("searchInput").addEventListener("input", applyFilters);
+            document.getElementById("filterKelas").addEventListener("change", applyFilters);
+            document.getElementById("filterJenis").addEventListener("change", applyFilters);
+
+            // Tutup modal dengan tombol Escape
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape" && !document.getElementById("scriptModal").classList.contains("hidden")) {
+                    closeModal();
+                }
+            });
+        });
+
+        /**
+         * Mengambil dan mengurai CSV langsung dari Google Sheets menggunakan PapaParse
+         */
+        async function fetchCSVData() {
+            setLoadingState(true);
+            hideBanners();
+
+            try {
+                // Tambahkan parameter cache-busting ringan agar selalu mendapat data terbaru saat tombol refresh ditekan
+                const fetchUrl = `${CSV_URL}&_t=${Date.now()}`;
+                const response = await fetch(fetchUrl);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Error ${response.status}: Tidak dapat mengakses file CSV.`);
+                }
+
+                const csvText = await response.text();
+
+                // Pastikan hasil bukan halaman HTML login Google (jika sheet tidak dipublikasikan)
+                if (csvText.trim().startsWith("<!DOCTYPE html") || csvText.includes("<html")) {
+                    throw new Error("Tautan mengembalikan halaman HTML, bukan CSV. Pastikan spreadsheet telah dipublikasikan ke web.");
+                }
+
+                // Parsing menggunakan PapaParse
+                Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: "greedy",
+                    transformHeader: function(header) {
+                        // Membersihkan spasi berlebih di awal/akhir nama header
+                        return header.trim();
+                    },
+                    complete: function(results) {
+                        if (results.errors && results.errors.length > 0) {
+                            console.warn("Peringatan parsing CSV:", results.errors);
+                        }
+
+                        const normalized = normalizeRecords(results.data);
+                        allPodcastData = normalized;
+                        
+                        populateFilterDropdowns(allPodcastData);
+                        updateStatistics(allPodcastData);
+                        applyFilters();
+                        updateLastSyncedTime();
+                        setLoadingState(false);
+                    },
+                    error: function(err) {
+                        throw new Error("Gagal mengurai format CSV: " + err.message);
+                    }
+                });
+
+            } catch (error) {
+                console.error("Fetch CSV Error:", error);
+                setLoadingState(false);
+                showErrorBanner(error.message || "Gagal memuat data. Periksa koneksi internet atau pengaturan publikasi Google Sheets.");
+            }
+        }
+
+        /**
+         * Menormalisasi nama kolom agar tahan terhadap perbedaan huruf kapital atau spasi ekstra
+         */
+        function normalizeRecords(rawRows) {
+            return rawRows
+                .map((row, idx) => {
+                    // Fungsi pembantu mencari nilai kolom berdasarkan variasi nama header
+                    const getVal = (candidates) => {
+                        const keys = Object.keys(row);
+                        for (let cand of candidates) {
+                            const foundKey = keys.find(k => k.toLowerCase().trim() === cand.toLowerCase());
+                            if (foundKey && row[foundKey] !== undefined && row[foundKey] !== null) {
+                                return String(row[foundKey]).trim();
+                            }
+                        }
+                        return "";
+                    };
+
+                    return {
+                        id: idx + 1,
+                        waktuKirim: getVal(["Waktu Kirim", "Timestamp", "Waktu"]),
+                        namaAnggota: getVal(["Nama Anggota", "Anggota", "Nama"]),
+                        kelas: getVal(["Kelas"]),
+                        kelompok: getVal(["Kelompok"]),
+                        jenisPodcast: getVal(["Jenis Podcast", "Jenis"]),
+                        narasumber: getVal(["Narasumber / Peran", "Narasumber/Peran", "Narasumber", "Peran"]),
+                        naskah: getVal(["Naskah Podcast", "Naskah"])
+                    };
+                })
+                // Filter baris yang benar-benar kosong
+                .filter(item => item.namaAnggota || item.kelompok || item.naskah);
+        }
+
+        /**
+         * Memperbarui kartu statistik di bagian atas
+         */
+        function updateStatistics(data) {
+            const total = data.length;
+            document.getElementById("statTotal").textContent = total;
+
+            // Hitung jumlah kelas unik
+            const uniqueClasses = new Set(
+                data.map(d => d.kelas).filter(k => k && k.trim() !== "")
+            );
+            document.getElementById("statClasses").textContent = uniqueClasses.size;
+
+            // Hitung jenis podcast terbanyak
+            const typeCounts = {};
+            data.forEach(d => {
+                const jenis = d.jenisPodcast || "Tidak Disebutkan";
+                typeCounts[jenis] = (typeCounts[jenis] || 0) + 1;
+            });
+
+            let topType = "-";
+            let topCount = 0;
+            for (const [jenis, count] of Object.entries(typeCounts)) {
+                if (count > topCount) {
+                    topCount = count;
+                    topType = jenis;
+                }
+            }
+
+            document.getElementById("statTopType").textContent = topType;
+            document.getElementById("statTopType").title = topType;
+            document.getElementById("statTopTypeCount").textContent = total > 0 
+                ? `${topCount} dari ${total} pengumpulan` 
+                : "Belum ada data";
+        }
+
+        /**
+         * Mengisi opsi dropdown Kelas dan Jenis Podcast secara dinamis
+         */
+        function populateFilterDropdowns(data) {
+            const kelasSelect = document.getElementById("filterKelas");
+            const jenisSelect = document.getElementById("filterJenis");
+
+            const currentKelas = kelasSelect.value;
+            const currentJenis = jenisSelect.value;
+
+            const classes = Array.from(new Set(data.map(d => d.kelas).filter(Boolean))).sort();
+            const types = Array.from(new Set(data.map(d => d.jenisPodcast).filter(Boolean))).sort();
+
+            kelasSelect.innerHTML = `<option value="">Semua Kelas (${classes.length})</option>`;
+            classes.forEach(k => {
+                const opt = document.createElement("option");
+                opt.value = k;
+                opt.textContent = k;
+                kelasSelect.appendChild(opt);
+            });
+
+            jenisSelect.innerHTML = `<option value="">Semua Jenis Podcast (${types.length})</option>`;
+            types.forEach(j => {
+                const opt = document.createElement("option");
+                opt.value = j;
+                opt.textContent = j;
+                jenisSelect.appendChild(opt);
+            });
+
+            // Pertahankan pilihan sebelumnya jika masih tersedia
+            if (classes.includes(currentKelas)) kelasSelect.value = currentKelas;
+            if (types.includes(currentJenis)) jenisSelect.value = currentJenis;
+        }
+
+        /**
+         * Menerapkan pencarian dan filter dropdown
+         */
+        function applyFilters() {
+            const query = document.getElementById("searchInput").value.toLowerCase().trim();
+            const selectedKelas = document.getElementById("filterKelas").value;
+            const selectedJenis = document.getElementById("filterJenis").value;
+
+            const resetBtn = document.getElementById("resetFilterBtn");
+            if (query || selectedKelas || selectedJenis) {
+                resetBtn.classList.remove("hidden");
+            } else {
+                resetBtn.classList.add("hidden");
+            }
+
+            filteredData = allPodcastData.filter(item => {
+                const matchKelas = !selectedKelas || item.kelas === selectedKelas;
+                const matchJenis = !selectedJenis || item.jenisPodcast === selectedJenis;
+                
+                const matchQuery = !query || (
+                    item.namaAnggota.toLowerCase().includes(query) ||
+                    item.kelompok.toLowerCase().includes(query) ||
+                    item.narasumber.toLowerCase().includes(query) ||
+                    item.naskah.toLowerCase().includes(query) ||
+                    item.kelas.toLowerCase().includes(query)
+                );
+
+                return matchKelas && matchJenis && matchQuery;
+            });
+
+            renderTable(filteredData);
+        }
+
+        /**
+         * Merender tampilan data: Kartu Vertikal untuk HP & Tabel untuk Desktop
+         */
+        function renderTable(data) {
+            const tbody = document.getElementById("tableBody");
+            const mobileCardList = document.getElementById("mobileCardList");
+            const dataContainer = document.getElementById("dataContainer");
+            const emptyState = document.getElementById("emptyState");
+            const resultCount = document.getElementById("resultCount");
+
+            resultCount.textContent = `Menampilkan ${data.length} dari ${allPodcastData.length} pengumpulan`;
+            tbody.innerHTML = "";
+            mobileCardList.innerHTML = "";
+
+            if (data.length === 0) {
+                dataContainer.classList.add("hidden");
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+            dataContainer.classList.remove("hidden");
+
+            data.forEach((item, index) => {
+                const badgeStyle = getBadgeColor(item.jenisPodcast);
+
+                // 1. Render Kartu Vertikal untuk Layar HP (< 768px)
+                const card = document.createElement("article");
+                card.className = "bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs space-y-3";
+                card.innerHTML = `
+                    <!-- Header Kartu: Kelas & Kelompok di kiri, Jenis Podcast di kanan -->
+                    <div class="flex items-start justify-between gap-2 pb-2.5 border-b border-slate-100">
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-[11px] font-bold text-slate-500">
+                                ${index + 1}
+                            </span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700">
+                                ${escapeHTML(item.kelas || "Kelas -")}
+                            </span>
+                            <span class="text-xs font-semibold text-slate-600">
+                                • ${escapeHTML(item.kelompok || "Kelompok -")}
+                            </span>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold flex-shrink-0 ${badgeStyle}">
+                            ${escapeHTML(item.jenisPodcast || "Umum")}
+                        </span>
+                    </div>
+
+                    <!-- Isi Kartu: Nama Anggota & Narasumber / Peran -->
+                    <div class="space-y-2 text-sm">
+                        <div>
+                            <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wide">Nama Anggota</p>
+                            <p class="font-semibold text-slate-800 break-words leading-snug mt-0.5">
+                                ${escapeHTML(item.namaAnggota || "-")}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wide">Narasumber / Peran</p>
+                            <p class="text-slate-600 break-words leading-snug mt-0.5">
+                                ${escapeHTML(item.narasumber || "-")}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Timestamp Ringkas -->
+                    <div class="flex items-center gap-1.5 text-[11px] text-slate-400 pt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Dikirim: ${escapeHTML(item.waktuKirim || "-")}</span>
+                    </div>
+
+                    <!-- Footer Kartu: Tombol Penuh Lebar Mudah Ditekan Jempol -->
+                    <button onclick="openScriptModal(${item.id})" class="w-full py-2.5 px-4 bg-indigo-50 hover:bg-indigo-600 active:bg-indigo-700 text-indigo-700 hover:text-white text-xs font-semibold rounded-xl border border-indigo-200/80 hover:border-indigo-600 transition-all duration-150 flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        <span>Lihat Penuh Naskah</span>
+                    </button>
+                `;
+                mobileCardList.appendChild(card);
+
+                // 2. Render Baris Tabel untuk Layar Tablet & Desktop (>= 768px)
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-slate-50/90 transition-colors duration-100 align-top";
+
+                tr.innerHTML = `
+                    <td class="py-3 px-3 text-center text-xs font-medium text-slate-400 pt-3.5">${index + 1}</td>
+                    <td class="py-3 px-3 text-xs text-slate-500 leading-snug pt-3.5">${escapeHTML(item.waktuKirim || "-")}</td>
+                    <td class="py-3 px-3 font-medium text-slate-800 break-words leading-snug">
+                        ${escapeHTML(item.namaAnggota || "-")}
+                    </td>
+                    <td class="py-3 px-3">
+                        <div class="flex flex-col items-start gap-1">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700">
+                                ${escapeHTML(item.kelas || "-")}
+                            </span>
+                            <span class="text-xs font-medium text-slate-500">
+                                ${escapeHTML(item.kelompok || "-")}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-3">
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold leading-tight ${badgeStyle}">
+                            ${escapeHTML(item.jenisPodcast || "Umum")}
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-slate-600 break-words leading-snug">
+                        ${escapeHTML(item.narasumber || "-")}
+                    </td>
+                    <td class="py-3 px-3 text-right whitespace-nowrap">
+                        <button onclick="openScriptModal(${item.id})" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white text-xs font-semibold rounded-xl border border-indigo-200/80 hover:border-indigo-600 transition-all duration-150 shadow-2xs">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <span>Lihat Penuh Naskah</span>
+                        </button>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        /**
+         * Memberikan warna badge berbeda secara konsisten berdasarkan jenis podcast
+         */
+        function getBadgeColor(jenis) {
+            const lower = (jenis || "").toLowerCase();
+            if (lower.includes("wawancara") || lower.includes("interview")) {
+                return "bg-sky-100 text-sky-800";
+            } else if (lower.includes("diskusi") || lower.includes("panel") || lower.includes("debat")) {
+                return "bg-purple-100 text-purple-800";
+            } else if (lower.includes("monolog") || lower.includes("solo") || lower.includes("cerita")) {
+                return "bg-amber-100 text-amber-800";
+            } else if (lower.includes("edukasi") || lower.includes("berita") || lower.includes("informasi")) {
+                return "bg-emerald-100 text-emerald-800";
+            } else if (lower.includes("komedi") || lower.includes("hiburan")) {
+                return "bg-pink-100 text-pink-800";
+            }
+            return "bg-indigo-100 text-indigo-800";
+        }
+
+        /**
+         * Membuka Modal Pop-up untuk membaca naskah secara penuh
+         */
+        function openScriptModal(recordId) {
+            const item = allPodcastData.find(d => d.id === recordId);
+            if (!item) return;
+
+            currentModalScript = item.naskah || "(Tidak ada isi naskah)";
+
+            // Isi data ke elemen modal
+            const badgeEl = document.getElementById("modalBadgeJenis");
+            badgeEl.textContent = item.jenisPodcast || "Podcast";
+            badgeEl.className = `px-2.5 py-0.5 text-xs font-semibold rounded-full ${getBadgeColor(item.jenisPodcast)}`;
+
+            document.getElementById("modalKelasKelompok").textContent = 
+                `${item.kelas ? "Kelas " + item.kelas : "Kelas -"} • ${item.kelompok || "Kelompok -"}`;
+            
+            document.getElementById("modalAnggota").textContent = item.namaAnggota || "-";
+            document.getElementById("modalNarasumber").textContent = item.narasumber || "-";
+            document.getElementById("modalWaktu").textContent = item.waktuKirim || "-";
+            
+            const contentEl = document.getElementById("modalNaskahContent");
+            contentEl.textContent = currentModalScript;
+
+            // Hitung jumlah kata
+            const words = currentModalScript.trim() ? currentModalScript.trim().split(/\s+/).length : 0;
+            document.getElementById("modalWordCount").textContent = `${words} kata`;
+
+            // Reset notifikasi salin
+            document.getElementById("copyFeedback").classList.add("hidden");
+
+            // Tampilkan modal dan kunci scroll halaman belakang
+            document.getElementById("scriptModal").classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+        }
+
+        /**
+         * Menutup Modal Pop-up
+         */
+        function closeModal() {
+            document.getElementById("scriptModal").classList.add("hidden");
+            document.body.style.overflow = "";
+        }
+
+        /**
+         * Menyalin isi naskah ke clipboard dengan metode aman (kompatibel iFrame)
+         */
+        function copyScriptText() {
+            if (!currentModalScript) return;
+
+            const textarea = document.createElement("textarea");
+            textarea.value = currentModalScript;
+            textarea.style.position = "fixed";
+            textarea.style.left = "-9999px";
+            document.body.appendChild(textarea);
+            textarea.select();
+
+            try {
+                const successful = document.execCommand("copy");
+                if (successful) {
+                    const feedback = document.getElementById("copyFeedback");
+                    feedback.classList.remove("hidden");
+                    setTimeout(() => {
+                        feedback.classList.add("hidden");
+                    }, 3000);
+                }
+            } catch (err) {
+                console.error("Gagal menyalin teks:", err);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        /**
+         * Mereset semua input filter dan pencarian
+         */
+        function resetFilters() {
+            document.getElementById("searchInput").value = "";
+            document.getElementById("filterKelas").value = "";
+            document.getElementById("filterJenis").value = "";
+            applyFilters();
+        }
+
+        /**
+         * Mengatur indikator status loading pada tombol refresh dan area tabel
+         */
+        function setLoadingState(isLoading) {
+            const refreshBtn = document.getElementById("refreshBtn");
+            const refreshIcon = document.getElementById("refreshIcon");
+            const refreshText = document.getElementById("refreshText");
+            const refreshTextMobile = document.getElementById("refreshTextMobile");
+            const loadingState = document.getElementById("loadingState");
+            const dataContainer = document.getElementById("dataContainer");
+            const emptyState = document.getElementById("emptyState");
+
+            if (isLoading) {
+                refreshBtn.disabled = true;
+                refreshIcon.classList.add("animate-spin");
+                refreshText.textContent = "Memuat...";
+                if (refreshTextMobile) refreshTextMobile.textContent = "Memuat...";
+                loadingState.classList.remove("hidden");
+                dataContainer.classList.add("hidden");
+                emptyState.classList.add("hidden");
+            } else {
+                refreshBtn.disabled = false;
+                refreshIcon.classList.remove("animate-spin");
+                refreshText.textContent = "Muat Ulang Data";
+                if (refreshTextMobile) refreshTextMobile.textContent = "Muat Ulang";
+                loadingState.classList.add("hidden");
+            }
+        }
+
+        function showErrorBanner(msg) {
+            const errorMsgEl = document.getElementById("errorMessage");
+            const errorBannerEl = document.getElementById("errorBanner");
+            if (errorMsgEl) errorMsgEl.textContent = msg;
+            if (errorBannerEl) errorBannerEl.classList.remove("hidden");
+        }
+
+        function hideBanners() {
+            const errorBannerEl = document.getElementById("errorBanner");
+            const demoBannerEl = document.getElementById("demoBanner");
+            if (errorBannerEl) errorBannerEl.classList.add("hidden");
+            if (demoBannerEl) demoBannerEl.classList.add("hidden");
+        }
+
+        function updateLastSyncedTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+            document.getElementById("lastUpdated").textContent = `Diperbarui: ${timeStr}`;
+        }
+
+        /**
+         * Fallback data simulasi jika pengguna mengalami kendala koneksi/CORS saat offline
+         */
+        function loadDemoFallback() {
+            hideBanners();
+            const demoBannerEl = document.getElementById("demoBanner");
+            if (demoBannerEl) demoBannerEl.classList.remove("hidden");
+
+            allPodcastData = [
+                {
+                    id: 1,
+                    waktuKirim: "21/11/2026 09:15:22",
+                    namaAnggota: "Ahmad Fauzan, Siti Nurhaliza, Budi Santoso",
+                    kelas: "XI IPA 1",
+                    kelompok: "Kelompok 1",
+                    jenisPodcast: "Wawancara",
+                    narasumber: "Budi Santoso (Ketua OSIS) / Ahmad (Host)",
+                    naskah: "INTRO MUSIC (5 detik - fade out)\n\nAhmad (Host): Halo sobat muda! Selamat datang kembali di Suara Pelajar Podcast.\n\nSiti (Co-Host): Hari ini kita kedatangan tamu spesial, Ketua OSIS kita, Budi Santoso!\n\nBudi (Narasumber): Halo teman-teman semua, terima kasih sudah mengundang saya.\n\nAhmad (Host): Langsung saja ya Bud, bagaimana persiapan pentas seni tahun ini?\n\nBudi (Narasumber): Alhamdulillah persiapan sudah mencapai 85%. Kami melibatkan seluruh ekstrakurikuler agar acara tahun ini lebih meriah dan edukatif.\n\nOUTRO MUSIC (5 detik)"
+                },
+                {
+                    id: 2,
+                    waktuKirim: "21/11/2026 10:02:45",
+                    namaAnggota: "Rina Marlina, Dedi Kurniawan",
+                    kelas: "XI IPS 2",
+                    kelompok: "Kelompok 3",
+                    jenisPodcast: "Diskusi Panel",
+                    narasumber: "Rina & Dedi (Pengamat Literasi Digital)",
+                    naskah: "Rina: Pernahkah kamu merasa waktu habis begitu saja hanya karena scrolling media sosial?\n\nDedi: Sangat sering! Algoritma memang dirancang untuk membuat kita betah berlama-lama di depan layar.\n\nRina: Oleh karena itu, pada episode kali ini kita akan membahas 3 cara praktis menerapkan digital minimalism bagi pelajar."
+                }
+            ];
+
+            populateFilterDropdowns(allPodcastData);
+            updateStatistics(allPodcastData);
+            applyFilters();
+            updateLastSyncedTime();
+        }
+
+        /**
+         * Utility untuk mengamankan string HTML
+         */
+        function escapeHTML(str) {
+            if (!str) return "";
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
