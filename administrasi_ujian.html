@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Si-ADU PRO | Sistem Administrasi Ujian Sekolah</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0b1120;
+      --panel-dark: rgba(30, 41, 59, 0.72);
+      --border-glass: rgba(148, 163, 184, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at top left, #1e1b4b, #0f172a 45%, #020617 100%);
+      color: #f8fafc;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    .glass-panel {
+      background: var(--panel-dark);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-glass);
+    }
+
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* =========================================
+       STYLING KERTAS A4 & DOKUMEN CETAK RESMI
+       ========================================= */
+    .print-workspace {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 14px;
+      overflow-x: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .a4-page {
+      width: 210mm;
+      height: 297mm;
+      max-height: 297mm;
+      background: #ffffff;
+      color: #000000;
+      font-family: 'Times New Roman', Times, serif;
+      padding: 8mm 10mm;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+    }
+    .a4-page:last-child {
+      page-break-after: auto;
+      break-after: auto;
+    }
+
+    .a4-page.a4-auto-height {
+      height: auto;
+      min-height: 297mm;
+      max-height: none;
+      overflow: visible;
+    }
+
+    .a4-landscape {
+      width: 297mm;
+      height: 210mm;
+      max-height: 210mm;
+      padding: 10mm 14mm;
+    }
+
+    /* KOP SURAT RESMI */
+    .kop-table {
+      width: 100%;
+      border-bottom: 3px double #000;
+      padding-bottom: 5px;
+      margin-bottom: 8px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .kop-table td { vertical-align: middle; overflow-wrap: anywhere; }
+    .kop-logo { width: 54px; height: 54px; object-fit: contain; display: block; }
+    .kop-text { text-align: center; line-height: 1.15; }
+    .kop-instansi { font-size: 10.5pt; font-weight: bold; text-transform: uppercase; }
+    .kop-sekolah { font-size: 13.5pt; font-weight: bold; text-transform: uppercase; letter-spacing: 0.3px; }
+    .kop-alamat { font-size: 8.5pt; font-style: italic; margin-top: 1.5px; }
+
+    /* GARIS DIAGONAL HEADER TABEL JADWAL */
+    .diag-cell {
+      position: relative;
+      background: linear-gradient(to top right, transparent calc(50% - 0.7px), #000 50%, transparent calc(50% + 0.7px)) !important;
+      padding: 1.5px !important;
+      height: 26px;
+      width: 48px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .diag-top { position: absolute; top: 1px; right: 2px; font-size: 5pt; font-weight: bold; }
+    .diag-bot { position: absolute; bottom: 1px; left: 2px; font-size: 5pt; font-weight: bold; }
+
+    /* TABEL DOKUMEN RESMI */
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 9.5pt;
+    }
+    .doc-table th, .doc-table td {
+      border: 1px solid #000;
+      padding: 4px 6px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .doc-table tr {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .doc-table th {
+      background-color: #f1f5f9 !important;
+      font-weight: bold;
+      text-align: center;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .fill-blank {
+      display: inline-block;
+      border-bottom: 1px dotted #000;
+      min-width: 90px;
+      max-width: 100%;
+      height: 14px;
+    }
+
+    /* =========================================
+       ATURAN PRINT (@media print)
+       ========================================= */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+      body.print-landscape @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .main-container {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+      }
+      main {
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+      }
+      .print-workspace {
+        background: transparent !important;
+        padding: 0 !important;
+        gap: 0 !important;
+        display: block !important;
+        overflow: visible !important;
+      }
+      .a4-page {
+        box-shadow: none !important;
+        margin: 0 !important;
+        width: 210mm !important;
+        height: 296.5mm !important;
+        max-height: 296.5mm !important;
+        padding: 8mm 10mm !important;
+        overflow: hidden !important;
+      }
+      .a4-page.a4-auto-height {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+      }
+      .a4-landscape {
+        width: 296.5mm !important;
+        height: 209.5mm !important;
+        max-height: 209.5mm !important;
+        padding: 10mm 14mm !important;
+      }
+    }
+  </style>
+</head>
+<body class="text-slate-100 antialiased">
+
+  <!-- TOP NAVBAR -->
+  <header class="no-print sticky top-0 z-40 glass-panel border-b border-slate-700/60 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+        <i data-lucide="file-check-2" class="w-6 h-6 text-white"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="font-extrabold text-base md:text-lg tracking-tight text-white">Si-ADU PRO</h1>
+          <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">Google Sheets Sync</span>
+        </div>
+        <p class="text-xs text-slate-400" id="headerSchoolName">SMP NEGERI 8 CIKARANG UTARA</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 flex-wrap">
+      <span id="syncStatusBadge" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800/90 border border-slate-700 text-slate-300 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-amber-400"></span> Mode Lokal
+      </span>
+      <button onclick="syncPullFromSheets()" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold flex items-center gap-1.5 transition shadow">
+        <i data-lucide="cloud-download" class="w-4 h-4"></i> Tarik Sheets
+      </button>
+      <button onclick="syncPushToSheets()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 transition shadow">
+        <i data-lucide="cloud-upload" class="w-4 h-4"></i> Simpan ke Sheets
+      </button>
+      <button onclick="triggerPrint()" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 transition shadow-lg shadow-emerald-600/25">
+        <i data-lucide="printer" class="w-4 h-4"></i> Cetak Dokumen (A4)
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN SHELL -->
+  <div class="main-container flex flex-col lg:flex-row min-h-[calc(100vh-65px)]">
+
+    <!-- SIDEBAR NAVIGASI 12 MODUL -->
+    <aside class="no-print w-full lg:w-72 glass-panel border-r border-slate-800 p-3 flex flex-col justify-between shrink-0">
+      <div>
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-2">Master Data & Denah</div>
+        <nav class="space-y-1">
+          <button data-tab="master" onclick="switchTab('master')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition bg-indigo-600 text-white shadow">
+            <i data-lucide="database" class="w-4 h-4 shrink-0"></i> 1. Database, Kop & Data Master
+          </button>
+          <button data-tab="denah" onclick="switchTab('denah')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="layout-grid" class="w-4 h-4 shrink-0"></i> 2. Atur & Acak Denah Duduk
+          </button>
+        </nav>
+
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-4 pb-2">Kartu & Identitas Ujian</div>
+        <nav class="space-y-1">
+          <button data-tab="kartu_peserta" onclick="switchTab('kartu_peserta')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="id-card" class="w-4 h-4 shrink-0"></i> 3. Kartu Peserta + QR & Jadwal
+          </button>
+          <button data-tab="kartu_meja" onclick="switchTab('kartu_meja')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="square-user" class="w-4 h-4 shrink-0"></i> 4. Kartu Meja Peserta (8/A4)
+          </button>
+          <button data-tab="kartu_panitia" onclick="switchTab('kartu_panitia')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="badge-check" class="w-4 h-4 shrink-0"></i> 5. Kartu Panitia & Pengawas
+          </button>
+          <button data-tab="label_ruang" onclick="switchTab('label_ruang')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="door-open" class="w-4 h-4 shrink-0"></i> 6. Label Pintu Ruangan
+          </button>
+        </nav>
+
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-4 pb-2">Berita Acara, Surat & Presensi</div>
+        <nav class="space-y-1">
+          <button data-tab="ba_pelaksanaan" onclick="switchTab('ba_pelaksanaan')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="file-signature" class="w-4 h-4 shrink-0"></i> 7. Berita Acara Pelaksanaan
+          </button>
+          <button data-tab="ba_serah_terima" onclick="switchTab('ba_serah_terima')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="folder-sync" class="w-4 h-4 shrink-0"></i> 8. BA Serah Terima Soal
+          </button>
+          <button data-tab="surat_ijin" onclick="switchTab('surat_ijin')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="mail-check" class="w-4 h-4 shrink-0"></i> 9. Surat Ket. / Ijin Ujian
+          </button>
+          <button data-tab="jurnal_siswa" onclick="switchTab('jurnal_siswa')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="book-open-check" class="w-4 h-4 shrink-0"></i> 10. Jurnal Agenda Siswa
+          </button>
+          <button data-tab="dh_siswa" onclick="switchTab('dh_siswa')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="users" class="w-4 h-4 shrink-0"></i> 11. Daftar Hadir Peserta
+          </button>
+          <button data-tab="dh_panitia" onclick="switchTab('dh_panitia')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0"></i> 12. Daftar Hadir Pengawas & Panitia
+          </button>
+        </nav>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-400 px-2 space-y-1">
+        <div class="font-semibold text-slate-300">Pengembang Sistem:</div>
+        <div>Algian Manggara, S.Agr</div>
+        <div class="text-[10px] text-slate-500">Auto-convert link Google Drive aktif</div>
+      </div>
+    </aside>
+
+    <!-- CONTENT AREA -->
+    <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+
+      <!-- =========================================================
+           MODUL 1: DATABASE GOOGLE SHEETS, KOP SURAT & DATA MASTER
+           ========================================================= -->
+      <section id="tab-master" class="tab-section space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl font-bold text-white">Database Google Spreadsheet, Kop & Data Master</h2>
+            <p class="text-xs text-slate-400">Mendukung link gambar Google Drive format <code class="text-cyan-300">https://drive.google.com/open?id=...</code> secara otomatis.</p>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <button onclick="openExcelModal()" class="px-3 py-2 rounded-xl bg-amber-600/90 hover:bg-amber-500 text-white text-xs font-semibold flex items-center gap-1.5">
+              <i data-lucide="table" class="w-4 h-4"></i> Paste Siswa dari Excel
+            </button>
+            <button onclick="resetDemoData()" class="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-semibold flex items-center gap-1.5">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset Data Contoh
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-2 border-b border-slate-700/70 pb-2 overflow-x-auto">
+          <button onclick="switchSubMaster('db')" id="subBtn-db" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-indigo-600 text-white">1A. Koneksi Google Sheets</button>
+          <button onclick="switchSubMaster('kop')" id="subBtn-kop" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">1B. Kop Surat, Logo & TTD Kepala</button>
+          <button onclick="switchSubMaster('siswa')" id="subBtn-siswa" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">1C. Data Peserta Ujian (<span id="countSiswa">0</span>)</button>
+          <button onclick="switchSubMaster('panitia')" id="subBtn-panitia" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">1D. Data Panitia & Pengawas (<span id="countPanitia">0</span>)</button>
+          <button onclick="switchSubMaster('jadwal')" id="subBtn-jadwal" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">1E. Jadwal Pelajaran Ujian</button>
+        </div>
+
+        <!-- SUB 1A: KONEKSI GOOGLE SHEETS -->
+        <div id="sub-db" class="sub-master-panel glass-panel rounded-2xl p-5 space-y-4">
+          <div class="grid md:grid-cols-3 gap-4 items-end">
+            <div class="md:col-span-2">
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">URL Google Apps Script Web App (<code class="text-emerald-400">.../exec</code>)</label>
+              <input type="url" id="inpGasUrl" placeholder="https://script.google.com/macros/s/AKfycbx.../exec" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-xs text-white focus:border-indigo-500 focus:outline-none" onchange="saveLocalSettings()" />
+            </div>
+            <div class="flex gap-2">
+              <button onclick="syncPullFromSheets()" class="flex-1 py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-xs font-bold text-white flex items-center justify-center gap-1.5">
+                <i data-lucide="download-cloud" class="w-4 h-4"></i> Muat Data
+              </button>
+              <button onclick="syncPushToSheets()" class="flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white flex items-center justify-center gap-1.5">
+                <i data-lucide="upload-cloud" class="w-4 h-4"></i> Simpan Data
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB 1B: KOP SURAT & PENGATURAN -->
+        <div id="sub-kop" class="sub-master-panel hidden glass-panel rounded-2xl p-5 space-y-4">
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Instansi / Yayasan / Dinas (Baris 1 Kop)</label>
+              <input type="text" id="cfgInstansi" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Satuan Pendidikan / Sekolah</label>
+              <input type="text" id="cfgSekolah" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Alamat Lengkap Sekolah</label>
+              <input type="text" id="cfgAlamat" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Kegiatan Ujian</label>
+              <input type="text" id="cfgNamaUjian" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Tahun Ajaran</label>
+              <input type="text" id="cfgTahunAjaran" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Titimangsa (Tempat, Tanggal Cetak)</label>
+              <input type="text" id="cfgTitimangsa" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Kepala Sekolah</label>
+              <input type="text" id="cfgKepsek" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">NIP Kepala Sekolah</label>
+              <input type="text" id="cfgNipKepsek" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Ketua Panitia Ujian & NIP</label>
+              <div class="flex gap-2">
+                <input type="text" id="cfgKetua" placeholder="Nama Ketua" class="w-1/2 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+                <input type="text" id="cfgNipKetua" placeholder="NIP Ketua" class="w-1/2 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-slate-700/70 pt-4">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-3">Tautan Gambar Logo & TTD Digital (Google Drive / URL)</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Logo Dinas / Kiri Kop</label>
+                <input type="text" id="cfgLogoKiri" placeholder="https://drive.google.com/open?id=..." class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Logo Sekolah / Kanan Kop</label>
+                <input type="text" id="cfgLogoKanan" placeholder="https://drive.google.com/open?id=..." class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-amber-300 mb-1">TTD Kepala Sekolah (Kartu Ujian & Meja)</label>
+                <input type="text" id="cfgTtdKepsek" placeholder="PNG Transparan / Link Drive" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-amber-300 mb-1">Stempel Sekolah (Kartu Ujian & Meja)</label>
+                <input type="text" id="cfgStempel" placeholder="PNG Transparan / Link Drive" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB 1C: DATA PESERTA UJIAN -->
+        <div id="sub-siswa" class="sub-master-panel hidden glass-panel rounded-2xl p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <input type="text" id="searchSiswa" onkeyup="renderStudentTable()" placeholder="Cari nama / nomor peserta / ruang..." class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs w-64" />
+            <button onclick="addStudentRow()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-4 h-4"></i> Tambah Peserta
+            </button>
+          </div>
+
+          <div class="overflow-x-auto max-h-[460px] border border-slate-700/70 rounded-xl">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900 text-slate-300 sticky top-0 z-10">
+                <tr>
+                  <th class="p-2.5">No</th>
+                  <th class="p-2.5">No. Peserta</th>
+                  <th class="p-2.5">NISN</th>
+                  <th class="p-2.5">Nama Lengkap</th>
+                  <th class="p-2.5">Kelas</th>
+                  <th class="p-2.5">Ruang</th>
+                  <th class="p-2.5">User CBT</th>
+                  <th class="p-2.5">Pass CBT</th>
+                  <th class="p-2.5">Link Foto Drive</th>
+                  <th class="p-2.5 text-center">Preview</th>
+                  <th class="p-2.5 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbodySiswa" class="divide-y divide-slate-800 bg-slate-900/40"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SUB 1D: DATA PANITIA & PENGAWAS -->
+        <div id="sub-panitia" class="sub-master-panel hidden glass-panel rounded-2xl p-5 space-y-4">
+          <div class="flex justify-between items-center">
+            <p class="text-xs text-slate-400">Kelola daftar Panitia Ujian dan Pengawas Ruang untuk cetak ID Card dan Daftar Hadir.</p>
+            <button onclick="addStaffRow()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1.5">
+              <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Panitia / Pengawas
+            </button>
+          </div>
+          <div class="overflow-x-auto border border-slate-700/70 rounded-xl">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900 text-slate-300">
+                <tr>
+                  <th class="p-2.5">No</th>
+                  <th class="p-2.5">Nama Lengkap & Gelar</th>
+                  <th class="p-2.5">NIP / NUPTK</th>
+                  <th class="p-2.5">Jabatan Kepanitiaan</th>
+                  <th class="p-2.5">Kategori</th>
+                  <th class="p-2.5">Ruang Tugas</th>
+                  <th class="p-2.5">Link Foto Drive</th>
+                  <th class="p-2.5 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyPanitia" class="divide-y divide-slate-800 bg-slate-900/40"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SUB 1E: JADWAL MATRIKS UJIAN -->
+        <div id="sub-jadwal" class="sub-master-panel hidden glass-panel rounded-2xl p-5 space-y-4">
+          <div class="flex flex-wrap justify-between items-center gap-2">
+            <div>
+              <h3 class="text-sm font-bold text-white">Matriks Jadwal Pelajaran Ujian</h3>
+              <p class="text-xs text-slate-400">Centang kolom <strong>Istirahat</strong> untuk memberi arsiran baris jeda seperti contoh kartu.</p>
+            </div>
+            <div class="flex gap-2">
+              <input type="text" id="cfgCatatanJadwal" placeholder="Catatan kaki jadwal..." class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs w-72" onchange="updateSettingsFromForm()" />
+              <button onclick="addScheduleRow()" class="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1">
+                <i data-lucide="plus" class="w-4 h-4"></i> Baris Jam
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-700/70 rounded-xl">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900 text-slate-300">
+                <tr>
+                  <th class="p-2">Jam Ke</th>
+                  <th class="p-2">Pukul</th>
+                  <th class="p-2 text-center">Istirahat?</th>
+                  <th class="p-2">Senin</th>
+                  <th class="p-2">Selasa</th>
+                  <th class="p-2">Rabu</th>
+                  <th class="p-2">Kamis</th>
+                  <th class="p-2">Jum'at</th>
+                  <th class="p-2 text-center">Hapus</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyJadwal" class="divide-y divide-slate-800 bg-slate-900/40"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 2: ATUR & ACAK DENAH TEMPAT DUDUK RUANGAN
+           ========================================================= -->
+      <section id="tab-denah" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-end justify-between gap-4 no-print">
+          <div class="flex flex-wrap items-end gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Pilih Ruangan</label>
+              <select id="denahRuangSelect" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold"></select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Jumlah Kolom Meja</label>
+              <input type="number" id="denahCols" min="2" max="7" value="4" onchange="updateDenahConfig()" class="w-20 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Jumlah Baris</label>
+              <input type="number" id="denahRows" min="2" max="8" value="5" onchange="updateDenahConfig()" class="w-20 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Pola Susunan Otomatis</label>
+              <select id="denahPattern" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                <option value="urut">Urut Lurus (Kiri ke Kanan)</option>
+                <option value="zigzag">Urut Zig-Zag (Ular)</option>
+                <option value="kolom">Urut Per Banjar (Depan ke Belakang)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <button onclick="applyPatternDenah()" class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-xs font-bold text-white flex items-center gap-1.5">
+              <i data-lucide="arrow-down-0-1" class="w-4 h-4"></i> Terapkan Urutan
+            </button>
+            <button onclick="shuffleDenah()" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-xs font-bold text-white flex items-center gap-1.5">
+              <i data-lucide="shuffle" class="w-4 h-4"></i> Acak Tempat Duduk
+            </button>
+          </div>
+        </div>
+
+        <div class="no-print text-xs text-cyan-300 bg-cyan-950/50 border border-cyan-800/60 px-4 py-2.5 rounded-xl flex items-center gap-2">
+          <i data-lucide="mouse-pointer-click" class="w-4 h-4 shrink-0"></i>
+          <span>Tips Interaktif: Klik 2 kotak meja pada pratinjau di bawah untuk <strong>menukar posisi duduk</strong> dua siswa secara manual.</span>
+        </div>
+
+        <div id="preview-denah" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 3: KARTU PESERTA UJIAN (+ QR CODE & JADWAL)
+           ========================================================= -->
+      <section id="tab-kartu_peserta" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 no-print">
+          <div class="flex flex-wrap items-center gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Filter Ruangan</label>
+              <select id="filterRuangKartu" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Format Desain Kartu</label>
+              <select id="modeKartuPeserta" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="dengan_jadwal">Opsi 1: Kartu Identitas + Jadwal Lipat 2 Sisi</option>
+                <option value="kartu_saja">Opsi 2: Kartu Identitas Saja (8 Kartu / A4)</option>
+              </select>
+            </div>
+            <label class="flex items-center gap-2 text-xs text-slate-300 mt-4 cursor-pointer">
+              <input type="checkbox" id="chkShowCbtKartu" onchange="renderActiveTab()" class="rounded bg-slate-900 border-slate-600" />
+              Tampilkan User/Pass CBT
+            </label>
+          </div>
+          <div class="text-xs text-slate-400">
+            Layout padat proporsional: teks tegas mengisi ruang, bingkai foto ganda, QR besar, dan TTD/cap menembus teks.
+          </div>
+        </div>
+
+        <div id="preview-kartu_peserta" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 4: KARTU MEJA PESERTA (8 PER A4, FOTO SAJA)
+           ========================================================= -->
+      <section id="tab-kartu_meja" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 no-print">
+          <div class="flex items-center gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Filter Ruangan</label>
+              <select id="filterRuangMeja" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+            </div>
+          </div>
+          <div class="text-xs text-slate-400">8 Kartu Meja per A4 (Grid 2×4), proporsi penuh, bingkai foto ganda &amp; TTD/cap menembus teks.</div>
+        </div>
+        <div id="preview-kartu_meja" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 5: KARTU PANITIA & PENGAWAS
+           ========================================================= -->
+      <section id="tab-kartu_panitia" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex items-center justify-between no-print">
+          <div class="text-xs text-slate-300">ID Card Gantung (6 Kartu per A4) untuk Panitia Ujian dan Pengawas Ruang.</div>
+        </div>
+        <div id="preview-kartu_panitia" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 6: LABEL PINTU RUANGAN
+           ========================================================= -->
+      <section id="tab-label_ruang" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex items-center gap-3">
+            <label class="text-xs font-semibold text-slate-300">Pilih Ruangan:</label>
+            <select id="filterLabelRuang" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+          </div>
+          <div class="text-xs text-slate-400">Ukuran 1 Ruangan penuh per lembar A4 Landscape.</div>
+        </div>
+        <div id="preview-label_ruang" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 7: BERITA ACARA PELAKSANAAN UJIAN (ISIAN MANUAL)
+           ========================================================= -->
+      <section id="tab-ba_pelaksanaan" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex items-center gap-3">
+            <label class="text-xs font-semibold text-slate-300">Jumlah Rangkap / Halaman:</label>
+            <input type="number" id="qtyBaPelaksanaan" min="1" max="20" value="1" onchange="renderActiveTab()" class="w-20 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+          </div>
+          <div class="text-xs text-amber-300">Isian dikosongkan menggunakan garis titik-titik untuk diisi manual oleh pengawas.</div>
+        </div>
+        <div id="preview-ba_pelaksanaan" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 8: BERITA ACARA SERAH TERIMA SOAL (ISIAN MANUAL)
+           ========================================================= -->
+      <section id="tab-ba_serah_terima" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex items-center gap-3">
+            <label class="text-xs font-semibold text-slate-300">Jumlah Rangkap / Halaman:</label>
+            <input type="number" id="qtyBaSerah" min="1" max="20" value="1" onchange="renderActiveTab()" class="w-20 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+          </div>
+          <div class="text-xs text-amber-300">Template serah terima naskah soal &amp; LJK dari Panitia ke Pengawas (isian manual).</div>
+        </div>
+        <div id="preview-ba_serah_terima" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 9: SURAT KETERANGAN / IJIN MENGIKUTI UJIAN
+           ========================================================= -->
+      <section id="tab-surat_ijin" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex items-center gap-3">
+            <label class="text-xs font-semibold text-slate-300">Pilih Siswa (atau Cetak Blanko Kosong):</label>
+            <select id="selectSiswaSurat" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+          </div>
+        </div>
+        <div id="preview-surat_ijin" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 10: JURNAL AGENDA UJIAN MASING-MASING SISWA
+           ========================================================= -->
+      <section id="tab-jurnal_siswa" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex items-center gap-3">
+            <label class="text-xs font-semibold text-slate-300">Filter Ruangan:</label>
+            <select id="filterRuangJurnal" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+          </div>
+          <div class="text-xs text-slate-400">Dicetak 2 Kartu Kendali / Jurnal Agenda Siswa per lembar A4.</div>
+        </div>
+        <div id="preview-jurnal_siswa" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 11: DAFTAR HADIR PESERTA UJIAN
+           ========================================================= -->
+      <section id="tab-dh_siswa" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex items-center gap-3">
+            <label class="text-xs font-semibold text-slate-300">Filter Ruangan:</label>
+            <select id="filterRuangDhSiswa" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+          </div>
+          <div class="text-xs text-slate-400">Otomatis berkelanjutan rapi jika peserta dalam satu ruang melebihi 1 halaman A4.</div>
+        </div>
+        <div id="preview-dh_siswa" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 12: DAFTAR HADIR PENGAWAS & PANITIA
+           ========================================================= -->
+      <section id="tab-dh_panitia" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex items-center gap-3">
+            <label class="text-xs font-semibold text-slate-300">Tampilkan Kategori:</label>
+            <select id="filterKategoriDhPanitia" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+              <option value="ALL">Semua (Panitia &amp; Pengawas)</option>
+              <option value="Panitia">Khusus Panitia Ujian</option>
+              <option value="Pengawas">Khusus Pengawas Ruang</option>
+            </select>
+          </div>
+        </div>
+        <div id="preview-dh_panitia" class="print-workspace"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL PASTE EXCEL SISWA -->
+  <div id="excelModal" class="no-print fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl max-w-2xl w-full p-6 space-y-4 border border-slate-700">
+      <div class="flex justify-between items-center">
+        <h3 class="text-base font-bold text-white">Impor Cepat Data Siswa dari Excel / Google Sheets</h3>
+        <button onclick="closeExcelModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <p class="text-xs text-slate-300">Salin baris dari Excel/Spreadsheet lalu tempel di bawah ini (dipisahkan Tab):<br>
+        <code class="text-cyan-300">No_Peserta [TAB] NISN [TAB] Nama_Lengkap [TAB] Kelas [TAB] Ruang [TAB] Username [TAB] Password [TAB] Link_Foto_Drive</code>
+      </p>
+      <textarea id="excelPasteArea" rows="8" placeholder="01-001	0091234501	Ahmad Fauzi	IX-A	RUANG 1	u001	12345	https://drive.google.com/open?id=..." class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-xs font-mono text-slate-200"></textarea>
+      <div class="flex justify-end gap-2">
+        <button onclick="closeExcelModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold">Batal</button>
+        <button onclick="processExcelPaste(false)" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-xs font-bold text-white">Tambahkan ke Daftar</button>
+        <button onclick="processExcelPaste(true)" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white">Timpa Seluruh Data Siswa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastBox" class="no-print fixed bottom-5 right-5 z-50 hidden px-4 py-3 rounded-xl bg-slate-900 border border-indigo-500/50 text-xs font-semibold text-white shadow-2xl items-center gap-2"></div>
+
+  <script>
+    const STORAGE_KEY = 'siadu_pro_state_v8';
+
+    const DEFAULT_STATE = {
+      gasUrl: '',
+      settings: {
+        instansi: 'PEMERINTAH KABUPATEN BEKASI - DINAS PENDIDIKAN',
+        sekolah: 'SMP NEGERI 8 CIKARANG UTARA',
+        alamat: 'Jl. Ki Hajar Dewantara, Karangasih, Kec. Cikarang Utara, Kab. Bekasi 17530',
+        namaUjian: 'ASESMEN SUMATIF AKHIR JENJANG',
+        tahunAjaran: 'TAHUN AJARAN 2026/2027',
+        titimangsa: 'Bekasi, 23 November 2026',
+        kepsek: 'Hasanah Aisah, M.Pd',
+        nipKepsek: '196902031998022005',
+        ketua: 'Algian Manggara, S.Agr',
+        nipKetua: '199404122025211046',
+        logoKiri: '',
+        logoKanan: '',
+        ttdKepsek: '',
+        stempel: '',
+        catatanJadwal: '* Mapel di belakang tanda " / " menunjukkan ujian di sesi/minggu berikutnya'
+      },
+      students: [
+        { id: 'S1', noPeserta: '01-001', nisn: '0091234501', nama: 'ABIDZARR ALFA RIZKI IRAWAN', kelas: '7.1', ruang: 'RUANG 1', username: 'peserta001', password: '48219', foto: '' },
+        { id: 'S2', noPeserta: '01-002', nisn: '0091234502', nama: 'MUHAMMAD RAFA ALFARIZI', kelas: '7.1', ruang: 'RUANG 1', username: 'peserta002', password: '73910', foto: '' },
+        { id: 'S3', noPeserta: '01-003', nisn: '0091234503', nama: 'NAYLA PUTRI AZZAHRA', kelas: '7.1', ruang: 'RUANG 1', username: 'peserta003', password: '19482', foto: '' },
+        { id: 'S4', noPeserta: '01-004', nisn: '0091234504', nama: 'DIMAS PRATAMA PUTRA', kelas: '7.1', ruang: 'RUANG 1', username: 'peserta004', password: '85721', foto: '' },
+        { id: 'S5', noPeserta: '01-005', nisn: '0091234505', nama: 'SITI NURHALIZA RAMADHANI', kelas: '7.2', ruang: 'RUANG 1', username: 'peserta005', password: '64019', foto: '' },
+        { id: 'S6', noPeserta: '01-006', nisn: '0091234506', nama: 'RIZKY ADITYA SAPUTRA', kelas: '7.2', ruang: 'RUANG 1', username: 'peserta006', password: '39104', foto: '' },
+        { id: 'S7', noPeserta: '01-007', nisn: '0091234507', nama: 'AULIA ZAHRA KHAIRUNNISA', kelas: '7.2', ruang: 'RUANG 1', username: 'peserta007', password: '92018', foto: '' },
+        { id: 'S8', noPeserta: '01-008', nisn: '0091234508', nama: 'FAJAR NUGROHO', kelas: '7.2', ruang: 'RUANG 1', username: 'peserta008', password: '51827', foto: '' },
+        { id: 'S9', noPeserta: '02-001', nisn: '0091234509', nama: 'KEISYA MAHARANI', kelas: '7.3', ruang: 'RUANG 2', username: 'peserta009', password: '20491', foto: '' },
+        { id: 'S10', noPeserta: '02-002', nisn: '0091234510', nama: 'BAGAS WIJAYA KUSUMA', kelas: '7.3', ruang: 'RUANG 2', username: 'peserta010', password: '67382', foto: '' }
+      ],
+      staff: [
+        { id: 'P1', nama: 'Hasanah Aisah, M.Pd', nip: '196902031998022005', jabatan: 'Penanggung Jawab', peran: 'Panitia', ruang: 'Sekretariat', foto: '' },
+        { id: 'P2', nama: 'Algian Manggara, S.Agr', nip: '199404122025211046', jabatan: 'Ketua Pelaksana', peran: 'Panitia', ruang: 'Sekretariat', foto: '' },
+        { id: 'P3', nama: 'Siti Aminah, S.Pd', nip: '198506142010012011', jabatan: 'Pengawas Ruang', peran: 'Pengawas', ruang: 'RUANG 1', foto: '' },
+        { id: 'P4', nama: 'Budi Santoso, S.Kom', nip: '199003212019031008', jabatan: 'Pengawas Ruang', peran: 'Pengawas', ruang: 'RUANG 2', foto: '' }
+      ],
+      schedule: [
+        { jam: '1', pukul: '07.30 - 08.30', istirahat: false, senin: 'Pend. Agama', selasa: 'Matematika', rabu: 'Bahasa Inggris', kamis: 'IPA', jumat: 'Seni Rupa' },
+        { jam: '2', pukul: '08.30 - 09.30', istirahat: false, senin: 'PPKn', selasa: 'IPS', rabu: 'Informatika', kamis: 'PJOK', jumat: 'Bahasa Sunda' },
+        { jam: '3', pukul: '09.30 - 10.00', istirahat: true, senin: 'ISTIRAHAT', selasa: 'ISTIRAHAT', rabu: 'ISTIRAHAT', kamis: 'ISTIRAHAT', jumat: 'ISTIRAHAT' },
+        { jam: '4', pukul: '10.00 - 11.00', istirahat: false, senin: 'Bahasa Indonesia', selasa: 'Prakarya', rabu: 'Bimbingan Konseling', kamis: 'Literasi', jumat: '-' }
+      ],
+      seating: {}
+    };
+
+    let appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    let activeTab = 'master';
+    let selectedSeatIndex = null;
+
+    function resolveDriveImage(url) {
+      if (!url) return '';
+      const clean = String(url).trim();
+      const idParamMatch = clean.match(/[?&]id=([a-zA-Z0-9_-]{15,})/);
+      if (idParamMatch && idParamMatch[1]) {
+        return `https://drive.google.com/thumbnail?id=${idParamMatch[1]}&sz=w600`;
+      }
+      const filePathMatch = clean.match(/\/file\/d\/([a-zA-Z0-9_-]{15,})/);
+      if (filePathMatch && filePathMatch[1]) {
+        return `https://drive.google.com/thumbnail?id=${filePathMatch[1]}&sz=w600`;
+      }
+      return clean;
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function renderQrIntoElement(elId, text, size) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.innerHTML = '';
+      if (!text) return;
+      new QRCode(el, {
+        text: String(text),
+        width: size,
+        height: size,
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    function showToast(msg, isError = false) {
+      const box = document.getElementById('toastBox');
+      box.className = `no-print fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl border text-xs font-semibold shadow-2xl flex items-center gap-2 ${
+        isError ? 'bg-rose-950 border-rose-500 text-rose-200' : 'bg-slate-900 border-emerald-500/60 text-emerald-200'
+      }`;
+      box.innerHTML = `<i data-lucide="${isError ? 'alert-circle' : 'check-circle-2'}" class="w-4 h-4"></i> <span>${escapeHtml(msg)}</span>`;
+      box.classList.remove('hidden');
+      lucide.createIcons();
+      setTimeout(() => box.classList.add('hidden'), 3500);
+    }
+
+    function loadLocalState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState = { ...DEFAULT_STATE, ...parsed, settings: { ...DEFAULT_STATE.settings, ...(parsed.settings || {}) } };
+        }
+      } catch (e) {
+        console.warn('Gagal memuat state:', e);
+      }
+    }
+
+    function saveLocalState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      document.getElementById('headerSchoolName').textContent = appState.settings.sekolah || 'SEKOLAH';
+    }
+
+    function saveLocalSettings() {
+      appState.gasUrl = document.getElementById('inpGasUrl').value.trim();
+      saveLocalState();
+    }
+
+    async function syncPullFromSheets() {
+      const url = document.getElementById('inpGasUrl').value.trim() || appState.gasUrl;
+      if (!url) {
+        showToast('Masukkan URL Google Apps Script (/exec) terlebih dahulu!', true);
+        switchTab('master');
+        switchSubMaster('db');
+        return;
+      }
+      appState.gasUrl = url;
+      saveLocalState();
+      setSyncStatus('loading', 'Menarik data...');
+      try {
+        const res = await fetch(url);
+        const json = await res.json();
+        if (json.status === 'success' && json.data) {
+          if (json.data.settings && Object.keys(json.data.settings).length > 0) {
+            appState.settings = { ...appState.settings, ...json.data.settings };
+          }
+          if (Array.isArray(json.data.students) && json.data.students.length > 0) appState.students = json.data.students;
+          if (Array.isArray(json.data.staff) && json.data.staff.length > 0) appState.staff = json.data.staff;
+          if (Array.isArray(json.data.schedule) && json.data.schedule.length > 0) appState.schedule = json.data.schedule;
+          if (json.data.seating) appState.seating = json.data.seating;
+          saveLocalState();
+          populateAllForms();
+          refreshRoomDropdowns();
+          renderActiveTab();
+          setSyncStatus('connected', 'Tersinkronisasi');
+          showToast('Data berhasil dimuat dari Google Spreadsheet!');
+        } else {
+          throw new Error(json.message || 'Format respons tidak valid');
+        }
+      } catch (err) {
+        setSyncStatus('error', 'Gagal Tarik');
+        showToast('Gagal memuat dari Sheets: ' + err.message, true);
+      }
+    }
+
+    async function syncPushToSheets() {
+      const url = document.getElementById('inpGasUrl').value.trim() || appState.gasUrl;
+      if (!url) {
+        showToast('Masukkan URL Google Apps Script (/exec) terlebih dahulu!', true);
+        switchTab('master');
+        switchSubMaster('db');
+        return;
+      }
+      appState.gasUrl = url;
+      saveLocalState();
+      setSyncStatus('loading', 'Menyimpan...');
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            settings: appState.settings,
+            students: appState.students,
+            staff: appState.staff,
+            schedule: appState.schedule,
+            seating: appState.seating
+          })
+        });
+        const json = await res.json();
+        if (json.status === 'success') {
+          setSyncStatus('connected', 'Tersimpan di Sheets');
+          showToast(json.message || 'Berhasil disimpan ke Google Spreadsheet!');
+        } else {
+          throw new Error(json.message || 'Gagal menyimpan');
+        }
+      } catch (err) {
+        setSyncStatus('error', 'Gagal Simpan');
+        showToast('Gagal menyimpan ke Sheets: ' + err.message, true);
+      }
+    }
+
+    function setSyncStatus(state, text) {
+      const badge = document.getElementById('syncStatusBadge');
+      const dotColor = state === 'connected' ? 'bg-emerald-400' : state === 'loading' ? 'bg-sky-400 animate-ping' : state === 'error' ? 'bg-rose-500' : 'bg-amber-400';
+      badge.innerHTML = `<span class="w-2 h-2 rounded-full ${dotColor}"></span> ${escapeHtml(text)}`;
+    }
+
+    function switchTab(tabId) {
+      activeTab = tabId;
+      selectedSeatIndex = null;
+      document.querySelectorAll('.tab-section').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.dataset.tab === tabId) {
+          btn.className = 'nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition bg-indigo-600 text-white shadow';
+        } else {
+          btn.className = 'nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70';
+        }
+      });
+
+      refreshRoomDropdowns();
+      renderActiveTab();
+      lucide.createIcons();
+    }
+
+    function switchSubMaster(subId) {
+      document.querySelectorAll('.sub-master-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('sub-' + subId).classList.remove('hidden');
+
+      document.querySelectorAll('.sub-master-btn').forEach(b => {
+        b.className = 'sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700';
+      });
+      document.getElementById('subBtn-' + subId).className = 'sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-indigo-600 text-white';
+    }
+
+    function populateAllForms() {
+      const s = appState.settings;
+      document.getElementById('inpGasUrl').value = appState.gasUrl || '';
+      document.getElementById('cfgInstansi').value = s.instansi || '';
+      document.getElementById('cfgSekolah').value = s.sekolah || '';
+      document.getElementById('cfgAlamat').value = s.alamat || '';
+      document.getElementById('cfgNamaUjian').value = s.namaUjian || '';
+      document.getElementById('cfgTahunAjaran').value = s.tahunAjaran || '';
+      document.getElementById('cfgTitimangsa').value = s.titimangsa || '';
+      document.getElementById('cfgKepsek').value = s.kepsek || '';
+      document.getElementById('cfgNipKepsek').value = s.nipKepsek || '';
+      document.getElementById('cfgKetua').value = s.ketua || '';
+      document.getElementById('cfgNipKetua').value = s.nipKetua || '';
+      document.getElementById('cfgLogoKiri').value = s.logoKiri || '';
+      document.getElementById('cfgLogoKanan').value = s.logoKanan || '';
+      document.getElementById('cfgTtdKepsek').value = s.ttdKepsek || '';
+      document.getElementById('cfgStempel').value = s.stempel || '';
+      document.getElementById('cfgCatatanJadwal').value = s.catatanJadwal || '';
+
+      renderStudentTable();
+      renderStaffTable();
+      renderScheduleTable();
+    }
+
+    function updateSettingsFromForm() {
+      const s = appState.settings;
+      s.instansi = document.getElementById('cfgInstansi').value;
+      s.sekolah = document.getElementById('cfgSekolah').value;
+      s.alamat = document.getElementById('cfgAlamat').value;
+      s.namaUjian = document.getElementById('cfgNamaUjian').value;
+      s.tahunAjaran = document.getElementById('cfgTahunAjaran').value;
+      s.titimangsa = document.getElementById('cfgTitimangsa').value;
+      s.kepsek = document.getElementById('cfgKepsek').value;
+      s.nipKepsek = document.getElementById('cfgNipKepsek').value;
+      s.ketua = document.getElementById('cfgKetua').value;
+      s.nipKetua = document.getElementById('cfgNipKetua').value;
+      s.logoKiri = document.getElementById('cfgLogoKiri').value.trim();
+      s.logoKanan = document.getElementById('cfgLogoKanan').value.trim();
+      s.ttdKepsek = document.getElementById('cfgTtdKepsek').value.trim();
+      s.stempel = document.getElementById('cfgStempel').value.trim();
+      s.catatanJadwal = document.getElementById('cfgCatatanJadwal').value;
+      saveLocalState();
+    }
+
+    function renderStudentTable() {
+      const q = (document.getElementById('searchSiswa')?.value || '').toLowerCase();
+      const tbody = document.getElementById('tbodySiswa');
+      document.getElementById('countSiswa').textContent = appState.students.length;
+
+      const filtered = appState.students.filter(st =>
+        st.nama.toLowerCase().includes(q) ||
+        st.noPeserta.toLowerCase().includes(q) ||
+        st.ruang.toLowerCase().includes(q) ||
+        st.kelas.toLowerCase().includes(q)
+      );
+
+      tbody.innerHTML = filtered.map((st, i) => {
+        const realIdx = appState.students.findIndex(x => x.id === st.id);
+        const fotoUrl = resolveDriveImage(st.foto);
+        return `
+          <tr class="hover:bg-slate-800/60">
+            <td class="p-2 text-slate-400">${i + 1}</td>
+            <td class="p-1.5"><input value="${escapeHtml(st.noPeserta)}" onchange="editStudent(${realIdx}, 'noPeserta', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+            <td class="p-1.5"><input value="${escapeHtml(st.nisn)}" onchange="editStudent(${realIdx}, 'nisn', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+            <td class="p-1.5"><input value="${escapeHtml(st.nama)}" onchange="editStudent(${realIdx}, 'nama', this.value)" class="w-44 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs font-semibold" /></td>
+            <td class="p-1.5"><input value="${escapeHtml(st.kelas)}" onchange="editStudent(${realIdx}, 'kelas', this.value)" class="w-24 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+            <td class="p-1.5"><input value="${escapeHtml(st.ruang)}" onchange="editStudent(${realIdx}, 'ruang', this.value)" class="w-24 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+            <td class="p-1.5"><input value="${escapeHtml(st.username)}" onchange="editStudent(${realIdx}, 'username', this.value)" class="w-24 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+            <td class="p-1.5"><input value="${escapeHtml(st.password)}" onchange="editStudent(${realIdx}, 'password', this.value)" class="w-20 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+            <td class="p-1.5"><input value="${escapeHtml(st.foto)}" placeholder="Link Drive..." onchange="editStudent(${realIdx}, 'foto', this.value)" class="w-44 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+            <td class="p-1.5 text-center">
+              ${fotoUrl ? `<img src="${fotoUrl}" referrerpolicy="no-referrer" class="w-8 h-10 object-cover rounded mx-auto border border-slate-600" />` : `<span class="text-[10px] text-slate-500">-</span>`}
+            </td>
+            <td class="p-1.5 text-center">
+              <button onclick="deleteStudent(${realIdx})" class="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function editStudent(idx, field, val) {
+      if (appState.students[idx]) {
+        appState.students[idx][field] = val.trim();
+        saveLocalState();
+        if (field === 'foto') renderStudentTable();
+      }
+    }
+
+    function addStudentRow() {
+      const nextNum = appState.students.length + 1;
+      appState.students.push({
+        id: 'S' + Date.now(),
+        noPeserta: '01-00' + nextNum,
+        nisn: '',
+        nama: 'PESERTA BARU ' + nextNum,
+        kelas: '7.1',
+        ruang: 'RUANG 1',
+        username: 'user' + nextNum,
+        password: String(Math.floor(10000 + Math.random() * 90000)),
+        foto: ''
+      });
+      saveLocalState();
+      renderStudentTable();
+    }
+
+    function deleteStudent(idx) {
+      appState.students.splice(idx, 1);
+      saveLocalState();
+      renderStudentTable();
+    }
+
+    function renderStaffTable() {
+      const tbody = document.getElementById('tbodyPanitia');
+      document.getElementById('countPanitia').textContent = appState.staff.length;
+      tbody.innerHTML = appState.staff.map((p, idx) => `
+        <tr class="hover:bg-slate-800/60">
+          <td class="p-2 text-slate-400">${idx + 1}</td>
+          <td class="p-1.5"><input value="${escapeHtml(p.nama)}" onchange="editStaff(${idx}, 'nama', this.value)" class="w-48 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs font-semibold" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(p.nip)}" onchange="editStaff(${idx}, 'nip', this.value)" class="w-36 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(p.jabatan)}" onchange="editStaff(${idx}, 'jabatan', this.value)" class="w-36 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5">
+            <select onchange="editStaff(${idx}, 'peran', this.value)" class="px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs">
+              <option value="Panitia" ${p.peran === 'Panitia' ? 'selected' : ''}>Panitia</option>
+              <option value="Pengawas" ${p.peran === 'Pengawas' ? 'selected' : ''}>Pengawas</option>
+            </select>
+          </td>
+          <td class="p-1.5"><input value="${escapeHtml(p.ruang)}" onchange="editStaff(${idx}, 'ruang', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(p.foto)}" placeholder="Link Drive..." onchange="editStaff(${idx}, 'foto', this.value)" class="w-44 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5 text-center">
+            <button onclick="deleteStaff(${idx})" class="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          </td>
+        </tr>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function editStaff(idx, field, val) {
+      appState.staff[idx][field] = val.trim();
+      saveLocalState();
+    }
+
+    function addStaffRow() {
+      appState.staff.push({
+        id: 'P' + Date.now(),
+        nama: 'Nama Pengawas / Panitia',
+        nip: '-',
+        jabatan: 'Pengawas Ruang',
+        peran: 'Pengawas',
+        ruang: 'RUANG 1',
+        foto: ''
+      });
+      saveLocalState();
+      renderStaffTable();
+    }
+
+    function deleteStaff(idx) {
+      appState.staff.splice(idx, 1);
+      saveLocalState();
+      renderStaffTable();
+    }
+
+    function renderScheduleTable() {
+      const tbody = document.getElementById('tbodyJadwal');
+      tbody.innerHTML = appState.schedule.map((j, idx) => `
+        <tr class="${j.istirahat ? 'bg-indigo-950/40' : ''}">
+          <td class="p-1.5"><input value="${escapeHtml(j.jam)}" onchange="editSchedule(${idx}, 'jam', this.value)" class="w-12 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs text-center" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(j.pukul)}" onchange="editSchedule(${idx}, 'pukul', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5 text-center"><input type="checkbox" ${j.istirahat ? 'checked' : ''} onchange="editSchedule(${idx}, 'istirahat', this.checked)" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(j.senin)}" onchange="editSchedule(${idx}, 'senin', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(j.selasa)}" onchange="editSchedule(${idx}, 'selasa', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(j.rabu)}" onchange="editSchedule(${idx}, 'rabu', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(j.kamis)}" onchange="editSchedule(${idx}, 'kamis', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(j.jumat)}" onchange="editSchedule(${idx}, 'jumat', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5 text-center"><button onclick="deleteSchedule(${idx})" class="text-rose-400 p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></td>
+        </tr>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function editSchedule(idx, field, val) {
+      appState.schedule[idx][field] = val;
+      saveLocalState();
+      if (field === 'istirahat') renderScheduleTable();
+    }
+
+    function addScheduleRow() {
+      appState.schedule.push({
+        jam: String(appState.schedule.length + 1),
+        pukul: '11.00 - 12.00',
+        istirahat: false,
+        senin: '-', selasa: '-', rabu: '-', kamis: '-', jumat: '-'
+      });
+      saveLocalState();
+      renderScheduleTable();
+    }
+
+    function deleteSchedule(idx) {
+      appState.schedule.splice(idx, 1);
+      saveLocalState();
+      renderScheduleTable();
+    }
+
+    function openExcelModal() {
+      document.getElementById('excelModal').classList.remove('hidden');
+      document.getElementById('excelModal').classList.add('flex');
+    }
+    function closeExcelModal() {
+      document.getElementById('excelModal').classList.add('hidden');
+      document.getElementById('excelModal').classList.remove('flex');
+    }
+    function processExcelPaste(replaceAll) {
+      const text = document.getElementById('excelPasteArea').value.trim();
+      if (!text) return;
+      const lines = text.split(/\r?\n/);
+      const imported = [];
+      lines.forEach((line, i) => {
+        const cols = line.split('\t');
+        if (cols.length >= 2 && cols[0].toLowerCase() !== 'no_peserta') {
+          imported.push({
+            id: 'S' + Date.now() + '_' + i,
+            noPeserta: (cols[0] || '').trim(),
+            nisn: (cols[1] || '').trim(),
+            nama: (cols[2] || '').trim(),
+            kelas: (cols[3] || '').trim(),
+            ruang: (cols[4] || 'RUANG 1').trim(),
+            username: (cols[5] || '').trim(),
+            password: (cols[6] || '').trim(),
+            foto: (cols[7] || '').trim()
+          });
+        }
+      });
+      if (imported.length === 0) {
+        showToast('Tidak ada baris valid yang terbaca.', true);
+        return;
+      }
+      appState.students = replaceAll ? imported : [...appState.students, ...imported];
+      saveLocalState();
+      renderStudentTable();
+      closeExcelModal();
+      document.getElementById('excelPasteArea').value = '';
+      showToast(`Berhasil mengimpor ${imported.length} data siswa!`);
+    }
+
+    function resetDemoData() {
+      if (confirm('Kembalikan seluruh data ke contoh awal?')) {
+        appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+        saveLocalState();
+        populateAllForms();
+        refreshRoomDropdowns();
+        renderActiveTab();
+        showToast('Data contoh berhasil dipulihkan.');
+      }
+    }
+
+    function getUniqueRooms() {
+      const set = new Set(appState.students.map(s => s.ruang || 'RUANG 1'));
+      if (set.size === 0) set.add('RUANG 1');
+      return Array.from(set);
+    }
+
+    function refreshRoomDropdowns() {
+      const rooms = getUniqueRooms();
+      const idsWithAll = ['filterRuangKartu', 'filterRuangMeja', 'filterRuangJurnal', 'filterRuangDhSiswa'];
+      idsWithAll.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const prev = el.value;
+        el.innerHTML = `<option value="ALL">Semua Ruangan (${rooms.length} Ruang)</option>` +
+          rooms.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
+        if (rooms.includes(prev) || prev === 'ALL') el.value = prev;
+      });
+
+      ['denahRuangSelect', 'filterLabelRuang'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const prev = el.value;
+        el.innerHTML = rooms.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
+        if (rooms.includes(prev)) el.value = prev;
+      });
+
+      const suratSel = document.getElementById('selectSiswaSurat');
+      if (suratSel) {
+        const prev = suratSel.value;
+        suratSel.innerHTML = `<option value="BLANK">-- Cetak Blanko Kosong (Diisi Manual) --</option>` +
+          appState.students.map(s => `<option value="${s.id}">${escapeHtml(s.noPeserta)} - ${escapeHtml(s.nama)} (${escapeHtml(s.ruang)})</option>`).join('');
+        if (prev) suratSel.value = prev;
+      }
+    }
+
+    function buildFullKopHTML() {
+      const s = appState.settings;
+      const logoL = resolveDriveImage(s.logoKiri);
+      const logoR = resolveDriveImage(s.logoKanan);
+      return `
+        <table class="kop-table">
+          <tr>
+            <td style="width:60px; text-align:left;">
+              ${logoL ? `<img src="${logoL}" referrerpolicy="no-referrer" class="kop-logo" />` : ''}
+            </td>
+            <td class="kop-text">
+              <div class="kop-instansi">${escapeHtml(s.instansi)}</div>
+              <div class="kop-sekolah">${escapeHtml(s.sekolah)}</div>
+              <div class="kop-alamat">${escapeHtml(s.alamat)}</div>
+            </td>
+            <td style="width:60px; text-align:right;">
+              ${logoR ? `<img src="${logoR}" referrerpolicy="no-referrer" class="kop-logo" />` : ''}
+            </td>
+          </tr>
+        </table>
+      `;
+    }
+
+    /* =====================================================================
+       KOP KARTU TEGAS & PENUH SEPERTI GAMBAR REFERENSI
+       ===================================================================== */
+    function buildCardKopHTML(showAddress = false, compact = false) {
+      const s = appState.settings;
+      const logoL = resolveDriveImage(s.logoKiri) || resolveDriveImage(s.logoKanan);
+      const logoR = resolveDriveImage(s.logoKanan) || resolveDriveImage(s.logoKiri);
+      const logoSize = compact ? '26px' : '30px';
+
+      // Pisahkan instansi jika memakai tanda " - " agar tampil 2 baris tegas seperti referensi
+      const instansiParts = String(s.instansi || '').split(/\s*-\s*/);
+      const baris1 = instansiParts[0] || '';
+      const baris2 = instansiParts.slice(1).join(' - ');
+
+      return `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:4px; border-bottom:1.8px solid #000; padding:${compact ? '2.5px 4px' : '3px 6px'}; min-width:0;">
+          ${logoL
+            ? `<img src="${logoL}" referrerpolicy="no-referrer" style="width:${logoSize}; height:${logoSize}; object-fit:contain; flex-shrink:0; display:block;" />`
+            : `<div style="width:${logoSize}; height:${logoSize}; flex-shrink:0;"></div>`
+          }
+          <div style="flex:1; min-width:0; text-align:center; line-height:1.06; overflow-wrap:anywhere;">
+            <div style="font-size:${compact ? '6pt' : '6.8pt'}; font-weight:bold; text-transform:uppercase;">${escapeHtml(baris1)}</div>
+            ${baris2 ? `<div style="font-size:${compact ? '6pt' : '6.8pt'}; font-weight:bold; text-transform:uppercase;">${escapeHtml(baris2)}</div>` : ''}
+            <div style="font-size:${compact ? '7.8pt' : '9pt'}; font-weight:bold; text-transform:uppercase; color:#000;">${escapeHtml(s.sekolah)}</div>
+            ${showAddress ? `<div style="font-size:4.6pt;">${escapeHtml(s.alamat)}</div>` : ''}
+          </div>
+          ${logoR
+            ? `<img src="${logoR}" referrerpolicy="no-referrer" style="width:${logoSize}; height:${logoSize}; object-fit:contain; flex-shrink:0; display:block;" />`
+            : `<div style="width:${logoSize}; height:${logoSize}; flex-shrink:0;"></div>`
+          }
+        </div>
+      `;
+    }
+
+    /* =====================================================================
+       TTD + STEMPEL OVERLAY PERSIS GAMBAR REFERENSI:
+       CAP DI KIRI-TENGAH MENEMBUS "Kepala Sekolah," & NAMA, TTD MELINTANG KE KANAN
+       ===================================================================== */
+    function buildTtdWithDigitalStampHTML(variant = 'normal') {
+      const s = appState.settings;
+      const ttd = resolveDriveImage(s.ttdKepsek);
+      const stempel = resolveDriveImage(s.stempel);
+      const isCompact = variant === 'compact';
+
+      const fontSize = isCompact ? '7.4pt' : '8.2pt';
+      const blockW = isCompact ? '138px' : '152px';
+      const stampSize = isCompact ? '52px' : '60px';
+      const ttdHeight = isCompact ? '36px' : '42px';
+      const ttdMaxW = isCompact ? '104px' : '116px';
+
+      return `
+        <div style="position:relative; overflow:visible; font-size:${fontSize}; font-weight:bold; line-height:1.15; min-width:0; width:${blockW}; flex-shrink:0; text-align:center; z-index:2;">
+          ${stempel
+            ? `<img src="${stempel}" referrerpolicy="no-referrer" style="position:absolute; left:-8px; top:3px; width:${stampSize}; height:${stampSize}; object-fit:contain; opacity:0.88; z-index:4; pointer-events:none;" />`
+            : ''
+          }
+          ${ttd
+            ? `<img src="${ttd}" referrerpolicy="no-referrer" style="position:absolute; left:18px; top:9px; height:${ttdHeight}; max-width:${ttdMaxW}; object-fit:contain; z-index:5; pointer-events:none;" />`
+            : ''
+          }
+
+          <div style="position:relative; z-index:1; white-space:nowrap;">${escapeHtml(s.titimangsa)}</div>
+          <div style="position:relative; z-index:1;">Kepala Sekolah,</div>
+          <div style="height:${isCompact ? '21px' : '25px'};"></div>
+          <div style="position:relative; z-index:1; text-decoration:underline; overflow-wrap:anywhere;">${escapeHtml(s.kepsek)}</div>
+          <div style="position:relative; z-index:1; font-weight:normal; font-size:${isCompact ? '6.8pt' : '7.4pt'}; overflow-wrap:anywhere;">NIP. ${escapeHtml(s.nipKepsek)}</div>
+        </div>
+      `;
+    }
+
+    function triggerPrint() {
+      if (activeTab === 'label_ruang') {
+        document.body.classList.add('print-landscape');
+      } else {
+        document.body.classList.remove('print-landscape');
+      }
+      window.print();
+    }
+
+    function renderActiveTab() {
+      switch (activeTab) {
+        case 'denah': renderDenah(); break;
+        case 'kartu_peserta': renderKartuPeserta(); break;
+        case 'kartu_meja': renderKartuMeja(); break;
+        case 'kartu_panitia': renderKartuPanitia(); break;
+        case 'label_ruang': renderLabelRuang(); break;
+        case 'ba_pelaksanaan': renderBaPelaksanaan(); break;
+        case 'ba_serah_terima': renderBaSerahTerima(); break;
+        case 'surat_ijin': renderSuratIjin(); break;
+        case 'jurnal_siswa': renderJurnalSiswa(); break;
+        case 'dh_siswa': renderDhSiswa(); break;
+        case 'dh_panitia': renderDhPanitia(); break;
+      }
+    }
+
+    /* =====================================================================
+       MODUL 2: DENAH TEMPAT DUDUK RUANGAN
+       ===================================================================== */
+    function ensureRoomSeating(ruang) {
+      const roomStudents = appState.students.filter(s => (s.ruang || 'RUANG 1') === ruang);
+      if (!appState.seating[ruang]) {
+        appState.seating[ruang] = {
+          cols: 4,
+          rows: Math.max(3, Math.ceil(roomStudents.length / 4)),
+          order: roomStudents.map(s => s.id)
+        };
+      }
+      const cfg = appState.seating[ruang];
+      const validIds = new Set(roomStudents.map(s => s.id));
+      cfg.order = (cfg.order || []).filter(id => validIds.has(id));
+      roomStudents.forEach(s => {
+        if (!cfg.order.includes(s.id)) cfg.order.push(s.id);
+      });
+      return cfg;
+    }
+
+    function updateDenahConfig() {
+      const ruang = document.getElementById('denahRuangSelect').value;
+      const cfg = ensureRoomSeating(ruang);
+      cfg.cols = Math.max(2, Math.min(7, parseInt(document.getElementById('denahCols').value) || 4));
+      cfg.rows = Math.max(2, Math.min(8, parseInt(document.getElementById('denahRows').value) || 5));
+      saveLocalState();
+      renderDenah();
+    }
+
+    function applyPatternDenah() {
+      const ruang = document.getElementById('denahRuangSelect').value;
+      const pattern = document.getElementById('denahPattern').value;
+      const cfg = ensureRoomSeating(ruang);
+      const roomStudents = appState.students.filter(s => (s.ruang || 'RUANG 1') === ruang);
+      const ids = roomStudents.map(s => s.id);
+
+      if (pattern === 'urut') {
+        cfg.order = ids;
+      } else if (pattern === 'zigzag') {
+        const result = [];
+        for (let r = 0; r < cfg.rows; r++) {
+          const slice = ids.slice(r * cfg.cols, (r + 1) * cfg.cols);
+          if (r % 2 === 1) slice.reverse();
+          result.push(...slice);
+        }
+        ids.forEach(id => { if (!result.includes(id)) result.push(id); });
+        cfg.order = result;
+      } else if (pattern === 'kolom') {
+        const grid = Array(cfg.rows * cfg.cols).fill(null);
+        let idx = 0;
+        for (let c = 0; c < cfg.cols; c++) {
+          for (let r = 0; r < cfg.rows; r++) {
+            if (idx < ids.length) grid[r * cfg.cols + c] = ids[idx++];
+          }
+        }
+        cfg.order = grid.filter(Boolean);
+      }
+      saveLocalState();
+      renderDenah();
+      showToast('Pola urutan tempat duduk diterapkan!');
+    }
+
+    function shuffleDenah() {
+      const ruang = document.getElementById('denahRuangSelect').value;
+      const cfg = ensureRoomSeating(ruang);
+      const arr = [...cfg.order];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      cfg.order = arr;
+      selectedSeatIndex = null;
+      saveLocalState();
+      renderDenah();
+      showToast('Posisi duduk siswa berhasil diacak!');
+    }
+
+    function handleSeatClick(seatIdx) {
+      const ruang = document.getElementById('denahRuangSelect').value;
+      const cfg = ensureRoomSeating(ruang);
+      if (selectedSeatIndex === null) {
+        selectedSeatIndex = seatIdx;
+        renderDenah();
+      } else if (selectedSeatIndex === seatIdx) {
+        selectedSeatIndex = null;
+        renderDenah();
+      } else {
+        const maxLen = Math.max(selectedSeatIndex, seatIdx) + 1;
+        while (cfg.order.length < maxLen) cfg.order.push(null);
+        const temp = cfg.order[selectedSeatIndex];
+        cfg.order[selectedSeatIndex] = cfg.order[seatIdx];
+        cfg.order[seatIdx] = temp;
+        cfg.order = cfg.order.filter(Boolean);
+        selectedSeatIndex = null;
+        saveLocalState();
+        renderDenah();
+        showToast('Posisi duduk berhasil ditukar!');
+      }
+    }
+
+    function renderDenah() {
+      const ruang = document.getElementById('denahRuangSelect').value || getUniqueRooms()[0];
+      const cfg = ensureRoomSeating(ruang);
+      document.getElementById('denahCols').value = cfg.cols;
+      document.getElementById('denahRows').value = cfg.rows;
+
+      const s = appState.settings;
+      const totalSeats = cfg.cols * cfg.rows;
+      const studentMap = new Map(appState.students.map(st => [st.id, st]));
+      const dense = cfg.cols >= 5 || cfg.rows >= 6;
+
+      // Foto 3x lipat dari ukuran sebelumnya (sebelumnya ~20x26 & ~24x32 -> sekarang 51x66 & 60x78)
+      const fotoW = dense ? 51 : 60;
+      const fotoH = dense ? 66 : 78;
+
+      let gridHtml = '';
+      for (let i = 0; i < totalSeats; i++) {
+        const stId = cfg.order[i];
+        const st = stId ? studentMap.get(stId) : null;
+        const isSelected = selectedSeatIndex === i;
+        const fotoUrl = st ? resolveDriveImage(st.foto) : '';
+
+        gridHtml += `
+          <div onclick="handleSeatClick(${i})" style="min-width:0; max-width:100%; border:1.2px solid ${isSelected ? '#2563eb' : '#000'}; background:${isSelected ? '#dbeafe' : '#fff'}; border-radius:3px; padding:2px 2.5px; text-align:center; cursor:pointer; display:flex; flex-direction:column; justify-content:space-between; align-items:center; overflow:hidden; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+            <div style="width:100%; display:flex; justify-content:space-between; align-items:center; gap:2px; font-size:${dense ? '5pt' : '5.5pt'}; font-weight:bold; line-height:1; border-bottom:1px solid #cbd5e1; padding-bottom:1px; flex-shrink:0;">
+              <span style="flex-shrink:0;">M-${i + 1}</span>
+              <span style="color:#1e3a8a; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${st ? escapeHtml(st.noPeserta) : 'KOSONG'}</span>
+            </div>
+
+            ${st ? `
+              <div style="flex:1; min-height:0; width:100%; display:flex; align-items:center; justify-content:center; padding:1px 0; overflow:hidden;">
+                ${fotoUrl
+                  ? `<img src="${fotoUrl}" referrerpolicy="no-referrer" style="width:${fotoW}px; height:${fotoH}px; max-width:100%; max-height:100%; object-fit:cover; border:1px solid #475569; display:block;" />`
+                  : `<div style="width:${fotoW}px; height:${fotoH}px; max-width:100%; max-height:100%; border:1px dashed #94a3b8; font-size:5.5pt; font-weight:bold; display:flex; align-items:center; justify-content:center; color:#64748b;">FOTO</div>`
+                }
+              </div>
+
+              <div style="width:100%; flex-shrink:0; line-height:1.02;">
+                <div style="font-size:${dense ? '5.2pt' : '5.8pt'}; font-weight:bold; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word;">${escapeHtml(st.nama)}</div>
+                <div style="font-size:${dense ? '4.8pt' : '5.3pt'}; color:#334155; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:0.5px;">${escapeHtml(st.kelas)}</div>
+              </div>
+            ` : `<div style="font-size:${dense ? '5.5pt' : '6.2pt'}; color:#94a3b8; margin:auto;">- Kosong -</div>`}
+          </div>
+        `;
+      }
+
+      document.getElementById('preview-denah').innerHTML = `
+        <div class="a4-page" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div style="min-width:0; flex:1; display:flex; flex-direction:column; min-height:0;">
+            ${buildFullKopHTML()}
+            <div style="text-align:center; margin-bottom:5px; flex-shrink:0;">
+              <div style="font-size:11pt; font-weight:bold; text-decoration:underline;">DENAH TEMPAT DUDUK PESERTA UJIAN</div>
+              <div style="font-size:9.5pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
+              <div style="display:inline-block; margin-top:2px; padding:1.5px 12px; border:1.5px solid #000; font-weight:bold; font-size:10pt;">${escapeHtml(ruang)}</div>
+            </div>
+
+            <div style="border:2px solid #000; padding:5px; border-radius:4px; background:#ffffff; flex:1; display:flex; flex-direction:column; min-height:0; overflow:hidden;">
+              <div style="border:1.5px solid #000; text-align:center; font-weight:bold; font-size:8.5pt; padding:2px; margin-bottom:4px; background:#f8fafc; flex-shrink:0;">
+                PAPAN TULIS / DEPAN KELAS
+              </div>
+              <div style="display:flex; justify-content:space-between; gap:8px; margin-bottom:5px; flex-shrink:0;">
+                <div style="border:1.2px solid #000; padding:2.5px 12px; font-size:7.5pt; font-weight:bold; background:#f1f5f9;">PINTU MASUK</div>
+                <div style="border:1.2px solid #000; padding:2.5px 20px; font-size:7.5pt; font-weight:bold; background:#f1f5f9;">MEJA PENGAWAS RUANG</div>
+              </div>
+
+              <div style="display:grid; grid-template-columns: repeat(${cfg.cols}, minmax(0, 1fr)); grid-template-rows: repeat(${cfg.rows}, minmax(0, 1fr)); gap:3.5px; flex:1; min-height:0; width:100%;">
+                ${gridHtml}
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; margin-top:5px; font-size:9pt; flex-shrink:0;">
+            <div style="width:205px;">
+              <div>${escapeHtml(s.titimangsa)}</div>
+              <div>Ketua Panitia Ujian,</div>
+              <div style="height:28px;"></div>
+              <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.ketua)}</div>
+              <div>NIP. ${escapeHtml(s.nipKetua)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* =====================================================================
+       MODUL 3: KARTU PESERTA UJIAN (PROPORSI PENUH SEPERTI GAMBAR REFERENSI)
+       ===================================================================== */
+    function buildScheduleMatrixTableHTML() {
+      const s = appState.settings;
+      const rows = appState.schedule.map(j => {
+        if (j.istirahat) {
+          return `
+            <tr style="background:#dbeafe; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+              <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:6pt;">${escapeHtml(j.jam)}</td>
+              <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:5.8pt;">${escapeHtml(j.pukul)}</td>
+              <td colspan="5" style="border:1px solid #000; text-align:center; font-weight:bold; letter-spacing:1.2px; padding:1.5px; font-size:5.8pt;">ISTIRAHAT</td>
+            </tr>
+          `;
+        }
+        return `
+          <tr>
+            <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:6pt;">${escapeHtml(j.jam)}</td>
+            <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:5.8pt;">${escapeHtml(j.pukul)}</td>
+            <td style="border:1px solid #000; text-align:center; padding:1.5px; font-size:5.8pt; overflow-wrap:anywhere;">${escapeHtml(j.senin)}</td>
+            <td style="border:1px solid #000; text-align:center; padding:1.5px; font-size:5.8pt; overflow-wrap:anywhere;">${escapeHtml(j.selasa)}</td>
+            <td style="border:1px solid #000; text-align:center; padding:1.5px; font-size:5.8pt; overflow-wrap:anywhere;">${escapeHtml(j.rabu)}</td>
+            <td style="border:1px solid #000; text-align:center; padding:1.5px; font-size:5.8pt; overflow-wrap:anywhere;">${escapeHtml(j.kamis)}</td>
+            <td style="border:1px solid #000; text-align:center; padding:1.5px; font-size:5.8pt; overflow-wrap:anywhere;">${escapeHtml(j.jumat)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      return `
+        <div style="min-width:0; border:1.8px solid #000; height:100%; display:flex; flex-direction:column; justify-content:space-between; background:#fff; overflow:hidden;">
+          <div style="min-width:0;">
+            ${buildCardKopHTML(false, true)}
+            <div style="padding:2px 5px 0 5px;">
+              <div style="text-align:center; font-weight:bold; font-size:6.8pt; text-decoration:underline; margin-top:1px;">
+                JADWAL PELAJARAN ${escapeHtml(s.namaUjian)}
+              </div>
+              <div style="text-align:center; font-weight:bold; font-size:6.3pt; margin-bottom:2px;">
+                ${escapeHtml(s.tahunAjaran)}
+              </div>
+              <table style="width:100%; border-collapse:collapse; table-layout:fixed;">
+                <thead>
+                  <tr>
+                    <th style="border:1px solid #000; width:17px; text-align:center; font-size:4.6pt; line-height:0.98;">JA<br>M/<br>HA<br>RI</th>
+                    <th class="diag-cell" style="border:1px solid #000;">
+                      <span class="diag-top">HARI</span>
+                      <span class="diag-bot">PUKUL</span>
+                    </th>
+                    <th style="border:1px solid #000; text-align:center; font-size:5.6pt;">SENIN</th>
+                    <th style="border:1px solid #000; text-align:center; font-size:5.6pt;">SELASA</th>
+                    <th style="border:1px solid #000; text-align:center; font-size:5.6pt;">RABU</th>
+                    <th style="border:1px solid #000; text-align:center; font-size:5.6pt;">KAMIS</th>
+                    <th style="border:1px solid #000; text-align:center; font-size:5.6pt;">JUM'AT</th>
+                  </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </div>
+          <div style="font-size:5.5pt; font-style:italic; padding:0 5px 3px 5px; overflow-wrap:anywhere;">
+            ${escapeHtml(s.catatanJadwal)}
+          </div>
+        </div>
+      `;
+    }
+
+    function buildSingleIdentityCardHTML(st, showCbt, qrDomId, compact = false) {
+      const s = appState.settings;
+      const fotoUrl = resolveDriveImage(st.foto);
+      const photoW = compact ? '60px' : '68px';
+      const photoH = compact ? '76px' : '86px';
+
+      return `
+        <div style="min-width:0; border:1.8px solid #000; height:100%; display:flex; flex-direction:column; justify-content:space-between; background:#fff; overflow:visible;">
+          <div style="min-width:0;">
+            ${buildCardKopHTML(false, compact)}
+            <div style="padding:${compact ? '2px 7px 0 7px' : '3px 9px 0 9px'};">
+              <div style="text-align:center; font-weight:bold; font-size:${compact ? '8.2pt' : '9.2pt'}; text-decoration:underline; margin-bottom:2px; letter-spacing:0.2px;">
+                KARTU ${escapeHtml(s.namaUjian)}
+              </div>
+
+              <table style="width:100%; font-size:${compact ? '7.6pt' : '8.6pt'}; font-weight:bold; line-height:1.15; border-collapse:collapse; table-layout:fixed;">
+                <tr>
+                  <td style="width:${compact ? '84px' : '94px'};">Nama Peserta</td>
+                  <td style="width:8px;">:</td>
+                  <td style="overflow-wrap:anywhere;">${escapeHtml(st.nama)}</td>
+                </tr>
+                <tr>
+                  <td>NISN</td>
+                  <td>:</td>
+                  <td style="overflow-wrap:anywhere;">${escapeHtml(st.nisn)}</td>
+                </tr>
+                <tr>
+                  <td>Kelas / Rombel</td>
+                  <td>:</td>
+                  <td style="overflow-wrap:anywhere;">${escapeHtml(st.kelas)}</td>
+                </tr>
+                <tr>
+                  <td>Nomor Peserta</td>
+                  <td>:</td>
+                  <td style="overflow-wrap:anywhere;">${escapeHtml(st.noPeserta)}</td>
+                </tr>
+                <tr>
+                  <td>Ruangan Peserta</td>
+                  <td>:</td>
+                  <td style="overflow-wrap:anywhere;">${escapeHtml(st.ruang)}</td>
+                </tr>
+                ${showCbt ? `
+                  <tr>
+                    <td>User / Pass</td>
+                    <td>:</td>
+                    <td style="font-family:monospace; font-size:6.6pt; overflow-wrap:anywhere;">${escapeHtml(st.username)} / ${escapeHtml(st.password)}</td>
+                  </tr>
+                ` : ''}
+              </table>
+            </div>
+          </div>
+
+          <!-- BARIS BAWAH PENUH: FOTO BINGKAI DOUBLE - QR CODE BESAR - TITIMANGSA + CAP/TTD MENEMBUS -->
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:6px; padding:${compact ? '0 7px 4px 7px' : '0 9px 5px 9px'}; min-width:0; overflow:visible;">
+            <div style="width:${photoW}; height:${photoH}; border:2px solid #000; padding:1.5px; background:#fff; flex-shrink:0;">
+              <div style="width:100%; height:100%; border:1px solid #000; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; background:#f8fafc;">
+                ${fotoUrl
+                  ? `<img src="${fotoUrl}" referrerpolicy="no-referrer" style="width:100%; height:100%; object-fit:cover; display:block;" />`
+                  : `<span style="font-size:7.2pt; font-weight:bold; color:#475569; text-align:center;">FOTO<br><span style="font-size:5.6pt; font-weight:normal;">2 x 3</span></span>`
+                }
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0;">
+              <div id="${qrDomId}" style="padding:2px; background:#fff; border:1.5px solid #000; line-height:0;" title="QR No Peserta: ${escapeHtml(st.noPeserta)}"></div>
+              <div style="font-size:${compact ? '6.6pt' : '7.4pt'}; font-weight:bold; margin-top:1px; white-space:nowrap;">${escapeHtml(st.noPeserta)}</div>
+            </div>
+
+            ${buildTtdWithDigitalStampHTML(compact ? 'compact' : 'normal')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderKartuPeserta() {
+      const ruangFilter = document.getElementById('filterRuangKartu').value || 'ALL';
+      const mode = document.getElementById('modeKartuPeserta').value || 'dengan_jadwal';
+      const showCbt = document.getElementById('chkShowCbtKartu').checked;
+
+      const list = ruangFilter === 'ALL'
+        ? appState.students
+        : appState.students.filter(s => s.ruang === ruangFilter);
+
+      const perPage = mode === 'dengan_jadwal' ? 4 : 8;
+      const qrQueue = [];
+      let pagesHtml = '';
+
+      for (let i = 0; i < list.length; i += perPage) {
+        const chunk = list.slice(i, i + perPage);
+        if (mode === 'dengan_jadwal') {
+          const rowsHtml = chunk.map((st, idx) => {
+            const qrId = `qr_kp_jad_${i}_${idx}`;
+            qrQueue.push({ id: qrId, text: st.noPeserta || st.id, size: 58 });
+            return `
+              <div style="display:grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap:2mm; height:69mm; overflow:visible;">
+                ${buildSingleIdentityCardHTML(st, showCbt, qrId, true)}
+                ${buildScheduleMatrixTableHTML()}
+              </div>
+            `;
+          }).join('');
+          pagesHtml += `<div class="a4-page" style="display:flex; flex-direction:column; gap:1.5mm;">${rowsHtml}</div>`;
+        } else {
+          const cardsHtml = chunk.map((st, idx) => {
+            const qrId = `qr_kp_only_${i}_${idx}`;
+            qrQueue.push({ id: qrId, text: st.noPeserta || st.id, size: 68 });
+            return `<div style="height:68.5mm; overflow:visible;">${buildSingleIdentityCardHTML(st, showCbt, qrId, false)}</div>`;
+          }).join('');
+          pagesHtml += `
+            <div class="a4-page" style="display:grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap:2.5mm; align-content:start;">
+              ${cardsHtml}
+            </div>
+          `;
+        }
+      }
+
+      document.getElementById('preview-kartu_peserta').innerHTML = pagesHtml || '<div class="text-slate-400 text-sm">Tidak ada data siswa.</div>';
+
+      qrQueue.forEach(item => {
+        renderQrIntoElement(item.id, item.text, item.size);
+      });
+    }
+
+    /* =====================================================================
+       MODUL 4: KARTU MEJA PESERTA (PROPORSI PENUH + FOTO DOUBLE BORDER + TTD MENEMBUS)
+       ===================================================================== */
+    function renderKartuMeja() {
+      const ruangFilter = document.getElementById('filterRuangMeja').value || 'ALL';
+      const list = ruangFilter === 'ALL'
+        ? appState.students
+        : appState.students.filter(s => s.ruang === ruangFilter);
+
+      let pagesHtml = '';
+
+      for (let i = 0; i < list.length; i += 8) {
+        const chunk = list.slice(i, i + 8);
+        const cardsHtml = chunk.map(st => {
+          const fotoUrl = resolveDriveImage(st.foto);
+
+          return `
+            <div style="min-width:0; border:1.8px solid #000; height:68.5mm; display:flex; flex-direction:column; justify-content:space-between; background:#fff; overflow:visible;">
+              <div style="min-width:0;">
+                ${buildCardKopHTML(false, true)}
+                <div style="padding:2px 8px 0 8px;">
+                  <div style="text-align:center; font-size:8.4pt; font-weight:bold; text-decoration:underline; margin-bottom:2px;">
+                    KARTU MEJA PESERTA UJIAN
+                  </div>
+
+                  <div style="text-align:center; background:#f1f5f9; border:1.4px solid #000; padding:1.5px 4px; margin-bottom:2.5px; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+                    <span style="font-size:6.4pt; font-weight:bold;">NO. PESERTA: </span>
+                    <span style="font-size:11pt; font-weight:bold; letter-spacing:0.6px; overflow-wrap:anywhere;">${escapeHtml(st.noPeserta)}</span>
+                  </div>
+
+                  <table style="width:100%; font-size:7.6pt; font-weight:bold; line-height:1.12; border-collapse:collapse; table-layout:fixed;">
+                    <tr><td style="width:74px;">Nama Peserta</td><td style="width:7px;">:</td><td style="overflow-wrap:anywhere;">${escapeHtml(st.nama)}</td></tr>
+                    <tr><td>NISN</td><td>:</td><td style="overflow-wrap:anywhere;">${escapeHtml(st.nisn)}</td></tr>
+                    <tr><td>Kelas / Ruang</td><td>:</td><td style="overflow-wrap:anywhere;">${escapeHtml(st.kelas)} / ${escapeHtml(st.ruang)}</td></tr>
+                  </table>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:10px; padding:0 12px 4px 12px; min-width:0; overflow:visible;">
+                <div style="width:62px; height:78px; border:2px solid #000; padding:1.5px; background:#fff; flex-shrink:0;">
+                  <div style="width:100%; height:100%; border:1px solid #000; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f8fafc;">
+                    ${fotoUrl
+                      ? `<img src="${fotoUrl}" referrerpolicy="no-referrer" style="width:100%; height:100%; object-fit:cover; display:block;" />`
+                      : `<span style="font-size:7pt; font-weight:bold; color:#64748b;">FOTO</span>`
+                    }
+                  </div>
+                </div>
+
+                ${buildTtdWithDigitalStampHTML('compact')}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        pagesHtml += `
+          <div class="a4-page" style="display:grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap:2.5mm; align-content:start;">
+            ${cardsHtml}
+          </div>
+        `;
+      }
+
+      document.getElementById('preview-kartu_meja').innerHTML = pagesHtml || '<div class="text-slate-400 text-sm">Tidak ada data siswa.</div>';
+    }
+
+    /* =====================================================================
+       MODUL 5: KARTU PANITIA & PENGAWAS
+       ===================================================================== */
+    function renderKartuPanitia() {
+      const s = appState.settings;
+      let pagesHtml = '';
+      for (let i = 0; i < appState.staff.length; i += 6) {
+        const chunk = appState.staff.slice(i, i + 6);
+        const cards = chunk.map(p => {
+          const fotoUrl = resolveDriveImage(p.foto);
+          const isPanitia = p.peran === 'Panitia';
+          const badgeBg = isPanitia ? '#1e3a8a' : '#065f46';
+          return `
+            <div style="min-width:0; border:1.8px solid #000; border-radius:6px; height:89mm; display:flex; flex-direction:column; justify-content:space-between; background:#fff; overflow:visible;">
+              <div>
+                ${buildCardKopHTML(true, false)}
+                <div style="padding:0 8px;">
+                  <div style="background:${badgeBg}; color:#fff; text-align:center; font-weight:bold; font-size:8.8pt; padding:2.5px; margin:3px 0; text-transform:uppercase; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+                    KARTU ${escapeHtml(p.peran)} UJIAN
+                  </div>
+                  <div style="text-align:center; font-size:7pt; font-weight:bold; margin-bottom:4px;">${escapeHtml(s.namaUjian)}</div>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:9px; padding:0 8px 0 16px; min-width:0;">
+                <div style="width:54px; height:68px; border:2px solid #000; padding:1.5px; flex-shrink:0; background:#fff;">
+                  <div style="width:100%; height:100%; border:1px solid #000; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f8fafc;">
+                    ${fotoUrl
+                      ? `<img src="${fotoUrl}" referrerpolicy="no-referrer" style="width:100%; height:100%; object-fit:cover; display:block;" />`
+                      : `<span style="font-size:6.8pt; font-weight:bold; color:#64748b;">FOTO</span>`
+                    }
+                  </div>
+                </div>
+
+                <table style="flex:1; min-width:0; font-size:7.6pt; line-height:1.35; border-collapse:collapse; table-layout:fixed;">
+                  <tr>
+                    <td style="width:52px; font-weight:600; vertical-align:top;">Nama</td>
+                    <td style="width:10px; text-align:center; vertical-align:top;">:</td>
+                    <td style="font-weight:bold; vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(p.nama)}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600; vertical-align:top;">NIP</td>
+                    <td style="text-align:center; vertical-align:top;">:</td>
+                    <td style="vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(p.nip)}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600; vertical-align:top;">Jabatan</td>
+                    <td style="text-align:center; vertical-align:top;">:</td>
+                    <td style="font-weight:bold; vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(p.jabatan)}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600; vertical-align:top;">Tugas</td>
+                    <td style="text-align:center; vertical-align:top;">:</td>
+                    <td style="font-weight:bold; vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(p.ruang)}</td>
+                  </tr>
+                </table>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end; padding:0 10px 5px 10px; overflow:visible;">
+                ${buildTtdWithDigitalStampHTML('compact')}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        pagesHtml += `
+          <div class="a4-page" style="display:grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap:4mm; align-content:start;">
+            ${cards}
+          </div>
+        `;
+      }
+      document.getElementById('preview-kartu_panitia').innerHTML = pagesHtml;
+    }
+
+    /* =====================================================================
+       MODUL 6: LABEL PINTU RUANGAN
+       ===================================================================== */
+    function renderLabelRuang() {
+      const ruang = document.getElementById('filterLabelRuang').value || getUniqueRooms()[0];
+      const s = appState.settings;
+      const roomStudents = appState.students.filter(st => (st.ruang || 'RUANG 1') === ruang);
+      const firstNo = roomStudents.length ? roomStudents[0].noPeserta : '-';
+      const lastNo = roomStudents.length ? roomStudents[roomStudents.length - 1].noPeserta : '-';
+      const kelasList = Array.from(new Set(roomStudents.map(st => st.kelas))).join(', ') || '-';
+
+      document.getElementById('preview-label_ruang').innerHTML = `
+        <div class="a4-page a4-landscape" style="display:flex; flex-direction:column; justify-content:space-between; border:4px double #000;">
+          ${buildFullKopHTML()}
+          <div style="text-align:center;">
+            <div style="font-size:15pt; font-weight:bold; letter-spacing:0.8px;">${escapeHtml(s.namaUjian)}</div>
+            <div style="font-size:13pt; font-weight:bold; margin-bottom:12px;">${escapeHtml(s.tahunAjaran)}</div>
+
+            <div style="border:4px solid #000; border-radius:12px; padding:16px 28px; display:inline-block; min-width:65%; background:#f8fafc; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+              <div style="font-size:40pt; font-weight:bold; letter-spacing:2px; line-height:1.1; overflow-wrap:anywhere;">${escapeHtml(ruang)}</div>
+            </div>
+
+            <div style="margin-top:14px; font-size:13pt; line-height:1.5; overflow-wrap:anywhere;">
+              <div>Nomor Peserta : <strong>${escapeHtml(firstNo)}</strong> s.d. <strong>${escapeHtml(lastNo)}</strong></div>
+              <div>Jumlah Peserta : <strong>${roomStudents.length} Siswa</strong> (Kelas: ${escapeHtml(kelasList)})</div>
+            </div>
+          </div>
+
+          <div style="text-align:center; border-top:2px solid #000; padding-top:6px; font-size:10.5pt; font-weight:bold; letter-spacing:1px;">
+            HARAP TENANG — SEDANG BERLANGSUNG UJIAN
+          </div>
+        </div>
+      `;
+    }
+
+    /* =====================================================================
+       MODUL 7: BERITA ACARA PELAKSANAAN UJIAN
+       ===================================================================== */
+    function renderBaPelaksanaan() {
+      const qty = Math.max(1, parseInt(document.getElementById('qtyBaPelaksanaan').value) || 1);
+      const s = appState.settings;
+      let html = '';
+
+      for (let i = 0; i < qty; i++) {
+        html += `
+          <div class="a4-page" style="font-size:10.5pt; line-height:1.4;">
+            ${buildFullKopHTML()}
+            <div style="text-align:center; margin-bottom:10px;">
+              <div style="font-size:12pt; font-weight:bold; text-decoration:underline;">BERITA ACARA PELAKSANAAN UJIAN</div>
+              <div style="font-size:10.5pt; font-weight:bold;">${escapeHtml(s.namaUjian)}</div>
+              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.tahunAjaran)}</div>
+            </div>
+
+            <p style="text-align:justify; margin-bottom:8px;">
+              Pada hari ini <span class="fill-blank" style="min-width:85px;"></span> tanggal <span class="fill-blank" style="min-width:40px;"></span>
+              bulan <span class="fill-blank" style="min-width:85px;"></span> tahun <span class="fill-blank" style="min-width:55px;"></span>,
+              di <strong>${escapeHtml(s.sekolah)}</strong> telah diselenggarakan <strong>${escapeHtml(s.namaUjian)}</strong>:
+            </p>
+
+            <table style="width:100%; margin-bottom:8px; border-collapse:collapse; font-size:10pt;">
+              <tr><td style="width:185px; padding:2px 0;">1. Ruang Ujian</td><td style="width:12px;">:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
+              <tr><td style="padding:2px 0;">2. Mata Pelajaran</td><td>:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
+              <tr><td style="padding:2px 0;">3. Pukul / Sesi ke-</td><td>:</td><td><span class="fill-blank" style="min-width:110px;"></span> s.d. <span class="fill-blank" style="min-width:110px;"></span> (Sesi: <span class="fill-blank" style="min-width:36px;"></span>)</td></tr>
+              <tr><td style="padding:2px 0;">4. Jumlah Peserta Terdaftar</td><td>:</td><td><span class="fill-blank" style="min-width:55px;"></span> orang</td></tr>
+              <tr><td style="padding:2px 0;">5. Jumlah Peserta Hadir</td><td>:</td><td><span class="fill-blank" style="min-width:55px;"></span> orang</td></tr>
+              <tr><td style="padding:2px 0;">6. Jumlah Peserta Tidak Hadir</td><td>:</td><td><span class="fill-blank" style="min-width:55px;"></span> orang</td></tr>
+              <tr><td style="padding:2px 0; vertical-align:top;">7. Nomor Peserta Tidak Hadir</td><td style="vertical-align:top;">:</td><td><div style="border-bottom:1px dotted #000; height:16px; margin-bottom:3px;"></div><div style="border-bottom:1px dotted #000; height:16px;"></div></td></tr>
+            </table>
+
+            <div style="margin-bottom:4px; font-weight:bold; font-size:10pt;">8. Catatan Kejadian Penting Selama Ujian Berlangsung:</div>
+            <div style="border:1px solid #000; padding:6px 8px; min-height:64px; margin-bottom:10px;">
+              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
+              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
+              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
+            </div>
+
+            <p style="margin-bottom:10px; font-size:10pt;">Demikian berita acara pelaksanaan ujian ini dibuat dengan sesungguhnya untuk dapat dipergunakan sebagaimana mestinya.</p>
+
+            <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt;">
+              <tr>
+                <td style="width:50%; vertical-align:top;">
+                  <div>Pengawas Ruang I,</div>
+                  <div style="height:46px;"></div>
+                  <div>( .................................................... )</div>
+                  <div>NIP. .............................................</div>
+                </td>
+                <td style="width:50%; vertical-align:top;">
+                  <div>Pengawas Ruang II,</div>
+                  <div style="height:46px;"></div>
+                  <div>( .................................................... )</div>
+                  <div>NIP. .............................................</div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" style="padding-top:10px;">
+                  <div>Mengetahui,</div>
+                  <div>Kepala ${escapeHtml(s.sekolah)}</div>
+                  <div style="height:46px;"></div>
+                  <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek)}</div>
+                  <div>NIP. ${escapeHtml(s.nipKepsek)}</div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        `;
+      }
+      document.getElementById('preview-ba_pelaksanaan').innerHTML = html;
+    }
+
+    /* =====================================================================
+       MODUL 8: BERITA ACARA SERAH TERIMA SOAL & LJK
+       ===================================================================== */
+    function renderBaSerahTerima() {
+      const qty = Math.max(1, parseInt(document.getElementById('qtyBaSerah').value) || 1);
+      const s = appState.settings;
+      let html = '';
+
+      for (let i = 0; i < qty; i++) {
+        html += `
+          <div class="a4-page" style="font-size:10.5pt; line-height:1.38;">
+            ${buildFullKopHTML()}
+            <div style="text-align:center; margin-bottom:10px;">
+              <div style="font-size:12pt; font-weight:bold; text-decoration:underline;">BERITA ACARA SERAH TERIMA NASKAH SOAL &amp; LJK</div>
+              <div style="font-size:10.5pt; font-weight:bold;">${escapeHtml(s.namaUjian)}</div>
+              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.tahunAjaran)}</div>
+            </div>
+
+            <p style="text-align:justify; margin-bottom:8px; font-size:10pt;">
+              Pada hari ini <span class="fill-blank" style="min-width:85px;"></span> tanggal <span class="fill-blank" style="min-width:40px;"></span>
+              bulan <span class="fill-blank" style="min-width:85px;"></span> tahun <span class="fill-blank" style="min-width:55px;"></span>,
+              telah dilakukan serah terima berkas ujian untuk:
+            </p>
+
+            <table style="width:100%; margin-bottom:10px; border-collapse:collapse; font-size:10pt;">
+              <tr><td style="width:155px; padding:2px 0;">Ruang Ujian</td><td style="width:12px;">:</td><td><span class="fill-blank" style="min-width:230px;"></span></td></tr>
+              <tr><td style="padding:2px 0;">Mata Pelajaran</td><td>:</td><td><span class="fill-blank" style="min-width:230px;"></span></td></tr>
+              <tr><td style="padding:2px 0;">Jam / Sesi ke-</td><td>:</td><td><span class="fill-blank" style="min-width:230px;"></span></td></tr>
+            </table>
+
+            <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">A. Penyerahan Sebelum Ujian (Panitia → Pengawas Ruang) — Pukul: ................ WIB</div>
+            <table class="doc-table" style="margin-bottom:10px; font-size:9pt;">
+              <thead>
+                <tr>
+                  <th style="width:34px;">No</th>
+                  <th>Jenis Berkas / Dokumen</th>
+                  <th style="width:100px;">Jumlah</th>
+                  <th style="width:130px;">Kondisi Sampul</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td style="text-align:center;">1</td><td>Amplop Naskah Soal Ujian</td><td style="text-align:center;">........ eks</td><td style="text-align:center;">Baik / Tersegel</td></tr>
+                <tr><td style="text-align:center;">2</td><td>Lembar Jawab (LJK / LJU)</td><td style="text-align:center;">........ lbr</td><td style="text-align:center;">Baik / Lengkap</td></tr>
+                <tr><td style="text-align:center;">3</td><td>Daftar Hadir &amp; Berita Acara Pelaksanaan</td><td style="text-align:center;">........ set</td><td style="text-align:center;">Lengkap</td></tr>
+              </tbody>
+            </table>
+
+            <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">B. Pengembalian Setelah Ujian (Pengawas Ruang → Panitia) — Pukul: ................ WIB</div>
+            <table class="doc-table" style="margin-bottom:14px; font-size:9pt;">
+              <thead>
+                <tr>
+                  <th style="width:34px;">No</th>
+                  <th>Jenis Berkas / Dokumen</th>
+                  <th style="width:100px;">Jumlah</th>
+                  <th style="width:130px;">Keterangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td style="text-align:center;">1</td><td>Lembar Jawab Peserta Terisi</td><td style="text-align:center;">........ lbr</td><td></td></tr>
+                <tr><td style="text-align:center;">2</td><td>Lembar Jawab Kosong / Sisa</td><td style="text-align:center;">........ lbr</td><td></td></tr>
+                <tr><td style="text-align:center;">3</td><td>Naskah Soal, Daftar Hadir &amp; Berita Acara</td><td style="text-align:center;">........ set</td><td></td></tr>
+              </tbody>
+            </table>
+
+            <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt;">
+              <tr>
+                <td style="width:50%;">
+                  <div>Yang Menyerahkan / Menerima,</div>
+                  <div><strong>Panitia Ujian</strong></div>
+                  <div style="height:48px;"></div>
+                  <div>( .................................................... )</div>
+                  <div>NIP. .............................................</div>
+                </td>
+                <td style="width:50%;">
+                  <div>Yang Menerima / Menyerahkan,</div>
+                  <div><strong>Pengawas Ruang</strong></div>
+                  <div style="height:48px;"></div>
+                  <div>( .................................................... )</div>
+                  <div>NIP. .............................................</div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        `;
+      }
+      document.getElementById('preview-ba_serah_terima').innerHTML = html;
+    }
+
+    /* =====================================================================
+       MODUL 9: SURAT KETERANGAN / IJIN MENGIKUTI UJIAN
+       ===================================================================== */
+    function renderSuratIjin() {
+      const selId = document.getElementById('selectSiswaSurat').value;
+      const st = appState.students.find(x => x.id === selId) || null;
+      const s = appState.settings;
+
+      const field = (val, width = '240px') => val
+        ? `<strong style="overflow-wrap:anywhere;">${escapeHtml(val)}</strong>`
+        : `<span class="fill-blank" style="min-width:${width};"></span>`;
+
+      document.getElementById('preview-surat_ijin').innerHTML = `
+        <div class="a4-page" style="font-size:11pt; line-height:1.5;">
+          ${buildFullKopHTML()}
+          <div style="text-align:center; margin:12px 0 16px 0;">
+            <div style="font-size:12.5pt; font-weight:bold; text-decoration:underline;">SURAT KETERANGAN / IJIN MENGIKUTI UJIAN</div>
+            <div style="font-size:10pt;">Nomor : 421.3 / ........... / PAN-UJIAN / 2026</div>
+          </div>
+
+          <p style="margin-bottom:10px;">Yang bertanda tangan di bawah ini, Panitia Pelaksana <strong>${escapeHtml(s.namaUjian)}</strong> ${escapeHtml(s.sekolah)} Tahun Ajaran ${escapeHtml(s.tahunAjaran)}, menerangkan bahwa:</p>
+
+          <table style="width:100%; margin:10px 0 14px 16px; border-collapse:collapse;">
+            <tr><td style="width:160px; padding:3px 0;">Nama Peserta</td><td style="width:12px;">:</td><td>${field(st?.nama)}</td></tr>
+            <tr><td style="padding:3px 0;">Nomor Peserta</td><td>:</td><td>${field(st?.noPeserta)}</td></tr>
+            <tr><td style="padding:3px 0;">NISN</td><td>:</td><td>${field(st?.nisn)}</td></tr>
+            <tr><td style="padding:3px 0;">Kelas</td><td>:</td><td>${field(st?.kelas)}</td></tr>
+            <tr><td style="padding:3px 0;">Ruang Ujian</td><td>:</td><td>${field(st?.ruang)}</td></tr>
+            <tr><td style="padding:3px 0;">Alasan / Keperluan</td><td>:</td><td><span class="fill-blank" style="min-width:260px;"></span></td></tr>
+          </table>
+
+          <p style="text-align:justify; margin-bottom:20px;">
+            Adalah benar peserta didik ${escapeHtml(s.sekolah)} yang terdaftar sebagai peserta ujian dan diberikan <strong>IJIN</strong> untuk mengikuti ujian pada hari ini tanggal <span class="fill-blank" style="min-width:130px;"></span>. Demikian surat keterangan ini dibuat untuk dipergunakan sebagaimana mestinya.
+          </p>
+
+          <table style="width:100%; border-collapse:collapse; margin-top:16px;">
+            <tr>
+              <td style="width:52%; vertical-align:top;">
+                <div>Mengetahui,</div>
+                <div>Kepala ${escapeHtml(s.sekolah)}</div>
+                <div style="height:56px;"></div>
+                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek)}</div>
+                <div>NIP. ${escapeHtml(s.nipKepsek)}</div>
+              </td>
+              <td style="width:48%; vertical-align:top;">
+                <div>${escapeHtml(s.titimangsa)}</div>
+                <div>Ketua Panitia Ujian,</div>
+                <div style="height:56px;"></div>
+                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.ketua)}</div>
+                <div>NIP. ${escapeHtml(s.nipKetua)}</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      `;
+    }
+
+    /* =====================================================================
+       MODUL 10: JURNAL AGENDA UJIAN MASING-MASING SISWA (2 PER A4)
+       ===================================================================== */
+    function renderJurnalSiswa() {
+      const ruangFilter = document.getElementById('filterRuangJurnal').value || 'ALL';
+      const list = ruangFilter === 'ALL'
+        ? appState.students
+        : appState.students.filter(s => s.ruang === ruangFilter);
+
+      const s = appState.settings;
+      let pagesHtml = '';
+
+      for (let i = 0; i < list.length; i += 2) {
+        const chunk = list.slice(i, i + 2);
+        const cards = chunk.map(st => `
+          <div style="border:1.8px solid #000; height:136mm; display:flex; flex-direction:column; justify-content:space-between; overflow:hidden;">
+            <div>
+              ${buildCardKopHTML(true, false)}
+              <div style="padding:3px 12px 0 12px;">
+                <div style="text-align:center; font-weight:bold; font-size:9.5pt; text-decoration:underline; margin-bottom:4px;">
+                  JURNAL AGENDA &amp; KARTU KENDALI KEHADIRAN PESERTA UJIAN
+                </div>
+                <table style="width:100%; font-size:8.5pt; margin-bottom:4px; border-collapse:collapse; table-layout:fixed;">
+                  <tr>
+                    <td style="width:82px;">Nama Siswa</td><td style="width:8px;">:</td><td style="font-weight:bold; overflow-wrap:anywhere;">${escapeHtml(st.nama)}</td>
+                    <td style="width:78px;">No. Peserta</td><td style="width:8px;">:</td><td style="font-weight:bold; overflow-wrap:anywhere;">${escapeHtml(st.noPeserta)}</td>
+                  </tr>
+                  <tr>
+                    <td>Kelas</td><td>:</td><td>${escapeHtml(st.kelas)}</td>
+                    <td>Ruang Ujian</td><td>:</td><td style="font-weight:bold;">${escapeHtml(st.ruang)}</td>
+                  </tr>
+                </table>
+
+                <table class="doc-table" style="font-size:8pt;">
+                  <thead>
+                    <tr>
+                      <th style="width:28px;">No</th>
+                      <th style="width:105px;">Hari / Tanggal</th>
+                      <th>Mata Pelajaran</th>
+                      <th style="width:68px;">Jam Ke</th>
+                      <th style="width:90px;">Paraf Pengawas</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${[1,2,3,4,5,6].map(n => `
+                      <tr>
+                        <td style="text-align:center; padding:3px;">${n}</td>
+                        <td></td><td></td><td></td><td></td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:8pt; padding:0 12px 6px 12px;">
+              <div style="font-style:italic; font-size:7pt; max-width:54%;">
+                * Kartu ini wajib dibawa setiap hari ujian dan diparaf oleh pengawas ruang.
+              </div>
+              <div style="width:180px;">
+                <div>${escapeHtml(s.titimangsa)}</div>
+                <div>Kepala Sekolah,</div>
+                <div style="height:26px;"></div>
+                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek)}</div>
+                <div>NIP. ${escapeHtml(s.nipKepsek)}</div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        pagesHtml += `
+          <div class="a4-page" style="display:flex; flex-direction:column; gap:4mm;">
+            ${cards}
+          </div>
+        `;
+      }
+      document.getElementById('preview-jurnal_siswa').innerHTML = pagesHtml;
+    }
+
+    /* =====================================================================
+       MODUL 11: DAFTAR HADIR PESERTA UJIAN
+       ===================================================================== */
+    function renderDhSiswa() {
+      const ruangFilter = document.getElementById('filterRuangDhSiswa').value || 'ALL';
+      const rooms = ruangFilter === 'ALL' ? getUniqueRooms() : [ruangFilter];
+      const s = appState.settings;
+      let pagesHtml = '';
+
+      rooms.forEach(ruang => {
+        const roomStudents = appState.students.filter(st => (st.ruang || 'RUANG 1') === ruang);
+        const rows = roomStudents.map((st, idx) => {
+          const isOdd = (idx + 1) % 2 === 1;
+          return `
+            <tr>
+              <td style="text-align:center;">${idx + 1}</td>
+              <td style="text-align:center; font-weight:bold;">${escapeHtml(st.noPeserta)}</td>
+              <td style="text-align:center;">${escapeHtml(st.nisn)}</td>
+              <td>${escapeHtml(st.nama)}</td>
+              <td style="text-align:center;">${escapeHtml(st.kelas)}</td>
+              <td style="text-align:left; font-size:8pt;">${isOdd ? (idx + 1) + '.' : ''}</td>
+              <td style="text-align:left; font-size:8pt;">${!isOdd ? (idx + 1) + '.' : ''}</td>
+            </tr>
+          `;
+        }).join('');
+
+        pagesHtml += `
+          <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
+            ${buildFullKopHTML()}
+            <div style="text-align:center; margin-bottom:8px;">
+              <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">DAFTAR HADIR PESERTA UJIAN</div>
+              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
+            </div>
+
+            <table style="width:100%; font-size:9pt; margin-bottom:6px; border-collapse:collapse;">
+              <tr>
+                <td style="width:110px;">Ruang Ujian</td><td style="width:10px;">:</td><td><strong>${escapeHtml(ruang)}</strong></td>
+                <td style="width:110px;">Hari / Tanggal</td><td style="width:10px;">:</td><td>............................................</td>
+              </tr>
+              <tr>
+                <td>Mata Pelajaran</td><td>:</td><td>............................................</td>
+                <td>Pukul / Sesi</td><td>:</td><td>............................................</td>
+              </tr>
+            </table>
+
+            <table class="doc-table" style="font-size:9pt; margin-bottom:12px;">
+              <thead>
+                <tr>
+                  <th style="width:30px;">No</th>
+                  <th style="width:88px;">No. Peserta</th>
+                  <th style="width:90px;">NISN</th>
+                  <th>Nama Peserta</th>
+                  <th style="width:52px;">Kelas</th>
+                  <th colspan="2" style="width:140px;">Tanda Tangan</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+
+            <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
+              <tr>
+                <td style="width:55%; vertical-align:top;">
+                  <div>Mengetahui,</div>
+                  <div>Kepala ${escapeHtml(s.sekolah)}</div>
+                  <div style="height:46px;"></div>
+                  <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek)}</div>
+                  <div>NIP. ${escapeHtml(s.nipKepsek)}</div>
+                </td>
+                <td style="width:45%; vertical-align:top;">
+                  <div>Pengawas Ruang,</div>
+                  <div style="height:56px;"></div>
+                  <div>( .................................................... )</div>
+                  <div>NIP. .............................................</div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        `;
+      });
+
+      document.getElementById('preview-dh_siswa').innerHTML = pagesHtml;
+    }
+
+    /* =====================================================================
+       MODUL 12: DAFTAR HADIR PENGAWAS & PANITIA
+       ===================================================================== */
+    function renderDhPanitia() {
+      const cat = document.getElementById('filterKategoriDhPanitia').value || 'ALL';
+      const list = cat === 'ALL' ? appState.staff : appState.staff.filter(p => p.peran === cat);
+      const s = appState.settings;
+
+      const titleMap = {
+        ALL: 'DAFTAR HADIR PANITIA DAN PENGAWAS UJIAN',
+        Panitia: 'DAFTAR HADIR PANITIA PELAKSANA UJIAN',
+        Pengawas: 'DAFTAR HADIR PENGAWAS RUANG UJIAN'
+      };
+
+      const rows = list.map((p, idx) => {
+        const isOdd = (idx + 1) % 2 === 1;
+        return `
+          <tr>
+            <td style="text-align:center;">${idx + 1}</td>
+            <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
+            <td>${escapeHtml(p.nip)}</td>
+            <td>${escapeHtml(p.jabatan)} (${escapeHtml(p.peran)})</td>
+            <td style="text-align:center;">${escapeHtml(p.ruang)}</td>
+            <td style="font-size:8pt;">${isOdd ? (idx + 1) + '.' : ''}</td>
+            <td style="font-size:8pt;">${!isOdd ? (idx + 1) + '.' : ''}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('preview-dh_panitia').innerHTML = `
+        <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
+          ${buildFullKopHTML()}
+          <div style="text-align:center; margin-bottom:8px;">
+            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">${titleMap[cat]}</div>
+            <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
+          </div>
+
+          <div style="margin-bottom:6px; font-size:9pt;">
+            Hari / Tanggal : ........................................................ &nbsp;&nbsp;&nbsp; Sesi / Pukul : ............................................
+          </div>
+
+          <table class="doc-table" style="font-size:9pt; margin-bottom:14px;">
+            <thead>
+              <tr>
+                <th style="width:30px;">No</th>
+                <th>Nama Lengkap &amp; Gelar</th>
+                <th style="width:120px;">NIP / NUPTK</th>
+                <th style="width:125px;">Jabatan</th>
+                <th style="width:76px;">Ruang</th>
+                <th colspan="2" style="width:136px;">Tanda Tangan</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+
+          <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:12px; break-inside:avoid;">
+            <tr>
+              <td style="width:55%; vertical-align:top;">
+                <div>Mengetahui,</div>
+                <div>Kepala ${escapeHtml(s.sekolah)}</div>
+                <div style="height:48px;"></div>
+                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek)}</div>
+                <div>NIP. ${escapeHtml(s.nipKepsek)}</div>
+              </td>
+              <td style="width:45%; vertical-align:top;">
+                <div>${escapeHtml(s.titimangsa)}</div>
+                <div>Ketua Panitia Ujian,</div>
+                <div style="height:48px;"></div>
+                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.ketua)}</div>
+                <div>NIP. ${escapeHtml(s.nipKetua)}</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      `;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadLocalState();
+      populateAllForms();
+      refreshRoomDropdowns();
+      document.getElementById('headerSchoolName').textContent = appState.settings.sekolah;
+      if (appState.gasUrl) {
+        setSyncStatus('connected', 'URL Sheets Siap');
+      }
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
