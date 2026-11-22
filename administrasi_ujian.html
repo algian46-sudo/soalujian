@@ -752,7 +752,7 @@
       </section>
 
       <!-- =========================================================
-           MODUL 10: JURNAL AGENDA & KARTU KENDALI SISWA (TANPA TTD KEPSEK DEFAULT)
+           MODUL 10: JURNAL AGENDA & KARTU KENDALI SISWA
            ========================================================= -->
       <section id="tab-jurnal_siswa" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -770,7 +770,7 @@
               </select>
             </div>
           </div>
-          <div class="text-xs text-slate-400">Default tanpa TTD Kepala Sekolah (isian kosong); aktifkan TTD Kepsek di atas bila diperlukan.</div>
+          <div class="text-xs text-slate-400">Nama &amp; NIP Kepala Sekolah tetap tampil; gambar TTD &amp; Cap mengikuti pilihan TTD di bar atas.</div>
         </div>
         <div id="preview-jurnal_siswa" class="print-workspace"></div>
       </section>
@@ -3112,7 +3112,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 10: JURNAL AGENDA & KARTU KENDALI SISWA (DEFAULT TANPA TTD KEPSEK)
+       MODUL 10: JURNAL AGENDA & KARTU KENDALI SISWA (NAMA/NIP KEPSEK TETAP TAMPIL)
        ===================================================================== */
     function buildAgendaRowsFromSchedule() {
       const days = appState.settings.scheduleDays || [];
@@ -3159,7 +3159,6 @@ function buildJsonResponse(obj) {
         parafHeaders = `<th style="width:84px;">Paraf Siswa</th>`;
       }
 
-      const showKepsekOnJurnal = appState.ttdMode === 'kepsek';
       let pagesHtml = '';
 
       for (let i = 0; i < list.length; i += 2) {
@@ -3223,10 +3222,10 @@ function buildJsonResponse(obj) {
               </div>
 
               <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:8pt; padding:0 10px 5px 10px; overflow:visible;">
-                <div style="font-style:italic; font-size:6.8pt; max-width:${showKepsekOnJurnal ? '56%' : '100%'};">
+                <div style="font-style:italic; font-size:6.8pt; max-width:56%;">
                   * Kartu ini wajib dibawa setiap hari ujian dan diparaf sesuai ketentuan ruang ujian.
                 </div>
-                ${showKepsekOnJurnal ? buildTtdWithDigitalStampHTML('compact', false) : ''}
+                ${buildTtdWithDigitalStampHTML('compact', false)}
               </div>
             </div>
           `;
