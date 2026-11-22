@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Si-ADU PRO | Sistem Administrasi Ujian Sekolah</title>
+  <link rel="icon" type="image/png" href="https://i.imgur.com/mRmw86t.jpeg">
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
@@ -110,12 +111,12 @@
       background: linear-gradient(to top right, transparent calc(50% - 0.7px), #000 50%, transparent calc(50% + 0.7px)) !important;
       padding: 1.5px !important;
       height: 26px;
-      width: 48px;
+      width: 44px;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
-    .diag-top { position: absolute; top: 1px; right: 2px; font-size: 5pt; font-weight: bold; }
-    .diag-bot { position: absolute; bottom: 1px; left: 2px; font-size: 5pt; font-weight: bold; }
+    .diag-top { position: absolute; top: 1px; right: 2px; font-size: 4.8pt; font-weight: bold; }
+    .diag-bot { position: absolute; bottom: 1px; left: 2px; font-size: 4.8pt; font-weight: bold; }
 
     /* TABEL DOKUMEN RESMI */
     .doc-table {
@@ -228,6 +229,13 @@
     </div>
 
     <div class="flex items-center gap-2 flex-wrap">
+      <div class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-700 rounded-lg px-2.5 py-1">
+        <span class="text-[11px] text-slate-400 font-semibold">TTD:</span>
+        <select id="globalTtdMode" onchange="updateGlobalTtdMode(this.value)" class="bg-transparent text-xs font-bold text-amber-300 focus:outline-none cursor-pointer">
+          <option value="kosong" class="bg-slate-900 text-white">TTD &amp; Cap Kepsek Kosong (Nama/NIP Tetap)</option>
+          <option value="kepsek" class="bg-slate-900 text-white">TTD Kepsek Muncul</option>
+        </select>
+      </div>
       <span id="syncStatusBadge" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800/90 border border-slate-700 text-slate-300 flex items-center gap-1.5">
         <span class="w-2 h-2 rounded-full bg-amber-400"></span> Mode Lokal
       </span>
@@ -246,36 +254,36 @@
   <!-- MAIN SHELL -->
   <div class="main-container flex flex-col lg:flex-row min-h-[calc(100vh-65px)]">
 
-    <!-- SIDEBAR NAVIGASI 12 MODUL -->
+    <!-- SIDEBAR NAVIGASI 13 MODUL -->
     <aside class="no-print w-full lg:w-72 glass-panel border-r border-slate-800 p-3 flex flex-col justify-between shrink-0">
       <div>
-        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-2">Master Data & Denah</div>
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-2">Master Data &amp; Denah</div>
         <nav class="space-y-1">
           <button data-tab="master" onclick="switchTab('master')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition bg-indigo-600 text-white shadow">
-            <i data-lucide="database" class="w-4 h-4 shrink-0"></i> 1. Database, Kop & Data Master
+            <i data-lucide="database" class="w-4 h-4 shrink-0"></i> 1. Database, Kop &amp; Data Master
           </button>
           <button data-tab="denah" onclick="switchTab('denah')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="layout-grid" class="w-4 h-4 shrink-0"></i> 2. Atur & Acak Denah Duduk
+            <i data-lucide="layout-grid" class="w-4 h-4 shrink-0"></i> 2. Atur &amp; Acak Denah Duduk
           </button>
         </nav>
 
-        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-4 pb-2">Kartu & Identitas Ujian</div>
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-4 pb-2">Kartu &amp; Identitas Ujian</div>
         <nav class="space-y-1">
           <button data-tab="kartu_peserta" onclick="switchTab('kartu_peserta')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="id-card" class="w-4 h-4 shrink-0"></i> 3. Kartu Peserta + QR & Jadwal
+            <i data-lucide="id-card" class="w-4 h-4 shrink-0"></i> 3. Kartu Peserta + QR &amp; Jadwal
           </button>
           <button data-tab="kartu_meja" onclick="switchTab('kartu_meja')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
             <i data-lucide="square-user" class="w-4 h-4 shrink-0"></i> 4. Kartu Meja Peserta (8/A4)
           </button>
           <button data-tab="kartu_panitia" onclick="switchTab('kartu_panitia')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="badge-check" class="w-4 h-4 shrink-0"></i> 5. Kartu Panitia & Pengawas
+            <i data-lucide="badge-check" class="w-4 h-4 shrink-0"></i> 5. Kartu Panitia &amp; Pengawas
           </button>
           <button data-tab="label_ruang" onclick="switchTab('label_ruang')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
             <i data-lucide="door-open" class="w-4 h-4 shrink-0"></i> 6. Label Pintu Ruangan
           </button>
         </nav>
 
-        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-4 pb-2">Berita Acara, Surat & Presensi</div>
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-4 pb-2">Berita Acara, Presensi &amp; Nilai</div>
         <nav class="space-y-1">
           <button data-tab="ba_pelaksanaan" onclick="switchTab('ba_pelaksanaan')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
             <i data-lucide="file-signature" class="w-4 h-4 shrink-0"></i> 7. Berita Acara Pelaksanaan
@@ -293,7 +301,10 @@
             <i data-lucide="users" class="w-4 h-4 shrink-0"></i> 11. Daftar Hadir Peserta
           </button>
           <button data-tab="dh_panitia" onclick="switchTab('dh_panitia')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0"></i> 12. Daftar Hadir Pengawas & Panitia
+            <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0"></i> 12. Daftar Hadir Pengawas &amp; Panitia
+          </button>
+          <button data-tab="daftar_nilai" onclick="switchTab('daftar_nilai')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="award" class="w-4 h-4 shrink-0"></i> 13. Daftar Nilai Lengkap Siswa
           </button>
         </nav>
       </div>
@@ -314,7 +325,7 @@
       <section id="tab-master" class="tab-section space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 class="text-xl font-bold text-white">Database Google Spreadsheet, Kop & Data Master</h2>
+            <h2 class="text-xl font-bold text-white">Database Google Spreadsheet, Kop &amp; Data Master</h2>
             <p class="text-xs text-slate-400">Mendukung link gambar Google Drive format <code class="text-cyan-300">https://drive.google.com/open?id=...</code> secara otomatis.</p>
           </div>
           <div class="flex gap-2 flex-wrap">
@@ -329,18 +340,18 @@
 
         <div class="flex gap-2 border-b border-slate-700/70 pb-2 overflow-x-auto">
           <button onclick="switchSubMaster('db')" id="subBtn-db" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-indigo-600 text-white">1A. Koneksi Google Sheets</button>
-          <button onclick="switchSubMaster('kop')" id="subBtn-kop" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">1B. Kop Surat, Logo & TTD Kepala</button>
+          <button onclick="switchSubMaster('kop')" id="subBtn-kop" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">1B. Kop Surat, Logo &amp; TTD Kepala</button>
           <button onclick="switchSubMaster('siswa')" id="subBtn-siswa" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">1C. Data Peserta Ujian (<span id="countSiswa">0</span>)</button>
-          <button onclick="switchSubMaster('panitia')" id="subBtn-panitia" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">1D. Data Panitia & Pengawas (<span id="countPanitia">0</span>)</button>
+          <button onclick="switchSubMaster('panitia')" id="subBtn-panitia" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">1D. Panitia &amp; Jadwal Pengawas (<span id="countPanitia">0</span>)</button>
           <button onclick="switchSubMaster('jadwal')" id="subBtn-jadwal" class="sub-master-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">1E. Jadwal Pelajaran Ujian</button>
         </div>
 
-        <!-- SUB 1A: KONEKSI GOOGLE SHEETS -->
-        <div id="sub-db" class="sub-master-panel glass-panel rounded-2xl p-5 space-y-4">
+        <!-- SUB 1A: KONEKSI GOOGLE SHEETS + TOMBOL SALIN KODE GAS -->
+        <div id="sub-db" class="sub-master-panel glass-panel rounded-2xl p-5 space-y-5">
           <div class="grid md:grid-cols-3 gap-4 items-end">
             <div class="md:col-span-2">
-              <label class="block text-xs font-semibold text-slate-300 mb-1.5">URL Google Apps Script Web App (<code class="text-emerald-400">.../exec</code>)</label>
-              <input type="url" id="inpGasUrl" placeholder="https://script.google.com/macros/s/AKfycbx.../exec" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-xs text-white focus:border-indigo-500 focus:outline-none" onchange="saveLocalSettings()" />
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">URL Google Apps Script Web App (<code class="text-emerald-400">.../exec</code>) — Otomatis tersimpan lokal</label>
+              <input type="url" id="inpGasUrl" placeholder="https://script.google.com/macros/s/AKfycbx.../exec" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-xs text-white focus:border-indigo-500 focus:outline-none" oninput="saveLocalSettings()" onchange="saveLocalSettings()" />
             </div>
             <div class="flex gap-2">
               <button onclick="syncPullFromSheets()" class="flex-1 py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-xs font-bold text-white flex items-center justify-center gap-1.5">
@@ -350,6 +361,19 @@
                 <i data-lucide="upload-cloud" class="w-4 h-4"></i> Simpan Data
               </button>
             </div>
+          </div>
+
+          <div class="border-t border-slate-700/70 pt-4 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-cyan-400">Kode Backend Google Apps Script (Code.gs)</h3>
+                <p class="text-[11px] text-slate-400">Klik tombol salin lalu tempel ke <strong>Ekstensi &rarr; Apps Script</strong> di Google Spreadsheet Anda, lalu deploy sebagai <strong>Web App (Anyone)</strong>.</p>
+              </div>
+              <button onclick="copyGasCode()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-indigo-600/25">
+                <i data-lucide="copy" class="w-4 h-4"></i> Salin Kode GAS
+              </button>
+            </div>
+            <pre id="gasCodeBlock" class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-[11px] font-mono text-slate-300 max-h-56 overflow-y-auto whitespace-pre select-all"></pre>
           </div>
         </div>
 
@@ -389,7 +413,7 @@
               <input type="text" id="cfgNipKepsek" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Ketua Panitia Ujian & NIP</label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Ketua Panitia Ujian &amp; NIP</label>
               <div class="flex gap-2">
                 <input type="text" id="cfgKetua" placeholder="Nama Ketua" class="w-1/2 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
                 <input type="text" id="cfgNipKetua" placeholder="NIP Ketua" class="w-1/2 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
@@ -398,22 +422,22 @@
           </div>
 
           <div class="border-t border-slate-700/70 pt-4">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-3">Tautan Gambar Logo & TTD Digital (Google Drive / URL)</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-3">Tautan Gambar Logo &amp; TTD Digital (Google Drive / URL)</h3>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Logo Dinas / Kiri Kop</label>
                 <input type="text" id="cfgLogoKiri" placeholder="https://drive.google.com/open?id=..." class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Logo Sekolah / Kanan Kop</label>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Logo Sekolah / Kanan Kop (Watermark)</label>
                 <input type="text" id="cfgLogoKanan" placeholder="https://drive.google.com/open?id=..." class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-amber-300 mb-1">TTD Kepala Sekolah (Kartu Ujian & Meja)</label>
+                <label class="block text-xs font-semibold text-amber-300 mb-1">TTD Kepala Sekolah</label>
                 <input type="text" id="cfgTtdKepsek" placeholder="PNG Transparan / Link Drive" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-amber-300 mb-1">Stempel Sekolah (Kartu Ujian & Meja)</label>
+                <label class="block text-xs font-semibold text-amber-300 mb-1">Stempel Sekolah</label>
                 <input type="text" id="cfgStempel" placeholder="PNG Transparan / Link Drive" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs" onchange="updateSettingsFromForm()" />
               </div>
             </div>
@@ -423,7 +447,7 @@
         <!-- SUB 1C: DATA PESERTA UJIAN -->
         <div id="sub-siswa" class="sub-master-panel hidden glass-panel rounded-2xl p-5 space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <input type="text" id="searchSiswa" onkeyup="renderStudentTable()" placeholder="Cari nama / nomor peserta / ruang..." class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs w-64" />
+            <input type="text" id="searchSiswa" onkeyup="renderStudentTable()" placeholder="Cari nama / nomor peserta / ruang / kelas..." class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs w-72" />
             <button onclick="addStudentRow()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1.5">
               <i data-lucide="plus" class="w-4 h-4"></i> Tambah Peserta
             </button>
@@ -451,63 +475,86 @@
           </div>
         </div>
 
-        <!-- SUB 1D: DATA PANITIA & PENGAWAS -->
-        <div id="sub-panitia" class="sub-master-panel hidden glass-panel rounded-2xl p-5 space-y-4">
-          <div class="flex justify-between items-center">
-            <p class="text-xs text-slate-400">Kelola daftar Panitia Ujian dan Pengawas Ruang untuk cetak ID Card dan Daftar Hadir.</p>
-            <button onclick="addStaffRow()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1.5">
-              <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Panitia / Pengawas
-            </button>
+        <!-- SUB 1D: DATA PANITIA & JADWAL PENGAWAS (FOTO SEKALI INPUT + TOMBOL TAMBAH JADWAL) -->
+        <div id="sub-panitia" class="sub-master-panel hidden space-y-5">
+          <!-- BAGIAN 1: PANITIA PELAKSANA -->
+          <div class="glass-panel rounded-2xl p-5 space-y-3">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+              <div>
+                <h3 class="text-sm font-bold text-indigo-300 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i> A. Data Panitia Pelaksana Ujian</h3>
+                <p class="text-xs text-slate-400">Dicetak di ID Card Panitia dan tabel bagian atas Daftar Hadir Panitia &amp; Pengawas.</p>
+              </div>
+              <button onclick="addStaffRow('Panitia')" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1.5">
+                <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Panitia
+              </button>
+            </div>
+            <div class="overflow-x-auto border border-slate-700/70 rounded-xl">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-900 text-slate-300">
+                  <tr>
+                    <th class="p-2.5">No</th>
+                    <th class="p-2.5">Nama Lengkap &amp; Gelar</th>
+                    <th class="p-2.5">NIP / NUPTK</th>
+                    <th class="p-2.5">Jabatan Kepanitiaan</th>
+                    <th class="p-2.5">Pos / Tugas</th>
+                    <th class="p-2.5">Link Foto Drive</th>
+                    <th class="p-2.5 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyPanitiaOnly" class="divide-y divide-slate-800 bg-slate-900/40"></tbody>
+              </table>
+            </div>
           </div>
-          <div class="overflow-x-auto border border-slate-700/70 rounded-xl">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-slate-900 text-slate-300">
-                <tr>
-                  <th class="p-2.5">No</th>
-                  <th class="p-2.5">Nama Lengkap & Gelar</th>
-                  <th class="p-2.5">NIP / NUPTK</th>
-                  <th class="p-2.5">Jabatan Kepanitiaan</th>
-                  <th class="p-2.5">Kategori</th>
-                  <th class="p-2.5">Ruang Tugas</th>
-                  <th class="p-2.5">Link Foto Drive</th>
-                  <th class="p-2.5 text-center">Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="tbodyPanitia" class="divide-y divide-slate-800 bg-slate-900/40"></tbody>
-            </table>
+
+          <!-- BAGIAN 2: JADWAL PENGAWAS RUANG (1 PROFIL PER PENGAWAS, MULTI JADWAL HARI/JAM/RUANG) -->
+          <div class="glass-panel rounded-2xl p-5 space-y-3">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+              <div>
+                <h3 class="text-sm font-bold text-emerald-300 flex items-center gap-1.5"><i data-lucide="calendar-check" class="w-4 h-4"></i> B. Data &amp; Jadwal Tugas Pengawas Ruang</h3>
+                <p class="text-xs text-slate-400">Foto cukup diinput sekali per pengawas. Klik <strong>+ Jadwal</strong> untuk menambahkan hari, jam, dan ruang mengawas berbeda bagi pengawas yang sama.</p>
+              </div>
+              <button onclick="addStaffRow('Pengawas')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white flex items-center gap-1.5">
+                <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Pengawas
+              </button>
+            </div>
+            <div class="overflow-x-auto border border-slate-700/70 rounded-xl">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-900 text-slate-300">
+                  <tr>
+                    <th class="p-2.5 w-10">No</th>
+                    <th class="p-2.5">Nama Pengawas &amp; NIP</th>
+                    <th class="p-2.5">Link Foto Drive (Sekali Input)</th>
+                    <th class="p-2.5">Daftar Hari / Tanggal, Sesi &amp; Ruang Mengawas</th>
+                    <th class="p-2.5 text-center w-28">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyPengawasOnly" class="divide-y divide-slate-800 bg-slate-900/40"></tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <!-- SUB 1E: JADWAL MATRIKS UJIAN -->
+        <!-- SUB 1E: JADWAL MATRIKS UJIAN (HINGGA SABTU + MENU TAMBAH HARI) -->
         <div id="sub-jadwal" class="sub-master-panel hidden glass-panel rounded-2xl p-5 space-y-4">
           <div class="flex flex-wrap justify-between items-center gap-2">
             <div>
-              <h3 class="text-sm font-bold text-white">Matriks Jadwal Pelajaran Ujian</h3>
-              <p class="text-xs text-slate-400">Centang kolom <strong>Istirahat</strong> untuk memberi arsiran baris jeda seperti contoh kartu.</p>
+              <h3 class="text-sm font-bold text-white">Matriks Jadwal Pelajaran Ujian (Senin s.d. Sabtu)</h3>
+              <p class="text-xs text-slate-400">Isi tanggal pada baris header hari agar otomatis muncul di Jurnal Agenda Siswa &amp; Pilihan Hari Pengawas.</p>
             </div>
-            <div class="flex gap-2">
-              <input type="text" id="cfgCatatanJadwal" placeholder="Catatan kaki jadwal..." class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs w-72" onchange="updateSettingsFromForm()" />
+            <div class="flex flex-wrap gap-2">
+              <input type="text" id="cfgCatatanJadwal" placeholder="Catatan kaki jadwal..." class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs w-64" onchange="updateSettingsFromForm()" />
+              <button onclick="addScheduleDay()" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white flex items-center gap-1">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> + Tambah Hari
+              </button>
               <button onclick="addScheduleRow()" class="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1">
-                <i data-lucide="plus" class="w-4 h-4"></i> Baris Jam
+                <i data-lucide="plus" class="w-4 h-4"></i> + Tambah Jam
               </button>
             </div>
           </div>
 
           <div class="overflow-x-auto border border-slate-700/70 rounded-xl">
             <table class="w-full text-left text-xs">
-              <thead class="bg-slate-900 text-slate-300">
-                <tr>
-                  <th class="p-2">Jam Ke</th>
-                  <th class="p-2">Pukul</th>
-                  <th class="p-2 text-center">Istirahat?</th>
-                  <th class="p-2">Senin</th>
-                  <th class="p-2">Selasa</th>
-                  <th class="p-2">Rabu</th>
-                  <th class="p-2">Kamis</th>
-                  <th class="p-2">Jum'at</th>
-                  <th class="p-2 text-center">Hapus</th>
-                </tr>
-              </thead>
+              <thead id="theadJadwal" class="bg-slate-900 text-slate-300"></thead>
               <tbody id="tbodyJadwal" class="divide-y divide-slate-800 bg-slate-900/40"></tbody>
             </table>
           </div>
@@ -583,7 +630,7 @@
             </label>
           </div>
           <div class="text-xs text-slate-400">
-            Layout padat proporsional: teks tegas mengisi ruang, bingkai foto ganda, QR besar, dan TTD/cap menembus teks.
+            Menampilkan seluruh hari aktif dari Jadwal Pelajaran (Senin s.d. Sabtu).
           </div>
         </div>
 
@@ -591,7 +638,7 @@
       </section>
 
       <!-- =========================================================
-           MODUL 4: KARTU MEJA PESERTA (8 PER A4, FOTO SAJA)
+           MODUL 4: KARTU MEJA PESERTA (8 PER A4)
            ========================================================= -->
       <section id="tab-kartu_meja" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 no-print">
@@ -601,7 +648,7 @@
               <select id="filterRuangMeja" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
             </div>
           </div>
-          <div class="text-xs text-slate-400">8 Kartu Meja per A4 (Grid 2×4), proporsi penuh, bingkai foto ganda &amp; TTD/cap menembus teks.</div>
+          <div class="text-xs text-slate-400">8 Kartu Meja per A4 (Grid 2&times;4), proporsi penuh, bingkai foto ganda &amp; mode TTD mengikuti pengaturan global.</div>
         </div>
         <div id="preview-kartu_meja" class="print-workspace"></div>
       </section>
@@ -610,14 +657,22 @@
            MODUL 5: KARTU PANITIA & PENGAWAS
            ========================================================= -->
       <section id="tab-kartu_panitia" class="tab-section hidden space-y-4">
-        <div class="glass-panel rounded-2xl p-4 flex items-center justify-between no-print">
-          <div class="text-xs text-slate-300">ID Card Gantung (6 Kartu per A4) untuk Panitia Ujian dan Pengawas Ruang.</div>
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex items-center gap-3">
+            <label class="text-xs font-semibold text-slate-300">Tampilkan Kartu:</label>
+            <select id="filterKategoriKartuPanitia" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+              <option value="ALL">Semua (Panitia &amp; Pengawas)</option>
+              <option value="Panitia">Khusus Kartu Panitia</option>
+              <option value="Pengawas">Khusus Kartu Pengawas</option>
+            </select>
+          </div>
+          <div class="text-xs text-slate-400">ID Card Gantung (6 Kartu per A4).</div>
         </div>
         <div id="preview-kartu_panitia" class="print-workspace"></div>
       </section>
 
       <!-- =========================================================
-           MODUL 6: LABEL PINTU RUANGAN
+           MODUL 6: LABEL PINTU RUANGAN (DENGAN WATERMARK LOGO 20%)
            ========================================================= -->
       <section id="tab-label_ruang" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -625,19 +680,28 @@
             <label class="text-xs font-semibold text-slate-300">Pilih Ruangan:</label>
             <select id="filterLabelRuang" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
           </div>
-          <div class="text-xs text-slate-400">Ukuran 1 Ruangan penuh per lembar A4 Landscape.</div>
+          <div class="text-xs text-slate-400">Ukuran 1 Ruangan penuh per lembar A4 Landscape dengan watermark logo sekolah transparan 20%.</div>
         </div>
         <div id="preview-label_ruang" class="print-workspace"></div>
       </section>
 
       <!-- =========================================================
-           MODUL 7: BERITA ACARA PELAKSANAAN UJIAN (ISIAN MANUAL)
+           MODUL 7: BERITA ACARA PELAKSANAAN UJIAN (OPSI 1 ATAU 2 PENGAWAS)
            ========================================================= -->
       <section id="tab-ba_pelaksanaan" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
-          <div class="flex items-center gap-3">
-            <label class="text-xs font-semibold text-slate-300">Jumlah Rangkap / Halaman:</label>
-            <input type="number" id="qtyBaPelaksanaan" min="1" max="20" value="1" onchange="renderActiveTab()" class="w-20 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-semibold text-slate-300">Jumlah Pengawas:</label>
+              <select id="opsiPengawasBa" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="2">2 Pengawas (Kepala Sekolah di Tengah Bawah)</option>
+                <option value="1">1 Pengawas (Berdampingan dengan Kepala Sekolah)</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-semibold text-slate-300">Jumlah Rangkap:</label>
+              <input type="number" id="qtyBaPelaksanaan" min="1" max="20" value="1" onchange="renderActiveTab()" class="w-16 px-2.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+            </div>
           </div>
           <div class="text-xs text-amber-300">Isian dikosongkan menggunakan garis titik-titik untuk diisi manual oleh pengawas.</div>
         </div>
@@ -645,15 +709,31 @@
       </section>
 
       <!-- =========================================================
-           MODUL 8: BERITA ACARA SERAH TERIMA SOAL (ISIAN MANUAL)
+           MODUL 8: BERITA ACARA SERAH TERIMA SOAL (URAIAN & TABEL GAMBAR + OPSI ISI)
            ========================================================= -->
       <section id="tab-ba_serah_terima" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
-          <div class="flex items-center gap-3">
-            <label class="text-xs font-semibold text-slate-300">Jumlah Rangkap / Halaman:</label>
-            <input type="number" id="qtyBaSerah" min="1" max="20" value="1" onchange="renderActiveTab()" class="w-20 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+          <div class="flex flex-wrap items-center gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Format Dokumen</label>
+              <select id="modeBaSerah" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="uraian">Format Berita Acara (Uraian &amp; Tabel Rincian)</option>
+                <option value="tabel_gambar">Format Tabel Pengambilan &amp; Penyerahan (Sesuai Gambar)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Isian Hari/Tgl, Ruang &amp; Mapel</label>
+              <select id="modeIsiBaSerah" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="kosong">Kosong (Titik-Titik Manual)</option>
+                <option value="terisi">Otomatis Terisi dari Jadwal</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Jumlah Halaman</label>
+              <input type="number" id="qtyBaSerah" min="1" max="20" value="1" onchange="renderActiveTab()" class="w-16 px-2.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+            </div>
           </div>
-          <div class="text-xs text-amber-300">Template serah terima naskah soal &amp; LJK dari Panitia ke Pengawas (isian manual).</div>
+          <div class="text-xs text-amber-300">Mendukung format uraian saat ini maupun format tabel 2 blok per halaman.</div>
         </div>
         <div id="preview-ba_serah_terima" class="print-workspace"></div>
       </section>
@@ -672,15 +752,25 @@
       </section>
 
       <!-- =========================================================
-           MODUL 10: JURNAL AGENDA UJIAN MASING-MASING SISWA
+           MODUL 10: JURNAL AGENDA & KARTU KENDALI SISWA (TANPA TTD KEPSEK DEFAULT)
            ========================================================= -->
       <section id="tab-jurnal_siswa" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
-          <div class="flex items-center gap-3">
-            <label class="text-xs font-semibold text-slate-300">Filter Ruangan:</label>
-            <select id="filterRuangJurnal" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+          <div class="flex flex-wrap items-center gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Filter Ruangan</label>
+              <select id="filterRuangJurnal" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Opsi Kolom Paraf</label>
+              <select id="opsiParafJurnal" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="keduanya">Paraf Pengawas &amp; Paraf Siswa</option>
+                <option value="pengawas">Paraf Pengawas Saja</option>
+                <option value="siswa">Paraf Siswa Saja</option>
+              </select>
+            </div>
           </div>
-          <div class="text-xs text-slate-400">Dicetak 2 Kartu Kendali / Jurnal Agenda Siswa per lembar A4.</div>
+          <div class="text-xs text-slate-400">Default tanpa TTD Kepala Sekolah (isian kosong); aktifkan TTD Kepsek di atas bila diperlukan.</div>
         </div>
         <div id="preview-jurnal_siswa" class="print-workspace"></div>
       </section>
@@ -700,20 +790,43 @@
       </section>
 
       <!-- =========================================================
-           MODUL 12: DAFTAR HADIR PENGAWAS & PANITIA
+           MODUL 12: DAFTAR HADIR PENGAWAS & PANITIA PER HARI JADWAL
            ========================================================= -->
       <section id="tab-dh_panitia" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
-          <div class="flex items-center gap-3">
-            <label class="text-xs font-semibold text-slate-300">Tampilkan Kategori:</label>
-            <select id="filterKategoriDhPanitia" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
-              <option value="ALL">Semua (Panitia &amp; Pengawas)</option>
-              <option value="Panitia">Khusus Panitia Ujian</option>
-              <option value="Pengawas">Khusus Pengawas Ruang</option>
-            </select>
+          <div class="flex flex-wrap items-center gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Pilih Hari / Tanggal Ujian</label>
+              <select id="filterHariDhPanitia" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold"></select>
+            </div>
           </div>
+          <div class="text-xs text-slate-400">Tabel atas: Daftar Hadir Panitia &bull; Tabel bawah: Daftar Hadir Pengawas sesuai jadwal hari terpilih.</div>
         </div>
         <div id="preview-dh_panitia" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 13: DAFTAR NILAI LENGKAP SISWA PER KELAS & MAPEL
+           ========================================================= -->
+      <section id="tab-daftar_nilai" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex flex-wrap items-center gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Pilih Kelas</label>
+              <select id="filterKelasNilai" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold"></select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Pilih Mata Pelajaran</label>
+              <select id="filterMapelNilai" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold"></select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Nama Guru Mapel (Opsional)</label>
+              <input type="text" id="inpGuruMapelNilai" onkeyup="renderActiveTab()" placeholder="Isi atau kosongkan titik-titik..." class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white w-52" />
+            </div>
+          </div>
+          <div class="text-xs text-slate-400">Form Daftar Nilai resmi per kelas &amp; mapel dengan TTD Kepala Sekolah dan Guru Mapel.</div>
+        </div>
+        <div id="preview-daftar_nilai" class="print-workspace"></div>
       </section>
 
     </main>
@@ -729,7 +842,7 @@
       <p class="text-xs text-slate-300">Salin baris dari Excel/Spreadsheet lalu tempel di bawah ini (dipisahkan Tab):<br>
         <code class="text-cyan-300">No_Peserta [TAB] NISN [TAB] Nama_Lengkap [TAB] Kelas [TAB] Ruang [TAB] Username [TAB] Password [TAB] Link_Foto_Drive</code>
       </p>
-      <textarea id="excelPasteArea" rows="8" placeholder="01-001	0091234501	Ahmad Fauzi	IX-A	RUANG 1	u001	12345	https://drive.google.com/open?id=..." class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-xs font-mono text-slate-200"></textarea>
+      <textarea id="excelPasteArea" rows="8" placeholder="01-001	0091234501	Ahmad Fauzi	7.1	RUANG 1	u001	12345	https://drive.google.com/open?id=..." class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-xs font-mono text-slate-200"></textarea>
       <div class="flex justify-end gap-2">
         <button onclick="closeExcelModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold">Batal</button>
         <button onclick="processExcelPaste(false)" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-xs font-bold text-white">Tambahkan ke Daftar</button>
@@ -742,10 +855,325 @@
   <div id="toastBox" class="no-print fixed bottom-5 right-5 z-50 hidden px-4 py-3 rounded-xl bg-slate-900 border border-indigo-500/50 text-xs font-semibold text-white shadow-2xl items-center gap-2"></div>
 
   <script>
-    const STORAGE_KEY = 'siadu_pro_state_v8';
+    const STORAGE_KEY = 'siadu_pro_state_v10';
+    const EXEC_URL_KEY = 'siadu_pro_exec_url';
+
+    /* =====================================================================
+       KODE BACKEND GOOGLE APPS SCRIPT (UNTUK TOMBOL SALIN)
+       ===================================================================== */
+    const GAS_BACKEND_CODE = `/**
+ * BACKEND DATABASE SISTEM ADMINISTRASI UJIAN SEKOLAH (Si-ADU PRO)
+ * Arsitektur: Google Spreadsheet + Google Apps Script Web App (/exec)
+ * Mendukung: GET (Tarik Data) & POST text/plain (Simpan Semua Data Tanpa Blokir CORS)
+ * Seluruh kolom kode/kelas/NIP/NISN disimpan dalam format Teks (@) agar tidak berubah menjadi tanggal.
+ */
+
+const SHEET_NAMES = {
+  PENGATURAN: 'Pengaturan',
+  SISWA: 'Siswa',
+  PANITIA: 'Panitia_Pengawas',
+  JADWAL: 'Jadwal_Matriks',
+  DENAH: 'Denah_Ruang'
+};
+
+function cleanSheetText(val) {
+  if (val === null || val === undefined) return '';
+  if (val instanceof Date) {
+    // Jika sel terlanjur terformat tanggal di Sheet (misal 7.1 -> 1 Juli), kembalikan ke bentuk teks wajar
+    const d = val.getDate();
+    const m = val.getMonth() + 1;
+    return m + '.' + d;
+  }
+  return String(val).replace(/^'/, '').trim();
+}
+
+function toPlainSheetCell(val) {
+  const s = cleanSheetText(val);
+  return s === '' ? '' : "'" + s;
+}
+
+/**
+ * Fungsi inisialisasi otomatis untuk memastikan ke-5 tab sheet dan header tersedia
+ */
+function initSheets() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  const schemas = {
+    [SHEET_NAMES.PENGATURAN]: ['Key', 'Value'],
+    [SHEET_NAMES.SISWA]: ['ID', 'No_Peserta', 'NISN', 'Nama', 'Kelas', 'Ruang', 'Username', 'Password', 'Foto_URL'],
+    [SHEET_NAMES.PANITIA]: ['ID', 'Nama', 'NIP', 'Jabatan', 'Peran', 'Ruang_Tugas', 'Foto_URL', 'Hari_Tanggal', 'Sesi_Jam', 'Jadwal_Slots_JSON'],
+    [SHEET_NAMES.JADWAL]: ['Jam_Ke', 'Pukul', 'Is_Istirahat', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
+    [SHEET_NAMES.DENAH]: ['Ruang', 'Cols', 'Rows', 'Urutan_ID_Siswa_JSON']
+  };
+
+  Object.keys(schemas).forEach(name => {
+    let sheet = ss.getSheetByName(name);
+    if (!sheet) {
+      sheet = ss.insertSheet(name);
+      sheet.appendRow(schemas[name]);
+      sheet.getRange(1, 1, 1, schemas[name].length)
+        .setFontWeight('bold')
+        .setBackground('#1e293b')
+        .setFontColor('#ffffff');
+      sheet.setFrozenRows(1);
+    } else if (sheet.getLastRow() === 0) {
+      sheet.appendRow(schemas[name]);
+    }
+  });
+}
+
+function doGet(e) {
+  try {
+    initSheets();
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    const pengSheet = ss.getSheetByName(SHEET_NAMES.PENGATURAN);
+    const pengRows = pengSheet.getDataRange().getValues();
+    const settings = {};
+    for (let i = 1; i < pengRows.length; i++) {
+      if (pengRows[i][0]) {
+        const key = cleanSheetText(pengRows[i][0]);
+        let val = pengRows[i][1];
+        if (key === 'scheduleDays' && typeof val === 'string') {
+          try { val = JSON.parse(cleanSheetText(val)); } catch (err) {}
+        } else {
+          val = cleanSheetText(val);
+        }
+        settings[key] = val;
+      }
+    }
+
+    const siswaSheet = ss.getSheetByName(SHEET_NAMES.SISWA);
+    const siswaRows = siswaSheet.getDataRange().getValues();
+    const students = [];
+    for (let i = 1; i < siswaRows.length; i++) {
+      const r = siswaRows[i];
+      if (r[1] || r[3]) {
+        students.push({
+          id: cleanSheetText(r[0]) || ('S' + i),
+          noPeserta: cleanSheetText(r[1]),
+          nisn: cleanSheetText(r[2]),
+          nama: cleanSheetText(r[3]),
+          kelas: cleanSheetText(r[4]),
+          ruang: cleanSheetText(r[5]) || 'RUANG 1',
+          username: cleanSheetText(r[6]),
+          password: cleanSheetText(r[7]),
+          foto: cleanSheetText(r[8])
+        });
+      }
+    }
+
+    const panSheet = ss.getSheetByName(SHEET_NAMES.PANITIA);
+    const panRows = panSheet.getDataRange().getValues();
+    const staff = [];
+    for (let i = 1; i < panRows.length; i++) {
+      const r = panRows[i];
+      if (r[1]) {
+        let slots = [];
+        try { slots = JSON.parse(cleanSheetText(r[9]) || '[]'); } catch (err) { slots = []; }
+        staff.push({
+          id: cleanSheetText(r[0]) || ('P' + i),
+          nama: cleanSheetText(r[1]),
+          nip: cleanSheetText(r[2]),
+          jabatan: cleanSheetText(r[3]),
+          peran: cleanSheetText(r[4]) || 'Pengawas',
+          ruang: cleanSheetText(r[5]) || '-',
+          foto: cleanSheetText(r[6]),
+          hariTanggal: cleanSheetText(r[7]),
+          sesiJam: cleanSheetText(r[8]),
+          jadwalSlots: slots
+        });
+      }
+    }
+
+    const jadSheet = ss.getSheetByName(SHEET_NAMES.JADWAL);
+    const jadRows = jadSheet.getDataRange().getValues();
+    const schedule = [];
+    for (let i = 1; i < jadRows.length; i++) {
+      const r = jadRows[i];
+      if (r[0] !== '') {
+        schedule.push({
+          jam: cleanSheetText(r[0]),
+          pukul: cleanSheetText(r[1]),
+          istirahat: r[2] === true || cleanSheetText(r[2]).toUpperCase() === 'TRUE',
+          senin: cleanSheetText(r[3]),
+          selasa: cleanSheetText(r[4]),
+          rabu: cleanSheetText(r[5]),
+          kamis: cleanSheetText(r[6]),
+          jumat: cleanSheetText(r[7]),
+          sabtu: cleanSheetText(r[8])
+        });
+      }
+    }
+
+    const denSheet = ss.getSheetByName(SHEET_NAMES.DENAH);
+    const denRows = denSheet.getDataRange().getValues();
+    const seating = {};
+    for (let i = 1; i < denRows.length; i++) {
+      const r = denRows[i];
+      if (r[0]) {
+        let orderArr = [];
+        try { orderArr = JSON.parse(cleanSheetText(r[3]) || '[]'); } catch (err) { orderArr = []; }
+        seating[cleanSheetText(r[0])] = {
+          cols: Number(cleanSheetText(r[1])) || 4,
+          rows: Number(cleanSheetText(r[2])) || 5,
+          order: orderArr
+        };
+      }
+    }
+
+    return buildJsonResponse({
+      status: 'success',
+      message: 'Data berhasil dimuat dari Google Spreadsheet',
+      timestamp: new Date().toISOString(),
+      data: { settings, students, staff, schedule, seating }
+    });
+  } catch (error) {
+    return buildJsonResponse({
+      status: 'error',
+      message: error && error.message ? error.message : String(error)
+    });
+  }
+}
+
+function doPost(e) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(15000);
+
+  try {
+    initSheets();
+    if (!e || !e.postData || !e.postData.contents) {
+      throw new Error('Payload data kosong.');
+    }
+
+    const payload = JSON.parse(e.postData.contents);
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    if (payload.settings) {
+      const sheet = ss.getSheetByName(SHEET_NAMES.PENGATURAN);
+      sheet.clearContents();
+      const rows = [['Key', 'Value']];
+      Object.keys(payload.settings).forEach(k => {
+        const val = typeof payload.settings[k] === 'object'
+          ? JSON.stringify(payload.settings[k])
+          : toPlainSheetCell(payload.settings[k]);
+        rows.push([toPlainSheetCell(k), val]);
+      });
+      const range = sheet.getRange(1, 1, rows.length, 2);
+      range.setNumberFormat('@');
+      range.setValues(rows);
+    }
+
+    if (Array.isArray(payload.students)) {
+      const sheet = ss.getSheetByName(SHEET_NAMES.SISWA);
+      sheet.clearContents();
+      const rows = [['ID', 'No_Peserta', 'NISN', 'Nama', 'Kelas', 'Ruang', 'Username', 'Password', 'Foto_URL']];
+      payload.students.forEach((s, idx) => {
+        rows.push([
+          toPlainSheetCell(s.id || ('S' + (idx + 1))),
+          toPlainSheetCell(s.noPeserta),
+          toPlainSheetCell(s.nisn),
+          toPlainSheetCell(s.nama),
+          toPlainSheetCell(s.kelas),
+          toPlainSheetCell(s.ruang || 'RUANG 1'),
+          toPlainSheetCell(s.username),
+          toPlainSheetCell(s.password),
+          toPlainSheetCell(s.foto)
+        ]);
+      });
+      const range = sheet.getRange(1, 1, rows.length, 9);
+      range.setNumberFormat('@');
+      range.setValues(rows);
+    }
+
+    if (Array.isArray(payload.staff)) {
+      const sheet = ss.getSheetByName(SHEET_NAMES.PANITIA);
+      sheet.clearContents();
+      const rows = [['ID', 'Nama', 'NIP', 'Jabatan', 'Peran', 'Ruang_Tugas', 'Foto_URL', 'Hari_Tanggal', 'Sesi_Jam', 'Jadwal_Slots_JSON']];
+      payload.staff.forEach((p, idx) => {
+        rows.push([
+          toPlainSheetCell(p.id || ('P' + (idx + 1))),
+          toPlainSheetCell(p.nama),
+          toPlainSheetCell(p.nip),
+          toPlainSheetCell(p.jabatan),
+          toPlainSheetCell(p.peran || 'Pengawas'),
+          toPlainSheetCell(p.ruang || '-'),
+          toPlainSheetCell(p.foto),
+          toPlainSheetCell(p.hariTanggal),
+          toPlainSheetCell(p.sesiJam),
+          JSON.stringify(p.jadwalSlots || [])
+        ]);
+      });
+      const range = sheet.getRange(1, 1, rows.length, 10);
+      range.setNumberFormat('@');
+      range.setValues(rows);
+    }
+
+    if (Array.isArray(payload.schedule)) {
+      const sheet = ss.getSheetByName(SHEET_NAMES.JADWAL);
+      sheet.clearContents();
+      const rows = [['Jam_Ke', 'Pukul', 'Is_Istirahat', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']];
+      payload.schedule.forEach(j => {
+        rows.push([
+          toPlainSheetCell(j.jam),
+          toPlainSheetCell(j.pukul),
+          Boolean(j.istirahat),
+          toPlainSheetCell(j.senin),
+          toPlainSheetCell(j.selasa),
+          toPlainSheetCell(j.rabu),
+          toPlainSheetCell(j.kamis),
+          toPlainSheetCell(j.jumat),
+          toPlainSheetCell(j.sabtu)
+        ]);
+      });
+      const range = sheet.getRange(1, 1, rows.length, 9);
+      range.setNumberFormat('@');
+      range.setValues(rows);
+    }
+
+    if (payload.seating && typeof payload.seating === 'object') {
+      const sheet = ss.getSheetByName(SHEET_NAMES.DENAH);
+      sheet.clearContents();
+      const rows = [['Ruang', 'Cols', 'Rows', 'Urutan_ID_Siswa_JSON']];
+      Object.keys(payload.seating).forEach(ruang => {
+        const cfg = payload.seating[ruang];
+        rows.push([
+          toPlainSheetCell(ruang),
+          toPlainSheetCell(cfg.cols || 4),
+          toPlainSheetCell(cfg.rows || 5),
+          JSON.stringify(cfg.order || [])
+        ]);
+      });
+      const range = sheet.getRange(1, 1, rows.length, 4);
+      range.setNumberFormat('@');
+      range.setValues(rows);
+    }
+
+    return buildJsonResponse({
+      status: 'success',
+      message: 'Seluruh data administrasi ujian berhasil disimpan ke Google Spreadsheet (Format Teks)!',
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    return buildJsonResponse({
+      status: 'error',
+      message: 'Gagal menyimpan: ' + (error && error.message ? error.message : String(error))
+    });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function buildJsonResponse(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
 
     const DEFAULT_STATE = {
       gasUrl: '',
+      ttdMode: 'kosong',
       settings: {
         instansi: 'PEMERINTAH KABUPATEN BEKASI - DINAS PENDIDIKAN',
         sekolah: 'SMP NEGERI 8 CIKARANG UTARA',
@@ -761,7 +1189,15 @@
         logoKanan: '',
         ttdKepsek: '',
         stempel: '',
-        catatanJadwal: '* Mapel di belakang tanda " / " menunjukkan ujian di sesi/minggu berikutnya'
+        catatanJadwal: '* Mapel di belakang tanda " / " menunjukkan ujian di sesi/minggu berikutnya',
+        scheduleDays: [
+          { key: 'senin', label: 'SENIN', tanggal: 'Senin, 23 November 2026' },
+          { key: 'selasa', label: 'SELASA', tanggal: 'Selasa, 24 November 2026' },
+          { key: 'rabu', label: 'RABU', tanggal: 'Rabu, 25 November 2026' },
+          { key: 'kamis', label: 'KAMIS', tanggal: 'Kamis, 26 November 2026' },
+          { key: 'jumat', label: "JUM'AT", tanggal: "Jum'at, 27 November 2026" },
+          { key: 'sabtu', label: 'SABTU', tanggal: 'Sabtu, 28 November 2026' }
+        ]
       },
       students: [
         { id: 'S1', noPeserta: '01-001', nisn: '0091234501', nama: 'ABIDZARR ALFA RIZKI IRAWAN', kelas: '7.1', ruang: 'RUANG 1', username: 'peserta001', password: '48219', foto: '' },
@@ -776,16 +1212,51 @@
         { id: 'S10', noPeserta: '02-002', nisn: '0091234510', nama: 'BAGAS WIJAYA KUSUMA', kelas: '7.3', ruang: 'RUANG 2', username: 'peserta010', password: '67382', foto: '' }
       ],
       staff: [
-        { id: 'P1', nama: 'Hasanah Aisah, M.Pd', nip: '196902031998022005', jabatan: 'Penanggung Jawab', peran: 'Panitia', ruang: 'Sekretariat', foto: '' },
-        { id: 'P2', nama: 'Algian Manggara, S.Agr', nip: '199404122025211046', jabatan: 'Ketua Pelaksana', peran: 'Panitia', ruang: 'Sekretariat', foto: '' },
-        { id: 'P3', nama: 'Siti Aminah, S.Pd', nip: '198506142010012011', jabatan: 'Pengawas Ruang', peran: 'Pengawas', ruang: 'RUANG 1', foto: '' },
-        { id: 'P4', nama: 'Budi Santoso, S.Kom', nip: '199003212019031008', jabatan: 'Pengawas Ruang', peran: 'Pengawas', ruang: 'RUANG 2', foto: '' }
+        { id: 'P1', nama: 'Hasanah Aisah, M.Pd', nip: '196902031998022005', jabatan: 'Penanggung Jawab', peran: 'Panitia', ruang: 'Sekretariat', foto: '', jadwalSlots: [] },
+        { id: 'P2', nama: 'Algian Manggara, S.Agr', nip: '199404122025211046', jabatan: 'Ketua Pelaksana', peran: 'Panitia', ruang: 'Sekretariat', foto: '', jadwalSlots: [] },
+        {
+          id: 'P3',
+          nama: 'Siti Aminah, S.Pd',
+          nip: '198506142010012011',
+          jabatan: 'Pengawas Ruang',
+          peran: 'Pengawas',
+          ruang: 'RUANG 1',
+          foto: '',
+          jadwalSlots: [
+            { hariTanggal: 'Senin, 23 November 2026', sesiJam: 'Jam 1 - 2', ruang: 'RUANG 1' },
+            { hariTanggal: 'Rabu, 25 November 2026', sesiJam: 'Jam 1 - 2', ruang: 'RUANG 2' }
+          ]
+        },
+        {
+          id: 'P4',
+          nama: 'Budi Santoso, S.Kom',
+          nip: '199003212019031008',
+          jabatan: 'Pengawas Ruang',
+          peran: 'Pengawas',
+          ruang: 'RUANG 2',
+          foto: '',
+          jadwalSlots: [
+            { hariTanggal: 'Senin, 23 November 2026', sesiJam: 'Jam 1 - 2', ruang: 'RUANG 2' }
+          ]
+        },
+        {
+          id: 'P5',
+          nama: 'Rina Marlina, S.Pd',
+          nip: '198804122015022003',
+          jabatan: 'Pengawas Ruang',
+          peran: 'Pengawas',
+          ruang: 'RUANG 1',
+          foto: '',
+          jadwalSlots: [
+            { hariTanggal: 'Selasa, 24 November 2026', sesiJam: 'Jam 1 - 2', ruang: 'RUANG 1' }
+          ]
+        }
       ],
       schedule: [
-        { jam: '1', pukul: '07.30 - 08.30', istirahat: false, senin: 'Pend. Agama', selasa: 'Matematika', rabu: 'Bahasa Inggris', kamis: 'IPA', jumat: 'Seni Rupa' },
-        { jam: '2', pukul: '08.30 - 09.30', istirahat: false, senin: 'PPKn', selasa: 'IPS', rabu: 'Informatika', kamis: 'PJOK', jumat: 'Bahasa Sunda' },
-        { jam: '3', pukul: '09.30 - 10.00', istirahat: true, senin: 'ISTIRAHAT', selasa: 'ISTIRAHAT', rabu: 'ISTIRAHAT', kamis: 'ISTIRAHAT', jumat: 'ISTIRAHAT' },
-        { jam: '4', pukul: '10.00 - 11.00', istirahat: false, senin: 'Bahasa Indonesia', selasa: 'Prakarya', rabu: 'Bimbingan Konseling', kamis: 'Literasi', jumat: '-' }
+        { jam: '1', pukul: '07.30 - 08.30', istirahat: false, senin: 'Pend. Agama', selasa: 'Matematika', rabu: 'Bahasa Inggris', kamis: 'IPA', jumat: 'Seni Rupa', sabtu: 'Informatika' },
+        { jam: '2', pukul: '08.30 - 09.30', istirahat: false, senin: 'PPKn', selasa: 'IPS', rabu: 'Prakarya', kamis: 'PJOK', jumat: 'Bahasa Sunda', sabtu: 'Bimbingan Konseling' },
+        { jam: '3', pukul: '09.30 - 10.00', istirahat: true, senin: 'ISTIRAHAT', selasa: 'ISTIRAHAT', rabu: 'ISTIRAHAT', kamis: 'ISTIRAHAT', jumat: 'ISTIRAHAT', sabtu: 'ISTIRAHAT' },
+        { jam: '4', pukul: '10.00 - 11.00', istirahat: false, senin: 'Bahasa Indonesia', selasa: 'Literasi Numerasi', rabu: 'Seni Budaya', kamis: 'P5 / Kokurikuler', jumat: '-', sabtu: '-' }
       ],
       seating: {}
     };
@@ -793,6 +1264,21 @@
     let appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
     let activeTab = 'master';
     let selectedSeatIndex = null;
+
+    function normalizeStaffItem(p) {
+      let slots = Array.isArray(p.jadwalSlots) ? p.jadwalSlots : [];
+      if (slots.length === 0 && (p.hariTanggal || p.sesiJam || (p.ruang && p.ruang !== '-'))) {
+        slots = [{
+          hariTanggal: p.hariTanggal || '',
+          sesiJam: p.sesiJam || '',
+          ruang: p.ruang || 'RUANG 1'
+        }];
+      }
+      return {
+        ...p,
+        jadwalSlots: slots
+      };
+    }
 
     function resolveDriveImage(url) {
       if (!url) return '';
@@ -806,6 +1292,76 @@
         return `https://drive.google.com/thumbnail?id=${filePathMatch[1]}&sz=w600`;
       }
       return clean;
+    }
+
+    function asCleanText(val) {
+      if (val === null || val === undefined) return '';
+      return String(val).replace(/^'/, '').trim();
+    }
+
+    function normalizeStudentRecord(st, idx = 0) {
+      return {
+        id: asCleanText(st.id) || ('S' + (idx + 1)),
+        noPeserta: asCleanText(st.noPeserta),
+        nisn: asCleanText(st.nisn),
+        nama: asCleanText(st.nama),
+        kelas: asCleanText(st.kelas),
+        ruang: asCleanText(st.ruang) || 'RUANG 1',
+        username: asCleanText(st.username),
+        password: asCleanText(st.password),
+        foto: asCleanText(st.foto)
+      };
+    }
+
+    function normalizeStaffRecord(p, idx = 0) {
+      const base = normalizeStaffItem(p);
+      return {
+        ...base,
+        id: asCleanText(base.id) || ('P' + (idx + 1)),
+        nama: asCleanText(base.nama),
+        nip: asCleanText(base.nip),
+        jabatan: asCleanText(base.jabatan),
+        peran: asCleanText(base.peran) || 'Pengawas',
+        ruang: asCleanText(base.ruang) || '-',
+        foto: asCleanText(base.foto),
+        hariTanggal: asCleanText(base.hariTanggal),
+        sesiJam: asCleanText(base.sesiJam),
+        jadwalSlots: (base.jadwalSlots || []).map(sl => ({
+          hariTanggal: asCleanText(sl.hariTanggal),
+          sesiJam: asCleanText(sl.sesiJam),
+          ruang: asCleanText(sl.ruang)
+        }))
+      };
+    }
+
+    function normalizeSettingsRecord(rawSettings) {
+      const cleaned = {};
+      Object.keys(rawSettings || {}).forEach(k => {
+        if (k === 'scheduleDays' && Array.isArray(rawSettings[k])) {
+          cleaned[k] = rawSettings[k].map(d => ({
+            key: asCleanText(d.key),
+            label: asCleanText(d.label),
+            tanggal: asCleanText(d.tanggal)
+          }));
+        } else {
+          cleaned[k] = asCleanText(rawSettings[k]);
+        }
+      });
+      return cleaned;
+    }
+
+    function normalizeScheduleRecord(row) {
+      const out = {
+        jam: asCleanText(row.jam),
+        pukul: asCleanText(row.pukul),
+        istirahat: Boolean(row.istirahat)
+      };
+      Object.keys(row || {}).forEach(k => {
+        if (!['jam', 'pukul', 'istirahat'].includes(k)) {
+          out[k] = asCleanText(row[k]);
+        }
+      });
+      return out;
     }
 
     function escapeHtml(str) {
@@ -837,33 +1393,77 @@
       box.innerHTML = `<i data-lucide="${isError ? 'alert-circle' : 'check-circle-2'}" class="w-4 h-4"></i> <span>${escapeHtml(msg)}</span>`;
       box.classList.remove('hidden');
       lucide.createIcons();
-      setTimeout(() => box.classList.add('hidden'), 3500);
+      setTimeout(() => box.classList.add('hidden'), 4000);
+    }
+
+    function copyGasCode() {
+      navigator.clipboard.writeText(GAS_BACKEND_CODE).then(() => {
+        showToast('Kode Google Apps Script berhasil disalin ke clipboard!');
+      }).catch(() => {
+        const range = document.createRange();
+        range.selectNode(document.getElementById('gasCodeBlock'));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        showToast('Kode Google Apps Script berhasil disalin!');
+      });
     }
 
     function loadLocalState() {
+      const savedExecUrl = localStorage.getItem(EXEC_URL_KEY) || '';
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
-          appState = { ...DEFAULT_STATE, ...parsed, settings: { ...DEFAULT_STATE.settings, ...(parsed.settings || {}) } };
+          appState = {
+            ...DEFAULT_STATE,
+            ...parsed,
+            gasUrl: parsed.gasUrl || savedExecUrl,
+            ttdMode: parsed.ttdMode === 'kepsek' ? 'kepsek' : 'kosong',
+            students: Array.isArray(parsed.students) ? parsed.students.map((st, idx) => normalizeStudentRecord(st, idx)) : DEFAULT_STATE.students,
+            staff: Array.isArray(parsed.staff) ? parsed.staff.map((p, idx) => normalizeStaffRecord(p, idx)) : DEFAULT_STATE.staff,
+            settings: {
+              ...DEFAULT_STATE.settings,
+              ...(parsed.settings || {}),
+              scheduleDays: Array.isArray(parsed.settings?.scheduleDays) && parsed.settings.scheduleDays.length > 0
+                ? parsed.settings.scheduleDays
+                : DEFAULT_STATE.settings.scheduleDays
+            }
+          };
+        } else if (savedExecUrl) {
+          appState.gasUrl = savedExecUrl;
         }
       } catch (e) {
         console.warn('Gagal memuat state:', e);
+        if (savedExecUrl) appState.gasUrl = savedExecUrl;
       }
     }
 
     function saveLocalState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      if (appState.gasUrl) {
+        localStorage.setItem(EXEC_URL_KEY, appState.gasUrl);
+      }
       document.getElementById('headerSchoolName').textContent = appState.settings.sekolah || 'SEKOLAH';
     }
 
     function saveLocalSettings() {
-      appState.gasUrl = document.getElementById('inpGasUrl').value.trim();
+      const urlVal = document.getElementById('inpGasUrl').value.trim();
+      appState.gasUrl = urlVal;
+      localStorage.setItem(EXEC_URL_KEY, urlVal);
       saveLocalState();
     }
 
+    function updateGlobalTtdMode(mode) {
+      appState.ttdMode = mode === 'kepsek' ? 'kepsek' : 'kosong';
+      saveLocalState();
+      renderActiveTab();
+      showToast(appState.ttdMode === 'kepsek' ? 'Gambar TTD & Cap Kepala Sekolah ditampilkan.' : 'Gambar TTD & Cap dikosongkan (Nama & NIP tetap tampil).');
+    }
+
     async function syncPullFromSheets() {
-      const url = document.getElementById('inpGasUrl').value.trim() || appState.gasUrl;
+      const url = (document.getElementById('inpGasUrl')?.value || '').trim() || appState.gasUrl || localStorage.getItem(EXEC_URL_KEY) || '';
       if (!url) {
         showToast('Masukkan URL Google Apps Script (/exec) terlebih dahulu!', true);
         switchTab('master');
@@ -874,19 +1474,31 @@
       saveLocalState();
       setSyncStatus('loading', 'Menarik data...');
       try {
-        const res = await fetch(url);
-        const json = await res.json();
+        const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+        const rawText = await res.text();
+        let json;
+        try {
+          json = JSON.parse(rawText);
+        } catch (_) {
+          throw new Error('Respons bukan JSON (cek izin Web App harus "Anyone" dan deploy versi baru).');
+        }
+
         if (json.status === 'success' && json.data) {
           if (json.data.settings && Object.keys(json.data.settings).length > 0) {
-            appState.settings = { ...appState.settings, ...json.data.settings };
+            const cleanSettings = normalizeSettingsRecord(json.data.settings);
+            const mergedDays = Array.isArray(cleanSettings.scheduleDays) && cleanSettings.scheduleDays.length > 0
+              ? cleanSettings.scheduleDays
+              : appState.settings.scheduleDays;
+            appState.settings = { ...appState.settings, ...cleanSettings, scheduleDays: mergedDays };
           }
-          if (Array.isArray(json.data.students) && json.data.students.length > 0) appState.students = json.data.students;
-          if (Array.isArray(json.data.staff) && json.data.staff.length > 0) appState.staff = json.data.staff;
-          if (Array.isArray(json.data.schedule) && json.data.schedule.length > 0) appState.schedule = json.data.schedule;
-          if (json.data.seating) appState.seating = json.data.seating;
+          if (Array.isArray(json.data.students)) appState.students = json.data.students.map((st, idx) => normalizeStudentRecord(st, idx));
+          if (Array.isArray(json.data.staff)) appState.staff = json.data.staff.map((p, idx) => normalizeStaffRecord(p, idx));
+          if (Array.isArray(json.data.schedule) && json.data.schedule.length > 0) appState.schedule = json.data.schedule.map(normalizeScheduleRecord);
+          if (json.data.seating && typeof json.data.seating === 'object') appState.seating = json.data.seating;
+
           saveLocalState();
           populateAllForms();
-          refreshRoomDropdowns();
+          refreshAllDropdowns();
           renderActiveTab();
           setSyncStatus('connected', 'Tersinkronisasi');
           showToast('Data berhasil dimuat dari Google Spreadsheet!');
@@ -900,7 +1512,7 @@
     }
 
     async function syncPushToSheets() {
-      const url = document.getElementById('inpGasUrl').value.trim() || appState.gasUrl;
+      const url = (document.getElementById('inpGasUrl')?.value || '').trim() || appState.gasUrl || localStorage.getItem(EXEC_URL_KEY) || '';
       if (!url) {
         showToast('Masukkan URL Google Apps Script (/exec) terlebih dahulu!', true);
         switchTab('master');
@@ -913,16 +1525,23 @@
       try {
         const res = await fetch(url, {
           method: 'POST',
+          redirect: 'follow',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
-            settings: appState.settings,
-            students: appState.students,
-            staff: appState.staff,
-            schedule: appState.schedule,
+            settings: normalizeSettingsRecord(appState.settings),
+            students: appState.students.map((st, idx) => normalizeStudentRecord(st, idx)),
+            staff: appState.staff.map((p, idx) => normalizeStaffRecord(p, idx)),
+            schedule: appState.schedule.map(normalizeScheduleRecord),
             seating: appState.seating
           })
         });
-        const json = await res.json();
+        const rawText = await res.text();
+        let json;
+        try {
+          json = JSON.parse(rawText);
+        } catch (_) {
+          throw new Error('Respons simpan bukan JSON (cek izin Web App "Anyone").');
+        }
         if (json.status === 'success') {
           setSyncStatus('connected', 'Tersimpan di Sheets');
           showToast(json.message || 'Berhasil disimpan ke Google Spreadsheet!');
@@ -956,7 +1575,7 @@
         }
       });
 
-      refreshRoomDropdowns();
+      refreshAllDropdowns();
       renderActiveTab();
       lucide.createIcons();
     }
@@ -973,7 +1592,11 @@
 
     function populateAllForms() {
       const s = appState.settings;
-      document.getElementById('inpGasUrl').value = appState.gasUrl || '';
+      const persistedUrl = appState.gasUrl || localStorage.getItem(EXEC_URL_KEY) || '';
+      appState.gasUrl = persistedUrl;
+      document.getElementById('gasCodeBlock').textContent = GAS_BACKEND_CODE;
+      document.getElementById('inpGasUrl').value = persistedUrl;
+      document.getElementById('globalTtdMode').value = appState.ttdMode || 'kosong';
       document.getElementById('cfgInstansi').value = s.instansi || '';
       document.getElementById('cfgSekolah').value = s.sekolah || '';
       document.getElementById('cfgAlamat').value = s.alamat || '';
@@ -991,7 +1614,7 @@
       document.getElementById('cfgCatatanJadwal').value = s.catatanJadwal || '';
 
       renderStudentTable();
-      renderStaffTable();
+      renderStaffTables();
       renderScheduleTable();
     }
 
@@ -1015,6 +1638,9 @@
       saveLocalState();
     }
 
+    /* =====================================================================
+       CRUD DATA SISWA
+       ===================================================================== */
     function renderStudentTable() {
       const q = (document.getElementById('searchSiswa')?.value || '').toLowerCase();
       const tbody = document.getElementById('tbodySiswa');
@@ -1084,28 +1710,88 @@
       renderStudentTable();
     }
 
-    function renderStaffTable() {
-      const tbody = document.getElementById('tbodyPanitia');
+    /* =====================================================================
+       CRUD PANITIA & PENGAWAS (FOTO SEKALI INPUT + TOMBOL TAMBAH JADWAL)
+       ===================================================================== */
+    function renderStaffTables() {
       document.getElementById('countPanitia').textContent = appState.staff.length;
-      tbody.innerHTML = appState.staff.map((p, idx) => `
+      const panitiaList = appState.staff.map((p, idx) => ({ ...p, realIdx: idx })).filter(p => p.peran === 'Panitia');
+      const pengawasList = appState.staff.map((p, idx) => ({ ...normalizeStaffItem(p), realIdx: idx })).filter(p => p.peran !== 'Panitia');
+
+      const daysOptions = (appState.settings.scheduleDays || []).map(d => d.tanggal || d.label);
+      const roomsOptions = getUniqueRooms();
+
+      document.getElementById('tbodyPanitiaOnly').innerHTML = panitiaList.map((p, i) => `
         <tr class="hover:bg-slate-800/60">
-          <td class="p-2 text-slate-400">${idx + 1}</td>
-          <td class="p-1.5"><input value="${escapeHtml(p.nama)}" onchange="editStaff(${idx}, 'nama', this.value)" class="w-48 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs font-semibold" /></td>
-          <td class="p-1.5"><input value="${escapeHtml(p.nip)}" onchange="editStaff(${idx}, 'nip', this.value)" class="w-36 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
-          <td class="p-1.5"><input value="${escapeHtml(p.jabatan)}" onchange="editStaff(${idx}, 'jabatan', this.value)" class="w-36 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
-          <td class="p-1.5">
-            <select onchange="editStaff(${idx}, 'peran', this.value)" class="px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs">
-              <option value="Panitia" ${p.peran === 'Panitia' ? 'selected' : ''}>Panitia</option>
-              <option value="Pengawas" ${p.peran === 'Pengawas' ? 'selected' : ''}>Pengawas</option>
-            </select>
-          </td>
-          <td class="p-1.5"><input value="${escapeHtml(p.ruang)}" onchange="editStaff(${idx}, 'ruang', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
-          <td class="p-1.5"><input value="${escapeHtml(p.foto)}" placeholder="Link Drive..." onchange="editStaff(${idx}, 'foto', this.value)" class="w-44 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-2 text-slate-400">${i + 1}</td>
+          <td class="p-1.5"><input value="${escapeHtml(p.nama)}" onchange="editStaff(${p.realIdx}, 'nama', this.value)" class="w-48 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs font-semibold" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(p.nip)}" onchange="editStaff(${p.realIdx}, 'nip', this.value)" class="w-36 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(p.jabatan)}" onchange="editStaff(${p.realIdx}, 'jabatan', this.value)" class="w-36 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(p.ruang)}" onchange="editStaff(${p.realIdx}, 'ruang', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          <td class="p-1.5"><input value="${escapeHtml(p.foto)}" placeholder="Link Drive..." onchange="editStaff(${p.realIdx}, 'foto', this.value)" class="w-40 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
           <td class="p-1.5 text-center">
-            <button onclick="deleteStaff(${idx})" class="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            <button onclick="deleteStaff(${p.realIdx})" class="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
           </td>
         </tr>
       `).join('');
+
+      document.getElementById('tbodyPengawasOnly').innerHTML = pengawasList.map((p, i) => {
+        const slots = Array.isArray(p.jadwalSlots) ? p.jadwalSlots : [];
+        const slotsHtml = slots.map((sl, sIdx) => {
+          const currentDay = sl.hariTanggal || '';
+          const hasMatchDay = daysOptions.includes(currentDay);
+          const dayOptsHtml = [
+            `<option value="">-- Hari / Tanggal --</option>`,
+            ...daysOptions.map(d => `<option value="${escapeHtml(d)}" ${currentDay === d ? 'selected' : ''}>${escapeHtml(d)}</option>`),
+            (!hasMatchDay && currentDay) ? `<option value="${escapeHtml(currentDay)}" selected>${escapeHtml(currentDay)}</option>` : ''
+          ].join('');
+
+          const currentRoom = sl.ruang || 'RUANG 1';
+          const hasMatchRoom = roomsOptions.includes(currentRoom);
+          const roomOptsHtml = [
+            ...roomsOptions.map(r => `<option value="${escapeHtml(r)}" ${currentRoom === r ? 'selected' : ''}>${escapeHtml(r)}</option>`),
+            (!hasMatchRoom && currentRoom) ? `<option value="${escapeHtml(currentRoom)}" selected>${escapeHtml(currentRoom)}</option>` : ''
+          ].join('');
+
+          return `
+            <div class="flex flex-wrap items-center gap-1.5 bg-slate-950/80 border border-slate-800 rounded-lg p-1.5">
+              <select onchange="editStaffSlot(${p.realIdx}, ${sIdx}, 'hariTanggal', this.value)" class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-[11px] text-emerald-300 font-semibold">
+                ${dayOptsHtml}
+              </select>
+              <input value="${escapeHtml(sl.sesiJam || '')}" placeholder="Sesi / Jam" onchange="editStaffSlot(${p.realIdx}, ${sIdx}, 'sesiJam', this.value)" class="w-24 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-[11px]" />
+              <select onchange="editStaffSlot(${p.realIdx}, ${sIdx}, 'ruang', this.value)" class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-[11px] font-semibold">
+                ${roomOptsHtml}
+              </select>
+              ${slots.length > 1 ? `<button onclick="deleteStaffSlot(${p.realIdx}, ${sIdx})" title="Hapus Jadwal Ini" class="p-1 text-rose-400 hover:bg-rose-950 rounded"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>` : ''}
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <tr class="hover:bg-slate-800/60 align-top">
+            <td class="p-2.5 text-slate-400">${i + 1}</td>
+            <td class="p-2 space-y-1.5">
+              <input value="${escapeHtml(p.nama)}" placeholder="Nama Pengawas" onchange="editStaff(${p.realIdx}, 'nama', this.value)" class="w-44 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs font-semibold block" />
+              <input value="${escapeHtml(p.nip)}" placeholder="NIP / NUPTK" onchange="editStaff(${p.realIdx}, 'nip', this.value)" class="w-44 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-[11px] block" />
+            </td>
+            <td class="p-2">
+              <input value="${escapeHtml(p.foto)}" placeholder="Link Foto Drive..." onchange="editStaff(${p.realIdx}, 'foto', this.value)" class="w-40 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" />
+            </td>
+            <td class="p-2 space-y-1.5">
+              ${slotsHtml}
+            </td>
+            <td class="p-2 text-center space-y-1.5">
+              <button onclick="addStaffSlot(${p.realIdx})" class="w-full px-2.5 py-1.5 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white text-[11px] font-bold flex items-center justify-center gap-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> + Jadwal
+              </button>
+              <button onclick="deleteStaff(${p.realIdx})" class="w-full px-2 py-1 rounded-lg text-rose-400 hover:bg-rose-950 text-[11px] font-semibold flex items-center justify-center gap-1">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
       lucide.createIcons();
     }
 
@@ -1114,42 +1800,146 @@
       saveLocalState();
     }
 
-    function addStaffRow() {
+    function addStaffSlot(staffIdx) {
+      const item = normalizeStaffItem(appState.staff[staffIdx]);
+      const defaultDay = (appState.settings.scheduleDays && appState.settings.scheduleDays[0])
+        ? appState.settings.scheduleDays[0].tanggal
+        : 'Senin, 23 November 2026';
+      item.jadwalSlots.push({
+        hariTanggal: defaultDay,
+        sesiJam: 'Jam 1 - 2',
+        ruang: getUniqueRooms()[0] || 'RUANG 1'
+      });
+      appState.staff[staffIdx] = item;
+      saveLocalState();
+      renderStaffTables();
+    }
+
+    function editStaffSlot(staffIdx, slotIdx, field, val) {
+      const item = normalizeStaffItem(appState.staff[staffIdx]);
+      if (item.jadwalSlots[slotIdx]) {
+        item.jadwalSlots[slotIdx][field] = val.trim();
+        appState.staff[staffIdx] = item;
+        saveLocalState();
+      }
+    }
+
+    function deleteStaffSlot(staffIdx, slotIdx) {
+      const item = normalizeStaffItem(appState.staff[staffIdx]);
+      if (item.jadwalSlots.length > 1) {
+        item.jadwalSlots.splice(slotIdx, 1);
+        appState.staff[staffIdx] = item;
+        saveLocalState();
+        renderStaffTables();
+      }
+    }
+
+    function addStaffRow(peranType) {
+      const defaultDay = (appState.settings.scheduleDays && appState.settings.scheduleDays[0])
+        ? appState.settings.scheduleDays[0].tanggal
+        : 'Senin, 23 November 2026';
+
       appState.staff.push({
         id: 'P' + Date.now(),
-        nama: 'Nama Pengawas / Panitia',
+        nama: peranType === 'Panitia' ? 'Nama Anggota Panitia' : 'Nama Pengawas Ruang',
         nip: '-',
-        jabatan: 'Pengawas Ruang',
-        peran: 'Pengawas',
-        ruang: 'RUANG 1',
-        foto: ''
+        jabatan: peranType === 'Panitia' ? 'Anggota Panitia' : 'Pengawas Ruang',
+        peran: peranType,
+        ruang: peranType === 'Panitia' ? 'Sekretariat' : (getUniqueRooms()[0] || 'RUANG 1'),
+        foto: '',
+        jadwalSlots: peranType === 'Pengawas'
+          ? [{ hariTanggal: defaultDay, sesiJam: 'Jam 1 - 2', ruang: getUniqueRooms()[0] || 'RUANG 1' }]
+          : []
       });
       saveLocalState();
-      renderStaffTable();
+      renderStaffTables();
     }
 
     function deleteStaff(idx) {
       appState.staff.splice(idx, 1);
       saveLocalState();
-      renderStaffTable();
+      renderStaffTables();
     }
 
+    /* =====================================================================
+       CRUD JADWAL PELAJARAN DINAMIS (HINGGA SABTU + TAMBAH HARI)
+       ===================================================================== */
     function renderScheduleTable() {
+      const days = appState.settings.scheduleDays || [];
+      const thead = document.getElementById('theadJadwal');
       const tbody = document.getElementById('tbodyJadwal');
+
+      thead.innerHTML = `
+        <tr>
+          <th class="p-2 w-14">Jam Ke</th>
+          <th class="p-2 w-28">Pukul</th>
+          <th class="p-2 text-center w-16">Istirahat?</th>
+          ${days.map((d, dIdx) => `
+            <th class="p-2 min-w-[140px]">
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <input value="${escapeHtml(d.label)}" onchange="editScheduleDayMeta(${dIdx}, 'label', this.value)" class="w-full px-1.5 py-0.5 rounded bg-slate-800 border border-slate-600 text-[11px] font-bold uppercase text-cyan-300" />
+                ${days.length > 1 ? `<button onclick="deleteScheduleDay(${dIdx})" title="Hapus Hari" class="text-rose-400 hover:text-rose-300 p-0.5"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>` : ''}
+              </div>
+              <input value="${escapeHtml(d.tanggal || '')}" placeholder="Tgl (cth: Senin, 23 Nov)" onchange="editScheduleDayMeta(${dIdx}, 'tanggal', this.value)" class="w-full px-1.5 py-0.5 rounded bg-slate-950 border border-slate-700 text-[10px] font-normal text-slate-300" />
+            </th>
+          `).join('')}
+          <th class="p-2 text-center w-14">Hapus</th>
+        </tr>
+      `;
+
       tbody.innerHTML = appState.schedule.map((j, idx) => `
         <tr class="${j.istirahat ? 'bg-indigo-950/40' : ''}">
           <td class="p-1.5"><input value="${escapeHtml(j.jam)}" onchange="editSchedule(${idx}, 'jam', this.value)" class="w-12 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs text-center" /></td>
           <td class="p-1.5"><input value="${escapeHtml(j.pukul)}" onchange="editSchedule(${idx}, 'pukul', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
           <td class="p-1.5 text-center"><input type="checkbox" ${j.istirahat ? 'checked' : ''} onchange="editSchedule(${idx}, 'istirahat', this.checked)" /></td>
-          <td class="p-1.5"><input value="${escapeHtml(j.senin)}" onchange="editSchedule(${idx}, 'senin', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
-          <td class="p-1.5"><input value="${escapeHtml(j.selasa)}" onchange="editSchedule(${idx}, 'selasa', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
-          <td class="p-1.5"><input value="${escapeHtml(j.rabu)}" onchange="editSchedule(${idx}, 'rabu', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
-          <td class="p-1.5"><input value="${escapeHtml(j.kamis)}" onchange="editSchedule(${idx}, 'kamis', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
-          <td class="p-1.5"><input value="${escapeHtml(j.jumat)}" onchange="editSchedule(${idx}, 'jumat', this.value)" class="w-28 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          ${days.map(d => `
+            <td class="p-1.5"><input value="${escapeHtml(j[d.key] || '')}" onchange="editSchedule(${idx}, '${d.key}', this.value)" class="w-full min-w-[120px] px-2 py-1 rounded bg-slate-950 border border-slate-700 text-xs" /></td>
+          `).join('')}
           <td class="p-1.5 text-center"><button onclick="deleteSchedule(${idx})" class="text-rose-400 p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></td>
         </tr>
       `).join('');
+
       lucide.createIcons();
+    }
+
+    function editScheduleDayMeta(dIdx, field, val) {
+      appState.settings.scheduleDays[dIdx][field] = val.trim();
+      saveLocalState();
+      renderStaffTables();
+    }
+
+    function addScheduleDay() {
+      const days = appState.settings.scheduleDays;
+      const presetPool = [
+        { key: 'sabtu', label: 'SABTU', tanggal: 'Sabtu, 28 November 2026' },
+        { key: 'senin_2', label: 'SENIN (II)', tanggal: 'Senin, 30 November 2026' },
+        { key: 'selasa_2', label: 'SELASA (II)', tanggal: 'Selasa, 1 Desember 2026' },
+        { key: 'rabu_2', label: 'RABU (II)', tanggal: 'Rabu, 2 Desember 2026' }
+      ];
+      const existingKeys = new Set(days.map(d => d.key));
+      let nextDay = presetPool.find(p => !existingKeys.has(p.key));
+      if (!nextDay) {
+        const n = days.length + 1;
+        nextDay = { key: 'hari_' + n, label: 'HARI ' + n, tanggal: 'Hari ke-' + n };
+      }
+      days.push(nextDay);
+      appState.schedule.forEach(row => {
+        if (row[nextDay.key] === undefined) {
+          row[nextDay.key] = row.istirahat ? 'ISTIRAHAT' : '-';
+        }
+      });
+      saveLocalState();
+      renderScheduleTable();
+      renderStaffTables();
+      showToast(`Kolom hari "${nextDay.label}" ditambahkan!`);
+    }
+
+    function deleteScheduleDay(dIdx) {
+      const removed = appState.settings.scheduleDays.splice(dIdx, 1);
+      saveLocalState();
+      renderScheduleTable();
+      renderStaffTables();
+      if (removed[0]) showToast(`Hari "${removed[0].label}" dihapus.`);
     }
 
     function editSchedule(idx, field, val) {
@@ -1159,12 +1949,13 @@
     }
 
     function addScheduleRow() {
-      appState.schedule.push({
+      const newRow = {
         jam: String(appState.schedule.length + 1),
         pukul: '11.00 - 12.00',
-        istirahat: false,
-        senin: '-', selasa: '-', rabu: '-', kamis: '-', jumat: '-'
-      });
+        istirahat: false
+      };
+      (appState.settings.scheduleDays || []).forEach(d => { newRow[d.key] = '-'; });
+      appState.schedule.push(newRow);
       saveLocalState();
       renderScheduleTable();
     }
@@ -1175,6 +1966,9 @@
       renderScheduleTable();
     }
 
+    /* =====================================================================
+       MODAL PASTE EXCEL
+       ===================================================================== */
     function openExcelModal() {
       document.getElementById('excelModal').classList.remove('hidden');
       document.getElementById('excelModal').classList.add('flex');
@@ -1218,22 +2012,50 @@
 
     function resetDemoData() {
       if (confirm('Kembalikan seluruh data ke contoh awal?')) {
+        const keepUrl = appState.gasUrl || localStorage.getItem(EXEC_URL_KEY) || '';
         appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+        appState.gasUrl = keepUrl;
         saveLocalState();
         populateAllForms();
-        refreshRoomDropdowns();
+        refreshAllDropdowns();
         renderActiveTab();
         showToast('Data contoh berhasil dipulihkan.');
       }
     }
 
+    /* =====================================================================
+       HELPER DROPDOWN & DATA UNIK
+       ===================================================================== */
     function getUniqueRooms() {
       const set = new Set(appState.students.map(s => s.ruang || 'RUANG 1'));
       if (set.size === 0) set.add('RUANG 1');
       return Array.from(set);
     }
 
-    function refreshRoomDropdowns() {
+    function getUniqueClasses() {
+      const set = new Set(appState.students.map(s => s.kelas || '7.1'));
+      if (set.size === 0) set.add('7.1');
+      return Array.from(set).sort();
+    }
+
+    function getUniqueSubjectsFromSchedule() {
+      const days = appState.settings.scheduleDays || [];
+      const set = new Set();
+      appState.schedule.forEach(row => {
+        if (!row.istirahat) {
+          days.forEach(d => {
+            const val = String(row[d.key] || '').trim();
+            if (val && val !== '-' && val.toUpperCase() !== 'ISTIRAHAT') {
+              set.add(val);
+            }
+          });
+        }
+      });
+      if (set.size === 0) set.add('Ilmu Pengetahuan Alam (IPA)');
+      return Array.from(set);
+    }
+
+    function refreshAllDropdowns() {
       const rooms = getUniqueRooms();
       const idsWithAll = ['filterRuangKartu', 'filterRuangMeja', 'filterRuangJurnal', 'filterRuangDhSiswa'];
       idsWithAll.forEach(id => {
@@ -1260,6 +2082,34 @@
           appState.students.map(s => `<option value="${s.id}">${escapeHtml(s.noPeserta)} - ${escapeHtml(s.nama)} (${escapeHtml(s.ruang)})</option>`).join('');
         if (prev) suratSel.value = prev;
       }
+
+      const hariDhSel = document.getElementById('filterHariDhPanitia');
+      if (hariDhSel) {
+        const prev = hariDhSel.value;
+        const days = appState.settings.scheduleDays || [];
+        const dayLabels = days.map(d => d.tanggal || d.label);
+        hariDhSel.innerHTML = dayLabels.map(lbl => `<option value="${escapeHtml(lbl)}">${escapeHtml(lbl)}</option>`).join('') +
+          `<option value="ALL">Semua Hari Jadwal</option>`;
+        if (dayLabels.includes(prev) || prev === 'ALL') hariDhSel.value = prev;
+      }
+
+      const kelasSel = document.getElementById('filterKelasNilai');
+      if (kelasSel) {
+        const prev = kelasSel.value;
+        const classes = getUniqueClasses();
+        kelasSel.innerHTML = classes.map(c => `<option value="${escapeHtml(c)}">Kelas ${escapeHtml(c)}</option>`).join('') +
+          `<option value="ALL">Semua Kelas (${classes.length} Rombel)</option>`;
+        if (classes.includes(prev) || prev === 'ALL') kelasSel.value = prev;
+      }
+
+      const mapelSel = document.getElementById('filterMapelNilai');
+      if (mapelSel) {
+        const prev = mapelSel.value;
+        const subjects = getUniqueSubjectsFromSchedule();
+        mapelSel.innerHTML = subjects.map(m => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join('') +
+          `<option value="BLANK">-- Kosongkan (Diisi Manual) --</option>`;
+        if (subjects.includes(prev) || prev === 'BLANK') mapelSel.value = prev;
+      }
     }
 
     function buildFullKopHTML() {
@@ -1285,16 +2135,12 @@
       `;
     }
 
-    /* =====================================================================
-       KOP KARTU TEGAS & PENUH SEPERTI GAMBAR REFERENSI
-       ===================================================================== */
     function buildCardKopHTML(showAddress = false, compact = false) {
       const s = appState.settings;
       const logoL = resolveDriveImage(s.logoKiri) || resolveDriveImage(s.logoKanan);
       const logoR = resolveDriveImage(s.logoKanan) || resolveDriveImage(s.logoKiri);
       const logoSize = compact ? '26px' : '30px';
 
-      // Pisahkan instansi jika memakai tanda " - " agar tampil 2 baris tegas seperti referensi
       const instansiParts = String(s.instansi || '').split(/\s*-\s*/);
       const baris1 = instansiParts[0] || '';
       const baris2 = instansiParts.slice(1).join(' - ');
@@ -1319,14 +2165,11 @@
       `;
     }
 
-    /* =====================================================================
-       TTD + STEMPEL OVERLAY PERSIS GAMBAR REFERENSI:
-       CAP DI KIRI-TENGAH MENEMBUS "Kepala Sekolah," & NAMA, TTD MELINTANG KE KANAN
-       ===================================================================== */
-    function buildTtdWithDigitalStampHTML(variant = 'normal') {
+    function buildTtdWithDigitalStampHTML(variant = 'normal', forceKosong = false) {
       const s = appState.settings;
-      const ttd = resolveDriveImage(s.ttdKepsek);
-      const stempel = resolveDriveImage(s.stempel);
+      const showKepsek = !forceKosong && appState.ttdMode === 'kepsek';
+      const ttd = showKepsek ? resolveDriveImage(s.ttdKepsek) : '';
+      const stempel = showKepsek ? resolveDriveImage(s.stempel) : '';
       const isCompact = variant === 'compact';
 
       const fontSize = isCompact ? '7.4pt' : '8.2pt';
@@ -1334,6 +2177,10 @@
       const stampSize = isCompact ? '52px' : '60px';
       const ttdHeight = isCompact ? '36px' : '42px';
       const ttdMaxW = isCompact ? '104px' : '116px';
+
+      const namaKepsekDisplay = `<div style="position:relative; z-index:1; text-decoration:underline; overflow-wrap:anywhere;">${escapeHtml(s.kepsek || 'Hasanah Aisah, M.Pd')}</div>`;
+
+      const nipKepsekDisplay = `<div style="position:relative; z-index:1; font-weight:normal; font-size:${isCompact ? '6.8pt' : '7.4pt'}; overflow-wrap:anywhere;">NIP. ${escapeHtml(s.nipKepsek || '196902031998022005')}</div>`;
 
       return `
         <div style="position:relative; overflow:visible; font-size:${fontSize}; font-weight:bold; line-height:1.15; min-width:0; width:${blockW}; flex-shrink:0; text-align:center; z-index:2;">
@@ -1349,8 +2196,29 @@
           <div style="position:relative; z-index:1; white-space:nowrap;">${escapeHtml(s.titimangsa)}</div>
           <div style="position:relative; z-index:1;">Kepala Sekolah,</div>
           <div style="height:${isCompact ? '21px' : '25px'};"></div>
-          <div style="position:relative; z-index:1; text-decoration:underline; overflow-wrap:anywhere;">${escapeHtml(s.kepsek)}</div>
-          <div style="position:relative; z-index:1; font-weight:normal; font-size:${isCompact ? '6.8pt' : '7.4pt'}; overflow-wrap:anywhere;">NIP. ${escapeHtml(s.nipKepsek)}</div>
+          ${namaKepsekDisplay}
+          ${nipKepsekDisplay}
+        </div>
+      `;
+    }
+
+    function buildFormalKepsekBlockHTML(prefixText = 'Mengetahui,', withTitimangsa = false) {
+      const s = appState.settings;
+      const showKepsek = appState.ttdMode === 'kepsek';
+      const ttd = showKepsek ? resolveDriveImage(s.ttdKepsek) : '';
+      const stempel = showKepsek ? resolveDriveImage(s.stempel) : '';
+
+      return `
+        <div style="position:relative; display:inline-block; min-width:190px; text-align:center; line-height:1.35;">
+          ${withTitimangsa ? `<div>${escapeHtml(s.titimangsa)}</div>` : ''}
+          ${prefixText ? `<div>${escapeHtml(prefixText)}</div>` : ''}
+          <div>Kepala ${escapeHtml(s.sekolah)}</div>
+          <div style="position:relative; height:52px;">
+            ${stempel ? `<img src="${stempel}" referrerpolicy="no-referrer" style="position:absolute; left:18px; top:2px; width:56px; height:56px; object-fit:contain; opacity:0.85; pointer-events:none;" />` : ''}
+            ${ttd ? `<img src="${ttd}" referrerpolicy="no-referrer" style="position:absolute; left:48px; top:8px; height:42px; max-width:115px; object-fit:contain; pointer-events:none;" />` : ''}
+          </div>
+          <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek || 'Hasanah Aisah, M.Pd')}</div>
+          <div>NIP. ${escapeHtml(s.nipKepsek || '196902031998022005')}</div>
         </div>
       `;
     }
@@ -1377,11 +2245,12 @@
         case 'jurnal_siswa': renderJurnalSiswa(); break;
         case 'dh_siswa': renderDhSiswa(); break;
         case 'dh_panitia': renderDhPanitia(); break;
+        case 'daftar_nilai': renderDaftarNilai(); break;
       }
     }
 
     /* =====================================================================
-       MODUL 2: DENAH TEMPAT DUDUK RUANGAN
+       MODUL 2: DENAH TEMPAT DUDUK RUANGAN (FOTO 3X LEBIH BESAR)
        ===================================================================== */
     function ensureRoomSeating(ruang) {
       const roomStudents = appState.students.filter(s => (s.ruang || 'RUANG 1') === ruang);
@@ -1492,7 +2361,6 @@
       const studentMap = new Map(appState.students.map(st => [st.id, st]));
       const dense = cfg.cols >= 5 || cfg.rows >= 6;
 
-      // Foto 3x lipat dari ukuran sebelumnya (sebelumnya ~20x26 & ~24x32 -> sekarang 51x66 & 60x78)
       const fotoW = dense ? 51 : 60;
       const fotoH = dense ? 66 : 78;
 
@@ -1566,29 +2434,31 @@
     }
 
     /* =====================================================================
-       MODUL 3: KARTU PESERTA UJIAN (PROPORSI PENUH SEPERTI GAMBAR REFERENSI)
+       MODUL 3: KARTU PESERTA UJIAN (DINAMIS HINGGA SABTU / TAMBAH HARI)
        ===================================================================== */
     function buildScheduleMatrixTableHTML() {
       const s = appState.settings;
+      const days = s.scheduleDays || [];
+      const dayFontSize = days.length >= 6 ? '5pt' : '5.6pt';
+      const cellFontSize = days.length >= 6 ? '5.2pt' : '5.8pt';
+
       const rows = appState.schedule.map(j => {
         if (j.istirahat) {
           return `
             <tr style="background:#dbeafe; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
-              <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:6pt;">${escapeHtml(j.jam)}</td>
-              <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:5.8pt;">${escapeHtml(j.pukul)}</td>
-              <td colspan="5" style="border:1px solid #000; text-align:center; font-weight:bold; letter-spacing:1.2px; padding:1.5px; font-size:5.8pt;">ISTIRAHAT</td>
+              <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:5.8pt;">${escapeHtml(j.jam)}</td>
+              <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:5.4pt;">${escapeHtml(j.pukul)}</td>
+              <td colspan="${days.length}" style="border:1px solid #000; text-align:center; font-weight:bold; letter-spacing:1.2px; padding:1.5px; font-size:5.6pt;">ISTIRAHAT</td>
             </tr>
           `;
         }
         return `
           <tr>
-            <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:6pt;">${escapeHtml(j.jam)}</td>
-            <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:5.8pt;">${escapeHtml(j.pukul)}</td>
-            <td style="border:1px solid #000; text-align:center; padding:1.5px; font-size:5.8pt; overflow-wrap:anywhere;">${escapeHtml(j.senin)}</td>
-            <td style="border:1px solid #000; text-align:center; padding:1.5px; font-size:5.8pt; overflow-wrap:anywhere;">${escapeHtml(j.selasa)}</td>
-            <td style="border:1px solid #000; text-align:center; padding:1.5px; font-size:5.8pt; overflow-wrap:anywhere;">${escapeHtml(j.rabu)}</td>
-            <td style="border:1px solid #000; text-align:center; padding:1.5px; font-size:5.8pt; overflow-wrap:anywhere;">${escapeHtml(j.kamis)}</td>
-            <td style="border:1px solid #000; text-align:center; padding:1.5px; font-size:5.8pt; overflow-wrap:anywhere;">${escapeHtml(j.jumat)}</td>
+            <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:5.8pt;">${escapeHtml(j.jam)}</td>
+            <td style="border:1px solid #000; text-align:center; font-weight:bold; padding:1.5px; font-size:5.4pt;">${escapeHtml(j.pukul)}</td>
+            ${days.map(d => `
+              <td style="border:1px solid #000; text-align:center; padding:1.5px; font-size:${cellFontSize}; overflow-wrap:anywhere;">${escapeHtml(j[d.key] || '-')}</td>
+            `).join('')}
           </tr>
         `;
       }).join('');
@@ -1597,33 +2467,31 @@
         <div style="min-width:0; border:1.8px solid #000; height:100%; display:flex; flex-direction:column; justify-content:space-between; background:#fff; overflow:hidden;">
           <div style="min-width:0;">
             ${buildCardKopHTML(false, true)}
-            <div style="padding:2px 5px 0 5px;">
+            <div style="padding:2px 4px 0 4px;">
               <div style="text-align:center; font-weight:bold; font-size:6.8pt; text-decoration:underline; margin-top:1px;">
                 JADWAL PELAJARAN ${escapeHtml(s.namaUjian)}
               </div>
-              <div style="text-align:center; font-weight:bold; font-size:6.3pt; margin-bottom:2px;">
+              <div style="text-align:center; font-weight:bold; font-size:6.2pt; margin-bottom:2px;">
                 ${escapeHtml(s.tahunAjaran)}
               </div>
               <table style="width:100%; border-collapse:collapse; table-layout:fixed;">
                 <thead>
                   <tr>
-                    <th style="border:1px solid #000; width:17px; text-align:center; font-size:4.6pt; line-height:0.98;">JA<br>M/<br>HA<br>RI</th>
+                    <th style="border:1px solid #000; width:16px; text-align:center; font-size:4.4pt; line-height:0.98;">JA<br>M/<br>HA<br>RI</th>
                     <th class="diag-cell" style="border:1px solid #000;">
                       <span class="diag-top">HARI</span>
                       <span class="diag-bot">PUKUL</span>
                     </th>
-                    <th style="border:1px solid #000; text-align:center; font-size:5.6pt;">SENIN</th>
-                    <th style="border:1px solid #000; text-align:center; font-size:5.6pt;">SELASA</th>
-                    <th style="border:1px solid #000; text-align:center; font-size:5.6pt;">RABU</th>
-                    <th style="border:1px solid #000; text-align:center; font-size:5.6pt;">KAMIS</th>
-                    <th style="border:1px solid #000; text-align:center; font-size:5.6pt;">JUM'AT</th>
+                    ${days.map(d => `
+                      <th style="border:1px solid #000; text-align:center; font-size:${dayFontSize}; overflow-wrap:anywhere;">${escapeHtml(d.label)}</th>
+                    `).join('')}
                   </tr>
                 </thead>
                 <tbody>${rows}</tbody>
               </table>
             </div>
           </div>
-          <div style="font-size:5.5pt; font-style:italic; padding:0 5px 3px 5px; overflow-wrap:anywhere;">
+          <div style="font-size:5.3pt; font-style:italic; padding:0 4px 2.5px 4px; overflow-wrap:anywhere;">
             ${escapeHtml(s.catatanJadwal)}
           </div>
         </div>
@@ -1682,7 +2550,6 @@
             </div>
           </div>
 
-          <!-- BARIS BAWAH PENUH: FOTO BINGKAI DOUBLE - QR CODE BESAR - TITIMANGSA + CAP/TTD MENEMBUS -->
           <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:6px; padding:${compact ? '0 7px 4px 7px' : '0 9px 5px 9px'}; min-width:0; overflow:visible;">
             <div style="width:${photoW}; height:${photoH}; border:2px solid #000; padding:1.5px; background:#fff; flex-shrink:0;">
               <div style="width:100%; height:100%; border:1px solid #000; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; background:#f8fafc;">
@@ -1746,14 +2613,11 @@
       }
 
       document.getElementById('preview-kartu_peserta').innerHTML = pagesHtml || '<div class="text-slate-400 text-sm">Tidak ada data siswa.</div>';
-
-      qrQueue.forEach(item => {
-        renderQrIntoElement(item.id, item.text, item.size);
-      });
+      qrQueue.forEach(item => renderQrIntoElement(item.id, item.text, item.size));
     }
 
     /* =====================================================================
-       MODUL 4: KARTU MEJA PESERTA (PROPORSI PENUH + FOTO DOUBLE BORDER + TTD MENEMBUS)
+       MODUL 4: KARTU MEJA PESERTA
        ===================================================================== */
     function renderKartuMeja() {
       const ruangFilter = document.getElementById('filterRuangMeja').value || 'ALL';
@@ -1767,7 +2631,6 @@
         const chunk = list.slice(i, i + 8);
         const cardsHtml = chunk.map(st => {
           const fotoUrl = resolveDriveImage(st.foto);
-
           return `
             <div style="min-width:0; border:1.8px solid #000; height:68.5mm; display:flex; flex-direction:column; justify-content:space-between; background:#fff; overflow:visible;">
               <div style="min-width:0;">
@@ -1820,21 +2683,29 @@
        MODUL 5: KARTU PANITIA & PENGAWAS
        ===================================================================== */
     function renderKartuPanitia() {
+      const cat = document.getElementById('filterKategoriKartuPanitia')?.value || 'ALL';
+      const list = cat === 'ALL' ? appState.staff : appState.staff.filter(p => p.peran === cat);
       const s = appState.settings;
       let pagesHtml = '';
-      for (let i = 0; i < appState.staff.length; i += 6) {
-        const chunk = appState.staff.slice(i, i + 6);
+
+      for (let i = 0; i < list.length; i += 6) {
+        const chunk = list.slice(i, i + 6);
         const cards = chunk.map(p => {
-          const fotoUrl = resolveDriveImage(p.foto);
-          const isPanitia = p.peran === 'Panitia';
+          const norm = normalizeStaffItem(p);
+          const fotoUrl = resolveDriveImage(norm.foto);
+          const isPanitia = norm.peran === 'Panitia';
           const badgeBg = isPanitia ? '#1e3a8a' : '#065f46';
+          const tugasText = isPanitia
+            ? norm.ruang
+            : (norm.jadwalSlots.map(sl => sl.ruang).filter(Boolean).join(', ') || norm.ruang);
+
           return `
             <div style="min-width:0; border:1.8px solid #000; border-radius:6px; height:89mm; display:flex; flex-direction:column; justify-content:space-between; background:#fff; overflow:visible;">
               <div>
                 ${buildCardKopHTML(true, false)}
                 <div style="padding:0 8px;">
                   <div style="background:${badgeBg}; color:#fff; text-align:center; font-weight:bold; font-size:8.8pt; padding:2.5px; margin:3px 0; text-transform:uppercase; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
-                    KARTU ${escapeHtml(p.peran)} UJIAN
+                    KARTU ${escapeHtml(norm.peran)} UJIAN
                   </div>
                   <div style="text-align:center; font-size:7pt; font-weight:bold; margin-bottom:4px;">${escapeHtml(s.namaUjian)}</div>
                 </div>
@@ -1854,22 +2725,22 @@
                   <tr>
                     <td style="width:52px; font-weight:600; vertical-align:top;">Nama</td>
                     <td style="width:10px; text-align:center; vertical-align:top;">:</td>
-                    <td style="font-weight:bold; vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(p.nama)}</td>
+                    <td style="font-weight:bold; vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(norm.nama)}</td>
                   </tr>
                   <tr>
                     <td style="font-weight:600; vertical-align:top;">NIP</td>
                     <td style="text-align:center; vertical-align:top;">:</td>
-                    <td style="vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(p.nip)}</td>
+                    <td style="vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(norm.nip)}</td>
                   </tr>
                   <tr>
                     <td style="font-weight:600; vertical-align:top;">Jabatan</td>
                     <td style="text-align:center; vertical-align:top;">:</td>
-                    <td style="font-weight:bold; vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(p.jabatan)}</td>
+                    <td style="font-weight:bold; vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(norm.jabatan)}</td>
                   </tr>
                   <tr>
                     <td style="font-weight:600; vertical-align:top;">Tugas</td>
                     <td style="text-align:center; vertical-align:top;">:</td>
-                    <td style="font-weight:bold; vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(p.ruang)}</td>
+                    <td style="font-weight:bold; vertical-align:top; overflow-wrap:anywhere;">${escapeHtml(tugasText)}</td>
                   </tr>
                 </table>
               </div>
@@ -1891,7 +2762,7 @@
     }
 
     /* =====================================================================
-       MODUL 6: LABEL PINTU RUANGAN
+       MODUL 6: LABEL PINTU RUANGAN (DENGAN LOGO WATERMARK TRANSPARAN 20%)
        ===================================================================== */
     function renderLabelRuang() {
       const ruang = document.getElementById('filterLabelRuang').value || getUniqueRooms()[0];
@@ -1900,15 +2771,23 @@
       const firstNo = roomStudents.length ? roomStudents[0].noPeserta : '-';
       const lastNo = roomStudents.length ? roomStudents[roomStudents.length - 1].noPeserta : '-';
       const kelasList = Array.from(new Set(roomStudents.map(st => st.kelas))).join(', ') || '-';
+      const watermarkLogo = resolveDriveImage(s.logoKanan) || resolveDriveImage(s.logoKiri);
 
       document.getElementById('preview-label_ruang').innerHTML = `
-        <div class="a4-page a4-landscape" style="display:flex; flex-direction:column; justify-content:space-between; border:4px double #000;">
-          ${buildFullKopHTML()}
-          <div style="text-align:center;">
+        <div class="a4-page a4-landscape" style="position:relative; display:flex; flex-direction:column; justify-content:space-between; border:4px double #000;">
+          ${watermarkLogo ? `
+            <img src="${watermarkLogo}" referrerpolicy="no-referrer" style="position:absolute; top:52%; left:50%; transform:translate(-50%, -50%); width:310px; height:310px; object-fit:contain; opacity:0.20; z-index:0; pointer-events:none;" />
+          ` : ''}
+
+          <div style="position:relative; z-index:1;">
+            ${buildFullKopHTML()}
+          </div>
+
+          <div style="position:relative; z-index:1; text-align:center;">
             <div style="font-size:15pt; font-weight:bold; letter-spacing:0.8px;">${escapeHtml(s.namaUjian)}</div>
             <div style="font-size:13pt; font-weight:bold; margin-bottom:12px;">${escapeHtml(s.tahunAjaran)}</div>
 
-            <div style="border:4px solid #000; border-radius:12px; padding:16px 28px; display:inline-block; min-width:65%; background:#f8fafc; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+            <div style="border:4px solid #000; border-radius:12px; padding:16px 28px; display:inline-block; min-width:65%; background:rgba(248, 250, 252, 0.85); -webkit-print-color-adjust:exact; print-color-adjust:exact;">
               <div style="font-size:40pt; font-weight:bold; letter-spacing:2px; line-height:1.1; overflow-wrap:anywhere;">${escapeHtml(ruang)}</div>
             </div>
 
@@ -1918,7 +2797,7 @@
             </div>
           </div>
 
-          <div style="text-align:center; border-top:2px solid #000; padding-top:6px; font-size:10.5pt; font-weight:bold; letter-spacing:1px;">
+          <div style="position:relative; z-index:1; text-align:center; border-top:2px solid #000; padding-top:6px; font-size:10.5pt; font-weight:bold; letter-spacing:1px;">
             HARAP TENANG — SEDANG BERLANGSUNG UJIAN
           </div>
         </div>
@@ -1926,12 +2805,52 @@
     }
 
     /* =====================================================================
-       MODUL 7: BERITA ACARA PELAKSANAAN UJIAN
+       MODUL 7: BERITA ACARA PELAKSANAAN UJIAN (OPSI 1 ATAU 2 PENGAWAS)
        ===================================================================== */
     function renderBaPelaksanaan() {
       const qty = Math.max(1, parseInt(document.getElementById('qtyBaPelaksanaan').value) || 1);
+      const opsiPengawas = document.getElementById('opsiPengawasBa')?.value || '2';
       const s = appState.settings;
       let html = '';
+
+      const kepsekCellHtml = buildFormalKepsekBlockHTML('Mengetahui,', false);
+
+      const ttdSection = opsiPengawas === '1'
+        ? `
+          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt; margin-top:14px;">
+            <tr>
+              <td style="width:50%; vertical-align:top;">${kepsekCellHtml}</td>
+              <td style="width:50%; vertical-align:top;">
+                <div>${escapeHtml(s.titimangsa)}</div>
+                <div>Pengawas Ruang,</div>
+                <div style="height:54px;"></div>
+                <div>( .................................................... )</div>
+                <div>NIP. .............................................</div>
+              </td>
+            </tr>
+          </table>
+        `
+        : `
+          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt;">
+            <tr>
+              <td style="width:50%; vertical-align:top;">
+                <div>Pengawas Ruang I,</div>
+                <div style="height:46px;"></div>
+                <div>( .................................................... )</div>
+                <div>NIP. .............................................</div>
+              </td>
+              <td style="width:50%; vertical-align:top;">
+                <div>Pengawas Ruang II,</div>
+                <div style="height:46px;"></div>
+                <div>( .................................................... )</div>
+                <div>NIP. .............................................</div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding-top:10px;">${kepsekCellHtml}</td>
+            </tr>
+          </table>
+        `;
 
       for (let i = 0; i < qty; i++) {
         html += `
@@ -1968,31 +2887,7 @@
 
             <p style="margin-bottom:10px; font-size:10pt;">Demikian berita acara pelaksanaan ujian ini dibuat dengan sesungguhnya untuk dapat dipergunakan sebagaimana mestinya.</p>
 
-            <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt;">
-              <tr>
-                <td style="width:50%; vertical-align:top;">
-                  <div>Pengawas Ruang I,</div>
-                  <div style="height:46px;"></div>
-                  <div>( .................................................... )</div>
-                  <div>NIP. .............................................</div>
-                </td>
-                <td style="width:50%; vertical-align:top;">
-                  <div>Pengawas Ruang II,</div>
-                  <div style="height:46px;"></div>
-                  <div>( .................................................... )</div>
-                  <div>NIP. .............................................</div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" style="padding-top:10px;">
-                  <div>Mengetahui,</div>
-                  <div>Kepala ${escapeHtml(s.sekolah)}</div>
-                  <div style="height:46px;"></div>
-                  <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek)}</div>
-                  <div>NIP. ${escapeHtml(s.nipKepsek)}</div>
-                </td>
-              </tr>
-            </table>
+            ${ttdSection}
           </div>
         `;
       }
@@ -2000,89 +2895,167 @@
     }
 
     /* =====================================================================
-       MODUL 8: BERITA ACARA SERAH TERIMA SOAL & LJK
+       MODUL 8: BERITA ACARA SERAH TERIMA SOAL (URAIAN & TABEL GAMBAR + OPSI ISI)
        ===================================================================== */
     function renderBaSerahTerima() {
       const qty = Math.max(1, parseInt(document.getElementById('qtyBaSerah').value) || 1);
+      const mode = document.getElementById('modeBaSerah')?.value || 'uraian';
+      const modeIsi = document.getElementById('modeIsiBaSerah')?.value || 'kosong';
       const s = appState.settings;
+      const rooms = getUniqueRooms();
+      const firstDay = (s.scheduleDays && s.scheduleDays[0]) ? (s.scheduleDays[0].tanggal || s.scheduleDays[0].label) : '';
+      const firstMapel = getUniqueSubjectsFromSchedule()[0] || '';
+      const firstRoom = rooms[0] || '';
+
       let html = '';
 
       for (let i = 0; i < qty; i++) {
-        html += `
-          <div class="a4-page" style="font-size:10.5pt; line-height:1.38;">
-            ${buildFullKopHTML()}
-            <div style="text-align:center; margin-bottom:10px;">
-              <div style="font-size:12pt; font-weight:bold; text-decoration:underline;">BERITA ACARA SERAH TERIMA NASKAH SOAL &amp; LJK</div>
-              <div style="font-size:10.5pt; font-weight:bold;">${escapeHtml(s.namaUjian)}</div>
-              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.tahunAjaran)}</div>
-            </div>
-
-            <p style="text-align:justify; margin-bottom:8px; font-size:10pt;">
-              Pada hari ini <span class="fill-blank" style="min-width:85px;"></span> tanggal <span class="fill-blank" style="min-width:40px;"></span>
-              bulan <span class="fill-blank" style="min-width:85px;"></span> tahun <span class="fill-blank" style="min-width:55px;"></span>,
-              telah dilakukan serah terima berkas ujian untuk:
-            </p>
-
-            <table style="width:100%; margin-bottom:10px; border-collapse:collapse; font-size:10pt;">
-              <tr><td style="width:155px; padding:2px 0;">Ruang Ujian</td><td style="width:12px;">:</td><td><span class="fill-blank" style="min-width:230px;"></span></td></tr>
-              <tr><td style="padding:2px 0;">Mata Pelajaran</td><td>:</td><td><span class="fill-blank" style="min-width:230px;"></span></td></tr>
-              <tr><td style="padding:2px 0;">Jam / Sesi ke-</td><td>:</td><td><span class="fill-blank" style="min-width:230px;"></span></td></tr>
-            </table>
-
-            <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">A. Penyerahan Sebelum Ujian (Panitia → Pengawas Ruang) — Pukul: ................ WIB</div>
-            <table class="doc-table" style="margin-bottom:10px; font-size:9pt;">
-              <thead>
-                <tr>
-                  <th style="width:34px;">No</th>
-                  <th>Jenis Berkas / Dokumen</th>
-                  <th style="width:100px;">Jumlah</th>
-                  <th style="width:130px;">Kondisi Sampul</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td style="text-align:center;">1</td><td>Amplop Naskah Soal Ujian</td><td style="text-align:center;">........ eks</td><td style="text-align:center;">Baik / Tersegel</td></tr>
-                <tr><td style="text-align:center;">2</td><td>Lembar Jawab (LJK / LJU)</td><td style="text-align:center;">........ lbr</td><td style="text-align:center;">Baik / Lengkap</td></tr>
-                <tr><td style="text-align:center;">3</td><td>Daftar Hadir &amp; Berita Acara Pelaksanaan</td><td style="text-align:center;">........ set</td><td style="text-align:center;">Lengkap</td></tr>
-              </tbody>
-            </table>
-
-            <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">B. Pengembalian Setelah Ujian (Pengawas Ruang → Panitia) — Pukul: ................ WIB</div>
-            <table class="doc-table" style="margin-bottom:14px; font-size:9pt;">
-              <thead>
-                <tr>
-                  <th style="width:34px;">No</th>
-                  <th>Jenis Berkas / Dokumen</th>
-                  <th style="width:100px;">Jumlah</th>
-                  <th style="width:130px;">Keterangan</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td style="text-align:center;">1</td><td>Lembar Jawab Peserta Terisi</td><td style="text-align:center;">........ lbr</td><td></td></tr>
-                <tr><td style="text-align:center;">2</td><td>Lembar Jawab Kosong / Sisa</td><td style="text-align:center;">........ lbr</td><td></td></tr>
-                <tr><td style="text-align:center;">3</td><td>Naskah Soal, Daftar Hadir &amp; Berita Acara</td><td style="text-align:center;">........ set</td><td></td></tr>
-              </tbody>
-            </table>
-
-            <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt;">
+        if (mode === 'tabel_gambar') {
+          const tableRows = Array.from({ length: 4 }, (_, rIdx) => {
+            const rLabel = rooms[rIdx] || `RUANG 0${rIdx + 1}`;
+            return `
               <tr>
-                <td style="width:50%;">
-                  <div>Yang Menyerahkan / Menerima,</div>
-                  <div><strong>Panitia Ujian</strong></div>
-                  <div style="height:48px;"></div>
-                  <div>( .................................................... )</div>
-                  <div>NIP. .............................................</div>
-                </td>
-                <td style="width:50%;">
-                  <div>Yang Menerima / Menyerahkan,</div>
-                  <div><strong>Pengawas Ruang</strong></div>
-                  <div style="height:48px;"></div>
-                  <div>( .................................................... )</div>
-                  <div>NIP. .............................................</div>
-                </td>
+                <td style="border:1.5px solid #000; text-align:center; padding:6px 4px; font-weight:bold;">${rIdx + 1}</td>
+                <td style="border:1.5px solid #000; padding:6px 8px; font-weight:bold;">${escapeHtml(rLabel)}</td>
+                <td style="border:1.5px solid #000; padding:6px 8px;"></td>
+                <td style="border:1.5px solid #000; padding:6px 8px; vertical-align:top; font-size:8.5pt;">${rIdx + 1}</td>
+                <td style="border:1.5px solid #000; padding:6px 8px;"></td>
+                <td style="border:1.5px solid #000; padding:6px 8px; vertical-align:top; font-size:8.5pt;">${rIdx + 1}</td>
               </tr>
-            </table>
-          </div>
-        `;
+            `;
+          }).join('');
+
+          const makeBlock = (blockIndex) => {
+            const mapelVal = modeIsi === 'terisi'
+              ? `<strong>${escapeHtml(getUniqueSubjectsFromSchedule()[blockIndex % getUniqueSubjectsFromSchedule().length] || firstMapel)}</strong>`
+              : `<span>........................................................</span>`;
+            return `
+              <div style="margin-bottom:8px; font-size:10pt;">
+                ${blockIndex === 0 ? `<div>Hari/Tanggal &nbsp;&nbsp;: ${modeIsi === 'terisi' ? `<strong>${escapeHtml(firstDay)}</strong>` : `<span>........................................................</span>`}</div>` : ''}
+                <div>Mata Pelajaran : ${mapelVal}</div>
+              </div>
+              <table style="width:100%; border-collapse:collapse; border:2px solid #000; font-size:9.5pt; margin-bottom:10px;">
+                <thead>
+                  <tr>
+                    <th colspan="3" style="border:1.5px solid #000; padding:4px; text-align:center; font-weight:bold;">PENGAMBILAN</th>
+                    <th colspan="3" style="border:1.5px solid #000; padding:4px; text-align:center; font-weight:bold;">PENYERAHAN</th>
+                  </tr>
+                  <tr>
+                    <th style="border:1.5px solid #000; width:34px; padding:4px; text-align:center;">NO</th>
+                    <th style="border:1.5px solid #000; width:96px; padding:4px; text-align:center;">RUANGAN</th>
+                    <th style="border:1.5px solid #000; padding:4px; text-align:center;">NAMA</th>
+                    <th style="border:1.5px solid #000; width:96px; padding:4px; text-align:center;">TANDA TANGAN</th>
+                    <th style="border:1.5px solid #000; padding:4px; text-align:center;">NAMA</th>
+                    <th style="border:1.5px solid #000; width:96px; padding:4px; text-align:center;">TANDA TANGAN</th>
+                  </tr>
+                </thead>
+                <tbody>${tableRows}</tbody>
+              </table>
+            `;
+          };
+
+          html += `
+            <div class="a4-page" style="font-size:10pt; line-height:1.3;">
+              ${buildFullKopHTML()}
+              <div style="text-align:center; margin-bottom:10px; font-weight:bold; line-height:1.25;">
+                <div style="font-size:11.5pt;">DAFTAR PENGAMBILAN DAN PENYERAHAN</div>
+                <div style="font-size:11.5pt;">NASKAH SOAL DAN LEMBAR JAWABAN ${escapeHtml(s.namaUjian)}</div>
+                <div style="font-size:10.5pt;">${escapeHtml(s.tahunAjaran)}</div>
+              </div>
+
+              ${makeBlock(0)}
+              ${makeBlock(1)}
+
+              <div style="display:flex; justify-content:flex-end; margin-top:6px;">
+                ${buildFormalKepsekBlockHTML('', true)}
+              </div>
+            </div>
+          `;
+        } else {
+          const ruangField = modeIsi === 'terisi'
+            ? `<strong>${escapeHtml(firstRoom)}</strong>`
+            : `<span class="fill-blank" style="min-width:230px;"></span>`;
+          const mapelField = modeIsi === 'terisi'
+            ? `<strong>${escapeHtml(firstMapel)}</strong>`
+            : `<span class="fill-blank" style="min-width:230px;"></span>`;
+          const dateNarration = modeIsi === 'terisi'
+            ? `pada jadwal <strong>${escapeHtml(firstDay)}</strong>,`
+            : `pada hari ini <span class="fill-blank" style="min-width:85px;"></span> tanggal <span class="fill-blank" style="min-width:40px;"></span> bulan <span class="fill-blank" style="min-width:85px;"></span> tahun <span class="fill-blank" style="min-width:55px;"></span>,`;
+
+          html += `
+            <div class="a4-page" style="font-size:10.5pt; line-height:1.38;">
+              ${buildFullKopHTML()}
+              <div style="text-align:center; margin-bottom:10px;">
+                <div style="font-size:12pt; font-weight:bold; text-decoration:underline;">BERITA ACARA SERAH TERIMA NASKAH SOAL &amp; LJK</div>
+                <div style="font-size:10.5pt; font-weight:bold;">${escapeHtml(s.namaUjian)}</div>
+                <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.tahunAjaran)}</div>
+              </div>
+
+              <p style="text-align:justify; margin-bottom:8px; font-size:10pt;">
+                ${dateNarration} telah dilakukan serah terima berkas ujian untuk:
+              </p>
+
+              <table style="width:100%; margin-bottom:10px; border-collapse:collapse; font-size:10pt;">
+                <tr><td style="width:155px; padding:2px 0;">Ruang Ujian</td><td style="width:12px;">:</td><td>${ruangField}</td></tr>
+                <tr><td style="padding:2px 0;">Mata Pelajaran</td><td>:</td><td>${mapelField}</td></tr>
+                <tr><td style="padding:2px 0;">Jam / Sesi ke-</td><td>:</td><td><span class="fill-blank" style="min-width:230px;"></span></td></tr>
+              </table>
+
+              <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">A. Penyerahan Sebelum Ujian (Panitia &rarr; Pengawas Ruang) — Pukul: ................ WIB</div>
+              <table class="doc-table" style="margin-bottom:10px; font-size:9pt;">
+                <thead>
+                  <tr>
+                    <th style="width:34px;">No</th>
+                    <th>Jenis Berkas / Dokumen</th>
+                    <th style="width:100px;">Jumlah</th>
+                    <th style="width:130px;">Kondisi Sampul</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="text-align:center;">1</td><td>Amplop Naskah Soal Ujian</td><td style="text-align:center;">........ eks</td><td style="text-align:center;">Baik / Tersegel</td></tr>
+                  <tr><td style="text-align:center;">2</td><td>Lembar Jawab (LJK / LJU)</td><td style="text-align:center;">........ lbr</td><td style="text-align:center;">Baik / Lengkap</td></tr>
+                  <tr><td style="text-align:center;">3</td><td>Daftar Hadir &amp; Berita Acara Pelaksanaan</td><td style="text-align:center;">........ set</td><td style="text-align:center;">Lengkap</td></tr>
+                </tbody>
+              </table>
+
+              <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">B. Pengembalian Setelah Ujian (Pengawas Ruang &rarr; Panitia) — Pukul: ................ WIB</div>
+              <table class="doc-table" style="margin-bottom:14px; font-size:9pt;">
+                <thead>
+                  <tr>
+                    <th style="width:34px;">No</th>
+                    <th>Jenis Berkas / Dokumen</th>
+                    <th style="width:100px;">Jumlah</th>
+                    <th style="width:130px;">Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="text-align:center;">1</td><td>Lembar Jawab Peserta Terisi</td><td style="text-align:center;">........ lbr</td><td></td></tr>
+                  <tr><td style="text-align:center;">2</td><td>Lembar Jawab Kosong / Sisa</td><td style="text-align:center;">........ lbr</td><td></td></tr>
+                  <tr><td style="text-align:center;">3</td><td>Naskah Soal, Daftar Hadir &amp; Berita Acara</td><td style="text-align:center;">........ set</td><td></td></tr>
+                </tbody>
+              </table>
+
+              <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt;">
+                <tr>
+                  <td style="width:50%;">
+                    <div>Yang Menyerahkan / Menerima,</div>
+                    <div><strong>Panitia Ujian</strong></div>
+                    <div style="height:48px;"></div>
+                    <div>( .................................................... )</div>
+                    <div>NIP. .............................................</div>
+                  </td>
+                  <td style="width:50%;">
+                    <div>Yang Menerima / Menyerahkan,</div>
+                    <div><strong>Pengawas Ruang</strong></div>
+                    <div style="height:48px;"></div>
+                    <div>( .................................................... )</div>
+                    <div>NIP. .............................................</div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          `;
+        }
       }
       document.getElementById('preview-ba_serah_terima').innerHTML = html;
     }
@@ -2124,13 +3097,7 @@
 
           <table style="width:100%; border-collapse:collapse; margin-top:16px;">
             <tr>
-              <td style="width:52%; vertical-align:top;">
-                <div>Mengetahui,</div>
-                <div>Kepala ${escapeHtml(s.sekolah)}</div>
-                <div style="height:56px;"></div>
-                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek)}</div>
-                <div>NIP. ${escapeHtml(s.nipKepsek)}</div>
-              </td>
+              <td style="width:52%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
               <td style="width:48%; vertical-align:top;">
                 <div>${escapeHtml(s.titimangsa)}</div>
                 <div>Ketua Panitia Ujian,</div>
@@ -2145,74 +3112,125 @@
     }
 
     /* =====================================================================
-       MODUL 10: JURNAL AGENDA UJIAN MASING-MASING SISWA (2 PER A4)
+       MODUL 10: JURNAL AGENDA & KARTU KENDALI SISWA (DEFAULT TANPA TTD KEPSEK)
        ===================================================================== */
+    function buildAgendaRowsFromSchedule() {
+      const days = appState.settings.scheduleDays || [];
+      const items = [];
+      days.forEach(d => {
+        appState.schedule.forEach(row => {
+          if (!row.istirahat) {
+            const mapel = String(row[d.key] || '').trim();
+            if (mapel && mapel !== '-' && mapel.toUpperCase() !== 'ISTIRAHAT') {
+              items.push({
+                hariTanggal: d.tanggal || d.label,
+                mapel,
+                jam: row.jam,
+                pukul: row.pukul
+              });
+            }
+          }
+        });
+      });
+      if (items.length === 0) {
+        return Array.from({ length: 6 }, () => ({ hariTanggal: '', mapel: '', jam: '', pukul: '' }));
+      }
+      return items;
+    }
+
     function renderJurnalSiswa() {
       const ruangFilter = document.getElementById('filterRuangJurnal').value || 'ALL';
+      const opsiParaf = document.getElementById('opsiParafJurnal')?.value || 'keduanya';
       const list = ruangFilter === 'ALL'
         ? appState.students
         : appState.students.filter(s => s.ruang === ruangFilter);
 
-      const s = appState.settings;
+      const agendaItems = buildAgendaRowsFromSchedule();
+      const denseRows = agendaItems.length > 9;
+      const cellPad = denseRows ? '1.5px 4px' : '2.5px 5px';
+      const tableFont = denseRows ? '7pt' : '7.6pt';
+
+      let parafHeaders = '';
+      if (opsiParaf === 'keduanya') {
+        parafHeaders = `<th style="width:66px;">Paraf Pengawas</th><th style="width:62px;">Paraf Siswa</th>`;
+      } else if (opsiParaf === 'pengawas') {
+        parafHeaders = `<th style="width:84px;">Paraf Pengawas</th>`;
+      } else {
+        parafHeaders = `<th style="width:84px;">Paraf Siswa</th>`;
+      }
+
+      const showKepsekOnJurnal = appState.ttdMode === 'kepsek';
       let pagesHtml = '';
 
       for (let i = 0; i < list.length; i += 2) {
         const chunk = list.slice(i, i + 2);
-        const cards = chunk.map(st => `
-          <div style="border:1.8px solid #000; height:136mm; display:flex; flex-direction:column; justify-content:space-between; overflow:hidden;">
-            <div>
-              ${buildCardKopHTML(true, false)}
-              <div style="padding:3px 12px 0 12px;">
-                <div style="text-align:center; font-weight:bold; font-size:9.5pt; text-decoration:underline; margin-bottom:4px;">
-                  JURNAL AGENDA &amp; KARTU KENDALI KEHADIRAN PESERTA UJIAN
-                </div>
-                <table style="width:100%; font-size:8.5pt; margin-bottom:4px; border-collapse:collapse; table-layout:fixed;">
-                  <tr>
-                    <td style="width:82px;">Nama Siswa</td><td style="width:8px;">:</td><td style="font-weight:bold; overflow-wrap:anywhere;">${escapeHtml(st.nama)}</td>
-                    <td style="width:78px;">No. Peserta</td><td style="width:8px;">:</td><td style="font-weight:bold; overflow-wrap:anywhere;">${escapeHtml(st.noPeserta)}</td>
-                  </tr>
-                  <tr>
-                    <td>Kelas</td><td>:</td><td>${escapeHtml(st.kelas)}</td>
-                    <td>Ruang Ujian</td><td>:</td><td style="font-weight:bold;">${escapeHtml(st.ruang)}</td>
-                  </tr>
-                </table>
+        const cards = chunk.map(st => {
+          const fotoUrl = resolveDriveImage(st.foto);
+          const rowsHtml = agendaItems.map((it, idx) => `
+            <tr>
+              <td style="text-align:center; padding:${cellPad};">${idx + 1}</td>
+              <td style="padding:${cellPad};">${escapeHtml(it.hariTanggal)}</td>
+              <td style="padding:${cellPad}; font-weight:bold;">${escapeHtml(it.mapel)}</td>
+              <td style="text-align:center; padding:${cellPad};">${escapeHtml(it.jam)}</td>
+              ${opsiParaf === 'keduanya' ? `<td></td><td></td>` : `<td></td>`}
+            </tr>
+          `).join('');
 
-                <table class="doc-table" style="font-size:8pt;">
-                  <thead>
-                    <tr>
-                      <th style="width:28px;">No</th>
-                      <th style="width:105px;">Hari / Tanggal</th>
-                      <th>Mata Pelajaran</th>
-                      <th style="width:68px;">Jam Ke</th>
-                      <th style="width:90px;">Paraf Pengawas</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${[1,2,3,4,5,6].map(n => `
+          return `
+            <div style="border:1.8px solid #000; height:136mm; display:flex; flex-direction:column; justify-content:space-between; overflow:visible; background:#fff;">
+              <div>
+                ${buildCardKopHTML(true, false)}
+                <div style="padding:3px 10px 0 10px;">
+                  <div style="text-align:center; font-weight:bold; font-size:9.2pt; text-decoration:underline; margin-bottom:4px;">
+                    JURNAL AGENDA &amp; KARTU KENDALI KEHADIRAN PESERTA UJIAN
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+                    <div style="width:42px; height:54px; border:1.8px solid #000; padding:1px; background:#fff; flex-shrink:0;">
+                      <div style="width:100%; height:100%; border:1px solid #000; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f8fafc;">
+                        ${fotoUrl
+                          ? `<img src="${fotoUrl}" referrerpolicy="no-referrer" style="width:100%; height:100%; object-fit:cover; display:block;" />`
+                          : `<span style="font-size:6pt; font-weight:bold; color:#64748b;">FOTO</span>`
+                        }
+                      </div>
+                    </div>
+
+                    <table style="flex:1; font-size:8.2pt; line-height:1.25; border-collapse:collapse; table-layout:fixed;">
                       <tr>
-                        <td style="text-align:center; padding:3px;">${n}</td>
-                        <td></td><td></td><td></td><td></td>
+                        <td style="width:76px;">Nama Siswa</td><td style="width:8px;">:</td><td style="font-weight:bold; overflow-wrap:anywhere;">${escapeHtml(st.nama)}</td>
+                        <td style="width:72px;">No. Peserta</td><td style="width:8px;">:</td><td style="font-weight:bold; overflow-wrap:anywhere;">${escapeHtml(st.noPeserta)}</td>
                       </tr>
-                    `).join('')}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                      <tr>
+                        <td>NISN</td><td>:</td><td>${escapeHtml(st.nisn)}</td>
+                        <td>Kelas / Ruang</td><td>:</td><td style="font-weight:bold;">${escapeHtml(st.kelas)} / ${escapeHtml(st.ruang)}</td>
+                      </tr>
+                    </table>
+                  </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:8pt; padding:0 12px 6px 12px;">
-              <div style="font-style:italic; font-size:7pt; max-width:54%;">
-                * Kartu ini wajib dibawa setiap hari ujian dan diparaf oleh pengawas ruang.
+                  <table class="doc-table" style="font-size:${tableFont};">
+                    <thead>
+                      <tr>
+                        <th style="width:24px;">No</th>
+                        <th style="width:128px;">Hari / Tanggal</th>
+                        <th>Mata Pelajaran</th>
+                        <th style="width:44px;">Jam</th>
+                        ${parafHeaders}
+                      </tr>
+                    </thead>
+                    <tbody>${rowsHtml}</tbody>
+                  </table>
+                </div>
               </div>
-              <div style="width:180px;">
-                <div>${escapeHtml(s.titimangsa)}</div>
-                <div>Kepala Sekolah,</div>
-                <div style="height:26px;"></div>
-                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek)}</div>
-                <div>NIP. ${escapeHtml(s.nipKepsek)}</div>
+
+              <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:8pt; padding:0 10px 5px 10px; overflow:visible;">
+                <div style="font-style:italic; font-size:6.8pt; max-width:${showKepsekOnJurnal ? '56%' : '100%'};">
+                  * Kartu ini wajib dibawa setiap hari ujian dan diparaf sesuai ketentuan ruang ujian.
+                </div>
+                ${showKepsekOnJurnal ? buildTtdWithDigitalStampHTML('compact', false) : ''}
               </div>
             </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
 
         pagesHtml += `
           <div class="a4-page" style="display:flex; flex-direction:column; gap:4mm;">
@@ -2284,13 +3302,7 @@
 
             <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
               <tr>
-                <td style="width:55%; vertical-align:top;">
-                  <div>Mengetahui,</div>
-                  <div>Kepala ${escapeHtml(s.sekolah)}</div>
-                  <div style="height:46px;"></div>
-                  <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek)}</div>
-                  <div>NIP. ${escapeHtml(s.nipKepsek)}</div>
-                </td>
+                <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
                 <td style="width:45%; vertical-align:top;">
                   <div>Pengawas Ruang,</div>
                   <div style="height:56px;"></div>
@@ -2307,73 +3319,118 @@
     }
 
     /* =====================================================================
-       MODUL 12: DAFTAR HADIR PENGAWAS & PANITIA
+       MODUL 12: DAFTAR HADIR PANITIA (TABEL ATAS) & PENGAWAS PER HARI (TABEL BAWAH)
        ===================================================================== */
     function renderDhPanitia() {
-      const cat = document.getElementById('filterKategoriDhPanitia').value || 'ALL';
-      const list = cat === 'ALL' ? appState.staff : appState.staff.filter(p => p.peran === cat);
+      const selectedHari = document.getElementById('filterHariDhPanitia')?.value || 'ALL';
       const s = appState.settings;
 
-      const titleMap = {
-        ALL: 'DAFTAR HADIR PANITIA DAN PENGAWAS UJIAN',
-        Panitia: 'DAFTAR HADIR PANITIA PELAKSANA UJIAN',
-        Pengawas: 'DAFTAR HADIR PENGAWAS RUANG UJIAN'
-      };
+      const panitiaList = appState.staff.filter(p => p.peran === 'Panitia');
+      const pengawasExpanded = [];
 
-      const rows = list.map((p, idx) => {
-        const isOdd = (idx + 1) % 2 === 1;
-        return `
-          <tr>
-            <td style="text-align:center;">${idx + 1}</td>
-            <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
-            <td>${escapeHtml(p.nip)}</td>
-            <td>${escapeHtml(p.jabatan)} (${escapeHtml(p.peran)})</td>
-            <td style="text-align:center;">${escapeHtml(p.ruang)}</td>
-            <td style="font-size:8pt;">${isOdd ? (idx + 1) + '.' : ''}</td>
-            <td style="font-size:8pt;">${!isOdd ? (idx + 1) + '.' : ''}</td>
-          </tr>
-        `;
-      }).join('');
+      appState.staff
+        .filter(p => p.peran !== 'Panitia')
+        .forEach(rawP => {
+          const norm = normalizeStaffItem(rawP);
+          norm.jadwalSlots.forEach(sl => {
+            const dayMatch = selectedHari === 'ALL' || String(sl.hariTanggal || '').trim() === selectedHari;
+            if (dayMatch) {
+              pengawasExpanded.push({
+                nama: norm.nama,
+                nip: norm.nip,
+                ruang: sl.ruang || norm.ruang || '-',
+                sesiJam: sl.sesiJam || '-',
+                hariTanggal: sl.hariTanggal || ''
+              });
+            }
+          });
+        });
+
+      const panitiaRows = panitiaList.length > 0
+        ? panitiaList.map((p, idx) => {
+            const isOdd = (idx + 1) % 2 === 1;
+            return `
+              <tr>
+                <td style="text-align:center;">${idx + 1}</td>
+                <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
+                <td>${escapeHtml(p.nip)}</td>
+                <td>${escapeHtml(p.jabatan)}</td>
+                <td style="font-size:8pt;">${isOdd ? (idx + 1) + '.' : ''}</td>
+                <td style="font-size:8pt;">${!isOdd ? (idx + 1) + '.' : ''}</td>
+              </tr>
+            `;
+          }).join('')
+        : `<tr><td colspan="6" style="text-align:center; font-style:italic;">Belum ada data panitia.</td></tr>`;
+
+      const pengawasRows = pengawasExpanded.length > 0
+        ? pengawasExpanded.map((p, idx) => {
+            const isOdd = (idx + 1) % 2 === 1;
+            return `
+              <tr>
+                <td style="text-align:center;">${idx + 1}</td>
+                <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
+                <td>${escapeHtml(p.nip)}</td>
+                <td style="text-align:center; font-weight:bold;">${escapeHtml(p.ruang)}</td>
+                <td style="text-align:center;">${escapeHtml(p.sesiJam)}</td>
+                <td style="font-size:8pt;">${isOdd ? (idx + 1) + '.' : ''}</td>
+                <td style="font-size:8pt;">${!isOdd ? (idx + 1) + '.' : ''}</td>
+              </tr>
+            `;
+          }).join('')
+        : `<tr><td colspan="7" style="text-align:center; font-style:italic;">Tidak ada jadwal pengawas pada hari yang dipilih.</td></tr>`;
+
+      const hariDisplay = selectedHari === 'ALL'
+        ? '........................................................'
+        : `<strong>${escapeHtml(selectedHari)}</strong>`;
 
       document.getElementById('preview-dh_panitia').innerHTML = `
         <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
           ${buildFullKopHTML()}
           <div style="text-align:center; margin-bottom:8px;">
-            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">${titleMap[cat]}</div>
+            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">DAFTAR HADIR PANITIA DAN PENGAWAS RUANG UJIAN</div>
             <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
           </div>
 
-          <div style="margin-bottom:6px; font-size:9pt;">
-            Hari / Tanggal : ........................................................ &nbsp;&nbsp;&nbsp; Sesi / Pukul : ............................................
+          <div style="margin-bottom:8px; font-size:9pt;">
+            Hari / Tanggal : ${hariDisplay}
           </div>
 
-          <table class="doc-table" style="font-size:9pt; margin-bottom:14px;">
+          <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">A. DAFTAR HADIR PANITIA PELAKSANA UJIAN</div>
+          <table class="doc-table" style="font-size:8.8pt; margin-bottom:12px;">
             <thead>
               <tr>
-                <th style="width:30px;">No</th>
+                <th style="width:28px;">No</th>
                 <th>Nama Lengkap &amp; Gelar</th>
-                <th style="width:120px;">NIP / NUPTK</th>
-                <th style="width:125px;">Jabatan</th>
-                <th style="width:76px;">Ruang</th>
+                <th style="width:125px;">NIP / NUPTK</th>
+                <th style="width:135px;">Jabatan Kepanitiaan</th>
                 <th colspan="2" style="width:136px;">Tanda Tangan</th>
               </tr>
             </thead>
-            <tbody>${rows}</tbody>
+            <tbody>${panitiaRows}</tbody>
           </table>
 
-          <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:12px; break-inside:avoid;">
+          <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">B. DAFTAR HADIR PENGAWAS RUANG (${selectedHari === 'ALL' ? 'SEMUA JADWAL' : escapeHtml(selectedHari).toUpperCase()})</div>
+          <table class="doc-table" style="font-size:8.8pt; margin-bottom:14px;">
+            <thead>
+              <tr>
+                <th style="width:28px;">No</th>
+                <th>Nama Pengawas &amp; Gelar</th>
+                <th style="width:120px;">NIP / NUPTK</th>
+                <th style="width:76px;">Ruang</th>
+                <th style="width:76px;">Sesi / Jam</th>
+                <th colspan="2" style="width:136px;">Tanda Tangan</th>
+              </tr>
+            </thead>
+            <tbody>${pengawasRows}</tbody>
+          </table>
+
+          <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
             <tr>
-              <td style="width:55%; vertical-align:top;">
-                <div>Mengetahui,</div>
-                <div>Kepala ${escapeHtml(s.sekolah)}</div>
-                <div style="height:48px;"></div>
-                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek)}</div>
-                <div>NIP. ${escapeHtml(s.nipKepsek)}</div>
-              </td>
+              <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
               <td style="width:45%; vertical-align:top;">
-                <div>${escapeHtml(s.titimangsa)}</div>
+                <div>${selectedHari === 'ALL' ? escapeHtml(s.titimangsa) : escapeHtml(selectedHari)}</div>
                 <div>Ketua Panitia Ujian,</div>
-                <div style="height:48px;"></div>
+                <div style="height:46px;"></div>
                 <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.ketua)}</div>
                 <div>NIP. ${escapeHtml(s.nipKetua)}</div>
               </td>
@@ -2383,13 +3440,100 @@
       `;
     }
 
+    /* =====================================================================
+       MODUL 13: DAFTAR NILAI LENGKAP SISWA PER KELAS & MAPEL
+       ===================================================================== */
+    function renderDaftarNilai() {
+      const kelasFilter = document.getElementById('filterKelasNilai')?.value || 'ALL';
+      const mapelFilter = document.getElementById('filterMapelNilai')?.value || 'BLANK';
+      const guruMapel = (document.getElementById('inpGuruMapelNilai')?.value || '').trim();
+      const s = appState.settings;
+
+      const classesToRender = kelasFilter === 'ALL' ? getUniqueClasses() : [kelasFilter];
+      const mapelText = mapelFilter === 'BLANK'
+        ? '........................................................'
+        : `<strong>${escapeHtml(mapelFilter)}</strong>`;
+
+      let pagesHtml = '';
+
+      classesToRender.forEach(kls => {
+        const classStudents = appState.students.filter(st => (st.kelas || '7.1') === kls);
+        const rows = classStudents.map((st, idx) => `
+          <tr>
+            <td style="text-align:center;">${idx + 1}</td>
+            <td style="text-align:center; font-weight:bold;">${escapeHtml(st.noPeserta)}</td>
+            <td style="text-align:center;">${escapeHtml(st.nisn)}</td>
+            <td>${escapeHtml(st.nama)}</td>
+            <td style="text-align:center;">${escapeHtml(st.kelas)}</td>
+            <td style="text-align:center;"></td>
+            <td style="text-align:left; font-size:8pt;">${idx + 1}.</td>
+            <td></td>
+          </tr>
+        `).join('');
+
+        pagesHtml += `
+          <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
+            ${buildFullKopHTML()}
+            <div style="text-align:center; margin-bottom:8px;">
+              <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">DAFTAR NILAI PESERTA UJIAN</div>
+              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
+            </div>
+
+            <table style="width:100%; font-size:9.2pt; margin-bottom:6px; border-collapse:collapse;">
+              <tr>
+                <td style="width:115px;">Kelas / Rombel</td>
+                <td style="width:10px;">:</td>
+                <td style="width:36%;"><strong>${escapeHtml(kls)}</strong></td>
+                <td style="width:115px;">Mata Pelajaran</td>
+                <td style="width:10px;">:</td>
+                <td>${mapelText}</td>
+              </tr>
+            </table>
+
+            <table class="doc-table" style="font-size:8.8pt; margin-bottom:14px;">
+              <thead>
+                <tr>
+                  <th style="width:28px;">No</th>
+                  <th style="width:76px;">No. Peserta</th>
+                  <th style="width:82px;">NISN</th>
+                  <th>Nama Peserta</th>
+                  <th style="width:48px;">Kelas</th>
+                  <th style="width:52px;">Nilai</th>
+                  <th style="width:76px;">Tanda Tangan</th>
+                  <th style="width:78px;">Keterangan</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+
+            <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:12px; break-inside:avoid;">
+              <tr>
+                <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+                <td style="width:45%; vertical-align:top;">
+                  <div>${escapeHtml(s.titimangsa)}</div>
+                  <div>Guru Mata Pelajaran,</div>
+                  <div style="height:48px;"></div>
+                  ${guruMapel
+                    ? `<div style="font-weight:bold; text-decoration:underline;">${escapeHtml(guruMapel)}</div><div>NIP. .............................................</div>`
+                    : `<div>( .................................................... )</div><div>NIP. .............................................</div>`
+                  }
+                </td>
+              </tr>
+            </table>
+          </div>
+        `;
+      });
+
+      document.getElementById('preview-daftar_nilai').innerHTML = pagesHtml;
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       loadLocalState();
       populateAllForms();
-      refreshRoomDropdowns();
+      refreshAllDropdowns();
       document.getElementById('headerSchoolName').textContent = appState.settings.sekolah;
       if (appState.gasUrl) {
-        setSyncStatus('connected', 'URL Sheets Siap');
+        setSyncStatus('connected', 'URL Sheets Tersimpan');
       }
       lucide.createIcons();
     });
