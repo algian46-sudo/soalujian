@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Si-ADU PRO | Sistem Administrasi Ujian Sekolah</title>
+  <title>SIMPAN-8 | Sistem Manajemen &amp; Pengadministrasian Ujian SMPN 8</title>
   <link rel="icon" type="image/png" href="https://i.imgur.com/mRmw86t.jpeg">
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -221,10 +221,10 @@
       </div>
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="font-extrabold text-base md:text-lg tracking-tight text-white">Si-ADU PRO</h1>
+          <h1 class="font-extrabold text-base md:text-lg tracking-tight text-white">SIMPAN-8</h1>
           <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">Google Sheets Sync</span>
         </div>
-        <p class="text-xs text-slate-400" id="headerSchoolName">SMP NEGERI 8 CIKARANG UTARA</p>
+        <p class="text-xs text-slate-400" id="headerSchoolName">Sistem Manajemen &amp; Pengadministrasian Ujian — SMP Negeri 8 Cikarang Utara</p>
       </div>
     </div>
 
@@ -333,7 +333,7 @@
       </div>
 
       <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-400 px-2 space-y-1">
-        <div class="font-semibold text-slate-300">Pengembang Sistem:</div>
+        <div class="font-semibold text-slate-300">&copy; 2026 SIMPAN-8 &bull; SMP Negeri 8 Cikarang Utara</div>
         <div>Algian Manggara, S.Agr</div>
         <div class="text-[10px] text-slate-500">Auto-convert link Google Drive aktif</div>
       </div>
@@ -1010,7 +1010,7 @@
        KODE BACKEND GOOGLE APPS SCRIPT (UNTUK TOMBOL SALIN)
        ===================================================================== */
     const GAS_BACKEND_CODE = `/**
- * BACKEND DATABASE SISTEM ADMINISTRASI UJIAN SEKOLAH (Si-ADU PRO)
+ * BACKEND DATABASE SISTEM ADMINISTRASI UJIAN SEKOLAH (SIMPAN-8)
  * Arsitektur: Google Spreadsheet + Google Apps Script Web App (/exec)
  * Mendukung: GET (Tarik Data) & POST text/plain (Simpan Semua Data Tanpa Blokir CORS)
  * Seluruh kolom kode/kelas/NIP/NISN disimpan dalam format Teks (@) agar tidak berubah menjadi tanggal.
@@ -1320,7 +1320,7 @@ function buildJsonResponse(obj) {
       ttdMode: 'kosong',
       settings: {
         instansi: 'PEMERINTAH KABUPATEN BEKASI - DINAS PENDIDIKAN',
-        sekolah: 'SMP NEGERI 8 CIKARANG UTARA',
+        sekolah: 'SIMPAN-8 — PANITIA PENYELENGGARA UJIAN SMP NEGERI 8 CIKARANG UTARA',
         alamat: 'Jl. Ki Hajar Dewantara, Karangasih, Kec. Cikarang Utara, Kab. Bekasi 17530',
         namaUjian: 'ASESMEN SUMATIF AKHIR JENJANG',
         tahunAjaran: 'TAHUN AJARAN 2026/2027',
@@ -1591,7 +1591,7 @@ function buildJsonResponse(obj) {
       if (appState.gasUrl) {
         localStorage.setItem(EXEC_URL_KEY, appState.gasUrl);
       }
-      document.getElementById('headerSchoolName').textContent = appState.settings.sekolah || 'SEKOLAH';
+      document.getElementById('headerSchoolName').textContent = 'Sistem Manajemen & Pengadministrasian Ujian — SMP Negeri 8 Cikarang Utara';
     }
 
     function saveLocalSettings() {
@@ -4056,7 +4056,7 @@ function buildJsonResponse(obj) {
               <div style="border-bottom:1px dotted #94a3b8; height:16px;"></div>
             </div>
 
-            <p style="margin-bottom:6px; font-size:9.5pt;">Demikian berita acara ujian susulan ini dibuat dengan sesungguhnya untuk dipergunakan sebagaimana mestinya.</p>
+            <p style="margin-bottom:6px; font-size:9.5pt;">Demikian berita acara ujian susulan ini dibuat dengan sesungguhnya untuk dapat dipergunakan sebagaimana mestinya.</p>
 
             ${ttdSection}
           </div>
@@ -4073,7 +4073,6 @@ function buildJsonResponse(obj) {
       const mode = document.getElementById('modeRekapPengawas')?.value || 'otomatis';
       const s = appState.settings;
       const days = s.scheduleDays || [];
-
       const pengawasList = appState.staff
         .filter(p => p.peran !== 'Panitia')
         .map(p => normalizeStaffItem(p));
@@ -4084,22 +4083,23 @@ function buildJsonResponse(obj) {
         const rows = pengawasList.length > 0
           ? pengawasList.map((p, idx) => {
               const slots = p.jadwalSlots || [];
-              const rincianTugas = slots.length > 0
+              const rincianJadwal = slots.length > 0
                 ? slots.map(sl => `${sl.hariTanggal || '-'} (${sl.ruang || '-'} / ${sl.sesiJam || '-'})`).join('; ')
                 : '-';
-              const totalHadir = slots.length;
+              const unikHari = new Set(slots.map(sl => sl.hariTanggal).filter(Boolean)).size;
               return `
                 <tr>
                   <td style="text-align:center;">${idx + 1}</td>
                   <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
                   <td>${escapeHtml(p.nip)}</td>
-                  <td style="font-size:8pt;">${escapeHtml(rincianTugas)}</td>
-                  <td style="text-align:center; font-weight:bold;">${totalHadir} Sesi</td>
+                  <td style="font-size:8pt;">${escapeHtml(rincianJadwal)}</td>
+                  <td style="text-align:center; font-weight:bold;">${slots.length} Sesi</td>
+                  <td style="text-align:center; font-weight:bold;">${unikHari} Hari</td>
                   <td></td>
                 </tr>
               `;
             }).join('')
-          : `<tr><td colspan="6" style="text-align:center; font-style:italic;">Belum ada data pengawas di Data Master.</td></tr>`;
+          : `<tr><td colspan="7" style="text-align:center; font-style:italic;">Belum ada data pengawas ruang.</td></tr>`;
 
         tableHtml = `
           <table class="doc-table" style="font-size:8.6pt; margin-bottom:14px;">
@@ -4107,9 +4107,10 @@ function buildJsonResponse(obj) {
               <tr>
                 <th style="width:28px;">No</th>
                 <th style="width:155px;">Nama Pengawas &amp; Gelar</th>
-                <th style="width:120px;">NIP / NUPTK</th>
-                <th>Rincian Jadwal &amp; Ruang Mengawas</th>
-                <th style="width:68px;">Jml Tugas</th>
+                <th style="width:115px;">NIP / NUPTK</th>
+                <th>Rincian Hari, Ruang &amp; Sesi Mengawas</th>
+                <th style="width:62px;">Jml Sesi</th>
+                <th style="width:62px;">Jml Hari</th>
                 <th style="width:74px;">Paraf</th>
               </tr>
             </thead>
@@ -4117,37 +4118,37 @@ function buildJsonResponse(obj) {
           </table>
         `;
       } else {
-        const dayHeaders = days.map(d => `<th style="width:36px; font-size:7.5pt;">${escapeHtml(d.label)}</th>`).join('');
         const rows = pengawasList.length > 0
           ? pengawasList.map((p, idx) => {
               const slots = p.jadwalSlots || [];
-              const dayCells = days.map(d => {
-                const match = slots.find(sl => String(sl.hariTanggal || '').toLowerCase().includes(String(d.label || '').toLowerCase()));
-                return `<td style="text-align:center; font-weight:bold; font-size:7.5pt;">${match ? escapeHtml(match.ruang.replace(/RUANG\s*/i, 'R.')) : ''}</td>`;
+              const dayChecks = days.map(d => {
+                const targetLabel = (d.tanggal || d.label || '').toLowerCase();
+                const matched = slots.filter(sl => String(sl.hariTanggal || '').toLowerCase() === targetLabel);
+                return `<td style="text-align:center; font-size:7.6pt; font-weight:bold;">${matched.length > 0 ? matched.map(m => m.ruang).join(', ') : ''}</td>`;
               }).join('');
               return `
                 <tr>
                   <td style="text-align:center;">${idx + 1}</td>
                   <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
-                  <td>${escapeHtml(p.nip)}</td>
-                  ${dayCells}
+                  <td style="font-size:8pt;">${escapeHtml(p.nip)}</td>
+                  ${dayChecks}
                   <td style="text-align:center; font-weight:bold;">${slots.length}</td>
                   <td></td>
                 </tr>
               `;
             }).join('')
-          : `<tr><td colspan="${5 + days.length}" style="text-align:center; font-style:italic;">Belum ada data pengawas.</td></tr>`;
+          : `<tr><td colspan="${days.length + 5}" style="text-align:center; font-style:italic;">Belum ada data pengawas ruang.</td></tr>`;
 
         tableHtml = `
-          <table class="doc-table" style="font-size:8.5pt; margin-bottom:14px;">
+          <table class="doc-table" style="font-size:8.2pt; margin-bottom:14px;">
             <thead>
               <tr>
-                <th style="width:28px;">No</th>
+                <th style="width:26px;">No</th>
                 <th>Nama Pengawas &amp; Gelar</th>
-                <th style="width:118px;">NIP / NUPTK</th>
-                ${dayHeaders}
-                <th style="width:46px;">Total</th>
-                <th style="width:68px;">Paraf</th>
+                <th style="width:110px;">NIP / NUPTK</th>
+                ${days.map(d => `<th style="width:58px; font-size:7.4pt;">${escapeHtml(d.label)}</th>`).join('')}
+                <th style="width:44px;">Total</th>
+                <th style="width:62px;">Paraf</th>
               </tr>
             </thead>
             <tbody>${rows}</tbody>
@@ -4186,18 +4187,18 @@ function buildJsonResponse(obj) {
        ===================================================================== */
     function renderDaftarNilai() {
       const kelasFilter = document.getElementById('filterKelasNilai')?.value || getUniqueClasses()[0];
-      const mapelVal = document.getElementById('filterMapelNilai')?.value || '';
+      const mapelVal = document.getElementById('filterMapelNilai')?.value || 'BLANK';
       const guruMapel = (document.getElementById('inpGuruMapelNilai')?.value || '').trim();
       const s = appState.settings;
 
-      const classes = kelasFilter === 'ALL' ? getUniqueClasses() : [kelasFilter];
-      const mapelDisplay = mapelVal === 'BLANK' || !mapelVal
+      const classesToRender = kelasFilter === 'ALL' ? getUniqueClasses() : [kelasFilter];
+      const mapelDisplay = mapelVal === 'BLANK'
         ? '........................................................'
         : `<strong>${escapeHtml(mapelVal)}</strong>`;
 
       let pagesHtml = '';
 
-      classes.forEach(kls => {
+      classesToRender.forEach(kls => {
         const classStudents = appState.students.filter(st => (st.kelas || '7.1') === kls);
         const rows = classStudents.map((st, idx) => `
           <tr>
@@ -4220,60 +4221,44 @@ function buildJsonResponse(obj) {
               <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
             </div>
 
-            <table style="width:100%; font-size:9pt; margin-bottom:6px; border-collapse:collapse;">
+            <table style="width:100%; font-size:9pt; margin-bottom:8px; border-collapse:collapse;">
               <tr>
-                <td style="width:110px;">Kelas / Rombel</td><td style="width:10px;">:</td><td><strong>${escapeHtml(kls)}</strong></td>
-                <td style="width:110px;">Hari / Tanggal</td><td style="width:10px;">:</td><td>............................................</td>
+                <td style="width:115px;">Mata Pelajaran</td><td style="width:10px;">:</td><td>${mapelDisplay}</td>
+                <td style="width:100px;">Kelas / Rombel</td><td style="width:10px;">:</td><td><strong>${escapeHtml(kls)}</strong></td>
               </tr>
               <tr>
-                <td>Mata Pelajaran</td><td>:</td><td>${mapelDisplay}</td>
-                <td>KKM / KKTP</td><td>:</td><td>...............</td>
+                <td>Guru Mapel</td><td>:</td><td>${guruMapel ? `<strong>${escapeHtml(guruMapel)}</strong>` : '........................................................'}</td>
+                <td>KKM / KKTP</td><td>:</td><td>................</td>
               </tr>
             </table>
 
-            <table class="doc-table" style="font-size:8.8pt; margin-bottom:10px;">
+            <table class="doc-table" style="font-size:8.6pt; margin-bottom:14px;">
               <thead>
                 <tr>
                   <th style="width:28px;">No</th>
-                  <th style="width:82px;">No. Peserta</th>
-                  <th style="width:86px;">NISN</th>
-                  <th>Nama Lengkap Peserta</th>
-                  <th style="width:58px;">Nilai Utama</th>
-                  <th style="width:58px;">Nilai Susulan</th>
-                  <th style="width:58px;">Nilai Akhir</th>
-                  <th style="width:86px;">Keterangan</th>
+                  <th style="width:78px;">No. Peserta</th>
+                  <th style="width:84px;">NISN</th>
+                  <th>Nama Lengkap Siswa</th>
+                  <th style="width:54px;">Nilai Utama</th>
+                  <th style="width:54px;">Nilai Susulan</th>
+                  <th style="width:54px;">Nilai Akhir</th>
+                  <th style="width:78px;">Keterangan</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>
             </table>
 
-            <table class="doc-table" style="width:55%; font-size:8.2pt; margin-bottom:12px; break-inside:avoid;">
-              <tr>
-                <td style="width:150px; font-weight:bold;">Jumlah Peserta Kelas</td>
-                <td style="width:80px; text-align:center;"><strong>${classStudents.length}</strong> Siswa</td>
-                <td style="width:130px; font-weight:bold;">Nilai Tertinggi</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td style="font-weight:bold;">Rata-Rata Nilai Kelas</td>
-                <td></td>
-                <td style="font-weight:bold;">Nilai Terendah</td>
-                <td></td>
-              </tr>
-            </table>
-
-            <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:8px; break-inside:avoid;">
+            <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:12px; break-inside:avoid;">
               <tr>
                 <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
                 <td style="width:45%; vertical-align:top;">
                   <div>${escapeHtml(s.titimangsa)}</div>
                   <div>Guru Mata Pelajaran,</div>
-                  <div style="height:52px;"></div>
+                  <div style="height:48px;"></div>
                   ${guruMapel
-                    ? `<div style="font-weight:bold; text-decoration:underline;">${escapeHtml(guruMapel)}</div>`
-                    : `<div>( .................................................... )</div>`
+                    ? `<div style="font-weight:bold; text-decoration:underline;">${escapeHtml(guruMapel)}</div><div>NIP. .............................................</div>`
+                    : `<div>( .................................................... )</div><div>NIP. .............................................</div>`
                   }
-                  <div>NIP. .............................................</div>
                 </td>
               </tr>
             </table>
@@ -4284,16 +4269,15 @@ function buildJsonResponse(obj) {
       document.getElementById('preview-daftar_nilai').innerHTML = pagesHtml;
     }
 
+    /* =====================================================================
+       INISIALISASI APLIKASI
+       ===================================================================== */
     window.addEventListener('DOMContentLoaded', () => {
       loadLocalState();
       populateAllForms();
       refreshAllDropdowns();
       saveLocalState();
       lucide.createIcons();
-
-      if (appState.gasUrl) {
-        syncPullFromSheets();
-      }
     });
   </script>
 </body>
