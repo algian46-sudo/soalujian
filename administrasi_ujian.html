@@ -254,57 +254,80 @@
   <!-- MAIN SHELL -->
   <div class="main-container flex flex-col lg:flex-row min-h-[calc(100vh-65px)]">
 
-    <!-- SIDEBAR NAVIGASI 13 MODUL -->
-    <aside class="no-print w-full lg:w-72 glass-panel border-r border-slate-800 p-3 flex flex-col justify-between shrink-0">
+    <!-- SIDEBAR NAVIGASI 18 MODUL (TERSUSUN RAPI SESUAI ALUR PANITIA) -->
+    <aside class="no-print w-full lg:w-72 glass-panel border-r border-slate-800 p-3 flex flex-col justify-between shrink-0 overflow-y-auto">
       <div>
-        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-2">Master Data &amp; Denah</div>
+        <!-- KELOMPOK 1: PERSIAPAN & RUANG -->
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-2">1. Persiapan &amp; Ruang Ujian</div>
         <nav class="space-y-1">
-          <button data-tab="master" onclick="switchTab('master')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition bg-indigo-600 text-white shadow">
+          <button data-tab="master" onclick="switchTab('master')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition bg-indigo-600 text-white shadow">
             <i data-lucide="database" class="w-4 h-4 shrink-0"></i> 1. Database, Kop &amp; Data Master
           </button>
-          <button data-tab="denah" onclick="switchTab('denah')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+          <button data-tab="denah" onclick="switchTab('denah')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
             <i data-lucide="layout-grid" class="w-4 h-4 shrink-0"></i> 2. Atur &amp; Acak Denah Duduk
           </button>
-        </nav>
-
-        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-4 pb-2">Kartu &amp; Identitas Ujian</div>
-        <nav class="space-y-1">
-          <button data-tab="kartu_peserta" onclick="switchTab('kartu_peserta')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="id-card" class="w-4 h-4 shrink-0"></i> 3. Kartu Peserta + QR &amp; Jadwal
+          <button data-tab="label_ruang" onclick="switchTab('label_ruang')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="door-open" class="w-4 h-4 shrink-0"></i> 3. Label Pintu Ruangan
           </button>
-          <button data-tab="kartu_meja" onclick="switchTab('kartu_meja')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="square-user" class="w-4 h-4 shrink-0"></i> 4. Kartu Meja Peserta (8/A4)
-          </button>
-          <button data-tab="kartu_panitia" onclick="switchTab('kartu_panitia')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="badge-check" class="w-4 h-4 shrink-0"></i> 5. Kartu Panitia &amp; Pengawas
-          </button>
-          <button data-tab="label_ruang" onclick="switchTab('label_ruang')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="door-open" class="w-4 h-4 shrink-0"></i> 6. Label Pintu Ruangan
+          <button data-tab="tata_tertib" onclick="switchTab('tata_tertib')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="scroll-text" class="w-4 h-4 shrink-0"></i> 4. Tata Tertib Peserta &amp; Pengawas
           </button>
         </nav>
 
-        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-4 pb-2">Berita Acara, Presensi &amp; Nilai</div>
+        <!-- KELOMPOK 2: KARTU & IDENTITAS -->
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-4 pb-2">2. Kartu &amp; Label Berkas</div>
         <nav class="space-y-1">
-          <button data-tab="ba_pelaksanaan" onclick="switchTab('ba_pelaksanaan')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="file-signature" class="w-4 h-4 shrink-0"></i> 7. Berita Acara Pelaksanaan
+          <button data-tab="kartu_peserta" onclick="switchTab('kartu_peserta')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="id-card" class="w-4 h-4 shrink-0"></i> 5. Kartu Peserta + QR &amp; Jadwal
           </button>
-          <button data-tab="ba_serah_terima" onclick="switchTab('ba_serah_terima')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="folder-sync" class="w-4 h-4 shrink-0"></i> 8. BA Serah Terima Soal
+          <button data-tab="kartu_meja" onclick="switchTab('kartu_meja')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="square-user" class="w-4 h-4 shrink-0"></i> 6. Kartu Meja Peserta (8/A4)
           </button>
-          <button data-tab="surat_ijin" onclick="switchTab('surat_ijin')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="mail-check" class="w-4 h-4 shrink-0"></i> 9. Surat Ket. / Ijin Ujian
+          <button data-tab="kartu_panitia" onclick="switchTab('kartu_panitia')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="badge-check" class="w-4 h-4 shrink-0"></i> 7. Kartu Panitia &amp; Pengawas
           </button>
-          <button data-tab="jurnal_siswa" onclick="switchTab('jurnal_siswa')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="book-open-check" class="w-4 h-4 shrink-0"></i> 10. Jurnal Agenda Siswa
+          <button data-tab="label_amplop" onclick="switchTab('label_amplop')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="package" class="w-4 h-4 shrink-0"></i> 8. Label Amplop Soal &amp; LJK
           </button>
-          <button data-tab="dh_siswa" onclick="switchTab('dh_siswa')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="users" class="w-4 h-4 shrink-0"></i> 11. Daftar Hadir Peserta
+        </nav>
+
+        <!-- KELOMPOK 3: BERKAS RUANG & PRESENSI -->
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-4 pb-2">3. Berkas Ruang &amp; Presensi</div>
+        <nav class="space-y-1">
+          <button data-tab="dh_siswa" onclick="switchTab('dh_siswa')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="users" class="w-4 h-4 shrink-0"></i> 9. Daftar Hadir Peserta
           </button>
-          <button data-tab="dh_panitia" onclick="switchTab('dh_panitia')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0"></i> 12. Daftar Hadir Pengawas &amp; Panitia
+          <button data-tab="dh_panitia" onclick="switchTab('dh_panitia')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="clipboard-list" class="w-4 h-4 shrink-0"></i> 10. Daftar Hadir Pengawas &amp; Panitia
           </button>
-          <button data-tab="daftar_nilai" onclick="switchTab('daftar_nilai')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
-            <i data-lucide="award" class="w-4 h-4 shrink-0"></i> 13. Daftar Nilai Lengkap Siswa
+          <button data-tab="ba_serah_terima" onclick="switchTab('ba_serah_terima')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="folder-sync" class="w-4 h-4 shrink-0"></i> 11. BA Serah Terima Soal
+          </button>
+          <button data-tab="ba_pelaksanaan" onclick="switchTab('ba_pelaksanaan')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="file-signature" class="w-4 h-4 shrink-0"></i> 12. Berita Acara Pelaksanaan
+          </button>
+        </nav>
+
+        <!-- KELOMPOK 4: KENDALI SISWA, SUSULAN & REKAP -->
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-4 pb-2">4. Kendali, Susulan &amp; Rekap</div>
+        <nav class="space-y-1">
+          <button data-tab="jurnal_siswa" onclick="switchTab('jurnal_siswa')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="book-open-check" class="w-4 h-4 shrink-0"></i> 13. Jurnal Agenda Siswa
+          </button>
+          <button data-tab="surat_ijin" onclick="switchTab('surat_ijin')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="mail-check" class="w-4 h-4 shrink-0"></i> 14. Surat Ket. / Ijin Ujian
+          </button>
+          <button data-tab="rekap_susulan" onclick="switchTab('rekap_susulan')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="user-x" class="w-4 h-4 shrink-0"></i> 15. Rekap Absen &amp; Ujian Susulan
+          </button>
+          <button data-tab="ba_susulan" onclick="switchTab('ba_susulan')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="file-clock" class="w-4 h-4 shrink-0"></i> 16. Berita Acara Ujian Susulan
+          </button>
+          <button data-tab="rekap_pengawas" onclick="switchTab('rekap_pengawas')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="calendar-range" class="w-4 h-4 shrink-0"></i> 17. Rekap Kehadiran Pengawas
+          </button>
+          <button data-tab="daftar_nilai" onclick="switchTab('daftar_nilai')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70">
+            <i data-lucide="award" class="w-4 h-4 shrink-0"></i> 18. Daftar Nilai Lengkap Siswa
           </button>
         </nav>
       </div>
@@ -608,7 +631,48 @@
       </section>
 
       <!-- =========================================================
-           MODUL 3: KARTU PESERTA UJIAN (+ QR CODE & JADWAL)
+           MODUL 3: LABEL PINTU RUANGAN (DENGAN WATERMARK LOGO 20%)
+           ========================================================= -->
+      <section id="tab-label_ruang" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex items-center gap-3">
+            <label class="text-xs font-semibold text-slate-300">Pilih Ruangan:</label>
+            <select id="filterLabelRuang" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+          </div>
+          <div class="text-xs text-slate-400">Ukuran 1 Ruangan penuh per lembar A4 Landscape dengan watermark logo sekolah transparan 20%.</div>
+        </div>
+        <div id="preview-label_ruang" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 4 (BARU): TATA TERTIB PESERTA & PENGAWAS UJIAN
+           ========================================================= -->
+      <section id="tab-tata_tertib" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex flex-wrap items-center gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Jenis Dokumen Tata Tertib</label>
+              <select id="modeTataTertib" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="peserta">Tata Tertib Peserta Ujian (1 Halaman A4)</option>
+                <option value="pengawas">Tata Tertib Pengawas Ruang Ujian (1 Halaman A4)</option>
+                <option value="keduanya">Cetak Keduanya (Halaman 1 Peserta, Halaman 2 Pengawas)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Moda Pelaksanaan Ujian</label>
+              <select id="modaTataTertib" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="cbt">Ujian Berbasis Komputer / Android (CBT)</option>
+                <option value="kertas">Ujian Berbasis Kertas &amp; Pensil (KP)</option>
+              </select>
+            </div>
+          </div>
+          <div class="text-xs text-slate-400">Siap ditempel di papan pengumuman ruang ujian atau dibacakan pengawas sebelum ujian dimulai.</div>
+        </div>
+        <div id="preview-tata_tertib" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 5: KARTU PESERTA UJIAN (+ QR CODE & JADWAL)
            ========================================================= -->
       <section id="tab-kartu_peserta" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 no-print">
@@ -638,7 +702,7 @@
       </section>
 
       <!-- =========================================================
-           MODUL 4: KARTU MEJA PESERTA (8 PER A4)
+           MODUL 6: KARTU MEJA PESERTA (8 PER A4)
            ========================================================= -->
       <section id="tab-kartu_meja" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 no-print">
@@ -654,7 +718,7 @@
       </section>
 
       <!-- =========================================================
-           MODUL 5: KARTU PANITIA & PENGAWAS
+           MODUL 7: KARTU PANITIA & PENGAWAS
            ========================================================= -->
       <section id="tab-kartu_panitia" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -672,44 +736,68 @@
       </section>
 
       <!-- =========================================================
-           MODUL 6: LABEL PINTU RUANGAN (DENGAN WATERMARK LOGO 20%)
+           MODUL 8 (BARU): LABEL AMPLOP NASKAH SOAL & LJK
            ========================================================= -->
-      <section id="tab-label_ruang" class="tab-section hidden space-y-4">
+      <section id="tab-label_amplop" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
-          <div class="flex items-center gap-3">
-            <label class="text-xs font-semibold text-slate-300">Pilih Ruangan:</label>
-            <select id="filterLabelRuang" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
-          </div>
-          <div class="text-xs text-slate-400">Ukuran 1 Ruangan penuh per lembar A4 Landscape dengan watermark logo sekolah transparan 20%.</div>
-        </div>
-        <div id="preview-label_ruang" class="print-workspace"></div>
-      </section>
-
-      <!-- =========================================================
-           MODUL 7: BERITA ACARA PELAKSANAAN UJIAN (OPSI 1 ATAU 2 PENGAWAS)
-           ========================================================= -->
-      <section id="tab-ba_pelaksanaan" class="tab-section hidden space-y-4">
-        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
-          <div class="flex flex-wrap items-center gap-4">
-            <div class="flex items-center gap-2">
-              <label class="text-xs font-semibold text-slate-300">Jumlah Pengawas:</label>
-              <select id="opsiPengawasBa" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
-                <option value="2">2 Pengawas (Kepala Sekolah di Tengah Bawah)</option>
-                <option value="1">1 Pengawas (Berdampingan dengan Kepala Sekolah)</option>
+          <div class="flex flex-wrap items-center gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Pilih Ruangan</label>
+              <select id="filterRuangAmplop" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold"></select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Jenis Berkas Amplop</label>
+              <select id="jenisBerkasAmplop" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="KEDUANYA">Naskah Soal &amp; Lembar Jawaban (LJK/LJU)</option>
+                <option value="NASKAH SOAL UJIAN">Khusus Amplop Naskah Soal Ujian</option>
+                <option value="LEMBAR JAWABAN UJIAN (LJK/LJU)">Khusus Amplop Lembar Jawaban (LJK/LJU)</option>
               </select>
             </div>
-            <div class="flex items-center gap-2">
-              <label class="text-xs font-semibold text-slate-300">Jumlah Rangkap:</label>
-              <input type="number" id="qtyBaPelaksanaan" min="1" max="20" value="1" onchange="renderActiveTab()" class="w-16 px-2.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Mode Isi Mata Pelajaran</label>
+              <select id="modeIsiAmplop" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="jadwal">Otomatis Sesuai Jadwal Mapel (4 Label / A4)</option>
+                <option value="blank">Blanko Kosong Manual (4 Label / A4)</option>
+              </select>
             </div>
           </div>
-          <div class="text-xs text-amber-300">Isian dikosongkan menggunakan garis titik-titik untuk diisi manual oleh pengawas.</div>
+          <div class="text-xs text-slate-400">4 Label Amplop per halaman A4, otomatis menghitung jumlah peserta per ruangan + cadangan.</div>
         </div>
-        <div id="preview-ba_pelaksanaan" class="print-workspace"></div>
+        <div id="preview-label_amplop" class="print-workspace"></div>
       </section>
 
       <!-- =========================================================
-           MODUL 8: BERITA ACARA SERAH TERIMA SOAL (URAIAN & TABEL GAMBAR + OPSI ISI)
+           MODUL 9: DAFTAR HADIR PESERTA UJIAN
+           ========================================================= -->
+      <section id="tab-dh_siswa" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex items-center gap-3">
+            <label class="text-xs font-semibold text-slate-300">Filter Ruangan:</label>
+            <select id="filterRuangDhSiswa" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+          </div>
+          <div class="text-xs text-slate-400">Otomatis berkelanjutan rapi jika peserta dalam satu ruang melebihi 1 halaman A4.</div>
+        </div>
+        <div id="preview-dh_siswa" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 10: DAFTAR HADIR PENGAWAS & PANITIA PER HARI JADWAL
+           ========================================================= -->
+      <section id="tab-dh_panitia" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex flex-wrap items-center gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Pilih Hari / Tanggal Ujian</label>
+              <select id="filterHariDhPanitia" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold"></select>
+            </div>
+          </div>
+          <div class="text-xs text-slate-400">Tabel atas: Daftar Hadir Panitia &bull; Tabel bawah: Daftar Hadir Pengawas sesuai jadwal hari terpilih.</div>
+        </div>
+        <div id="preview-dh_panitia" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 11: BERITA ACARA SERAH TERIMA SOAL (URAIAN & TABEL GAMBAR + OPSI ISI)
            ========================================================= -->
       <section id="tab-ba_serah_terima" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -739,20 +827,30 @@
       </section>
 
       <!-- =========================================================
-           MODUL 9: SURAT KETERANGAN / IJIN MENGIKUTI UJIAN
+           MODUL 12: BERITA ACARA PELAKSANAAN UJIAN (OPSI 1 ATAU 2 PENGAWAS)
            ========================================================= -->
-      <section id="tab-surat_ijin" class="tab-section hidden space-y-4">
+      <section id="tab-ba_pelaksanaan" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
-          <div class="flex items-center gap-3">
-            <label class="text-xs font-semibold text-slate-300">Pilih Siswa (atau Cetak Blanko Kosong):</label>
-            <select id="selectSiswaSurat" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-semibold text-slate-300">Jumlah Pengawas:</label>
+              <select id="opsiPengawasBa" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="2">2 Pengawas (Kepala Sekolah di Tengah Bawah)</option>
+                <option value="1">1 Pengawas (Berdampingan dengan Kepala Sekolah)</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-semibold text-slate-300">Jumlah Rangkap:</label>
+              <input type="number" id="qtyBaPelaksanaan" min="1" max="20" value="1" onchange="renderActiveTab()" class="w-16 px-2.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+            </div>
           </div>
+          <div class="text-xs text-amber-300">Isian dikosongkan menggunakan garis titik-titik untuk diisi manual oleh pengawas.</div>
         </div>
-        <div id="preview-surat_ijin" class="print-workspace"></div>
+        <div id="preview-ba_pelaksanaan" class="print-workspace"></div>
       </section>
 
       <!-- =========================================================
-           MODUL 10: JURNAL AGENDA & KARTU KENDALI SISWA
+           MODUL 13: JURNAL AGENDA & KARTU KENDALI SISWA
            ========================================================= -->
       <section id="tab-jurnal_siswa" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -776,37 +874,87 @@
       </section>
 
       <!-- =========================================================
-           MODUL 11: DAFTAR HADIR PESERTA UJIAN
+           MODUL 14: SURAT KETERANGAN / IJIN MENGIKUTI UJIAN
            ========================================================= -->
-      <section id="tab-dh_siswa" class="tab-section hidden space-y-4">
+      <section id="tab-surat_ijin" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
           <div class="flex items-center gap-3">
-            <label class="text-xs font-semibold text-slate-300">Filter Ruangan:</label>
-            <select id="filterRuangDhSiswa" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+            <label class="text-xs font-semibold text-slate-300">Pilih Siswa (atau Cetak Blanko Kosong):</label>
+            <select id="selectSiswaSurat" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
           </div>
-          <div class="text-xs text-slate-400">Otomatis berkelanjutan rapi jika peserta dalam satu ruang melebihi 1 halaman A4.</div>
         </div>
-        <div id="preview-dh_siswa" class="print-workspace"></div>
+        <div id="preview-surat_ijin" class="print-workspace"></div>
       </section>
 
       <!-- =========================================================
-           MODUL 12: DAFTAR HADIR PENGAWAS & PANITIA PER HARI JADWAL
+           MODUL 15 (BARU): REKAPITULASI KETIDAKHADIRAN & UJIAN SUSULAN
            ========================================================= -->
-      <section id="tab-dh_panitia" class="tab-section hidden space-y-4">
+      <section id="tab-rekap_susulan" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 space-y-3 no-print">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-bold text-white">Daftar Peserta Tidak Hadir &amp; Jadwal Ujian Susulan</h3>
+              <p class="text-xs text-slate-400">Pilih siswa dari master data atau isi baris manual untuk mencetak daftar rekap ketidakhadiran &amp; jadwal susulan.</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="addSusulanRow(false)" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1">
+                <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> + Tambah Siswa Absen
+              </button>
+              <button onclick="addSusulanRow(true)" class="px-3 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-xs font-bold text-slate-200 flex items-center gap-1">
+                <i data-lucide="plus-square" class="w-3.5 h-3.5"></i> + Baris Kosong Manual
+              </button>
+            </div>
+          </div>
+
+          <div id="susulanEditorList" class="space-y-2 max-h-56 overflow-y-auto pr-1"></div>
+        </div>
+        <div id="preview-rekap_susulan" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 16 (BARU): BERITA ACARA UJIAN SUSULAN
+           ========================================================= -->
+      <section id="tab-ba_susulan" class="tab-section hidden space-y-4">
+        <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-semibold text-slate-300">Jumlah Pengawas Susulan:</label>
+              <select id="opsiPengawasBaSusulan" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="1">1 Pengawas (Berdampingan dengan Kepala Sekolah)</option>
+                <option value="2">2 Pengawas (Kepala Sekolah di Tengah Bawah)</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-semibold text-slate-300">Jumlah Rangkap:</label>
+              <input type="number" id="qtyBaSusulan" min="1" max="20" value="1" onchange="renderActiveTab()" class="w-16 px-2.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+            </div>
+          </div>
+          <div class="text-xs text-amber-300">Dilengkapi tabel rincian peserta susulan dan mata pelajaran yang diujikan.</div>
+        </div>
+        <div id="preview-ba_susulan" class="print-workspace"></div>
+      </section>
+
+      <!-- =========================================================
+           MODUL 17 (BARU): REKAPITULASI KEHADIRAN PENGAWAS (TANPA UANG TRANSPORT)
+           ========================================================= -->
+      <section id="tab-rekap_pengawas" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
           <div class="flex flex-wrap items-center gap-3">
             <div>
-              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Pilih Hari / Tanggal Ujian</label>
-              <select id="filterHariDhPanitia" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold"></select>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Sumber Data Tabel</label>
+              <select id="modeRekapPengawas" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-semibold">
+                <option value="otomatis">Otomatis dari Jadwal Mengawas (Tab 1D)</option>
+                <option value="gabungan">Semua Pengawas + Ceklis Harian Manual</option>
+              </select>
             </div>
           </div>
-          <div class="text-xs text-slate-400">Tabel atas: Daftar Hadir Panitia &bull; Tabel bawah: Daftar Hadir Pengawas sesuai jadwal hari terpilih.</div>
+          <div class="text-xs text-slate-400">Rekapitulasi jumlah sesi, ruang tugas, total hari mengawas &amp; paraf pengawas (murni administrasi kehadiran tanpa kolom honor/transport).</div>
         </div>
-        <div id="preview-dh_panitia" class="print-workspace"></div>
+        <div id="preview-rekap_pengawas" class="print-workspace"></div>
       </section>
 
       <!-- =========================================================
-           MODUL 13: DAFTAR NILAI LENGKAP SISWA PER KELAS & MAPEL
+           MODUL 18: DAFTAR NILAI LENGKAP SISWA PER KELAS & MAPEL
            ========================================================= -->
       <section id="tab-daftar_nilai" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -879,7 +1027,6 @@ const SHEET_NAMES = {
 function cleanSheetText(val) {
   if (val === null || val === undefined) return '';
   if (val instanceof Date) {
-    // Jika sel terlanjur terformat tanggal di Sheet (misal 7.1 -> 1 Juli), kembalikan ke bentuk teks wajar
     const d = val.getDate();
     const m = val.getMonth() + 1;
     return m + '.' + d;
@@ -892,9 +1039,6 @@ function toPlainSheetCell(val) {
   return s === '' ? '' : "'" + s;
 }
 
-/**
- * Fungsi inisialisasi otomatis untuk memastikan ke-5 tab sheet dan header tersedia
- */
 function initSheets() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
 
@@ -1258,7 +1402,8 @@ function buildJsonResponse(obj) {
         { jam: '3', pukul: '09.30 - 10.00', istirahat: true, senin: 'ISTIRAHAT', selasa: 'ISTIRAHAT', rabu: 'ISTIRAHAT', kamis: 'ISTIRAHAT', jumat: 'ISTIRAHAT', sabtu: 'ISTIRAHAT' },
         { jam: '4', pukul: '10.00 - 11.00', istirahat: false, senin: 'Bahasa Indonesia', selasa: 'Literasi Numerasi', rabu: 'Seni Budaya', kamis: 'P5 / Kokurikuler', jumat: '-', sabtu: '-' }
       ],
-      seating: {}
+      seating: {},
+      susulanRecords: []
     };
 
     let appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -1423,6 +1568,7 @@ function buildJsonResponse(obj) {
             ttdMode: parsed.ttdMode === 'kepsek' ? 'kepsek' : 'kosong',
             students: Array.isArray(parsed.students) ? parsed.students.map((st, idx) => normalizeStudentRecord(st, idx)) : DEFAULT_STATE.students,
             staff: Array.isArray(parsed.staff) ? parsed.staff.map((p, idx) => normalizeStaffRecord(p, idx)) : DEFAULT_STATE.staff,
+            susulanRecords: Array.isArray(parsed.susulanRecords) ? parsed.susulanRecords : [],
             settings: {
               ...DEFAULT_STATE.settings,
               ...(parsed.settings || {}),
@@ -1569,9 +1715,9 @@ function buildJsonResponse(obj) {
 
       document.querySelectorAll('.nav-btn').forEach(btn => {
         if (btn.dataset.tab === tabId) {
-          btn.className = 'nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition bg-indigo-600 text-white shadow';
+          btn.className = 'nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition bg-indigo-600 text-white shadow';
         } else {
-          btn.className = 'nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70';
+          btn.className = 'nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-left transition text-slate-300 hover:bg-slate-800/70';
         }
       });
 
@@ -2067,7 +2213,7 @@ function buildJsonResponse(obj) {
         if (rooms.includes(prev) || prev === 'ALL') el.value = prev;
       });
 
-      ['denahRuangSelect', 'filterLabelRuang'].forEach(id => {
+      ['denahRuangSelect', 'filterLabelRuang', 'filterRuangAmplop'].forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
         const prev = el.value;
@@ -2179,7 +2325,6 @@ function buildJsonResponse(obj) {
       const ttdMaxW = isCompact ? '104px' : '116px';
 
       const namaKepsekDisplay = `<div style="position:relative; z-index:1; text-decoration:underline; overflow-wrap:anywhere;">${escapeHtml(s.kepsek || 'Hasanah Aisah, M.Pd')}</div>`;
-
       const nipKepsekDisplay = `<div style="position:relative; z-index:1; font-weight:normal; font-size:${isCompact ? '6.8pt' : '7.4pt'}; overflow-wrap:anywhere;">NIP. ${escapeHtml(s.nipKepsek || '196902031998022005')}</div>`;
 
       return `
@@ -2235,22 +2380,27 @@ function buildJsonResponse(obj) {
     function renderActiveTab() {
       switch (activeTab) {
         case 'denah': renderDenah(); break;
+        case 'label_ruang': renderLabelRuang(); break;
+        case 'tata_tertib': renderTataTertib(); break;
         case 'kartu_peserta': renderKartuPeserta(); break;
         case 'kartu_meja': renderKartuMeja(); break;
         case 'kartu_panitia': renderKartuPanitia(); break;
-        case 'label_ruang': renderLabelRuang(); break;
-        case 'ba_pelaksanaan': renderBaPelaksanaan(); break;
-        case 'ba_serah_terima': renderBaSerahTerima(); break;
-        case 'surat_ijin': renderSuratIjin(); break;
-        case 'jurnal_siswa': renderJurnalSiswa(); break;
+        case 'label_amplop': renderLabelAmplop(); break;
         case 'dh_siswa': renderDhSiswa(); break;
         case 'dh_panitia': renderDhPanitia(); break;
+        case 'ba_serah_terima': renderBaSerahTerima(); break;
+        case 'ba_pelaksanaan': renderBaPelaksanaan(); break;
+        case 'jurnal_siswa': renderJurnalSiswa(); break;
+        case 'surat_ijin': renderSuratIjin(); break;
+        case 'rekap_susulan': renderRekapSusulan(); break;
+        case 'ba_susulan': renderBaSusulan(); break;
+        case 'rekap_pengawas': renderRekapPengawas(); break;
         case 'daftar_nilai': renderDaftarNilai(); break;
       }
     }
 
     /* =====================================================================
-       MODUL 2: DENAH TEMPAT DUDUK RUANGAN (FOTO 3X LEBIH BESAR)
+       MODUL 2: DENAH TEMPAT DUDUK RUANGAN
        ===================================================================== */
     function ensureRoomSeating(ruang) {
       const roomStudents = appState.students.filter(s => (s.ruang || 'RUANG 1') === ruang);
@@ -2434,7 +2584,167 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 3: KARTU PESERTA UJIAN (DINAMIS HINGGA SABTU / TAMBAH HARI)
+       MODUL 3: LABEL PINTU RUANGAN (DENGAN LOGO WATERMARK TRANSPARAN 20%)
+       ===================================================================== */
+    function renderLabelRuang() {
+      const ruang = document.getElementById('filterLabelRuang').value || getUniqueRooms()[0];
+      const s = appState.settings;
+      const roomStudents = appState.students.filter(st => (st.ruang || 'RUANG 1') === ruang);
+      const firstNo = roomStudents.length ? roomStudents[0].noPeserta : '-';
+      const lastNo = roomStudents.length ? roomStudents[roomStudents.length - 1].noPeserta : '-';
+      const kelasList = Array.from(new Set(roomStudents.map(st => st.kelas))).join(', ') || '-';
+      const watermarkLogo = resolveDriveImage(s.logoKanan) || resolveDriveImage(s.logoKiri);
+
+      document.getElementById('preview-label_ruang').innerHTML = `
+        <div class="a4-page a4-landscape" style="position:relative; display:flex; flex-direction:column; justify-content:space-between; border:4px double #000;">
+          ${watermarkLogo ? `
+            <img src="${watermarkLogo}" referrerpolicy="no-referrer" style="position:absolute; top:52%; left:50%; transform:translate(-50%, -50%); width:310px; height:310px; object-fit:contain; opacity:0.20; z-index:0; pointer-events:none;" />
+          ` : ''}
+
+          <div style="position:relative; z-index:1;">
+            ${buildFullKopHTML()}
+          </div>
+
+          <div style="position:relative; z-index:1; text-align:center;">
+            <div style="font-size:15pt; font-weight:bold; letter-spacing:0.8px;">${escapeHtml(s.namaUjian)}</div>
+            <div style="font-size:13pt; font-weight:bold; margin-bottom:12px;">${escapeHtml(s.tahunAjaran)}</div>
+
+            <div style="border:4px solid #000; border-radius:12px; padding:16px 28px; display:inline-block; min-width:65%; background:rgba(248, 250, 252, 0.85); -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+              <div style="font-size:40pt; font-weight:bold; letter-spacing:2px; line-height:1.1; overflow-wrap:anywhere;">${escapeHtml(ruang)}</div>
+            </div>
+
+            <div style="margin-top:14px; font-size:13pt; line-height:1.5; overflow-wrap:anywhere;">
+              <div>Nomor Peserta : <strong>${escapeHtml(firstNo)}</strong> s.d. <strong>${escapeHtml(lastNo)}</strong></div>
+              <div>Jumlah Peserta : <strong>${roomStudents.length} Siswa</strong> (Kelas: ${escapeHtml(kelasList)})</div>
+            </div>
+          </div>
+
+          <div style="position:relative; z-index:1; text-align:center; border-top:2px solid #000; padding-top:6px; font-size:10.5pt; font-weight:bold; letter-spacing:1px;">
+            HARAP TENANG — SEDANG BERLANGSUNG UJIAN
+          </div>
+        </div>
+      `;
+    }
+
+    /* =====================================================================
+       MODUL 4 (BARU): TATA TERTIB PESERTA & PENGAWAS UJIAN
+       ===================================================================== */
+    function renderTataTertib() {
+      const mode = document.getElementById('modeTataTertib')?.value || 'peserta';
+      const moda = document.getElementById('modaTataTertib')?.value || 'cbt';
+      const s = appState.settings;
+
+      const buildPesertaPage = () => {
+        const poinSpesifik = moda === 'cbt'
+          ? [
+              'Peserta memasuki ruangan ujian 15 (lima belas) menit sebelum ujian dimulai setelah tanda bel dibunyikan.',
+              'Peserta wajib membawa Kartu Peserta Ujian dan perangkat ujian (HP/Laptop/Komputer) dalam kondisi baterai terisi penuh serta kuota/koneksi stabil.',
+              'Peserta duduk di tempat yang telah ditentukan sesuai nomor peserta dan denah tempat duduk ruangan.',
+              'Tas, buku catatan, kalkulator, maupun perangkat komunikasi cadangan diletakkan di bagian depan ruang ujian sesuai arahan pengawas.',
+              'Peserta melakukan login menggunakan Username dan Password yang tertera pada Kartu Peserta setelah mendapat instruksi pengawas.',
+              'Selama ujian berlangsung, peserta dilarang membuka tab/aplikasi lain, melakukan tangkapan layar (screenshot), bekerja sama, atau berkomunikasi dalam bentuk apa pun.',
+              'Peserta yang memerlukan bantuan teknis wajib mengangkat tangan dengan tenang tanpa mengganggu peserta lain.',
+              'Peserta yang terlambat hadir hanya diperkenankan mengikuti ujian setelah mendapat surat ijin dari Panitia Ujian dan tanpa perpanjangan waktu.',
+              'Setelah selesai mengerjakan soal, peserta memastikan seluruh jawaban telah terkirim (Submit) sebelum meninggalkan ruangan dengan tertib.'
+            ]
+          : [
+              'Peserta memasuki ruangan ujian 15 (lima belas) menit sebelum ujian dimulai setelah tanda bel dibunyikan.',
+              'Peserta wajib membawa Kartu Peserta Ujian serta alat tulis lengkap (pensil 2B, penghapus, rautan, dan pulpen hitam).',
+              'Peserta duduk di tempat yang telah ditentukan sesuai nomor peserta dan denah tempat duduk ruangan.',
+              'Tas, buku catatan, alat hitung, dan telepon genggam (dalam keadaan nonaktif) dikumpulkan di depan ruang ujian.',
+              'Peserta mengisi identitas pada Lembar Jawaban Ujian (LJK/LJU) dengan lengkap, jelas, dan menandatangani daftar hadir.',
+              'Peserta mulai mengerjakan soal setelah tanda waktu dimulai dibunyikan dan berhenti mengerjakan setelah tanda waktu selesai.',
+              'Selama ujian berlangsung, peserta dilarang mencontek, bekerja sama, meminjam alat tulis, atau meninggalkan ruangan tanpa seizin pengawas.',
+              'Peserta yang terlambat hadir hanya diperkenankan mengikuti ujian setelah mendapat surat ijin dari Panitia Ujian dan tanpa perpanjangan waktu.',
+              'Setelah waktu ujian berakhir, peserta tetap duduk tenang hingga pengawas selesai mengumpulkan dan menghitung lembar jawaban.'
+            ];
+
+        return `
+          <div class="a4-page" style="display:flex; flex-direction:column; justify-content:space-between; font-size:10.5pt; line-height:1.45;">
+            <div>
+              ${buildFullKopHTML()}
+              <div style="text-align:center; margin:8px 0 14px 0;">
+                <div style="font-size:12.5pt; font-weight:bold; text-decoration:underline;">TATA TERTIB PESERTA UJIAN</div>
+                <div style="font-size:10.5pt; font-weight:bold;">${escapeHtml(s.namaUjian)}</div>
+                <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.tahunAjaran)}</div>
+              </div>
+
+              <div style="border:2px solid #000; border-radius:6px; padding:12px 16px; background:#fff;">
+                <ol style="margin:0; padding-left:20px; text-align:justify;">
+                  ${poinSpesifik.map(p => `<li style="margin-bottom:7px;">${escapeHtml(p)}</li>`).join('')}
+                </ol>
+              </div>
+
+              <div style="margin-top:12px; border:1.5px solid #000; padding:8px 12px; background:#f8fafc; font-size:9.5pt; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+                <strong>SANKSI PELANGGARAN:</strong> Peserta yang melanggar tata tertib akan diberikan peringatan lisan/tertulis oleh pengawas ruang, dicatat dalam Berita Acara Pelaksanaan Ujian, dan dapat dikenai sanksi pembatalan ujian pada mata pelajaran yang bersangkutan.
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; margin-top:10px; font-size:10pt;">
+              ${buildFormalKepsekBlockHTML('Mengetahui,', true)}
+            </div>
+          </div>
+        `;
+      };
+
+      const buildPengawasPage = () => {
+        const poinPengawas = [
+          'Pengawas ruang hadir di ruang sekretariat panitia sekurang-kurangnya 30 (tiga puluh) menit sebelum ujian dimulai untuk menandatangani daftar hadir dan menerima berkas ujian.',
+          'Pengawas memeriksa kesiapan ruang ujian, kebersihan, serta kesesuaian nomor meja dengan denah tempat duduk peserta.',
+          'Pengawas mempersilakan peserta memasuki ruangan 15 menit sebelum ujian dimulai dan memeriksa Kartu Peserta serta kelengkapan ujian setiap siswa.',
+          'Pengawas membacakan Tata Tertib Peserta Ujian sebelum ujian dimulai dan memimpin doa bersama.',
+          moda === 'cbt'
+            ? 'Pengawas membagikan/membacakan token ujian (jika ada) dan memantau aktivitas peserta agar tidak membuka aplikasi di luar sistem ujian.'
+            : 'Pengawas memperlihatkan sampul naskah soal yang masih tersegel kepada peserta sebelum dibuka dan membagikan soal secara tertib.',
+          'Pengawas mengedarkan Daftar Hadir Peserta untuk ditandatangani siswa serta memaraf Jurnal Agenda Peserta Ujian.',
+          'Selama ujian berlangsung, pengawas wajib menjaga ketertiban dan ketenangan ruangan, tidak merokok, serta tidak menggunakan ponsel untuk keperluan pribadi yang mengganggu pengawasan.',
+          'Pengawas mencatat setiap kejadian khusus atau peserta yang tidak hadir pada Berita Acara Pelaksanaan Ujian.',
+          'Setelah ujian berakhir, pengawas menyerahkan kembali seluruh berkas administrasi ruang (Daftar Hadir, Berita Acara, dan LJK/LJU jika ada) kepada Panitia Ujian.'
+        ];
+
+        return `
+          <div class="a4-page" style="display:flex; flex-direction:column; justify-content:space-between; font-size:10.5pt; line-height:1.45;">
+            <div>
+              ${buildFullKopHTML()}
+              <div style="text-align:center; margin:8px 0 14px 0;">
+                <div style="font-size:12.5pt; font-weight:bold; text-decoration:underline;">TATA TERTIB PENGAWAS RUANG UJIAN</div>
+                <div style="font-size:10.5pt; font-weight:bold;">${escapeHtml(s.namaUjian)}</div>
+                <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.tahunAjaran)}</div>
+              </div>
+
+              <div style="border:2px solid #000; border-radius:6px; padding:12px 16px; background:#fff;">
+                <ol style="margin:0; padding-left:20px; text-align:justify;">
+                  ${poinPengawas.map(p => `<li style="margin-bottom:7px;">${escapeHtml(p)}</li>`).join('')}
+                </ol>
+              </div>
+            </div>
+
+            <table style="width:100%; border-collapse:collapse; margin-top:12px; font-size:10pt;">
+              <tr>
+                <td style="width:52%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+                <td style="width:48%; vertical-align:top; text-align:center;">
+                  <div>${escapeHtml(s.titimangsa)}</div>
+                  <div>Ketua Panitia Ujian,</div>
+                  <div style="height:52px;"></div>
+                  <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.ketua)}</div>
+                  <div>NIP. ${escapeHtml(s.nipKetua)}</div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        `;
+      };
+
+      let outHtml = '';
+      if (mode === 'peserta') outHtml = buildPesertaPage();
+      else if (mode === 'pengawas') outHtml = buildPengawasPage();
+      else outHtml = buildPesertaPage() + buildPengawasPage();
+
+      document.getElementById('preview-tata_tertib').innerHTML = outHtml;
+    }
+
+    /* =====================================================================
+       MODUL 5: KARTU PESERTA UJIAN (DINAMIS HINGGA SABTU / TAMBAH HARI)
        ===================================================================== */
     function buildScheduleMatrixTableHTML() {
       const s = appState.settings;
@@ -2617,7 +2927,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 4: KARTU MEJA PESERTA
+       MODUL 6: KARTU MEJA PESERTA
        ===================================================================== */
     function renderKartuMeja() {
       const ruangFilter = document.getElementById('filterRuangMeja').value || 'ALL';
@@ -2680,7 +2990,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 5: KARTU PANITIA & PENGAWAS
+       MODUL 7: KARTU PANITIA & PENGAWAS
        ===================================================================== */
     function renderKartuPanitia() {
       const cat = document.getElementById('filterKategoriKartuPanitia')?.value || 'ALL';
@@ -2762,140 +3072,316 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 6: LABEL PINTU RUANGAN (DENGAN LOGO WATERMARK TRANSPARAN 20%)
+       MODUL 8 (BARU): LABEL AMPLOP NASKAH SOAL & LJK
        ===================================================================== */
-    function renderLabelRuang() {
-      const ruang = document.getElementById('filterLabelRuang').value || getUniqueRooms()[0];
+    function renderLabelAmplop() {
+      const ruang = document.getElementById('filterRuangAmplop')?.value || getUniqueRooms()[0];
+      const jenisBerkas = document.getElementById('jenisBerkasAmplop')?.value || 'KEDUANYA';
+      const modeIsi = document.getElementById('modeIsiAmplop')?.value || 'jadwal';
       const s = appState.settings;
+
       const roomStudents = appState.students.filter(st => (st.ruang || 'RUANG 1') === ruang);
-      const firstNo = roomStudents.length ? roomStudents[0].noPeserta : '-';
-      const lastNo = roomStudents.length ? roomStudents[roomStudents.length - 1].noPeserta : '-';
+      const jmlPeserta = roomStudents.length;
+      const firstNo = jmlPeserta ? roomStudents[0].noPeserta : '-';
+      const lastNo = jmlPeserta ? roomStudents[jmlPeserta - 1].noPeserta : '-';
       const kelasList = Array.from(new Set(roomStudents.map(st => st.kelas))).join(', ') || '-';
-      const watermarkLogo = resolveDriveImage(s.logoKanan) || resolveDriveImage(s.logoKiri);
 
-      document.getElementById('preview-label_ruang').innerHTML = `
-        <div class="a4-page a4-landscape" style="position:relative; display:flex; flex-direction:column; justify-content:space-between; border:4px double #000;">
-          ${watermarkLogo ? `
-            <img src="${watermarkLogo}" referrerpolicy="no-referrer" style="position:absolute; top:52%; left:50%; transform:translate(-50%, -50%); width:310px; height:310px; object-fit:contain; opacity:0.20; z-index:0; pointer-events:none;" />
-          ` : ''}
+      let envelopeItems = [];
+      if (modeIsi === 'jadwal') {
+        const agenda = buildAgendaRowsFromSchedule();
+        agenda.forEach(item => {
+          if (jenisBerkas === 'KEDUANYA') {
+            envelopeItems.push({ jenis: 'NASKAH SOAL UJIAN', hari: item.hariTanggal, mapel: item.mapel, pukul: item.pukul });
+            envelopeItems.push({ jenis: 'LEMBAR JAWABAN UJIAN (LJK/LJU)', hari: item.hariTanggal, mapel: item.mapel, pukul: item.pukul });
+          } else {
+            envelopeItems.push({ jenis: jenisBerkas, hari: item.hariTanggal, mapel: item.mapel, pukul: item.pukul });
+          }
+        });
+      } else {
+        for (let k = 0; k < 4; k++) {
+          const jenisLabel = jenisBerkas === 'KEDUANYA'
+            ? (k % 2 === 0 ? 'NASKAH SOAL UJIAN' : 'LEMBAR JAWABAN UJIAN (LJK/LJU)')
+            : jenisBerkas;
+          envelopeItems.push({ jenis: jenisLabel, hari: '', mapel: '', pukul: '' });
+        }
+      }
 
-          <div style="position:relative; z-index:1;">
+      if (envelopeItems.length === 0) {
+        envelopeItems = [{ jenis: 'NASKAH SOAL & LJK', hari: '', mapel: '', pukul: '' }];
+      }
+
+      let pagesHtml = '';
+      for (let i = 0; i < envelopeItems.length; i += 4) {
+        const chunk = envelopeItems.slice(i, i + 4);
+        const cardsHtml = chunk.map(env => `
+          <div style="border:2px solid #000; border-radius:4px; height:136mm; display:flex; flex-direction:column; justify-content:space-between; background:#fff; overflow:hidden;">
+            <div>
+              ${buildCardKopHTML(false, true)}
+              <div style="padding:4px 8px;">
+                <div style="background:#0f172a; color:#fff; text-align:center; font-weight:bold; font-size:8.5pt; padding:3px; margin:2px 0 4px 0; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+                  ${escapeHtml(env.jenis)}
+                </div>
+                <div style="text-align:center; font-size:7.6pt; font-weight:bold; margin-bottom:5px;">
+                  ${escapeHtml(s.namaUjian)} (${escapeHtml(s.tahunAjaran)})
+                </div>
+
+                <div style="border:2px solid #000; text-align:center; padding:4px; font-size:13pt; font-weight:bold; background:#f1f5f9; margin-bottom:6px; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+                  ${escapeHtml(ruang)}
+                </div>
+
+                <table style="width:100%; font-size:8pt; line-height:1.45; border-collapse:collapse; table-layout:fixed;">
+                  <tr>
+                    <td style="width:86px; font-weight:bold;">Hari / Tanggal</td>
+                    <td style="width:8px;">:</td>
+                    <td>${env.hari ? `<strong>${escapeHtml(env.hari)}</strong>` : '.............................................'}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold;">Mata Pelajaran</td>
+                    <td>:</td>
+                    <td>${env.mapel ? `<strong>${escapeHtml(env.mapel)}</strong>` : '.............................................'}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold;">Pukul / Waktu</td>
+                    <td>:</td>
+                    <td>${env.pukul ? `<strong>${escapeHtml(env.pukul)} WIB</strong>` : '.............................................'}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold;">Kelas / Rombel</td>
+                    <td>:</td>
+                    <td><strong>${escapeHtml(kelasList)}</strong></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold;">Nomor Peserta</td>
+                    <td>:</td>
+                    <td><strong>${escapeHtml(firstNo)}</strong> s.d. <strong>${escapeHtml(lastNo)}</strong></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold;">Jumlah Isi</td>
+                    <td>:</td>
+                    <td><strong>${jmlPeserta}</strong> Eks + <strong>2</strong> Cadangan = <strong>${jmlPeserta + 2}</strong> Eks</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <div style="border-top:1.5px dashed #000; padding:4px 8px; background:#f8fafc; font-size:7.2pt; display:flex; justify-content:space-between; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+              <div>Panitia: ..........................</div>
+              <div>Pengawas: ..........................</div>
+            </div>
+          </div>
+        `).join('');
+
+        pagesHtml += `
+          <div class="a4-page" style="display:grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap:4mm; align-content:start;">
+            ${cardsHtml}
+          </div>
+        `;
+      }
+
+      document.getElementById('preview-label_amplop').innerHTML = pagesHtml;
+    }
+
+    /* =====================================================================
+       MODUL 9: DAFTAR HADIR PESERTA UJIAN
+       ===================================================================== */
+    function renderDhSiswa() {
+      const ruangFilter = document.getElementById('filterRuangDhSiswa').value || 'ALL';
+      const rooms = ruangFilter === 'ALL' ? getUniqueRooms() : [ruangFilter];
+      const s = appState.settings;
+      let pagesHtml = '';
+
+      rooms.forEach(ruang => {
+        const roomStudents = appState.students.filter(st => (st.ruang || 'RUANG 1') === ruang);
+        const rows = roomStudents.map((st, idx) => {
+          const isOdd = (idx + 1) % 2 === 1;
+          return `
+            <tr>
+              <td style="text-align:center;">${idx + 1}</td>
+              <td style="text-align:center; font-weight:bold;">${escapeHtml(st.noPeserta)}</td>
+              <td style="text-align:center;">${escapeHtml(st.nisn)}</td>
+              <td>${escapeHtml(st.nama)}</td>
+              <td style="text-align:center;">${escapeHtml(st.kelas)}</td>
+              <td style="text-align:left; font-size:8pt;">${isOdd ? (idx + 1) + '.' : ''}</td>
+              <td style="text-align:left; font-size:8pt;">${!isOdd ? (idx + 1) + '.' : ''}</td>
+            </tr>
+          `;
+        }).join('');
+
+        pagesHtml += `
+          <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
             ${buildFullKopHTML()}
-          </div>
-
-          <div style="position:relative; z-index:1; text-align:center;">
-            <div style="font-size:15pt; font-weight:bold; letter-spacing:0.8px;">${escapeHtml(s.namaUjian)}</div>
-            <div style="font-size:13pt; font-weight:bold; margin-bottom:12px;">${escapeHtml(s.tahunAjaran)}</div>
-
-            <div style="border:4px solid #000; border-radius:12px; padding:16px 28px; display:inline-block; min-width:65%; background:rgba(248, 250, 252, 0.85); -webkit-print-color-adjust:exact; print-color-adjust:exact;">
-              <div style="font-size:40pt; font-weight:bold; letter-spacing:2px; line-height:1.1; overflow-wrap:anywhere;">${escapeHtml(ruang)}</div>
+            <div style="text-align:center; margin-bottom:8px;">
+              <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">DAFTAR HADIR PESERTA UJIAN</div>
+              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
             </div>
 
-            <div style="margin-top:14px; font-size:13pt; line-height:1.5; overflow-wrap:anywhere;">
-              <div>Nomor Peserta : <strong>${escapeHtml(firstNo)}</strong> s.d. <strong>${escapeHtml(lastNo)}</strong></div>
-              <div>Jumlah Peserta : <strong>${roomStudents.length} Siswa</strong> (Kelas: ${escapeHtml(kelasList)})</div>
-            </div>
+            <table style="width:100%; font-size:9pt; margin-bottom:6px; border-collapse:collapse;">
+              <tr>
+                <td style="width:110px;">Ruang Ujian</td><td style="width:10px;">:</td><td><strong>${escapeHtml(ruang)}</strong></td>
+                <td style="width:110px;">Hari / Tanggal</td><td style="width:10px;">:</td><td>............................................</td>
+              </tr>
+              <tr>
+                <td>Mata Pelajaran</td><td>:</td><td>............................................</td>
+                <td>Pukul / Sesi</td><td>:</td><td>............................................</td>
+              </tr>
+            </table>
+
+            <table class="doc-table" style="font-size:9pt; margin-bottom:12px;">
+              <thead>
+                <tr>
+                  <th style="width:30px;">No</th>
+                  <th style="width:88px;">No. Peserta</th>
+                  <th style="width:90px;">NISN</th>
+                  <th>Nama Peserta</th>
+                  <th style="width:52px;">Kelas</th>
+                  <th colspan="2" style="width:140px;">Tanda Tangan</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+
+            <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
+              <tr>
+                <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+                <td style="width:45%; vertical-align:top;">
+                  <div>Pengawas Ruang,</div>
+                  <div style="height:56px;"></div>
+                  <div>( .................................................... )</div>
+                  <div>NIP. .............................................</div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        `;
+      });
+
+      document.getElementById('preview-dh_siswa').innerHTML = pagesHtml;
+    }
+
+    /* =====================================================================
+       MODUL 10: DAFTAR HADIR PANITIA (TABEL ATAS) & PENGAWAS PER HARI (TABEL BAWAH)
+       ===================================================================== */
+    function renderDhPanitia() {
+      const selectedHari = document.getElementById('filterHariDhPanitia')?.value || 'ALL';
+      const s = appState.settings;
+
+      const panitiaList = appState.staff.filter(p => p.peran === 'Panitia');
+      const pengawasExpanded = [];
+
+      appState.staff
+        .filter(p => p.peran !== 'Panitia')
+        .forEach(rawP => {
+          const norm = normalizeStaffItem(rawP);
+          norm.jadwalSlots.forEach(sl => {
+            const dayMatch = selectedHari === 'ALL' || String(sl.hariTanggal || '').trim() === selectedHari;
+            if (dayMatch) {
+              pengawasExpanded.push({
+                nama: norm.nama,
+                nip: norm.nip,
+                ruang: sl.ruang || norm.ruang || '-',
+                sesiJam: sl.sesiJam || '-',
+                hariTanggal: sl.hariTanggal || ''
+              });
+            }
+          });
+        });
+
+      const panitiaRows = panitiaList.length > 0
+        ? panitiaList.map((p, idx) => {
+            const isOdd = (idx + 1) % 2 === 1;
+            return `
+              <tr>
+                <td style="text-align:center;">${idx + 1}</td>
+                <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
+                <td>${escapeHtml(p.nip)}</td>
+                <td>${escapeHtml(p.jabatan)}</td>
+                <td style="font-size:8pt;">${isOdd ? (idx + 1) + '.' : ''}</td>
+                <td style="font-size:8pt;">${!isOdd ? (idx + 1) + '.' : ''}</td>
+              </tr>
+            `;
+          }).join('')
+        : `<tr><td colspan="6" style="text-align:center; font-style:italic;">Belum ada data panitia.</td></tr>`;
+
+      const pengawasRows = pengawasExpanded.length > 0
+        ? pengawasExpanded.map((p, idx) => {
+            const isOdd = (idx + 1) % 2 === 1;
+            return `
+              <tr>
+                <td style="text-align:center;">${idx + 1}</td>
+                <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
+                <td>${escapeHtml(p.nip)}</td>
+                <td style="text-align:center; font-weight:bold;">${escapeHtml(p.ruang)}</td>
+                <td style="text-align:center;">${escapeHtml(p.sesiJam)}</td>
+                <td style="font-size:8pt;">${isOdd ? (idx + 1) + '.' : ''}</td>
+                <td style="font-size:8pt;">${!isOdd ? (idx + 1) + '.' : ''}</td>
+              </tr>
+            `;
+          }).join('')
+        : `<tr><td colspan="7" style="text-align:center; font-style:italic;">Tidak ada jadwal pengawas pada hari yang dipilih.</td></tr>`;
+
+      const hariDisplay = selectedHari === 'ALL'
+        ? '........................................................'
+        : `<strong>${escapeHtml(selectedHari)}</strong>`;
+
+      document.getElementById('preview-dh_panitia').innerHTML = `
+        <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
+          ${buildFullKopHTML()}
+          <div style="text-align:center; margin-bottom:8px;">
+            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">DAFTAR HADIR PANITIA DAN PENGAWAS RUANG UJIAN</div>
+            <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
           </div>
 
-          <div style="position:relative; z-index:1; text-align:center; border-top:2px solid #000; padding-top:6px; font-size:10.5pt; font-weight:bold; letter-spacing:1px;">
-            HARAP TENANG — SEDANG BERLANGSUNG UJIAN
+          <div style="margin-bottom:8px; font-size:9pt;">
+            Hari / Tanggal : ${hariDisplay}
           </div>
+
+          <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">A. DAFTAR HADIR PANITIA PELAKSANA UJIAN</div>
+          <table class="doc-table" style="font-size:8.8pt; margin-bottom:12px;">
+            <thead>
+              <tr>
+                <th style="width:28px;">No</th>
+                <th>Nama Lengkap &amp; Gelar</th>
+                <th style="width:125px;">NIP / NUPTK</th>
+                <th style="width:135px;">Jabatan Kepanitiaan</th>
+                <th colspan="2" style="width:136px;">Tanda Tangan</th>
+              </tr>
+            </thead>
+            <tbody>${panitiaRows}</tbody>
+          </table>
+
+          <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">B. DAFTAR HADIR PENGAWAS RUANG (${selectedHari === 'ALL' ? 'SEMUA JADWAL' : escapeHtml(selectedHari).toUpperCase()})</div>
+          <table class="doc-table" style="font-size:8.8pt; margin-bottom:14px;">
+            <thead>
+              <tr>
+                <th style="width:28px;">No</th>
+                <th>Nama Pengawas &amp; Gelar</th>
+                <th style="width:120px;">NIP / NUPTK</th>
+                <th style="width:76px;">Ruang</th>
+                <th style="width:76px;">Sesi / Jam</th>
+                <th colspan="2" style="width:136px;">Tanda Tangan</th>
+              </tr>
+            </thead>
+            <tbody>${pengawasRows}</tbody>
+          </table>
+
+          <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
+            <tr>
+              <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+              <td style="width:45%; vertical-align:top;">
+                <div>${selectedHari === 'ALL' ? escapeHtml(s.titimangsa) : escapeHtml(selectedHari)}</div>
+                <div>Ketua Panitia Ujian,</div>
+                <div style="height:46px;"></div>
+                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.ketua)}</div>
+                <div>NIP. ${escapeHtml(s.nipKetua)}</div>
+              </td>
+            </tr>
+          </table>
         </div>
       `;
     }
 
     /* =====================================================================
-       MODUL 7: BERITA ACARA PELAKSANAAN UJIAN (OPSI 1 ATAU 2 PENGAWAS)
-       ===================================================================== */
-    function renderBaPelaksanaan() {
-      const qty = Math.max(1, parseInt(document.getElementById('qtyBaPelaksanaan').value) || 1);
-      const opsiPengawas = document.getElementById('opsiPengawasBa')?.value || '2';
-      const s = appState.settings;
-      let html = '';
-
-      const kepsekCellHtml = buildFormalKepsekBlockHTML('Mengetahui,', false);
-
-      const ttdSection = opsiPengawas === '1'
-        ? `
-          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt; margin-top:14px;">
-            <tr>
-              <td style="width:50%; vertical-align:top;">${kepsekCellHtml}</td>
-              <td style="width:50%; vertical-align:top;">
-                <div>${escapeHtml(s.titimangsa)}</div>
-                <div>Pengawas Ruang,</div>
-                <div style="height:54px;"></div>
-                <div>( .................................................... )</div>
-                <div>NIP. .............................................</div>
-              </td>
-            </tr>
-          </table>
-        `
-        : `
-          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt;">
-            <tr>
-              <td style="width:50%; vertical-align:top;">
-                <div>Pengawas Ruang I,</div>
-                <div style="height:46px;"></div>
-                <div>( .................................................... )</div>
-                <div>NIP. .............................................</div>
-              </td>
-              <td style="width:50%; vertical-align:top;">
-                <div>Pengawas Ruang II,</div>
-                <div style="height:46px;"></div>
-                <div>( .................................................... )</div>
-                <div>NIP. .............................................</div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2" style="padding-top:10px;">${kepsekCellHtml}</td>
-            </tr>
-          </table>
-        `;
-
-      for (let i = 0; i < qty; i++) {
-        html += `
-          <div class="a4-page" style="font-size:10.5pt; line-height:1.4;">
-            ${buildFullKopHTML()}
-            <div style="text-align:center; margin-bottom:10px;">
-              <div style="font-size:12pt; font-weight:bold; text-decoration:underline;">BERITA ACARA PELAKSANAAN UJIAN</div>
-              <div style="font-size:10.5pt; font-weight:bold;">${escapeHtml(s.namaUjian)}</div>
-              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.tahunAjaran)}</div>
-            </div>
-
-            <p style="text-align:justify; margin-bottom:8px;">
-              Pada hari ini <span class="fill-blank" style="min-width:85px;"></span> tanggal <span class="fill-blank" style="min-width:40px;"></span>
-              bulan <span class="fill-blank" style="min-width:85px;"></span> tahun <span class="fill-blank" style="min-width:55px;"></span>,
-              di <strong>${escapeHtml(s.sekolah)}</strong> telah diselenggarakan <strong>${escapeHtml(s.namaUjian)}</strong>:
-            </p>
-
-            <table style="width:100%; margin-bottom:8px; border-collapse:collapse; font-size:10pt;">
-              <tr><td style="width:185px; padding:2px 0;">1. Ruang Ujian</td><td style="width:12px;">:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
-              <tr><td style="padding:2px 0;">2. Mata Pelajaran</td><td>:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
-              <tr><td style="padding:2px 0;">3. Pukul / Sesi ke-</td><td>:</td><td><span class="fill-blank" style="min-width:110px;"></span> s.d. <span class="fill-blank" style="min-width:110px;"></span> (Sesi: <span class="fill-blank" style="min-width:36px;"></span>)</td></tr>
-              <tr><td style="padding:2px 0;">4. Jumlah Peserta Terdaftar</td><td>:</td><td><span class="fill-blank" style="min-width:55px;"></span> orang</td></tr>
-              <tr><td style="padding:2px 0;">5. Jumlah Peserta Hadir</td><td>:</td><td><span class="fill-blank" style="min-width:55px;"></span> orang</td></tr>
-              <tr><td style="padding:2px 0;">6. Jumlah Peserta Tidak Hadir</td><td>:</td><td><span class="fill-blank" style="min-width:55px;"></span> orang</td></tr>
-              <tr><td style="padding:2px 0; vertical-align:top;">7. Nomor Peserta Tidak Hadir</td><td style="vertical-align:top;">:</td><td><div style="border-bottom:1px dotted #000; height:16px; margin-bottom:3px;"></div><div style="border-bottom:1px dotted #000; height:16px;"></div></td></tr>
-            </table>
-
-            <div style="margin-bottom:4px; font-weight:bold; font-size:10pt;">8. Catatan Kejadian Penting Selama Ujian Berlangsung:</div>
-            <div style="border:1px solid #000; padding:6px 8px; min-height:64px; margin-bottom:10px;">
-              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
-              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
-              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
-            </div>
-
-            <p style="margin-bottom:10px; font-size:10pt;">Demikian berita acara pelaksanaan ujian ini dibuat dengan sesungguhnya untuk dapat dipergunakan sebagaimana mestinya.</p>
-
-            ${ttdSection}
-          </div>
-        `;
-      }
-      document.getElementById('preview-ba_pelaksanaan').innerHTML = html;
-    }
-
-    /* =====================================================================
-       MODUL 8: BERITA ACARA SERAH TERIMA SOAL (URAIAN & TABEL GAMBAR + OPSI ISI)
+       MODUL 11: BERITA ACARA SERAH TERIMA SOAL (URAIAN & TABEL GAMBAR + OPSI ISI)
        ===================================================================== */
     function renderBaSerahTerima() {
       const qty = Math.max(1, parseInt(document.getElementById('qtyBaSerah').value) || 1);
@@ -3061,58 +3547,97 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 9: SURAT KETERANGAN / IJIN MENGIKUTI UJIAN
+       MODUL 12: BERITA ACARA PELAKSANAAN UJIAN (OPSI 1 ATAU 2 PENGAWAS)
        ===================================================================== */
-    function renderSuratIjin() {
-      const selId = document.getElementById('selectSiswaSurat').value;
-      const st = appState.students.find(x => x.id === selId) || null;
+    function renderBaPelaksanaan() {
+      const qty = Math.max(1, parseInt(document.getElementById('qtyBaPelaksanaan').value) || 1);
+      const opsiPengawas = document.getElementById('opsiPengawasBa')?.value || '2';
       const s = appState.settings;
+      let html = '';
 
-      const field = (val, width = '240px') => val
-        ? `<strong style="overflow-wrap:anywhere;">${escapeHtml(val)}</strong>`
-        : `<span class="fill-blank" style="min-width:${width};"></span>`;
+      const kepsekCellHtml = buildFormalKepsekBlockHTML('Mengetahui,', false);
 
-      document.getElementById('preview-surat_ijin').innerHTML = `
-        <div class="a4-page" style="font-size:11pt; line-height:1.5;">
-          ${buildFullKopHTML()}
-          <div style="text-align:center; margin:12px 0 16px 0;">
-            <div style="font-size:12.5pt; font-weight:bold; text-decoration:underline;">SURAT KETERANGAN / IJIN MENGIKUTI UJIAN</div>
-            <div style="font-size:10pt;">Nomor : 421.3 / ........... / PAN-UJIAN / 2026</div>
-          </div>
-
-          <p style="margin-bottom:10px;">Yang bertanda tangan di bawah ini, Panitia Pelaksana <strong>${escapeHtml(s.namaUjian)}</strong> ${escapeHtml(s.sekolah)} Tahun Ajaran ${escapeHtml(s.tahunAjaran)}, menerangkan bahwa:</p>
-
-          <table style="width:100%; margin:10px 0 14px 16px; border-collapse:collapse;">
-            <tr><td style="width:160px; padding:3px 0;">Nama Peserta</td><td style="width:12px;">:</td><td>${field(st?.nama)}</td></tr>
-            <tr><td style="padding:3px 0;">Nomor Peserta</td><td>:</td><td>${field(st?.noPeserta)}</td></tr>
-            <tr><td style="padding:3px 0;">NISN</td><td>:</td><td>${field(st?.nisn)}</td></tr>
-            <tr><td style="padding:3px 0;">Kelas</td><td>:</td><td>${field(st?.kelas)}</td></tr>
-            <tr><td style="padding:3px 0;">Ruang Ujian</td><td>:</td><td>${field(st?.ruang)}</td></tr>
-            <tr><td style="padding:3px 0;">Alasan / Keperluan</td><td>:</td><td><span class="fill-blank" style="min-width:260px;"></span></td></tr>
-          </table>
-
-          <p style="text-align:justify; margin-bottom:20px;">
-            Adalah benar peserta didik ${escapeHtml(s.sekolah)} yang terdaftar sebagai peserta ujian dan diberikan <strong>IJIN</strong> untuk mengikuti ujian pada hari ini tanggal <span class="fill-blank" style="min-width:130px;"></span>. Demikian surat keterangan ini dibuat untuk dipergunakan sebagaimana mestinya.
-          </p>
-
-          <table style="width:100%; border-collapse:collapse; margin-top:16px;">
+      const ttdSection = opsiPengawas === '1'
+        ? `
+          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt; margin-top:14px;">
             <tr>
-              <td style="width:52%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
-              <td style="width:48%; vertical-align:top;">
+              <td style="width:50%; vertical-align:top;">${kepsekCellHtml}</td>
+              <td style="width:50%; vertical-align:top;">
                 <div>${escapeHtml(s.titimangsa)}</div>
-                <div>Ketua Panitia Ujian,</div>
-                <div style="height:56px;"></div>
-                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.ketua)}</div>
-                <div>NIP. ${escapeHtml(s.nipKetua)}</div>
+                <div>Pengawas Ruang,</div>
+                <div style="height:54px;"></div>
+                <div>( .................................................... )</div>
+                <div>NIP. .............................................</div>
               </td>
             </tr>
           </table>
-        </div>
-      `;
+        `
+        : `
+          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt;">
+            <tr>
+              <td style="width:50%; vertical-align:top;">
+                <div>Pengawas Ruang I,</div>
+                <div style="height:46px;"></div>
+                <div>( .................................................... )</div>
+                <div>NIP. .............................................</div>
+              </td>
+              <td style="width:50%; vertical-align:top;">
+                <div>Pengawas Ruang II,</div>
+                <div style="height:46px;"></div>
+                <div>( .................................................... )</div>
+                <div>NIP. .............................................</div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding-top:10px;">${kepsekCellHtml}</td>
+            </tr>
+          </table>
+        `;
+
+      for (let i = 0; i < qty; i++) {
+        html += `
+          <div class="a4-page" style="font-size:10.5pt; line-height:1.4;">
+            ${buildFullKopHTML()}
+            <div style="text-align:center; margin-bottom:10px;">
+              <div style="font-size:12pt; font-weight:bold; text-decoration:underline;">BERITA ACARA PELAKSANAAN UJIAN</div>
+              <div style="font-size:10.5pt; font-weight:bold;">${escapeHtml(s.namaUjian)}</div>
+              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.tahunAjaran)}</div>
+            </div>
+
+            <p style="text-align:justify; margin-bottom:8px;">
+              Pada hari ini <span class="fill-blank" style="min-width:85px;"></span> tanggal <span class="fill-blank" style="min-width:40px;"></span>
+              bulan <span class="fill-blank" style="min-width:85px;"></span> tahun <span class="fill-blank" style="min-width:55px;"></span>,
+              di <strong>${escapeHtml(s.sekolah)}</strong> telah diselenggarakan <strong>${escapeHtml(s.namaUjian)}</strong>:
+            </p>
+
+            <table style="width:100%; margin-bottom:8px; border-collapse:collapse; font-size:10pt;">
+              <tr><td style="width:185px; padding:2px 0;">1. Ruang Ujian</td><td style="width:12px;">:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
+              <tr><td style="padding:2px 0;">2. Mata Pelajaran</td><td>:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
+              <tr><td style="padding:2px 0;">3. Pukul / Sesi ke-</td><td>:</td><td><span class="fill-blank" style="min-width:110px;"></span> s.d. <span class="fill-blank" style="min-width:110px;"></span> (Sesi: <span class="fill-blank" style="min-width:36px;"></span>)</td></tr>
+              <tr><td style="padding:2px 0;">4. Jumlah Peserta Terdaftar</td><td>:</td><td><span class="fill-blank" style="min-width:55px;"></span> orang</td></tr>
+              <tr><td style="padding:2px 0;">5. Jumlah Peserta Hadir</td><td>:</td><td><span class="fill-blank" style="min-width:55px;"></span> orang</td></tr>
+              <tr><td style="padding:2px 0;">6. Jumlah Peserta Tidak Hadir</td><td>:</td><td><span class="fill-blank" style="min-width:55px;"></span> orang</td></tr>
+              <tr><td style="padding:2px 0; vertical-align:top;">7. Nomor Peserta Tidak Hadir</td><td style="vertical-align:top;">:</td><td><div style="border-bottom:1px dotted #000; height:16px; margin-bottom:3px;"></div><div style="border-bottom:1px dotted #000; height:16px;"></div></td></tr>
+            </table>
+
+            <div style="margin-bottom:4px; font-weight:bold; font-size:10pt;">8. Catatan Kejadian Penting Selama Ujian Berlangsung:</div>
+            <div style="border:1px solid #000; padding:6px 8px; min-height:64px; margin-bottom:10px;">
+              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
+              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
+              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
+            </div>
+
+            <p style="margin-bottom:10px; font-size:10pt;">Demikian berita acara pelaksanaan ujian ini dibuat dengan sesungguhnya untuk dapat dipergunakan sebagaimana mestinya.</p>
+
+            ${ttdSection}
+          </div>
+        `;
+      }
+      document.getElementById('preview-ba_pelaksanaan').innerHTML = html;
     }
 
     /* =====================================================================
-       MODUL 10: JURNAL AGENDA & KARTU KENDALI SISWA (NAMA/NIP KEPSEK TETAP TAMPIL)
+       MODUL 13: JURNAL AGENDA & KARTU KENDALI SISWA
        ===================================================================== */
     function buildAgendaRowsFromSchedule() {
       const days = appState.settings.scheduleDays || [];
@@ -3241,195 +3766,47 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 11: DAFTAR HADIR PESERTA UJIAN
+       MODUL 14: SURAT KETERANGAN / IJIN MENGIKUTI UJIAN
        ===================================================================== */
-    function renderDhSiswa() {
-      const ruangFilter = document.getElementById('filterRuangDhSiswa').value || 'ALL';
-      const rooms = ruangFilter === 'ALL' ? getUniqueRooms() : [ruangFilter];
-      const s = appState.settings;
-      let pagesHtml = '';
-
-      rooms.forEach(ruang => {
-        const roomStudents = appState.students.filter(st => (st.ruang || 'RUANG 1') === ruang);
-        const rows = roomStudents.map((st, idx) => {
-          const isOdd = (idx + 1) % 2 === 1;
-          return `
-            <tr>
-              <td style="text-align:center;">${idx + 1}</td>
-              <td style="text-align:center; font-weight:bold;">${escapeHtml(st.noPeserta)}</td>
-              <td style="text-align:center;">${escapeHtml(st.nisn)}</td>
-              <td>${escapeHtml(st.nama)}</td>
-              <td style="text-align:center;">${escapeHtml(st.kelas)}</td>
-              <td style="text-align:left; font-size:8pt;">${isOdd ? (idx + 1) + '.' : ''}</td>
-              <td style="text-align:left; font-size:8pt;">${!isOdd ? (idx + 1) + '.' : ''}</td>
-            </tr>
-          `;
-        }).join('');
-
-        pagesHtml += `
-          <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
-            ${buildFullKopHTML()}
-            <div style="text-align:center; margin-bottom:8px;">
-              <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">DAFTAR HADIR PESERTA UJIAN</div>
-              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
-            </div>
-
-            <table style="width:100%; font-size:9pt; margin-bottom:6px; border-collapse:collapse;">
-              <tr>
-                <td style="width:110px;">Ruang Ujian</td><td style="width:10px;">:</td><td><strong>${escapeHtml(ruang)}</strong></td>
-                <td style="width:110px;">Hari / Tanggal</td><td style="width:10px;">:</td><td>............................................</td>
-              </tr>
-              <tr>
-                <td>Mata Pelajaran</td><td>:</td><td>............................................</td>
-                <td>Pukul / Sesi</td><td>:</td><td>............................................</td>
-              </tr>
-            </table>
-
-            <table class="doc-table" style="font-size:9pt; margin-bottom:12px;">
-              <thead>
-                <tr>
-                  <th style="width:30px;">No</th>
-                  <th style="width:88px;">No. Peserta</th>
-                  <th style="width:90px;">NISN</th>
-                  <th>Nama Peserta</th>
-                  <th style="width:52px;">Kelas</th>
-                  <th colspan="2" style="width:140px;">Tanda Tangan</th>
-                </tr>
-              </thead>
-              <tbody>${rows}</tbody>
-            </table>
-
-            <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
-              <tr>
-                <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
-                <td style="width:45%; vertical-align:top;">
-                  <div>Pengawas Ruang,</div>
-                  <div style="height:56px;"></div>
-                  <div>( .................................................... )</div>
-                  <div>NIP. .............................................</div>
-                </td>
-              </tr>
-            </table>
-          </div>
-        `;
-      });
-
-      document.getElementById('preview-dh_siswa').innerHTML = pagesHtml;
-    }
-
-    /* =====================================================================
-       MODUL 12: DAFTAR HADIR PANITIA (TABEL ATAS) & PENGAWAS PER HARI (TABEL BAWAH)
-       ===================================================================== */
-    function renderDhPanitia() {
-      const selectedHari = document.getElementById('filterHariDhPanitia')?.value || 'ALL';
+    function renderSuratIjin() {
+      const selId = document.getElementById('selectSiswaSurat').value;
+      const st = appState.students.find(x => x.id === selId) || null;
       const s = appState.settings;
 
-      const panitiaList = appState.staff.filter(p => p.peran === 'Panitia');
-      const pengawasExpanded = [];
+      const field = (val, width = '240px') => val
+        ? `<strong style="overflow-wrap:anywhere;">${escapeHtml(val)}</strong>`
+        : `<span class="fill-blank" style="min-width:${width};"></span>`;
 
-      appState.staff
-        .filter(p => p.peran !== 'Panitia')
-        .forEach(rawP => {
-          const norm = normalizeStaffItem(rawP);
-          norm.jadwalSlots.forEach(sl => {
-            const dayMatch = selectedHari === 'ALL' || String(sl.hariTanggal || '').trim() === selectedHari;
-            if (dayMatch) {
-              pengawasExpanded.push({
-                nama: norm.nama,
-                nip: norm.nip,
-                ruang: sl.ruang || norm.ruang || '-',
-                sesiJam: sl.sesiJam || '-',
-                hariTanggal: sl.hariTanggal || ''
-              });
-            }
-          });
-        });
-
-      const panitiaRows = panitiaList.length > 0
-        ? panitiaList.map((p, idx) => {
-            const isOdd = (idx + 1) % 2 === 1;
-            return `
-              <tr>
-                <td style="text-align:center;">${idx + 1}</td>
-                <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
-                <td>${escapeHtml(p.nip)}</td>
-                <td>${escapeHtml(p.jabatan)}</td>
-                <td style="font-size:8pt;">${isOdd ? (idx + 1) + '.' : ''}</td>
-                <td style="font-size:8pt;">${!isOdd ? (idx + 1) + '.' : ''}</td>
-              </tr>
-            `;
-          }).join('')
-        : `<tr><td colspan="6" style="text-align:center; font-style:italic;">Belum ada data panitia.</td></tr>`;
-
-      const pengawasRows = pengawasExpanded.length > 0
-        ? pengawasExpanded.map((p, idx) => {
-            const isOdd = (idx + 1) % 2 === 1;
-            return `
-              <tr>
-                <td style="text-align:center;">${idx + 1}</td>
-                <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
-                <td>${escapeHtml(p.nip)}</td>
-                <td style="text-align:center; font-weight:bold;">${escapeHtml(p.ruang)}</td>
-                <td style="text-align:center;">${escapeHtml(p.sesiJam)}</td>
-                <td style="font-size:8pt;">${isOdd ? (idx + 1) + '.' : ''}</td>
-                <td style="font-size:8pt;">${!isOdd ? (idx + 1) + '.' : ''}</td>
-              </tr>
-            `;
-          }).join('')
-        : `<tr><td colspan="7" style="text-align:center; font-style:italic;">Tidak ada jadwal pengawas pada hari yang dipilih.</td></tr>`;
-
-      const hariDisplay = selectedHari === 'ALL'
-        ? '........................................................'
-        : `<strong>${escapeHtml(selectedHari)}</strong>`;
-
-      document.getElementById('preview-dh_panitia').innerHTML = `
-        <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
+      document.getElementById('preview-surat_ijin').innerHTML = `
+        <div class="a4-page" style="font-size:11pt; line-height:1.5;">
           ${buildFullKopHTML()}
-          <div style="text-align:center; margin-bottom:8px;">
-            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">DAFTAR HADIR PANITIA DAN PENGAWAS RUANG UJIAN</div>
-            <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
+          <div style="text-align:center; margin:12px 0 16px 0;">
+            <div style="font-size:12.5pt; font-weight:bold; text-decoration:underline;">SURAT KETERANGAN / IJIN MENGIKUTI UJIAN</div>
+            <div style="font-size:10pt;">Nomor : 421.3 / ........... / PAN-UJIAN / 2026</div>
           </div>
 
-          <div style="margin-bottom:8px; font-size:9pt;">
-            Hari / Tanggal : ${hariDisplay}
-          </div>
+          <p style="margin-bottom:10px;">Yang bertanda tangan di bawah ini, Panitia Pelaksana <strong>${escapeHtml(s.namaUjian)}</strong> ${escapeHtml(s.sekolah)} Tahun Ajaran ${escapeHtml(s.tahunAjaran)}, menerangkan bahwa:</p>
 
-          <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">A. DAFTAR HADIR PANITIA PELAKSANA UJIAN</div>
-          <table class="doc-table" style="font-size:8.8pt; margin-bottom:12px;">
-            <thead>
-              <tr>
-                <th style="width:28px;">No</th>
-                <th>Nama Lengkap &amp; Gelar</th>
-                <th style="width:125px;">NIP / NUPTK</th>
-                <th style="width:135px;">Jabatan Kepanitiaan</th>
-                <th colspan="2" style="width:136px;">Tanda Tangan</th>
-              </tr>
-            </thead>
-            <tbody>${panitiaRows}</tbody>
+          <table style="width:100%; margin:10px 0 14px 16px; border-collapse:collapse;">
+            <tr><td style="width:160px; padding:3px 0;">Nama Peserta</td><td style="width:12px;">:</td><td>${field(st?.nama)}</td></tr>
+            <tr><td style="padding:3px 0;">Nomor Peserta</td><td>:</td><td>${field(st?.noPeserta)}</td></tr>
+            <tr><td style="padding:3px 0;">NISN</td><td>:</td><td>${field(st?.nisn)}</td></tr>
+            <tr><td style="padding:3px 0;">Kelas</td><td>:</td><td>${field(st?.kelas)}</td></tr>
+            <tr><td style="padding:3px 0;">Ruang Ujian</td><td>:</td><td>${field(st?.ruang)}</td></tr>
+            <tr><td style="padding:3px 0;">Alasan / Keperluan</td><td>:</td><td><span class="fill-blank" style="min-width:260px;"></span></td></tr>
           </table>
 
-          <div style="font-weight:bold; font-size:9.5pt; margin-bottom:3px;">B. DAFTAR HADIR PENGAWAS RUANG (${selectedHari === 'ALL' ? 'SEMUA JADWAL' : escapeHtml(selectedHari).toUpperCase()})</div>
-          <table class="doc-table" style="font-size:8.8pt; margin-bottom:14px;">
-            <thead>
-              <tr>
-                <th style="width:28px;">No</th>
-                <th>Nama Pengawas &amp; Gelar</th>
-                <th style="width:120px;">NIP / NUPTK</th>
-                <th style="width:76px;">Ruang</th>
-                <th style="width:76px;">Sesi / Jam</th>
-                <th colspan="2" style="width:136px;">Tanda Tangan</th>
-              </tr>
-            </thead>
-            <tbody>${pengawasRows}</tbody>
-          </table>
+          <p style="text-align:justify; margin-bottom:20px;">
+            Adalah benar peserta didik ${escapeHtml(s.sekolah)} yang terdaftar sebagai peserta ujian dan diberikan <strong>IJIN</strong> untuk mengikuti ujian pada hari ini tanggal <span class="fill-blank" style="min-width:130px;"></span>. Demikian surat keterangan ini dibuat untuk dipergunakan sebagaimana mestinya.
+          </p>
 
-          <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
+          <table style="width:100%; border-collapse:collapse; margin-top:16px;">
             <tr>
-              <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
-              <td style="width:45%; vertical-align:top;">
-                <div>${selectedHari === 'ALL' ? escapeHtml(s.titimangsa) : escapeHtml(selectedHari)}</div>
+              <td style="width:52%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+              <td style="width:48%; vertical-align:top;">
+                <div>${escapeHtml(s.titimangsa)}</div>
                 <div>Ketua Panitia Ujian,</div>
-                <div style="height:46px;"></div>
+                <div style="height:56px;"></div>
                 <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.ketua)}</div>
                 <div>NIP. ${escapeHtml(s.nipKetua)}</div>
               </td>
@@ -3440,22 +3817,387 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 13: DAFTAR NILAI LENGKAP SISWA PER KELAS & MAPEL
+       MODUL 15 (BARU): REKAPITULASI KETIDAKHADIRAN & UJIAN SUSULAN
+       ===================================================================== */
+    function addSusulanRow(isBlank = false) {
+      const firstSt = !isBlank && appState.students.length > 0 ? appState.students[0] : null;
+      const firstMapel = getUniqueSubjectsFromSchedule()[0] || '';
+      appState.susulanRecords.push({
+        id: 'SUS' + Date.now() + '_' + Math.floor(Math.random() * 100),
+        studentId: firstSt ? firstSt.id : '',
+        noPeserta: firstSt ? firstSt.noPeserta : '',
+        nama: firstSt ? firstSt.nama : '',
+        kelas: firstSt ? firstSt.kelas : '',
+        ruang: firstSt ? firstSt.ruang : '',
+        mapel: firstMapel,
+        alasan: 'Sakit',
+        jadwalSusulan: ''
+      });
+      saveLocalState();
+      renderRekapSusulan();
+    }
+
+    function selectStudentForSusulan(idx, stId) {
+      const rec = appState.susulanRecords[idx];
+      if (!rec) return;
+      rec.studentId = stId;
+      const st = appState.students.find(x => x.id === stId);
+      if (st) {
+        rec.noPeserta = st.noPeserta;
+        rec.nama = st.nama;
+        rec.kelas = st.kelas;
+        rec.ruang = st.ruang;
+      }
+      saveLocalState();
+      renderRekapSusulan();
+    }
+
+    function editSusulanField(idx, field, val) {
+      if (appState.susulanRecords[idx]) {
+        appState.susulanRecords[idx][field] = val;
+        saveLocalState();
+        renderRekapSusulanDocument();
+      }
+    }
+
+    function deleteSusulanRow(idx) {
+      appState.susulanRecords.splice(idx, 1);
+      saveLocalState();
+      renderRekapSusulan();
+    }
+
+    function renderRekapSusulan() {
+      const editorBox = document.getElementById('susulanEditorList');
+      const subjects = getUniqueSubjectsFromSchedule();
+
+      if (appState.susulanRecords.length === 0) {
+        editorBox.innerHTML = `<div class="text-xs text-slate-400 italic py-2">Belum ada siswa tercatat absen. Pratinjau di bawah menampilkan 10 baris blanko kosong untuk diisi manual, atau klik <strong>+ Tambah Siswa Absen</strong> di atas.</div>`;
+      } else {
+        editorBox.innerHTML = appState.susulanRecords.map((rec, idx) => `
+          <div class="flex flex-wrap items-center gap-1.5 bg-slate-950/80 border border-slate-800 rounded-xl p-2 text-xs">
+            <span class="text-slate-400 font-bold w-5">${idx + 1}.</span>
+            <select onchange="selectStudentForSusulan(${idx}, this.value)" class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs max-w-[180px]">
+              <option value="">-- Input Manual --</option>
+              ${appState.students.map(st => `<option value="${st.id}" ${rec.studentId === st.id ? 'selected' : ''}>${escapeHtml(st.noPeserta)} - ${escapeHtml(st.nama)}</option>`).join('')}
+            </select>
+            <input value="${escapeHtml(rec.nama)}" placeholder="Nama Siswa" onchange="editSusulanField(${idx}, 'nama', this.value)" class="w-36 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs font-semibold" />
+            <input value="${escapeHtml(rec.kelas)}" placeholder="Kelas" onchange="editSusulanField(${idx}, 'kelas', this.value)" class="w-16 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs" />
+            <input list="mapelListSusulan" value="${escapeHtml(rec.mapel)}" placeholder="Mata Pelajaran" onchange="editSusulanField(${idx}, 'mapel', this.value)" class="w-36 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs" />
+            <select onchange="editSusulanField(${idx}, 'alasan', this.value)" class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs text-amber-300">
+              <option value="Sakit" ${rec.alasan === 'Sakit' ? 'selected' : ''}>Sakit (S)</option>
+              <option value="Izin" ${rec.alasan === 'Izin' ? 'selected' : ''}>Izin (I)</option>
+              <option value="Alpa" ${rec.alasan === 'Alpa' ? 'selected' : ''}>Tanpa Ket. (A)</option>
+              <option value="Dispensasi" ${rec.alasan === 'Dispensasi' ? 'selected' : ''}>Dispensasi</option>
+            </select>
+            <input value="${escapeHtml(rec.jadwalSusulan)}" placeholder="Jadwal Susulan (cth: Senin, 30 Nov)" onchange="editSusulanField(${idx}, 'jadwalSusulan', this.value)" class="w-44 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs" />
+            <button onclick="deleteSusulanRow(${idx})" class="p-1 text-rose-400 hover:bg-rose-950 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          </div>
+        `).join('') + `<datalist id="mapelListSusulan">${subjects.map(m => `<option value="${escapeHtml(m)}">`).join('')}</datalist>`;
+      }
+
+      lucide.createIcons();
+      renderRekapSusulanDocument();
+    }
+
+    function renderRekapSusulanDocument() {
+      const s = appState.settings;
+      const records = appState.susulanRecords;
+      const displayRows = records.length > 0
+        ? records
+        : Array.from({ length: 10 }, () => ({ noPeserta: '', nama: '', kelas: '', ruang: '', mapel: '', alasan: '', jadwalSusulan: '' }));
+
+      const rowsHtml = displayRows.map((r, idx) => `
+        <tr style="height:24px;">
+          <td style="text-align:center;">${idx + 1}</td>
+          <td style="text-align:center; font-weight:bold;">${escapeHtml(r.noPeserta)}</td>
+          <td>${escapeHtml(r.nama)}</td>
+          <td style="text-align:center;">${escapeHtml(r.kelas)}</td>
+          <td style="text-align:center;">${escapeHtml(r.ruang)}</td>
+          <td>${escapeHtml(r.mapel)}</td>
+          <td style="text-align:center;">${escapeHtml(r.alasan)}</td>
+          <td>${escapeHtml(r.jadwalSusulan)}</td>
+          <td></td>
+        </tr>
+      `).join('');
+
+      document.getElementById('preview-rekap_susulan').innerHTML = `
+        <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
+          ${buildFullKopHTML()}
+          <div style="text-align:center; margin-bottom:10px;">
+            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">REKAPITULASI KETIDAKHADIRAN &amp; JADWAL UJIAN SUSULAN</div>
+            <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
+          </div>
+
+          <table class="doc-table" style="font-size:8.6pt; margin-bottom:14px;">
+            <thead>
+              <tr>
+                <th style="width:26px;">No</th>
+                <th style="width:74px;">No. Peserta</th>
+                <th>Nama Peserta</th>
+                <th style="width:46px;">Kelas</th>
+                <th style="width:62px;">Ruang</th>
+                <th style="width:110px;">Mata Pelajaran</th>
+                <th style="width:56px;">Ket.</th>
+                <th style="width:105px;">Jadwal Susulan</th>
+                <th style="width:54px;">Paraf</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+
+          <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:12px; break-inside:avoid;">
+            <tr>
+              <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+              <td style="width:45%; vertical-align:top;">
+                <div>${escapeHtml(s.titimangsa)}</div>
+                <div>Ketua Panitia Ujian,</div>
+                <div style="height:48px;"></div>
+                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.ketua)}</div>
+                <div>NIP. ${escapeHtml(s.nipKetua)}</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      `;
+    }
+
+    /* =====================================================================
+       MODUL 16 (BARU): BERITA ACARA UJIAN SUSULAN
+       ===================================================================== */
+    function renderBaSusulan() {
+      const qty = Math.max(1, parseInt(document.getElementById('qtyBaSusulan')?.value) || 1);
+      const opsiPengawas = document.getElementById('opsiPengawasBaSusulan')?.value || '1';
+      const s = appState.settings;
+      let html = '';
+
+      const kepsekCellHtml = buildFormalKepsekBlockHTML('Mengetahui,', false);
+
+      const ttdSection = opsiPengawas === '1'
+        ? `
+          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt; margin-top:12px;">
+            <tr>
+              <td style="width:50%; vertical-align:top;">${kepsekCellHtml}</td>
+              <td style="width:50%; vertical-align:top;">
+                <div>${escapeHtml(s.titimangsa)}</div>
+                <div>Pengawas Ujian Susulan,</div>
+                <div style="height:50px;"></div>
+                <div>( .................................................... )</div>
+                <div>NIP. .............................................</div>
+              </td>
+            </tr>
+          </table>
+        `
+        : `
+          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt;">
+            <tr>
+              <td style="width:50%; vertical-align:top;">
+                <div>Pengawas Ujian Susulan I,</div>
+                <div style="height:42px;"></div>
+                <div>( .................................................... )</div>
+                <div>NIP. .............................................</div>
+              </td>
+              <td style="width:50%; vertical-align:top;">
+                <div>Pengawas Ujian Susulan II,</div>
+                <div style="height:42px;"></div>
+                <div>( .................................................... )</div>
+                <div>NIP. .............................................</div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding-top:8px;">${kepsekCellHtml}</td>
+            </tr>
+          </table>
+        `;
+
+      const daftarPesertaRows = Array.from({ length: 6 }, (_, idx) => `
+        <tr style="height:22px;">
+          <td style="text-align:center;">${idx + 1}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      `).join('');
+
+      for (let i = 0; i < qty; i++) {
+        html += `
+          <div class="a4-page" style="font-size:10pt; line-height:1.36;">
+            ${buildFullKopHTML()}
+            <div style="text-align:center; margin-bottom:8px;">
+              <div style="font-size:12pt; font-weight:bold; text-decoration:underline;">BERITA ACARA PELAKSANAAN UJIAN SUSULAN</div>
+              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
+            </div>
+
+            <p style="text-align:justify; margin-bottom:6px;">
+              Pada hari ini <span class="fill-blank" style="min-width:85px;"></span> tanggal <span class="fill-blank" style="min-width:40px;"></span>
+              bulan <span class="fill-blank" style="min-width:85px;"></span> tahun <span class="fill-blank" style="min-width:55px;"></span>,
+              pukul <span class="fill-blank" style="min-width:75px;"></span> s.d. <span class="fill-blank" style="min-width:75px;"></span> WIB,
+              bertempat di ruang <span class="fill-blank" style="min-width:120px;"></span> <strong>${escapeHtml(s.sekolah)}</strong> telah dilaksanakan <strong>Ujian Susulan</strong> bagi peserta didik yang berhalangan hadir pada jadwal utama dengan rincian sebagai berikut:
+            </p>
+
+            <table class="doc-table" style="font-size:8.6pt; margin-bottom:8px;">
+              <thead>
+                <tr>
+                  <th style="width:26px;">No</th>
+                  <th style="width:76px;">No. Peserta</th>
+                  <th>Nama Peserta Susulan</th>
+                  <th style="width:48px;">Kelas</th>
+                  <th style="width:125px;">Mata Pelajaran</th>
+                  <th style="width:74px;">Tanda Tangan</th>
+                </tr>
+              </thead>
+              <tbody>${daftarPesertaRows}</tbody>
+            </table>
+
+            <div style="margin-bottom:3px; font-weight:bold; font-size:9.5pt;">Catatan Selama Ujian Susulan Berlangsung:</div>
+            <div style="border:1px solid #000; padding:4px 8px; min-height:44px; margin-bottom:8px;">
+              <div style="border-bottom:1px dotted #94a3b8; height:16px;"></div>
+              <div style="border-bottom:1px dotted #94a3b8; height:16px;"></div>
+            </div>
+
+            <p style="margin-bottom:6px; font-size:9.5pt;">Demikian berita acara ujian susulan ini dibuat dengan sesungguhnya untuk dipergunakan sebagaimana mestinya.</p>
+
+            ${ttdSection}
+          </div>
+        `;
+      }
+
+      document.getElementById('preview-ba_susulan').innerHTML = html;
+    }
+
+    /* =====================================================================
+       MODUL 17 (BARU): REKAPITULASI KEHADIRAN PENGAWAS (TANPA UANG TRANSPORT)
+       ===================================================================== */
+    function renderRekapPengawas() {
+      const mode = document.getElementById('modeRekapPengawas')?.value || 'otomatis';
+      const s = appState.settings;
+      const days = s.scheduleDays || [];
+
+      const pengawasList = appState.staff
+        .filter(p => p.peran !== 'Panitia')
+        .map(p => normalizeStaffItem(p));
+
+      let tableHtml = '';
+
+      if (mode === 'otomatis') {
+        const rows = pengawasList.length > 0
+          ? pengawasList.map((p, idx) => {
+              const slots = p.jadwalSlots || [];
+              const rincianTugas = slots.length > 0
+                ? slots.map(sl => `${sl.hariTanggal || '-'} (${sl.ruang || '-'} / ${sl.sesiJam || '-'})`).join('; ')
+                : '-';
+              const totalHadir = slots.length;
+              return `
+                <tr>
+                  <td style="text-align:center;">${idx + 1}</td>
+                  <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
+                  <td>${escapeHtml(p.nip)}</td>
+                  <td style="font-size:8pt;">${escapeHtml(rincianTugas)}</td>
+                  <td style="text-align:center; font-weight:bold;">${totalHadir} Sesi</td>
+                  <td></td>
+                </tr>
+              `;
+            }).join('')
+          : `<tr><td colspan="6" style="text-align:center; font-style:italic;">Belum ada data pengawas di Data Master.</td></tr>`;
+
+        tableHtml = `
+          <table class="doc-table" style="font-size:8.6pt; margin-bottom:14px;">
+            <thead>
+              <tr>
+                <th style="width:28px;">No</th>
+                <th style="width:155px;">Nama Pengawas &amp; Gelar</th>
+                <th style="width:120px;">NIP / NUPTK</th>
+                <th>Rincian Jadwal &amp; Ruang Mengawas</th>
+                <th style="width:68px;">Jml Tugas</th>
+                <th style="width:74px;">Paraf</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      } else {
+        const dayHeaders = days.map(d => `<th style="width:36px; font-size:7.5pt;">${escapeHtml(d.label)}</th>`).join('');
+        const rows = pengawasList.length > 0
+          ? pengawasList.map((p, idx) => {
+              const slots = p.jadwalSlots || [];
+              const dayCells = days.map(d => {
+                const match = slots.find(sl => String(sl.hariTanggal || '').toLowerCase().includes(String(d.label || '').toLowerCase()));
+                return `<td style="text-align:center; font-weight:bold; font-size:7.5pt;">${match ? escapeHtml(match.ruang.replace(/RUANG\s*/i, 'R.')) : ''}</td>`;
+              }).join('');
+              return `
+                <tr>
+                  <td style="text-align:center;">${idx + 1}</td>
+                  <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
+                  <td>${escapeHtml(p.nip)}</td>
+                  ${dayCells}
+                  <td style="text-align:center; font-weight:bold;">${slots.length}</td>
+                  <td></td>
+                </tr>
+              `;
+            }).join('')
+          : `<tr><td colspan="${5 + days.length}" style="text-align:center; font-style:italic;">Belum ada data pengawas.</td></tr>`;
+
+        tableHtml = `
+          <table class="doc-table" style="font-size:8.5pt; margin-bottom:14px;">
+            <thead>
+              <tr>
+                <th style="width:28px;">No</th>
+                <th>Nama Pengawas &amp; Gelar</th>
+                <th style="width:118px;">NIP / NUPTK</th>
+                ${dayHeaders}
+                <th style="width:46px;">Total</th>
+                <th style="width:68px;">Paraf</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      }
+
+      document.getElementById('preview-rekap_pengawas').innerHTML = `
+        <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
+          ${buildFullKopHTML()}
+          <div style="text-align:center; margin-bottom:10px;">
+            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">REKAPITULASI KEHADIRAN PENGAWAS RUANG UJIAN</div>
+            <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
+          </div>
+
+          ${tableHtml}
+
+          <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:12px; break-inside:avoid;">
+            <tr>
+              <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+              <td style="width:45%; vertical-align:top;">
+                <div>${escapeHtml(s.titimangsa)}</div>
+                <div>Ketua Panitia Ujian,</div>
+                <div style="height:48px;"></div>
+                <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.ketua)}</div>
+                <div>NIP. ${escapeHtml(s.nipKetua)}</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      `;
+    }
+
+    /* =====================================================================
+       MODUL 18: DAFTAR NILAI LENGKAP SISWA PER KELAS & MAPEL
        ===================================================================== */
     function renderDaftarNilai() {
-      const kelasFilter = document.getElementById('filterKelasNilai')?.value || 'ALL';
-      const mapelFilter = document.getElementById('filterMapelNilai')?.value || 'BLANK';
+      const kelasFilter = document.getElementById('filterKelasNilai')?.value || getUniqueClasses()[0];
+      const mapelVal = document.getElementById('filterMapelNilai')?.value || '';
       const guruMapel = (document.getElementById('inpGuruMapelNilai')?.value || '').trim();
       const s = appState.settings;
 
-      const classesToRender = kelasFilter === 'ALL' ? getUniqueClasses() : [kelasFilter];
-      const mapelText = mapelFilter === 'BLANK'
+      const classes = kelasFilter === 'ALL' ? getUniqueClasses() : [kelasFilter];
+      const mapelDisplay = mapelVal === 'BLANK' || !mapelVal
         ? '........................................................'
-        : `<strong>${escapeHtml(mapelFilter)}</strong>`;
+        : `<strong>${escapeHtml(mapelVal)}</strong>`;
 
       let pagesHtml = '';
 
-      classesToRender.forEach(kls => {
+      classes.forEach(kls => {
         const classStudents = appState.students.filter(st => (st.kelas || '7.1') === kls);
         const rows = classStudents.map((st, idx) => `
           <tr>
@@ -3463,9 +4205,9 @@ function buildJsonResponse(obj) {
             <td style="text-align:center; font-weight:bold;">${escapeHtml(st.noPeserta)}</td>
             <td style="text-align:center;">${escapeHtml(st.nisn)}</td>
             <td>${escapeHtml(st.nama)}</td>
-            <td style="text-align:center;">${escapeHtml(st.kelas)}</td>
             <td style="text-align:center;"></td>
-            <td style="text-align:left; font-size:8pt;">${idx + 1}.</td>
+            <td style="text-align:center;"></td>
+            <td style="text-align:center;"></td>
             <td></td>
           </tr>
         `).join('');
@@ -3478,44 +4220,60 @@ function buildJsonResponse(obj) {
               <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
             </div>
 
-            <table style="width:100%; font-size:9.2pt; margin-bottom:6px; border-collapse:collapse;">
+            <table style="width:100%; font-size:9pt; margin-bottom:6px; border-collapse:collapse;">
               <tr>
-                <td style="width:115px;">Kelas / Rombel</td>
-                <td style="width:10px;">:</td>
-                <td style="width:36%;"><strong>${escapeHtml(kls)}</strong></td>
-                <td style="width:115px;">Mata Pelajaran</td>
-                <td style="width:10px;">:</td>
-                <td>${mapelText}</td>
+                <td style="width:110px;">Kelas / Rombel</td><td style="width:10px;">:</td><td><strong>${escapeHtml(kls)}</strong></td>
+                <td style="width:110px;">Hari / Tanggal</td><td style="width:10px;">:</td><td>............................................</td>
+              </tr>
+              <tr>
+                <td>Mata Pelajaran</td><td>:</td><td>${mapelDisplay}</td>
+                <td>KKM / KKTP</td><td>:</td><td>...............</td>
               </tr>
             </table>
 
-            <table class="doc-table" style="font-size:8.8pt; margin-bottom:14px;">
+            <table class="doc-table" style="font-size:8.8pt; margin-bottom:10px;">
               <thead>
                 <tr>
                   <th style="width:28px;">No</th>
-                  <th style="width:76px;">No. Peserta</th>
-                  <th style="width:82px;">NISN</th>
-                  <th>Nama Peserta</th>
-                  <th style="width:48px;">Kelas</th>
-                  <th style="width:52px;">Nilai</th>
-                  <th style="width:76px;">Tanda Tangan</th>
-                  <th style="width:78px;">Keterangan</th>
+                  <th style="width:82px;">No. Peserta</th>
+                  <th style="width:86px;">NISN</th>
+                  <th>Nama Lengkap Peserta</th>
+                  <th style="width:58px;">Nilai Utama</th>
+                  <th style="width:58px;">Nilai Susulan</th>
+                  <th style="width:58px;">Nilai Akhir</th>
+                  <th style="width:86px;">Keterangan</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>
             </table>
 
-            <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:12px; break-inside:avoid;">
+            <table class="doc-table" style="width:55%; font-size:8.2pt; margin-bottom:12px; break-inside:avoid;">
+              <tr>
+                <td style="width:150px; font-weight:bold;">Jumlah Peserta Kelas</td>
+                <td style="width:80px; text-align:center;"><strong>${classStudents.length}</strong> Siswa</td>
+                <td style="width:130px; font-weight:bold;">Nilai Tertinggi</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td style="font-weight:bold;">Rata-Rata Nilai Kelas</td>
+                <td></td>
+                <td style="font-weight:bold;">Nilai Terendah</td>
+                <td></td>
+              </tr>
+            </table>
+
+            <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:8px; break-inside:avoid;">
               <tr>
                 <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
                 <td style="width:45%; vertical-align:top;">
                   <div>${escapeHtml(s.titimangsa)}</div>
                   <div>Guru Mata Pelajaran,</div>
-                  <div style="height:48px;"></div>
+                  <div style="height:52px;"></div>
                   ${guruMapel
-                    ? `<div style="font-weight:bold; text-decoration:underline;">${escapeHtml(guruMapel)}</div><div>NIP. .............................................</div>`
-                    : `<div>( .................................................... )</div><div>NIP. .............................................</div>`
+                    ? `<div style="font-weight:bold; text-decoration:underline;">${escapeHtml(guruMapel)}</div>`
+                    : `<div>( .................................................... )</div>`
                   }
+                  <div>NIP. .............................................</div>
                 </td>
               </tr>
             </table>
@@ -3530,11 +4288,12 @@ function buildJsonResponse(obj) {
       loadLocalState();
       populateAllForms();
       refreshAllDropdowns();
-      document.getElementById('headerSchoolName').textContent = appState.settings.sekolah;
-      if (appState.gasUrl) {
-        setSyncStatus('connected', 'URL Sheets Tersimpan');
-      }
+      saveLocalState();
       lucide.createIcons();
+
+      if (appState.gasUrl) {
+        syncPullFromSheets();
+      }
     });
   </script>
 </body>
