@@ -151,6 +151,38 @@
       height: 14px;
     }
 
+    /* INPUT INLINE NOMOR SURAT */
+    .inline-nomor-input {
+      border: none;
+      border-bottom: 1px dotted #000;
+      background: transparent;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 10pt;
+      color: #000;
+      text-align: center;
+      padding: 0 2px;
+      outline: none;
+    }
+    .inline-nomor-input:focus {
+      background: #fef9c3;
+    }
+
+    /* DRAGGABLE TTD & STEMPEL OVERLAY */
+    .draggable-sig-item {
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      transition: outline 0.12s ease;
+    }
+    .draggable-sig-item:hover {
+      outline: 1.5px dashed #2563eb;
+      background: rgba(37, 99, 235, 0.06);
+    }
+    .draggable-sig-item:active {
+      cursor: grabbing;
+    }
+
     /* =========================================
        ATURAN PRINT (@media print)
        ========================================= */
@@ -169,6 +201,13 @@
       }
       .no-print {
         display: none !important;
+      }
+      .draggable-sig-item:hover {
+        outline: none !important;
+        background: transparent !important;
+      }
+      .inline-nomor-input:focus {
+        background: transparent !important;
       }
       .main-container {
         display: block !important;
@@ -254,7 +293,7 @@
   <!-- MAIN SHELL -->
   <div class="main-container flex flex-col lg:flex-row min-h-[calc(100vh-65px)]">
 
-    <!-- SIDEBAR NAVIGASI 18 MODUL (TERSUSUN RAPI SESUAI ALUR PANITIA) -->
+    <!-- SIDEBAR NAVIGASI 18 MODUL -->
     <aside class="no-print w-full lg:w-72 glass-panel border-r border-slate-800 p-3 flex flex-col justify-between shrink-0 overflow-y-auto">
       <div>
         <!-- KELOMPOK 1: PERSIAPAN & RUANG -->
@@ -341,6 +380,73 @@
 
     <!-- CONTENT AREA -->
     <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+
+      <!-- =========================================================
+           PANEL KONTROL POSISI & UKURAN TTD + CAP KEPALA SEKOLAH
+           ========================================================= -->
+      <div id="ttdPositionControllerBar" class="no-print hidden glass-panel rounded-2xl p-3.5 mb-4 border border-amber-500/35 bg-slate-900/85 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300">
+              <i data-lucide="move" class="w-4 h-4"></i>
+            </span>
+            <div>
+              <div class="text-xs font-bold text-amber-300 flex items-center gap-2">
+                <span>Atur Posisi &amp; Ukuran TTD + Cap Kepala Sekolah</span>
+                <span id="ttdScopeBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/25 text-indigo-200 border border-indigo-400/30">Berlaku Semua Kartu</span>
+              </div>
+              <div class="text-[11px] text-slate-400">Bisa digeser langsung dengan mouse/sentuhan pada gambar TTD/Cap di pratinjau, atau atur angka presisi di bawah. Ikut tersimpan saat klik <strong>Simpan ke Sheets</strong>.</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- Khusus Dokumen Besar A4 Penuh: Opsi Geser Semua atau Masing-Masing -->
+            <div id="a4TtdScopeWrap" class="hidden items-center gap-1.5 bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5">
+              <span class="text-[11px] font-semibold text-cyan-300">Mode A4 Penuh:</span>
+              <select id="a4TtdScopeMode" onchange="changeA4TtdScopeMode(this.value)" class="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer">
+                <option value="all" class="bg-slate-900 text-white">Geser Semua Dokumen A4 Serentak</option>
+                <option value="per_doc" class="bg-slate-900 text-white">Geser Dokumen Ini Saja (Masing-Masing)</option>
+              </select>
+            </div>
+
+            <button onclick="resetCurrentTtdLayout()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-semibold text-slate-200 flex items-center gap-1">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Posisi
+            </button>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-3 pt-1 border-t border-slate-800">
+          <!-- KONTROL TTD -->
+          <div class="flex flex-wrap items-center gap-2 bg-slate-950/75 border border-slate-800 rounded-xl px-3 py-2">
+            <span class="text-[11px] font-bold text-emerald-300 w-16">TTD Kepsek</span>
+            <label class="text-[11px] text-slate-400 flex items-center gap-1">X:
+              <input type="number" id="inpTtdX" step="1" onchange="updateTtdLayoutFromInputs()" oninput="updateTtdLayoutFromInputs()" class="w-14 px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-xs text-white text-center" />px
+            </label>
+            <label class="text-[11px] text-slate-400 flex items-center gap-1">Y:
+              <input type="number" id="inpTtdY" step="1" onchange="updateTtdLayoutFromInputs()" oninput="updateTtdLayoutFromInputs()" class="w-14 px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-xs text-white text-center" />px
+            </label>
+            <label class="text-[11px] text-slate-400 flex items-center gap-1.5 flex-1 min-w-[130px]">Ukuran:
+              <input type="range" id="rngTtdScale" min="40" max="220" value="100" oninput="syncScaleRangeToNum('ttd', this.value)" class="w-20 accent-emerald-400 cursor-pointer" />
+              <input type="number" id="inpTtdScale" min="40" max="250" value="100" onchange="updateTtdLayoutFromInputs()" oninput="updateTtdLayoutFromInputs()" class="w-14 px-1 py-0.5 rounded bg-slate-900 border border-slate-700 text-xs text-white text-center" />%
+            </label>
+          </div>
+
+          <!-- KONTROL STEMPEL / CAP -->
+          <div class="flex flex-wrap items-center gap-2 bg-slate-950/75 border border-slate-800 rounded-xl px-3 py-2">
+            <span class="text-[11px] font-bold text-sky-300 w-16">Cap / Stempel</span>
+            <label class="text-[11px] text-slate-400 flex items-center gap-1">X:
+              <input type="number" id="inpCapX" step="1" onchange="updateTtdLayoutFromInputs()" oninput="updateTtdLayoutFromInputs()" class="w-14 px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-xs text-white text-center" />px
+            </label>
+            <label class="text-[11px] text-slate-400 flex items-center gap-1">Y:
+              <input type="number" id="inpCapY" step="1" onchange="updateTtdLayoutFromInputs()" oninput="updateTtdLayoutFromInputs()" class="w-14 px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-xs text-white text-center" />px
+            </label>
+            <label class="text-[11px] text-slate-400 flex items-center gap-1.5 flex-1 min-w-[130px]">Ukuran:
+              <input type="range" id="rngCapScale" min="40" max="220" value="100" oninput="syncScaleRangeToNum('cap', this.value)" class="w-20 accent-sky-400 cursor-pointer" />
+              <input type="number" id="inpCapScale" min="40" max="250" value="100" onchange="updateTtdLayoutFromInputs()" oninput="updateTtdLayoutFromInputs()" class="w-14 px-1 py-0.5 rounded bg-slate-900 border border-slate-700 text-xs text-white text-center" />%
+            </label>
+          </div>
+        </div>
+      </div>
 
       <!-- =========================================================
            MODUL 1: DATABASE GOOGLE SHEETS, KOP SURAT & DATA MASTER
@@ -498,7 +604,7 @@
           </div>
         </div>
 
-        <!-- SUB 1D: DATA PANITIA & JADWAL PENGAWAS (FOTO SEKALI INPUT + TOMBOL TAMBAH JADWAL) -->
+        <!-- SUB 1D: DATA PANITIA & JADWAL PENGAWAS -->
         <div id="sub-panitia" class="sub-master-panel hidden space-y-5">
           <!-- BAGIAN 1: PANITIA PELAKSANA -->
           <div class="glass-panel rounded-2xl p-5 space-y-3">
@@ -529,7 +635,7 @@
             </div>
           </div>
 
-          <!-- BAGIAN 2: JADWAL PENGAWAS RUANG (1 PROFIL PER PENGAWAS, MULTI JADWAL HARI/JAM/RUANG) -->
+          <!-- BAGIAN 2: JADWAL PENGAWAS RUANG -->
           <div class="glass-panel rounded-2xl p-5 space-y-3">
             <div class="flex flex-wrap justify-between items-center gap-2">
               <div>
@@ -557,7 +663,7 @@
           </div>
         </div>
 
-        <!-- SUB 1E: JADWAL MATRIKS UJIAN (HINGGA SABTU + MENU TAMBAH HARI) -->
+        <!-- SUB 1E: JADWAL MATRIKS UJIAN -->
         <div id="sub-jadwal" class="sub-master-panel hidden glass-panel rounded-2xl p-5 space-y-4">
           <div class="flex flex-wrap justify-between items-center gap-2">
             <div>
@@ -631,7 +737,7 @@
       </section>
 
       <!-- =========================================================
-           MODUL 3: LABEL PINTU RUANGAN (DENGAN WATERMARK LOGO 20%)
+           MODUL 3: LABEL PINTU RUANGAN
            ========================================================= -->
       <section id="tab-label_ruang" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -645,7 +751,7 @@
       </section>
 
       <!-- =========================================================
-           MODUL 4 (BARU): TATA TERTIB PESERTA & PENGAWAS UJIAN
+           MODUL 4: TATA TERTIB PESERTA & PENGAWAS UJIAN
            ========================================================= -->
       <section id="tab-tata_tertib" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -689,7 +795,7 @@
               </select>
             </div>
             <label class="flex items-center gap-2 text-xs text-slate-300 mt-4 cursor-pointer">
-              <input type="checkbox" id="chkShowCbtKartu" onchange="renderActiveTab()" class="rounded bg-slate-900 border-slate-600" />
+              <input type="checkbox" id="chkShowCbtKartu" onchange="onToggleCbtOption(this.checked)" class="rounded bg-slate-900 border-slate-600" />
               Tampilkan User/Pass CBT
             </label>
           </div>
@@ -736,7 +842,7 @@
       </section>
 
       <!-- =========================================================
-           MODUL 8 (BARU): LABEL AMPLOP NASKAH SOAL & LJK
+           MODUL 8: LABEL AMPLOP NASKAH SOAL & LJK
            ========================================================= -->
       <section id="tab-label_amplop" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -797,7 +903,7 @@
       </section>
 
       <!-- =========================================================
-           MODUL 11: BERITA ACARA SERAH TERIMA SOAL (URAIAN & TABEL GAMBAR + OPSI ISI)
+           MODUL 11: BERITA ACARA SERAH TERIMA SOAL
            ========================================================= -->
       <section id="tab-ba_serah_terima" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -821,13 +927,13 @@
               <input type="number" id="qtyBaSerah" min="1" max="20" value="1" onchange="renderActiveTab()" class="w-16 px-2.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
             </div>
           </div>
-          <div class="text-xs text-amber-300">Mendukung format uraian saat ini maupun format tabel 2 blok per halaman.</div>
+          <div class="text-xs text-amber-300">Mendukung format uraian maupun format tabel 2 blok per halaman.</div>
         </div>
         <div id="preview-ba_serah_terima" class="print-workspace"></div>
       </section>
 
       <!-- =========================================================
-           MODUL 12: BERITA ACARA PELAKSANAAN UJIAN (OPSI 1 ATAU 2 PENGAWAS)
+           MODUL 12: BERITA ACARA PELAKSANAAN UJIAN
            ========================================================= -->
       <section id="tab-ba_pelaksanaan" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -878,16 +984,23 @@
            ========================================================= -->
       <section id="tab-surat_ijin" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
-          <div class="flex items-center gap-3">
-            <label class="text-xs font-semibold text-slate-300">Pilih Siswa (atau Cetak Blanko Kosong):</label>
-            <select id="selectSiswaSurat" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-semibold text-slate-300">Pilih Siswa (atau Cetak Blanko Kosong):</label>
+              <select id="selectSiswaSurat" onchange="renderActiveTab()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+            </div>
+            <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+              <input type="checkbox" id="chkShowCbtSurat" onchange="onToggleCbtOption(this.checked)" class="rounded bg-slate-900 border-slate-600" />
+              Tampilkan Username / Password
+            </label>
           </div>
+          <div class="text-xs text-cyan-300">Nomor surat dapat diketik langsung pada garis titik-titik di halaman surat.</div>
         </div>
         <div id="preview-surat_ijin" class="print-workspace"></div>
       </section>
 
       <!-- =========================================================
-           MODUL 15 (BARU): REKAPITULASI KETIDAKHADIRAN & UJIAN SUSULAN
+           MODUL 15: REKAPITULASI KETIDAKHADIRAN & UJIAN SUSULAN
            ========================================================= -->
       <section id="tab-rekap_susulan" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 space-y-3 no-print">
@@ -912,7 +1025,7 @@
       </section>
 
       <!-- =========================================================
-           MODUL 16 (BARU): BERITA ACARA UJIAN SUSULAN
+           MODUL 16: BERITA ACARA UJIAN SUSULAN
            ========================================================= -->
       <section id="tab-ba_susulan" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -935,7 +1048,7 @@
       </section>
 
       <!-- =========================================================
-           MODUL 17 (BARU): REKAPITULASI KEHADIRAN PENGAWAS (TANPA UANG TRANSPORT)
+           MODUL 17: REKAPITULASI KEHADIRAN PENGAWAS
            ========================================================= -->
       <section id="tab-rekap_pengawas" class="tab-section hidden space-y-4">
         <div class="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 no-print">
@@ -948,7 +1061,7 @@
               </select>
             </div>
           </div>
-          <div class="text-xs text-slate-400">Rekapitulasi jumlah sesi, ruang tugas, total hari mengawas &amp; paraf pengawas (murni administrasi kehadiran tanpa kolom honor/transport).</div>
+          <div class="text-xs text-slate-400">Rekapitulasi jumlah sesi, ruang tugas, total hari mengawas &amp; paraf pengawas.</div>
         </div>
         <div id="preview-rekap_pengawas" class="print-workspace"></div>
       </section>
@@ -1003,8 +1116,35 @@
   <div id="toastBox" class="no-print fixed bottom-5 right-5 z-50 hidden px-4 py-3 rounded-xl bg-slate-900 border border-indigo-500/50 text-xs font-semibold text-white shadow-2xl items-center gap-2"></div>
 
   <script>
-    const STORAGE_KEY = 'siadu_pro_state_v10';
+    const STORAGE_KEY = 'siadu_pro_state_v11';
     const EXEC_URL_KEY = 'siadu_pro_exec_url';
+
+    const DEFAULT_TTD_LAYOUT = {
+      cards: { ttdX: 18, ttdY: 9, ttdScale: 100, capX: -8, capY: 3, capScale: 100 },
+      a4Scope: 'all',
+      a4Global: { ttdX: 48, ttdY: 8, ttdScale: 100, capX: 18, capY: 2, capScale: 100 },
+      a4PerDoc: {}
+    };
+
+    const CARD_TABS = new Set(['kartu_peserta', 'kartu_meja', 'kartu_panitia', 'jurnal_siswa']);
+    const A4_SIG_TABS = new Set([
+      'tata_tertib', 'dh_siswa', 'dh_panitia', 'ba_serah_terima',
+      'ba_pelaksanaan', 'surat_ijin', 'rekap_susulan', 'ba_susulan',
+      'rekap_pengawas', 'daftar_nilai'
+    ]);
+
+    const TAB_DISPLAY_NAMES = {
+      tata_tertib: 'Tata Tertib Ujian',
+      dh_siswa: 'Daftar Hadir Peserta',
+      dh_panitia: 'Daftar Hadir Panitia & Pengawas',
+      ba_serah_terima: 'BA Serah Terima Soal',
+      ba_pelaksanaan: 'Berita Acara Pelaksanaan',
+      surat_ijin: 'Surat Keterangan / Ijin Ujian',
+      rekap_susulan: 'Rekap Absen & Susulan',
+      ba_susulan: 'Berita Acara Ujian Susulan',
+      rekap_pengawas: 'Rekap Kehadiran Pengawas',
+      daftar_nilai: 'Daftar Nilai Siswa'
+    };
 
     /* =====================================================================
        KODE BACKEND GOOGLE APPS SCRIPT (UNTUK TOMBOL SALIN)
@@ -1078,7 +1218,7 @@ function doGet(e) {
       if (pengRows[i][0]) {
         const key = cleanSheetText(pengRows[i][0]);
         let val = pengRows[i][1];
-        if (key === 'scheduleDays' && typeof val === 'string') {
+        if ((key === 'scheduleDays' || key === 'ttdLayout') && typeof val === 'string') {
           try { val = JSON.parse(cleanSheetText(val)); } catch (err) {}
         } else {
           val = cleanSheetText(val);
@@ -1295,7 +1435,7 @@ function doPost(e) {
 
     return buildJsonResponse({
       status: 'success',
-      message: 'Seluruh data administrasi ujian berhasil disimpan ke Google Spreadsheet (Format Teks)!',
+      message: 'Seluruh data administrasi ujian & pengaturan TTD berhasil disimpan ke Google Spreadsheet!',
       timestamp: new Date().toISOString()
     });
 
@@ -1318,6 +1458,11 @@ function buildJsonResponse(obj) {
     const DEFAULT_STATE = {
       gasUrl: '',
       ttdMode: 'kosong',
+      showCbt: false,
+      suratNomor1: '',
+      suratNomor2: '',
+      suratNomor3: '',
+      suratNomor4: '',
       settings: {
         instansi: 'PEMERINTAH KABUPATEN BEKASI - DINAS PENDIDIKAN',
         sekolah: 'SIMPAN-8 — PANITIA PENYELENGGARA UJIAN SMP NEGERI 8 CIKARANG UTARA',
@@ -1334,6 +1479,7 @@ function buildJsonResponse(obj) {
         ttdKepsek: '',
         stempel: '',
         catatanJadwal: '* Mapel di belakang tanda " / " menunjukkan ujian di sesi/minggu berikutnya',
+        ttdLayout: JSON.parse(JSON.stringify(DEFAULT_TTD_LAYOUT)),
         scheduleDays: [
           { key: 'senin', label: 'SENIN', tanggal: 'Senin, 23 November 2026' },
           { key: 'selasa', label: 'SELASA', tanggal: 'Selasa, 24 November 2026' },
@@ -1409,6 +1555,214 @@ function buildJsonResponse(obj) {
     let appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
     let activeTab = 'master';
     let selectedSeatIndex = null;
+
+    /* =====================================================================
+       MANAJEMEN LAYOUT POSISI & UKURAN TTD + STEMPEL (KARTU & A4 PENUH)
+       ===================================================================== */
+    function ensureTtdLayoutStructure() {
+      if (!appState.settings.ttdLayout || typeof appState.settings.ttdLayout !== 'object') {
+        appState.settings.ttdLayout = JSON.parse(JSON.stringify(DEFAULT_TTD_LAYOUT));
+      }
+      const tl = appState.settings.ttdLayout;
+      tl.cards = { ...DEFAULT_TTD_LAYOUT.cards, ...(tl.cards || {}) };
+      tl.a4Scope = tl.a4Scope === 'per_doc' ? 'per_doc' : 'all';
+      tl.a4Global = { ...DEFAULT_TTD_LAYOUT.a4Global, ...(tl.a4Global || {}) };
+      if (!tl.a4PerDoc || typeof tl.a4PerDoc !== 'object') tl.a4PerDoc = {};
+      return tl;
+    }
+
+    function getCardTtdLayout() {
+      return ensureTtdLayoutStructure().cards;
+    }
+
+    function getFormalTtdLayout(docKey = activeTab) {
+      const tl = ensureTtdLayoutStructure();
+      if (tl.a4Scope === 'per_doc') {
+        if (!tl.a4PerDoc[docKey]) {
+          tl.a4PerDoc[docKey] = { ...tl.a4Global };
+        }
+        return tl.a4PerDoc[docKey];
+      }
+      return tl.a4Global;
+    }
+
+    function getActiveLayoutTarget(tabKey = activeTab) {
+      if (CARD_TABS.has(tabKey)) return getCardTtdLayout();
+      if (A4_SIG_TABS.has(tabKey)) return getFormalTtdLayout(tabKey);
+      return null;
+    }
+
+    function updateTtdControllerBarUI() {
+      const bar = document.getElementById('ttdPositionControllerBar');
+      const scopeBadge = document.getElementById('ttdScopeBadge');
+      const a4Wrap = document.getElementById('a4TtdScopeWrap');
+      const a4ModeSel = document.getElementById('a4TtdScopeMode');
+
+      if (!CARD_TABS.has(activeTab) && !A4_SIG_TABS.has(activeTab)) {
+        bar.classList.add('hidden');
+        return;
+      }
+
+      bar.classList.remove('hidden');
+      const tl = ensureTtdLayoutStructure();
+
+      if (CARD_TABS.has(activeTab)) {
+        a4Wrap.classList.add('hidden');
+        a4Wrap.classList.remove('flex');
+        scopeBadge.textContent = 'Sinkron Semua Kartu (Kartu Peserta, Jadwal, Meja, Pengawas & Jurnal)';
+      } else {
+        a4Wrap.classList.remove('hidden');
+        a4Wrap.classList.add('flex');
+        a4ModeSel.value = tl.a4Scope;
+        if (tl.a4Scope === 'all') {
+          scopeBadge.textContent = 'Dokumen A4: Semua Halaman Ikut Berubah';
+        } else {
+          scopeBadge.textContent = `Khusus Dokumen: ${TAB_DISPLAY_NAMES[activeTab] || activeTab}`;
+        }
+      }
+
+      const cfg = getActiveLayoutTarget(activeTab);
+      if (!cfg) return;
+
+      document.getElementById('inpTtdX').value = Math.round(cfg.ttdX);
+      document.getElementById('inpTtdY').value = Math.round(cfg.ttdY);
+      document.getElementById('inpTtdScale').value = Math.round(cfg.ttdScale);
+      document.getElementById('rngTtdScale').value = Math.min(220, Math.max(40, Math.round(cfg.ttdScale)));
+
+      document.getElementById('inpCapX').value = Math.round(cfg.capX);
+      document.getElementById('inpCapY').value = Math.round(cfg.capY);
+      document.getElementById('inpCapScale').value = Math.round(cfg.capScale);
+      document.getElementById('rngCapScale').value = Math.min(220, Math.max(40, Math.round(cfg.capScale)));
+    }
+
+    function changeA4TtdScopeMode(mode) {
+      const tl = ensureTtdLayoutStructure();
+      tl.a4Scope = mode === 'per_doc' ? 'per_doc' : 'all';
+      if (tl.a4Scope === 'per_doc' && !tl.a4PerDoc[activeTab]) {
+        tl.a4PerDoc[activeTab] = { ...tl.a4Global };
+      }
+      saveLocalState();
+      updateTtdControllerBarUI();
+      renderActiveTab();
+    }
+
+    function syncScaleRangeToNum(type, val) {
+      if (type === 'ttd') document.getElementById('inpTtdScale').value = val;
+      else document.getElementById('inpCapScale').value = val;
+      updateTtdLayoutFromInputs();
+    }
+
+    function updateTtdLayoutFromInputs() {
+      const cfg = getActiveLayoutTarget(activeTab);
+      if (!cfg) return;
+
+      cfg.ttdX = Number(document.getElementById('inpTtdX').value) || 0;
+      cfg.ttdY = Number(document.getElementById('inpTtdY').value) || 0;
+      cfg.ttdScale = Math.max(30, Math.min(300, Number(document.getElementById('inpTtdScale').value) || 100));
+      document.getElementById('rngTtdScale').value = Math.min(220, Math.max(40, cfg.ttdScale));
+
+      cfg.capX = Number(document.getElementById('inpCapX').value) || 0;
+      cfg.capY = Number(document.getElementById('inpCapY').value) || 0;
+      cfg.capScale = Math.max(30, Math.min(300, Number(document.getElementById('inpCapScale').value) || 100));
+      document.getElementById('rngCapScale').value = Math.min(220, Math.max(40, cfg.capScale));
+
+      saveLocalState();
+      applyLiveSignatureTransform();
+    }
+
+    function resetCurrentTtdLayout() {
+      const tl = ensureTtdLayoutStructure();
+      if (CARD_TABS.has(activeTab)) {
+        tl.cards = { ...DEFAULT_TTD_LAYOUT.cards };
+      } else if (A4_SIG_TABS.has(activeTab)) {
+        if (tl.a4Scope === 'per_doc') {
+          tl.a4PerDoc[activeTab] = { ...DEFAULT_TTD_LAYOUT.a4Global };
+        } else {
+          tl.a4Global = { ...DEFAULT_TTD_LAYOUT.a4Global };
+        }
+      }
+      saveLocalState();
+      updateTtdControllerBarUI();
+      applyLiveSignatureTransform();
+      showToast('Posisi & ukuran TTD/Cap dikembalikan ke standar.');
+    }
+
+    function applyLiveSignatureTransform() {
+      const cfg = getActiveLayoutTarget(activeTab);
+      if (!cfg) return;
+
+      document.querySelectorAll('.sig-ttd-img').forEach(img => {
+        const baseH = parseFloat(img.dataset.baseH || '42');
+        const baseMaxW = parseFloat(img.dataset.baseMaxw || '116');
+        const scale = (cfg.ttdScale || 100) / 100;
+        img.style.left = `${cfg.ttdX}px`;
+        img.style.top = `${cfg.ttdY}px`;
+        img.style.height = `${(baseH * scale).toFixed(1)}px`;
+        img.style.maxWidth = `${(baseMaxW * scale).toFixed(1)}px`;
+      });
+
+      document.querySelectorAll('.sig-cap-img').forEach(img => {
+        const baseSize = parseFloat(img.dataset.baseSize || '56');
+        const scale = (cfg.capScale || 100) / 100;
+        img.style.left = `${cfg.capX}px`;
+        img.style.top = `${cfg.capY}px`;
+        img.style.width = `${(baseSize * scale).toFixed(1)}px`;
+        img.style.height = `${(baseSize * scale).toFixed(1)}px`;
+      });
+    }
+
+    function startSigDrag(e, kind) {
+      if (e.button !== undefined && e.button !== 0) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const cfg = getActiveLayoutTarget(activeTab);
+      if (!cfg) return;
+
+      const startClientX = e.clientX;
+      const startClientY = e.clientY;
+      const origX = kind === 'ttd' ? cfg.ttdX : cfg.capX;
+      const origY = kind === 'ttd' ? cfg.ttdY : cfg.capY;
+
+      function onMove(ev) {
+        const dx = Math.round(ev.clientX - startClientX);
+        const dy = Math.round(ev.clientY - startClientY);
+        if (kind === 'ttd') {
+          cfg.ttdX = origX + dx;
+          cfg.ttdY = origY + dy;
+          document.getElementById('inpTtdX').value = cfg.ttdX;
+          document.getElementById('inpTtdY').value = cfg.ttdY;
+        } else {
+          cfg.capX = origX + dx;
+          cfg.capY = origY + dy;
+          document.getElementById('inpCapX').value = cfg.capX;
+          document.getElementById('inpCapY').value = cfg.capY;
+        }
+        applyLiveSignatureTransform();
+      }
+
+      function onUp() {
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+        saveLocalState();
+      }
+
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    }
+
+    /* =====================================================================
+       SINKRON OPSI TAMPILKAN USER/PASS CBT (KARTU & SURAT IJIN)
+       ===================================================================== */
+    function onToggleCbtOption(checked) {
+      appState.showCbt = Boolean(checked);
+      const chkKartu = document.getElementById('chkShowCbtKartu');
+      const chkSurat = document.getElementById('chkShowCbtSurat');
+      if (chkKartu) chkKartu.checked = appState.showCbt;
+      if (chkSurat) chkSurat.checked = appState.showCbt;
+      saveLocalState();
+      renderActiveTab();
+    }
 
     function normalizeStaffItem(p) {
       let slots = Array.isArray(p.jadwalSlots) ? p.jadwalSlots : [];
@@ -1488,6 +1842,8 @@ function buildJsonResponse(obj) {
             label: asCleanText(d.label),
             tanggal: asCleanText(d.tanggal)
           }));
+        } else if (k === 'ttdLayout' && rawSettings[k] && typeof rawSettings[k] === 'object') {
+          cleaned[k] = rawSettings[k];
         } else {
           cleaned[k] = asCleanText(rawSettings[k]);
         }
@@ -1558,7 +1914,7 @@ function buildJsonResponse(obj) {
     function loadLocalState() {
       const savedExecUrl = localStorage.getItem(EXEC_URL_KEY) || '';
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('siadu_pro_state_v10');
         if (raw) {
           const parsed = JSON.parse(raw);
           appState = {
@@ -1566,12 +1922,17 @@ function buildJsonResponse(obj) {
             ...parsed,
             gasUrl: parsed.gasUrl || savedExecUrl,
             ttdMode: parsed.ttdMode === 'kepsek' ? 'kepsek' : 'kosong',
+            showCbt: Boolean(parsed.showCbt),
             students: Array.isArray(parsed.students) ? parsed.students.map((st, idx) => normalizeStudentRecord(st, idx)) : DEFAULT_STATE.students,
             staff: Array.isArray(parsed.staff) ? parsed.staff.map((p, idx) => normalizeStaffRecord(p, idx)) : DEFAULT_STATE.staff,
             susulanRecords: Array.isArray(parsed.susulanRecords) ? parsed.susulanRecords : [],
             settings: {
               ...DEFAULT_STATE.settings,
               ...(parsed.settings || {}),
+              ttdLayout: {
+                ...JSON.parse(JSON.stringify(DEFAULT_TTD_LAYOUT)),
+                ...(parsed.settings?.ttdLayout || {})
+              },
               scheduleDays: Array.isArray(parsed.settings?.scheduleDays) && parsed.settings.scheduleDays.length > 0
                 ? parsed.settings.scheduleDays
                 : DEFAULT_STATE.settings.scheduleDays
@@ -1584,6 +1945,7 @@ function buildJsonResponse(obj) {
         console.warn('Gagal memuat state:', e);
         if (savedExecUrl) appState.gasUrl = savedExecUrl;
       }
+      ensureTtdLayoutStructure();
     }
 
     function saveLocalState() {
@@ -1605,7 +1967,7 @@ function buildJsonResponse(obj) {
       appState.ttdMode = mode === 'kepsek' ? 'kepsek' : 'kosong';
       saveLocalState();
       renderActiveTab();
-      showToast(appState.ttdMode === 'kepsek' ? 'Gambar TTD & Cap Kepala Sekolah ditampilkan.' : 'Gambar TTD & Cap dikosongkan (Nama & NIP tetap tampil).');
+      showToast(appState.ttdMode === 'kepsek' ? 'Gambar TTD & Cap Kepala Sekolah ditampilkan (dapat digeser & diubah ukurannya).' : 'Gambar TTD & Cap dikosongkan (Nama & NIP tetap tampil).');
     }
 
     async function syncPullFromSheets() {
@@ -1635,7 +1997,16 @@ function buildJsonResponse(obj) {
             const mergedDays = Array.isArray(cleanSettings.scheduleDays) && cleanSettings.scheduleDays.length > 0
               ? cleanSettings.scheduleDays
               : appState.settings.scheduleDays;
-            appState.settings = { ...appState.settings, ...cleanSettings, scheduleDays: mergedDays };
+            const mergedTtdLayout = cleanSettings.ttdLayout && typeof cleanSettings.ttdLayout === 'object'
+              ? { ...JSON.parse(JSON.stringify(DEFAULT_TTD_LAYOUT)), ...cleanSettings.ttdLayout }
+              : appState.settings.ttdLayout;
+            appState.settings = {
+              ...appState.settings,
+              ...cleanSettings,
+              scheduleDays: mergedDays,
+              ttdLayout: mergedTtdLayout
+            };
+            ensureTtdLayoutStructure();
           }
           if (Array.isArray(json.data.students)) appState.students = json.data.students.map((st, idx) => normalizeStudentRecord(st, idx));
           if (Array.isArray(json.data.staff)) appState.staff = json.data.staff.map((p, idx) => normalizeStaffRecord(p, idx));
@@ -1645,9 +2016,10 @@ function buildJsonResponse(obj) {
           saveLocalState();
           populateAllForms();
           refreshAllDropdowns();
+          updateTtdControllerBarUI();
           renderActiveTab();
           setSyncStatus('connected', 'Tersinkronisasi');
-          showToast('Data berhasil dimuat dari Google Spreadsheet!');
+          showToast('Data & aturan posisi TTD berhasil dimuat dari Google Spreadsheet!');
         } else {
           throw new Error(json.message || 'Format respons tidak valid');
         }
@@ -1666,6 +2038,7 @@ function buildJsonResponse(obj) {
         return;
       }
       appState.gasUrl = url;
+      ensureTtdLayoutStructure();
       saveLocalState();
       setSyncStatus('loading', 'Menyimpan...');
       try {
@@ -1690,7 +2063,7 @@ function buildJsonResponse(obj) {
         }
         if (json.status === 'success') {
           setSyncStatus('connected', 'Tersimpan di Sheets');
-          showToast(json.message || 'Berhasil disimpan ke Google Spreadsheet!');
+          showToast(json.message || 'Data & aturan posisi/ukuran TTD berhasil disimpan ke Google Spreadsheet!');
         } else {
           throw new Error(json.message || 'Gagal menyimpan');
         }
@@ -1722,6 +2095,7 @@ function buildJsonResponse(obj) {
       });
 
       refreshAllDropdowns();
+      updateTtdControllerBarUI();
       renderActiveTab();
       lucide.createIcons();
     }
@@ -1743,6 +2117,8 @@ function buildJsonResponse(obj) {
       document.getElementById('gasCodeBlock').textContent = GAS_BACKEND_CODE;
       document.getElementById('inpGasUrl').value = persistedUrl;
       document.getElementById('globalTtdMode').value = appState.ttdMode || 'kosong';
+      if (document.getElementById('chkShowCbtKartu')) document.getElementById('chkShowCbtKartu').checked = Boolean(appState.showCbt);
+      if (document.getElementById('chkShowCbtSurat')) document.getElementById('chkShowCbtSurat').checked = Boolean(appState.showCbt);
       document.getElementById('cfgInstansi').value = s.instansi || '';
       document.getElementById('cfgSekolah').value = s.sekolah || '';
       document.getElementById('cfgAlamat').value = s.alamat || '';
@@ -1857,7 +2233,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       CRUD PANITIA & PENGAWAS (FOTO SEKALI INPUT + TOMBOL TAMBAH JADWAL)
+       CRUD PANITIA & PENGAWAS
        ===================================================================== */
     function renderStaffTables() {
       document.getElementById('countPanitia').textContent = appState.staff.length;
@@ -2008,7 +2384,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       CRUD JADWAL PELAJARAN DINAMIS (HINGGA SABTU + TAMBAH HARI)
+       CRUD JADWAL PELAJARAN DINAMIS
        ===================================================================== */
     function renderScheduleTable() {
       const days = appState.settings.scheduleDays || [];
@@ -2164,6 +2540,7 @@ function buildJsonResponse(obj) {
         saveLocalState();
         populateAllForms();
         refreshAllDropdowns();
+        updateTtdControllerBarUI();
         renderActiveTab();
         showToast('Data contoh berhasil dipulihkan.');
       }
@@ -2318,11 +2695,19 @@ function buildJsonResponse(obj) {
       const stempel = showKepsek ? resolveDriveImage(s.stempel) : '';
       const isCompact = variant === 'compact';
 
+      const cfg = getCardTtdLayout();
+      const ttdScale = (cfg.ttdScale || 100) / 100;
+      const capScale = (cfg.capScale || 100) / 100;
+
       const fontSize = isCompact ? '7.4pt' : '8.2pt';
       const blockW = isCompact ? '138px' : '152px';
-      const stampSize = isCompact ? '52px' : '60px';
-      const ttdHeight = isCompact ? '36px' : '42px';
-      const ttdMaxW = isCompact ? '104px' : '116px';
+      const baseStampSize = isCompact ? 52 : 60;
+      const baseTtdHeight = isCompact ? 36 : 42;
+      const baseTtdMaxW = isCompact ? 104 : 116;
+
+      const stampSize = (baseStampSize * capScale).toFixed(1);
+      const ttdHeight = (baseTtdHeight * ttdScale).toFixed(1);
+      const ttdMaxW = (baseTtdMaxW * ttdScale).toFixed(1);
 
       const namaKepsekDisplay = `<div style="position:relative; z-index:1; text-decoration:underline; overflow-wrap:anywhere;">${escapeHtml(s.kepsek || 'Hasanah Aisah, M.Pd')}</div>`;
       const nipKepsekDisplay = `<div style="position:relative; z-index:1; font-weight:normal; font-size:${isCompact ? '6.8pt' : '7.4pt'}; overflow-wrap:anywhere;">NIP. ${escapeHtml(s.nipKepsek || '196902031998022005')}</div>`;
@@ -2330,11 +2715,11 @@ function buildJsonResponse(obj) {
       return `
         <div style="position:relative; overflow:visible; font-size:${fontSize}; font-weight:bold; line-height:1.15; min-width:0; width:${blockW}; flex-shrink:0; text-align:center; z-index:2;">
           ${stempel
-            ? `<img src="${stempel}" referrerpolicy="no-referrer" style="position:absolute; left:-8px; top:3px; width:${stampSize}; height:${stampSize}; object-fit:contain; opacity:0.88; z-index:4; pointer-events:none;" />`
+            ? `<img src="${stempel}" referrerpolicy="no-referrer" class="sig-cap-img draggable-sig-item" data-base-size="${baseStampSize}" onpointerdown="startSigDrag(event, 'cap')" title="Geser Cap/Stempel (Semua Kartu Ikut Berubah)" style="position:absolute; left:${cfg.capX}px; top:${cfg.capY}px; width:${stampSize}px; height:${stampSize}px; object-fit:contain; opacity:0.88; z-index:4;" />`
             : ''
           }
           ${ttd
-            ? `<img src="${ttd}" referrerpolicy="no-referrer" style="position:absolute; left:18px; top:9px; height:${ttdHeight}; max-width:${ttdMaxW}; object-fit:contain; z-index:5; pointer-events:none;" />`
+            ? `<img src="${ttd}" referrerpolicy="no-referrer" class="sig-ttd-img draggable-sig-item" data-base-h="${baseTtdHeight}" data-base-maxw="${baseTtdMaxW}" onpointerdown="startSigDrag(event, 'ttd')" title="Geser TTD Kepsek (Semua Kartu Ikut Berubah)" style="position:absolute; left:${cfg.ttdX}px; top:${cfg.ttdY}px; height:${ttdHeight}px; max-width:${ttdMaxW}px; object-fit:contain; z-index:5;" />`
             : ''
           }
 
@@ -2347,20 +2732,32 @@ function buildJsonResponse(obj) {
       `;
     }
 
-    function buildFormalKepsekBlockHTML(prefixText = 'Mengetahui,', withTitimangsa = false) {
+    function buildFormalKepsekBlockHTML(prefixText = 'Mengetahui,', withTitimangsa = false, docKey = activeTab) {
       const s = appState.settings;
       const showKepsek = appState.ttdMode === 'kepsek';
       const ttd = showKepsek ? resolveDriveImage(s.ttdKepsek) : '';
       const stempel = showKepsek ? resolveDriveImage(s.stempel) : '';
+
+      const cfg = getFormalTtdLayout(docKey);
+      const ttdScale = (cfg.ttdScale || 100) / 100;
+      const capScale = (cfg.capScale || 100) / 100;
+
+      const baseStampSize = 56;
+      const baseTtdHeight = 42;
+      const baseTtdMaxW = 115;
+
+      const stampSize = (baseStampSize * capScale).toFixed(1);
+      const ttdHeight = (baseTtdHeight * ttdScale).toFixed(1);
+      const ttdMaxW = (baseTtdMaxW * ttdScale).toFixed(1);
 
       return `
         <div style="position:relative; display:inline-block; min-width:190px; text-align:center; line-height:1.35;">
           ${withTitimangsa ? `<div>${escapeHtml(s.titimangsa)}</div>` : ''}
           ${prefixText ? `<div>${escapeHtml(prefixText)}</div>` : ''}
           <div>Kepala ${escapeHtml(s.sekolah)}</div>
-          <div style="position:relative; height:52px;">
-            ${stempel ? `<img src="${stempel}" referrerpolicy="no-referrer" style="position:absolute; left:18px; top:2px; width:56px; height:56px; object-fit:contain; opacity:0.85; pointer-events:none;" />` : ''}
-            ${ttd ? `<img src="${ttd}" referrerpolicy="no-referrer" style="position:absolute; left:48px; top:8px; height:42px; max-width:115px; object-fit:contain; pointer-events:none;" />` : ''}
+          <div style="position:relative; height:52px; overflow:visible;">
+            ${stempel ? `<img src="${stempel}" referrerpolicy="no-referrer" class="sig-cap-img draggable-sig-item" data-base-size="${baseStampSize}" onpointerdown="startSigDrag(event, 'cap')" title="Geser Cap/Stempel" style="position:absolute; left:${cfg.capX}px; top:${cfg.capY}px; width:${stampSize}px; height:${stampSize}px; object-fit:contain; opacity:0.85; z-index:4;" />` : ''}
+            ${ttd ? `<img src="${ttd}" referrerpolicy="no-referrer" class="sig-ttd-img draggable-sig-item" data-base-h="${baseTtdHeight}" data-base-maxw="${baseTtdMaxW}" onpointerdown="startSigDrag(event, 'ttd')" title="Geser TTD Kepsek" style="position:absolute; left:${cfg.ttdX}px; top:${cfg.ttdY}px; height:${ttdHeight}px; max-width:${ttdMaxW}px; object-fit:contain; z-index:5;" />` : ''}
           </div>
           <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.kepsek || 'Hasanah Aisah, M.Pd')}</div>
           <div>NIP. ${escapeHtml(s.nipKepsek || '196902031998022005')}</div>
@@ -2584,7 +2981,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 3: LABEL PINTU RUANGAN (DENGAN LOGO WATERMARK TRANSPARAN 20%)
+       MODUL 3: LABEL PINTU RUANGAN
        ===================================================================== */
     function renderLabelRuang() {
       const ruang = document.getElementById('filterLabelRuang').value || getUniqueRooms()[0];
@@ -2627,7 +3024,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 4 (BARU): TATA TERTIB PESERTA & PENGAWAS UJIAN
+       MODUL 4: TATA TERTIB PESERTA & PENGAWAS UJIAN
        ===================================================================== */
     function renderTataTertib() {
       const mode = document.getElementById('modeTataTertib')?.value || 'peserta';
@@ -2681,7 +3078,7 @@ function buildJsonResponse(obj) {
             </div>
 
             <div style="display:flex; justify-content:flex-end; margin-top:10px; font-size:10pt;">
-              ${buildFormalKepsekBlockHTML('Mengetahui,', true)}
+              ${buildFormalKepsekBlockHTML('Mengetahui,', true, 'tata_tertib')}
             </div>
           </div>
         `;
@@ -2721,7 +3118,7 @@ function buildJsonResponse(obj) {
 
             <table style="width:100%; border-collapse:collapse; margin-top:12px; font-size:10pt;">
               <tr>
-                <td style="width:52%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+                <td style="width:52%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false, 'tata_tertib')}</td>
                 <td style="width:48%; vertical-align:top; text-align:center;">
                   <div>${escapeHtml(s.titimangsa)}</div>
                   <div>Ketua Panitia Ujian,</div>
@@ -2744,7 +3141,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 5: KARTU PESERTA UJIAN (DINAMIS HINGGA SABTU / TAMBAH HARI)
+       MODUL 5: KARTU PESERTA UJIAN
        ===================================================================== */
     function buildScheduleMatrixTableHTML() {
       const s = appState.settings;
@@ -2884,7 +3281,7 @@ function buildJsonResponse(obj) {
     function renderKartuPeserta() {
       const ruangFilter = document.getElementById('filterRuangKartu').value || 'ALL';
       const mode = document.getElementById('modeKartuPeserta').value || 'dengan_jadwal';
-      const showCbt = document.getElementById('chkShowCbtKartu').checked;
+      const showCbt = Boolean(document.getElementById('chkShowCbtKartu')?.checked || appState.showCbt);
 
       const list = ruangFilter === 'ALL'
         ? appState.students
@@ -3072,7 +3469,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 8 (BARU): LABEL AMPLOP NASKAH SOAL & LJK
+       MODUL 8: LABEL AMPLOP NASKAH SOAL & LJK
        ===================================================================== */
     function renderLabelAmplop() {
       const ruang = document.getElementById('filterRuangAmplop')?.value || getUniqueRooms()[0];
@@ -3242,7 +3639,7 @@ function buildJsonResponse(obj) {
 
             <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
               <tr>
-                <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+                <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false, 'dh_siswa')}</td>
                 <td style="width:45%; vertical-align:top;">
                   <div>Pengawas Ruang,</div>
                   <div style="height:56px;"></div>
@@ -3259,7 +3656,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 10: DAFTAR HADIR PANITIA (TABEL ATAS) & PENGAWAS PER HARI (TABEL BAWAH)
+       MODUL 10: DAFTAR HADIR PANITIA & PENGAWAS PER HARI JADWAL
        ===================================================================== */
     function renderDhPanitia() {
       const selectedHari = document.getElementById('filterHariDhPanitia')?.value || 'ALL';
@@ -3366,7 +3763,7 @@ function buildJsonResponse(obj) {
 
           <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
             <tr>
-              <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+              <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false, 'dh_panitia')}</td>
               <td style="width:45%; vertical-align:top;">
                 <div>${selectedHari === 'ALL' ? escapeHtml(s.titimangsa) : escapeHtml(selectedHari)}</div>
                 <div>Ketua Panitia Ujian,</div>
@@ -3381,7 +3778,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 11: BERITA ACARA SERAH TERIMA SOAL (URAIAN & TABEL GAMBAR + OPSI ISI)
+       MODUL 11: BERITA ACARA SERAH TERIMA SOAL
        ===================================================================== */
     function renderBaSerahTerima() {
       const qty = Math.max(1, parseInt(document.getElementById('qtyBaSerah').value) || 1);
@@ -3453,7 +3850,7 @@ function buildJsonResponse(obj) {
               ${makeBlock(1)}
 
               <div style="display:flex; justify-content:flex-end; margin-top:6px;">
-                ${buildFormalKepsekBlockHTML('', true)}
+                ${buildFormalKepsekBlockHTML('', true, 'ba_serah_terima')}
               </div>
             </div>
           `;
@@ -3547,7 +3944,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 12: BERITA ACARA PELAKSANAAN UJIAN (OPSI 1 ATAU 2 PENGAWAS)
+       MODUL 12: BERITA ACARA PELAKSANAAN UJIAN
        ===================================================================== */
     function renderBaPelaksanaan() {
       const qty = Math.max(1, parseInt(document.getElementById('qtyBaPelaksanaan').value) || 1);
@@ -3555,7 +3952,7 @@ function buildJsonResponse(obj) {
       const s = appState.settings;
       let html = '';
 
-      const kepsekCellHtml = buildFormalKepsekBlockHTML('Mengetahui,', false);
+      const kepsekCellHtml = buildFormalKepsekBlockHTML('Mengetahui,', false, 'ba_pelaksanaan');
 
       const ttdSection = opsiPengawas === '1'
         ? `
@@ -3622,12 +4019,14 @@ function buildJsonResponse(obj) {
 
             <div style="margin-bottom:4px; font-weight:bold; font-size:10pt;">8. Catatan Kejadian Penting Selama Ujian Berlangsung:</div>
             <div style="border:1px solid #000; padding:6px 8px; min-height:64px; margin-bottom:10px;">
-              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
-              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
-              <div style="border-bottom:1px dotted #94a3b8; height:18px;"></div>
+              <div style="border-bottom:1px dotted #64748b; height:17px;"></div>
+              <div style="border-bottom:1px dotted #64748b; height:17px;"></div>
+              <div style="border-bottom:1px dotted #64748b; height:17px;"></div>
             </div>
 
-            <p style="margin-bottom:10px; font-size:10pt;">Demikian berita acara pelaksanaan ujian ini dibuat dengan sesungguhnya untuk dapat dipergunakan sebagaimana mestinya.</p>
+            <p style="text-align:justify; margin-bottom:12px; font-size:10pt;">
+              Demikian Berita Acara ini dibuat dengan sesungguhnya untuk dipergunakan sebagaimana mestinya.
+            </p>
 
             ${ttdSection}
           </div>
@@ -3641,116 +4040,100 @@ function buildJsonResponse(obj) {
        ===================================================================== */
     function buildAgendaRowsFromSchedule() {
       const days = appState.settings.scheduleDays || [];
-      const items = [];
+      const agenda = [];
       days.forEach(d => {
         appState.schedule.forEach(row => {
-          if (!row.istirahat) {
-            const mapel = String(row[d.key] || '').trim();
-            if (mapel && mapel !== '-' && mapel.toUpperCase() !== 'ISTIRAHAT') {
-              items.push({
-                hariTanggal: d.tanggal || d.label,
-                mapel,
-                jam: row.jam,
-                pukul: row.pukul
-              });
-            }
+          const mapel = String(row[d.key] || '').trim();
+          if (!row.istirahat && mapel && mapel !== '-' && mapel.toUpperCase() !== 'ISTIRAHAT') {
+            agenda.push({
+              hariTanggal: d.tanggal || d.label,
+              pukul: row.pukul || '',
+              mapel
+            });
           }
         });
       });
-      if (items.length === 0) {
-        return Array.from({ length: 6 }, () => ({ hariTanggal: '', mapel: '', jam: '', pukul: '' }));
-      }
-      return items;
+      return agenda;
     }
 
     function renderJurnalSiswa() {
       const ruangFilter = document.getElementById('filterRuangJurnal').value || 'ALL';
       const opsiParaf = document.getElementById('opsiParafJurnal')?.value || 'keduanya';
-      const list = ruangFilter === 'ALL'
-        ? appState.students
-        : appState.students.filter(s => s.ruang === ruangFilter);
+      const list = ruangFilter === 'ALL' ? appState.students : appState.students.filter(s => s.ruang === ruangFilter);
+      const agendaList = buildAgendaRowsFromSchedule();
+      const s = appState.settings;
+      const showKepsekOnJurnal = appState.ttdMode === 'kepsek';
 
-      const agendaItems = buildAgendaRowsFromSchedule();
-      const denseRows = agendaItems.length > 9;
-      const cellPad = denseRows ? '1.5px 4px' : '2.5px 5px';
-      const tableFont = denseRows ? '7pt' : '7.6pt';
+      const parafHeaders = opsiParaf === 'keduanya'
+        ? `<th style="border:1px solid #000; padding:3px; width:76px; text-align:center;">Paraf Pengawas</th><th style="border:1px solid #000; padding:3px; width:72px; text-align:center;">Paraf Siswa</th>`
+        : opsiParaf === 'pengawas'
+          ? `<th style="border:1px solid #000; padding:3px; width:95px; text-align:center;">Paraf Pengawas</th>`
+          : `<th style="border:1px solid #000; padding:3px; width:95px; text-align:center;">Paraf Siswa</th>`;
 
-      let parafHeaders = '';
-      if (opsiParaf === 'keduanya') {
-        parafHeaders = `<th style="width:66px;">Paraf Pengawas</th><th style="width:62px;">Paraf Siswa</th>`;
-      } else if (opsiParaf === 'pengawas') {
-        parafHeaders = `<th style="width:84px;">Paraf Pengawas</th>`;
-      } else {
-        parafHeaders = `<th style="width:84px;">Paraf Siswa</th>`;
-      }
+      const parafCells = opsiParaf === 'keduanya'
+        ? `<td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>`
+        : `<td style="border:1px solid #000;"></td>`;
+
+      const displayRows = agendaList.length > 0
+        ? agendaList
+        : Array.from({ length: 8 }, () => ({ hariTanggal: '', pukul: '', mapel: '' }));
 
       let pagesHtml = '';
 
       for (let i = 0; i < list.length; i += 2) {
         const chunk = list.slice(i, i + 2);
         const cards = chunk.map(st => {
-          const fotoUrl = resolveDriveImage(st.foto);
-          const rowsHtml = agendaItems.map((it, idx) => `
-            <tr>
-              <td style="text-align:center; padding:${cellPad};">${idx + 1}</td>
-              <td style="padding:${cellPad};">${escapeHtml(it.hariTanggal)}</td>
-              <td style="padding:${cellPad}; font-weight:bold;">${escapeHtml(it.mapel)}</td>
-              <td style="text-align:center; padding:${cellPad};">${escapeHtml(it.jam)}</td>
-              ${opsiParaf === 'keduanya' ? `<td></td><td></td>` : `<td></td>`}
+          const rowsHtml = displayRows.map((ag, idx) => `
+            <tr style="height:20px;">
+              <td style="border:1px solid #000; text-align:center;">${idx + 1}</td>
+              <td style="border:1px solid #000; padding:1.5px 4px; font-size:7.6pt;">${escapeHtml(ag.hariTanggal)}</td>
+              <td style="border:1px solid #000; text-align:center; font-size:7.4pt;">${escapeHtml(ag.pukul)}</td>
+              <td style="border:1px solid #000; padding:1.5px 5px; font-size:7.8pt; font-weight:600;">${escapeHtml(ag.mapel)}</td>
+              ${parafCells}
             </tr>
           `).join('');
 
           return `
-            <div style="border:1.8px solid #000; height:136mm; display:flex; flex-direction:column; justify-content:space-between; overflow:visible; background:#fff;">
+            <div style="border:1.8px solid #000; padding:7px 9px; height:136mm; display:flex; flex-direction:column; justify-content:space-between; background:#fff; overflow:visible;">
               <div>
-                ${buildCardKopHTML(true, false)}
-                <div style="padding:3px 10px 0 10px;">
-                  <div style="text-align:center; font-weight:bold; font-size:9.2pt; text-decoration:underline; margin-bottom:4px;">
-                    JURNAL AGENDA &amp; KARTU KENDALI KEHADIRAN PESERTA UJIAN
-                  </div>
-
-                  <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
-                    <div style="width:42px; height:54px; border:1.8px solid #000; padding:1px; background:#fff; flex-shrink:0;">
-                      <div style="width:100%; height:100%; border:1px solid #000; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f8fafc;">
-                        ${fotoUrl
-                          ? `<img src="${fotoUrl}" referrerpolicy="no-referrer" style="width:100%; height:100%; object-fit:cover; display:block;" />`
-                          : `<span style="font-size:6pt; font-weight:bold; color:#64748b;">FOTO</span>`
-                        }
-                      </div>
-                    </div>
-
-                    <table style="flex:1; font-size:8.2pt; line-height:1.25; border-collapse:collapse; table-layout:fixed;">
-                      <tr>
-                        <td style="width:76px;">Nama Siswa</td><td style="width:8px;">:</td><td style="font-weight:bold; overflow-wrap:anywhere;">${escapeHtml(st.nama)}</td>
-                        <td style="width:72px;">No. Peserta</td><td style="width:8px;">:</td><td style="font-weight:bold; overflow-wrap:anywhere;">${escapeHtml(st.noPeserta)}</td>
-                      </tr>
-                      <tr>
-                        <td>NISN</td><td>:</td><td>${escapeHtml(st.nisn)}</td>
-                        <td>Kelas / Ruang</td><td>:</td><td style="font-weight:bold;">${escapeHtml(st.kelas)} / ${escapeHtml(st.ruang)}</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <table class="doc-table" style="font-size:${tableFont};">
-                    <thead>
-                      <tr>
-                        <th style="width:24px;">No</th>
-                        <th style="width:128px;">Hari / Tanggal</th>
-                        <th>Mata Pelajaran</th>
-                        <th style="width:44px;">Jam</th>
-                        ${parafHeaders}
-                      </tr>
-                    </thead>
-                    <tbody>${rowsHtml}</tbody>
-                  </table>
+                ${buildCardKopHTML(true, true)}
+                <div style="text-align:center; font-weight:bold; font-size:9.5pt; text-decoration:underline; margin-top:4px;">
+                  JURNAL AGENDA &amp; KARTU KENDALI PESERTA UJIAN
                 </div>
+                <div style="text-align:center; font-size:8pt; font-weight:bold; margin-bottom:5px;">
+                  ${escapeHtml(s.namaUjian)} (${escapeHtml(s.tahunAjaran)})
+                </div>
+
+                <table style="width:100%; font-size:8.2pt; margin-bottom:5px; border-collapse:collapse;">
+                  <tr>
+                    <td style="width:92px;">Nama Peserta</td><td style="width:8px;">:</td><td><strong>${escapeHtml(st.nama)}</strong></td>
+                    <td style="width:76px;">No. Peserta</td><td style="width:8px;">:</td><td><strong>${escapeHtml(st.noPeserta)}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Kelas / Rombel</td><td>:</td><td>${escapeHtml(st.kelas)}</td>
+                    <td>Ruang Ujian</td><td>:</td><td><strong>${escapeHtml(st.ruang)}</strong></td>
+                  </tr>
+                </table>
+
+                <table style="width:100%; border-collapse:collapse; font-size:7.8pt;">
+                  <thead>
+                    <tr style="background:#f1f5f9; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+                      <th style="border:1px solid #000; padding:3px; width:24px; text-align:center;">No</th>
+                      <th style="border:1px solid #000; padding:3px; width:126px; text-align:center;">Hari / Tanggal</th>
+                      <th style="border:1px solid #000; padding:3px; width:74px; text-align:center;">Pukul</th>
+                      <th style="border:1px solid #000; padding:3px; text-align:center;">Mata Pelajaran</th>
+                      ${parafHeaders}
+                    </tr>
+                  </thead>
+                  <tbody>${rowsHtml}</tbody>
+                </table>
               </div>
 
-              <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:8pt; padding:0 10px 5px 10px; overflow:visible;">
-                <div style="font-style:italic; font-size:6.8pt; max-width:56%;">
-                  * Kartu ini wajib dibawa setiap hari ujian dan diparaf sesuai ketentuan ruang ujian.
+              <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:7.5pt; margin-top:4px; overflow:visible;">
+                <div style="font-style:italic; max-width:340px;">
+                  * Wajib dibawa setiap hari ujian dan diparaf sesuai ketentuan ruang ujian.
                 </div>
-                ${buildTtdWithDigitalStampHTML('compact', false)}
+                ${showKepsekOnJurnal ? buildTtdWithDigitalStampHTML('compact', false) : ''}
               </div>
             </div>
           `;
@@ -3767,42 +4150,80 @@ function buildJsonResponse(obj) {
 
     /* =====================================================================
        MODUL 14: SURAT KETERANGAN / IJIN MENGIKUTI UJIAN
+       (NOMOR SURAT FORMAT LANGSUNG + USER/PASS CBT JIKA DIAKTIFKAN)
        ===================================================================== */
+    function updateSuratNomorField(idx, val) {
+      appState['suratNomor' + idx] = val;
+      saveLocalState();
+    }
+
     function renderSuratIjin() {
       const selId = document.getElementById('selectSiswaSurat').value;
       const st = appState.students.find(x => x.id === selId) || null;
       const s = appState.settings;
+      const showCbt = Boolean(document.getElementById('chkShowCbtSurat')?.checked || appState.showCbt);
 
       const field = (val, width = '240px') => val
         ? `<strong style="overflow-wrap:anywhere;">${escapeHtml(val)}</strong>`
         : `<span class="fill-blank" style="min-width:${width};"></span>`;
 
+      const cbtIdentityRow = showCbt
+        ? `
+          <tr>
+            <td style="padding:3px 0;">Username / Password</td>
+            <td>:</td>
+            <td>${st
+              ? `<strong style="font-family:monospace; font-size:10pt;">${escapeHtml(st.username || '-')} / ${escapeHtml(st.password || '-')}</strong>`
+              : `<span class="fill-blank" style="min-width:240px;"></span>`
+            }</td>
+          </tr>
+        `
+        : '';
+
       document.getElementById('preview-surat_ijin').innerHTML = `
         <div class="a4-page" style="font-size:11pt; line-height:1.5;">
           ${buildFullKopHTML()}
-          <div style="text-align:center; margin:12px 0 16px 0;">
-            <div style="font-size:12.5pt; font-weight:bold; text-decoration:underline;">SURAT KETERANGAN / IJIN MENGIKUTI UJIAN</div>
-            <div style="font-size:10pt;">Nomor : 421.3 / ........... / PAN-UJIAN / 2026</div>
+
+          <div style="text-align:center; margin:12px 0 18px 0;">
+            <div style="font-size:13pt; font-weight:bold; text-decoration:underline;">SURAT KETERANGAN / IJIN MENGIKUTI UJIAN</div>
+            <div style="font-size:10pt; margin-top:3px;">
+              Nomor :
+              <input type="text" value="${escapeHtml(appState.suratNomor1 || '')}" oninput="updateSuratNomorField(1, this.value)" placeholder="........." class="inline-nomor-input" style="width:65px;" />/<input type="text" value="${escapeHtml(appState.suratNomor2 || '')}" oninput="updateSuratNomorField(2, this.value)" placeholder="..........." class="inline-nomor-input" style="width:80px;" />/PAN-UJIAN/<input type="text" value="${escapeHtml(appState.suratNomor3 || '')}" oninput="updateSuratNomorField(3, this.value)" placeholder="............" class="inline-nomor-input" style="width:85px;" />/<input type="text" value="${escapeHtml(appState.suratNomor4 || '')}" oninput="updateSuratNomorField(4, this.value)" placeholder="............" class="inline-nomor-input" style="width:85px;" />
+            </div>
           </div>
 
-          <p style="margin-bottom:10px;">Yang bertanda tangan di bawah ini, Panitia Pelaksana <strong>${escapeHtml(s.namaUjian)}</strong> ${escapeHtml(s.sekolah)} Tahun Ajaran ${escapeHtml(s.tahunAjaran)}, menerangkan bahwa:</p>
+          <p style="text-align:justify; margin-bottom:12px;">
+            Yang bertanda tangan di bawah ini Ketua Panitia Penyelenggara <strong>${escapeHtml(s.namaUjian)}</strong>
+            <strong>${escapeHtml(s.tahunAjaran)}</strong> pada <strong>${escapeHtml(s.sekolah)}</strong>, menerangkan dan memberikan ijin kepada peserta ujian:
+          </p>
 
-          <table style="width:100%; margin:10px 0 14px 16px; border-collapse:collapse;">
-            <tr><td style="width:160px; padding:3px 0;">Nama Peserta</td><td style="width:12px;">:</td><td>${field(st?.nama)}</td></tr>
+          <table style="width:100%; margin-left:18px; margin-bottom:14px; border-collapse:collapse;">
+            <tr><td style="width:170px; padding:3px 0;">Nama Peserta</td><td style="width:14px;">:</td><td>${field(st?.nama)}</td></tr>
             <tr><td style="padding:3px 0;">Nomor Peserta</td><td>:</td><td>${field(st?.noPeserta)}</td></tr>
             <tr><td style="padding:3px 0;">NISN</td><td>:</td><td>${field(st?.nisn)}</td></tr>
             <tr><td style="padding:3px 0;">Kelas</td><td>:</td><td>${field(st?.kelas)}</td></tr>
             <tr><td style="padding:3px 0;">Ruang Ujian</td><td>:</td><td>${field(st?.ruang)}</td></tr>
-            <tr><td style="padding:3px 0;">Alasan / Keperluan</td><td>:</td><td><span class="fill-blank" style="min-width:260px;"></span></td></tr>
+            ${cbtIdentityRow}
+            <tr><td style="padding:3px 0;">Alasan / Keperluan</td><td>:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
           </table>
 
-          <p style="text-align:justify; margin-bottom:20px;">
-            Adalah benar peserta didik ${escapeHtml(s.sekolah)} yang terdaftar sebagai peserta ujian dan diberikan <strong>IJIN</strong> untuk mengikuti ujian pada hari ini tanggal <span class="fill-blank" style="min-width:130px;"></span>. Demikian surat keterangan ini dibuat untuk dipergunakan sebagaimana mestinya.
+          <p style="text-align:justify; margin-bottom:12px;">
+            Untuk diperkenankan <strong>mengikuti ujian / masuk ke ruang ujian</strong> pada:
           </p>
 
-          <table style="width:100%; border-collapse:collapse; margin-top:16px;">
+          <table style="width:100%; margin-left:18px; margin-bottom:16px; border-collapse:collapse;">
+            <tr><td style="width:170px; padding:3px 0;">Hari / Tanggal</td><td style="width:14px;">:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
+            <tr><td style="padding:3px 0;">Mata Pelajaran</td><td>:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
+            <tr><td style="padding:3px 0;">Jam / Pukul</td><td>:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
+          </table>
+
+          <p style="text-align:justify; margin-bottom:22px;">
+            Demikian surat keterangan / ijin ini dibuat untuk diserahkan kepada Pengawas Ruang Ujian dan dipergunakan sebagaimana mestinya.
+          </p>
+
+          <table style="width:100%; text-align:center; border-collapse:collapse; margin-top:16px;">
             <tr>
-              <td style="width:52%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+              <td style="width:52%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false, 'surat_ijin')}</td>
               <td style="width:48%; vertical-align:top;">
                 <div>${escapeHtml(s.titimangsa)}</div>
                 <div>Ketua Panitia Ujian,</div>
@@ -3817,102 +4238,92 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 15 (BARU): REKAPITULASI KETIDAKHADIRAN & UJIAN SUSULAN
+       MODUL 15: REKAPITULASI KETIDAKHADIRAN & UJIAN SUSULAN
        ===================================================================== */
-    function addSusulanRow(isBlank = false) {
-      const firstSt = !isBlank && appState.students.length > 0 ? appState.students[0] : null;
-      const firstMapel = getUniqueSubjectsFromSchedule()[0] || '';
+    function renderSusulanEditor() {
+      const container = document.getElementById('susulanEditorList');
+      if (!container) return;
+      const records = appState.susulanRecords || [];
+      if (records.length === 0) {
+        container.innerHTML = `<div class="text-xs text-slate-400 italic py-2">Belum ada baris peserta absen/susulan ditambahkan. Dokumen di bawah akan menampilkan tabel siap isi manual (12 baris), atau klik tombol di atas untuk mengisi daftar siswa.</div>`;
+        return;
+      }
+
+      const studentOpts = `<option value="">-- Ketik Manual / Pilih Siswa --</option>` +
+        appState.students.map(st => `<option value="${st.id}">${escapeHtml(st.noPeserta)} - ${escapeHtml(st.nama)} (${escapeHtml(st.kelas)})</option>`).join('');
+
+      container.innerHTML = records.map((rec, idx) => `
+        <div class="flex flex-wrap items-center gap-1.5 bg-slate-950/90 border border-slate-800 rounded-xl p-2 text-xs">
+          <span class="text-slate-400 font-bold w-5">${idx + 1}.</span>
+          <select onchange="pickStudentForSusulan(${idx}, this.value)" class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs max-w-[190px]">
+            ${studentOpts}
+          </select>
+          <input value="${escapeHtml(rec.noPeserta || '')}" placeholder="No. Peserta" onchange="editSusulanRec(${idx}, 'noPeserta', this.value)" class="w-24 px-2 py-1 rounded bg-slate-900 border border-slate-700" />
+          <input value="${escapeHtml(rec.nama || '')}" placeholder="Nama Siswa" onchange="editSusulanRec(${idx}, 'nama', this.value)" class="w-40 px-2 py-1 rounded bg-slate-900 border border-slate-700 font-semibold" />
+          <input value="${escapeHtml(rec.kelas || '')}" placeholder="Kelas" onchange="editSusulanRec(${idx}, 'kelas', this.value)" class="w-16 px-2 py-1 rounded bg-slate-900 border border-slate-700" />
+          <input value="${escapeHtml(rec.mapel || '')}" placeholder="Mapel Absen" onchange="editSusulanRec(${idx}, 'mapel', this.value)" class="w-32 px-2 py-1 rounded bg-slate-900 border border-slate-700" />
+          <input value="${escapeHtml(rec.alasan || '')}" placeholder="Alasan (S/I/A)" onchange="editSusulanRec(${idx}, 'alasan', this.value)" class="w-28 px-2 py-1 rounded bg-slate-900 border border-slate-700" />
+          <input value="${escapeHtml(rec.jadwalSusulan || '')}" placeholder="Jadwal Susulan" onchange="editSusulanRec(${idx}, 'jadwalSusulan', this.value)" class="w-36 px-2 py-1 rounded bg-slate-900 border border-slate-700" />
+          <button onclick="deleteSusulanRec(${idx})" class="p-1 text-rose-400 hover:bg-rose-950 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function addSusulanRow(isBlank) {
+      if (!Array.isArray(appState.susulanRecords)) appState.susulanRecords = [];
+      const firstSt = !isBlank && appState.students[0] ? appState.students[0] : null;
       appState.susulanRecords.push({
-        id: 'SUS' + Date.now() + '_' + Math.floor(Math.random() * 100),
-        studentId: firstSt ? firstSt.id : '',
         noPeserta: firstSt ? firstSt.noPeserta : '',
         nama: firstSt ? firstSt.nama : '',
         kelas: firstSt ? firstSt.kelas : '',
-        ruang: firstSt ? firstSt.ruang : '',
-        mapel: firstMapel,
-        alasan: 'Sakit',
+        mapel: getUniqueSubjectsFromSchedule()[0] || '',
+        alasan: firstSt ? 'Sakit' : '',
         jadwalSusulan: ''
       });
       saveLocalState();
       renderRekapSusulan();
     }
 
-    function selectStudentForSusulan(idx, stId) {
-      const rec = appState.susulanRecords[idx];
-      if (!rec) return;
-      rec.studentId = stId;
+    function pickStudentForSusulan(idx, stId) {
       const st = appState.students.find(x => x.id === stId);
-      if (st) {
-        rec.noPeserta = st.noPeserta;
-        rec.nama = st.nama;
-        rec.kelas = st.kelas;
-        rec.ruang = st.ruang;
-      }
-      saveLocalState();
-      renderRekapSusulan();
-    }
-
-    function editSusulanField(idx, field, val) {
-      if (appState.susulanRecords[idx]) {
-        appState.susulanRecords[idx][field] = val;
+      if (st && appState.susulanRecords[idx]) {
+        appState.susulanRecords[idx].noPeserta = st.noPeserta;
+        appState.susulanRecords[idx].nama = st.nama;
+        appState.susulanRecords[idx].kelas = st.kelas;
         saveLocalState();
-        renderRekapSusulanDocument();
+        renderRekapSusulan();
       }
     }
 
-    function deleteSusulanRow(idx) {
+    function editSusulanRec(idx, field, val) {
+      if (appState.susulanRecords[idx]) {
+        appState.susulanRecords[idx][field] = val.trim();
+        saveLocalState();
+        renderRekapSusulan();
+      }
+    }
+
+    function deleteSusulanRec(idx) {
       appState.susulanRecords.splice(idx, 1);
       saveLocalState();
       renderRekapSusulan();
     }
 
     function renderRekapSusulan() {
-      const editorBox = document.getElementById('susulanEditorList');
-      const subjects = getUniqueSubjectsFromSchedule();
-
-      if (appState.susulanRecords.length === 0) {
-        editorBox.innerHTML = `<div class="text-xs text-slate-400 italic py-2">Belum ada siswa tercatat absen. Pratinjau di bawah menampilkan 10 baris blanko kosong untuk diisi manual, atau klik <strong>+ Tambah Siswa Absen</strong> di atas.</div>`;
-      } else {
-        editorBox.innerHTML = appState.susulanRecords.map((rec, idx) => `
-          <div class="flex flex-wrap items-center gap-1.5 bg-slate-950/80 border border-slate-800 rounded-xl p-2 text-xs">
-            <span class="text-slate-400 font-bold w-5">${idx + 1}.</span>
-            <select onchange="selectStudentForSusulan(${idx}, this.value)" class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs max-w-[180px]">
-              <option value="">-- Input Manual --</option>
-              ${appState.students.map(st => `<option value="${st.id}" ${rec.studentId === st.id ? 'selected' : ''}>${escapeHtml(st.noPeserta)} - ${escapeHtml(st.nama)}</option>`).join('')}
-            </select>
-            <input value="${escapeHtml(rec.nama)}" placeholder="Nama Siswa" onchange="editSusulanField(${idx}, 'nama', this.value)" class="w-36 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs font-semibold" />
-            <input value="${escapeHtml(rec.kelas)}" placeholder="Kelas" onchange="editSusulanField(${idx}, 'kelas', this.value)" class="w-16 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs" />
-            <input list="mapelListSusulan" value="${escapeHtml(rec.mapel)}" placeholder="Mata Pelajaran" onchange="editSusulanField(${idx}, 'mapel', this.value)" class="w-36 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs" />
-            <select onchange="editSusulanField(${idx}, 'alasan', this.value)" class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs text-amber-300">
-              <option value="Sakit" ${rec.alasan === 'Sakit' ? 'selected' : ''}>Sakit (S)</option>
-              <option value="Izin" ${rec.alasan === 'Izin' ? 'selected' : ''}>Izin (I)</option>
-              <option value="Alpa" ${rec.alasan === 'Alpa' ? 'selected' : ''}>Tanpa Ket. (A)</option>
-              <option value="Dispensasi" ${rec.alasan === 'Dispensasi' ? 'selected' : ''}>Dispensasi</option>
-            </select>
-            <input value="${escapeHtml(rec.jadwalSusulan)}" placeholder="Jadwal Susulan (cth: Senin, 30 Nov)" onchange="editSusulanField(${idx}, 'jadwalSusulan', this.value)" class="w-44 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs" />
-            <button onclick="deleteSusulanRow(${idx})" class="p-1 text-rose-400 hover:bg-rose-950 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-          </div>
-        `).join('') + `<datalist id="mapelListSusulan">${subjects.map(m => `<option value="${escapeHtml(m)}">`).join('')}</datalist>`;
-      }
-
-      lucide.createIcons();
-      renderRekapSusulanDocument();
-    }
-
-    function renderRekapSusulanDocument() {
+      renderSusulanEditor();
       const s = appState.settings;
-      const records = appState.susulanRecords;
-      const displayRows = records.length > 0
+      const records = appState.susulanRecords || [];
+      const rowsData = records.length > 0
         ? records
-        : Array.from({ length: 10 }, () => ({ noPeserta: '', nama: '', kelas: '', ruang: '', mapel: '', alasan: '', jadwalSusulan: '' }));
+        : Array.from({ length: 12 }, () => ({ noPeserta: '', nama: '', kelas: '', mapel: '', alasan: '', jadwalSusulan: '' }));
 
-      const rowsHtml = displayRows.map((r, idx) => `
+      const rowsHtml = rowsData.map((r, idx) => `
         <tr style="height:24px;">
           <td style="text-align:center;">${idx + 1}</td>
           <td style="text-align:center; font-weight:bold;">${escapeHtml(r.noPeserta)}</td>
-          <td>${escapeHtml(r.nama)}</td>
+          <td style="font-weight:600;">${escapeHtml(r.nama)}</td>
           <td style="text-align:center;">${escapeHtml(r.kelas)}</td>
-          <td style="text-align:center;">${escapeHtml(r.ruang)}</td>
           <td>${escapeHtml(r.mapel)}</td>
           <td style="text-align:center;">${escapeHtml(r.alasan)}</td>
           <td>${escapeHtml(r.jadwalSusulan)}</td>
@@ -3924,30 +4335,29 @@ function buildJsonResponse(obj) {
         <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
           ${buildFullKopHTML()}
           <div style="text-align:center; margin-bottom:10px;">
-            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">REKAPITULASI KETIDAKHADIRAN &amp; JADWAL UJIAN SUSULAN</div>
+            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">REKAPITULASI KETIDAKHADIRAN PESERTA &amp; JADWAL UJIAN SUSULAN</div>
             <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
           </div>
 
           <table class="doc-table" style="font-size:8.6pt; margin-bottom:14px;">
             <thead>
               <tr>
-                <th style="width:26px;">No</th>
-                <th style="width:74px;">No. Peserta</th>
+                <th style="width:28px;">No</th>
+                <th style="width:76px;">No. Peserta</th>
                 <th>Nama Peserta</th>
                 <th style="width:46px;">Kelas</th>
-                <th style="width:62px;">Ruang</th>
-                <th style="width:110px;">Mata Pelajaran</th>
-                <th style="width:56px;">Ket.</th>
-                <th style="width:105px;">Jadwal Susulan</th>
-                <th style="width:54px;">Paraf</th>
+                <th style="width:120px;">Mata Pelajaran</th>
+                <th style="width:66px;">Alasan (S/I/A)</th>
+                <th style="width:125px;">Jadwal Susulan</th>
+                <th style="width:65px;">Paraf</th>
               </tr>
             </thead>
             <tbody>${rowsHtml}</tbody>
           </table>
 
-          <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:12px; break-inside:avoid;">
+          <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
             <tr>
-              <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+              <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false, 'rekap_susulan')}</td>
               <td style="width:45%; vertical-align:top;">
                 <div>${escapeHtml(s.titimangsa)}</div>
                 <div>Ketua Panitia Ujian,</div>
@@ -3962,7 +4372,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 16 (BARU): BERITA ACARA UJIAN SUSULAN
+       MODUL 16: BERITA ACARA UJIAN SUSULAN
        ===================================================================== */
     function renderBaSusulan() {
       const qty = Math.max(1, parseInt(document.getElementById('qtyBaSusulan')?.value) || 1);
@@ -3970,7 +4380,7 @@ function buildJsonResponse(obj) {
       const s = appState.settings;
       let html = '';
 
-      const kepsekCellHtml = buildFormalKepsekBlockHTML('Mengetahui,', false);
+      const kepsekCellHtml = buildFormalKepsekBlockHTML('Mengetahui,', false, 'ba_susulan');
 
       const ttdSection = opsiPengawas === '1'
         ? `
@@ -3992,13 +4402,13 @@ function buildJsonResponse(obj) {
             <tr>
               <td style="width:50%; vertical-align:top;">
                 <div>Pengawas Ujian Susulan I,</div>
-                <div style="height:42px;"></div>
+                <div style="height:44px;"></div>
                 <div>( .................................................... )</div>
                 <div>NIP. .............................................</div>
               </td>
               <td style="width:50%; vertical-align:top;">
                 <div>Pengawas Ujian Susulan II,</div>
-                <div style="height:42px;"></div>
+                <div style="height:44px;"></div>
                 <div>( .................................................... )</div>
                 <div>NIP. .............................................</div>
               </td>
@@ -4009,7 +4419,7 @@ function buildJsonResponse(obj) {
           </table>
         `;
 
-      const daftarPesertaRows = Array.from({ length: 6 }, (_, idx) => `
+      const emptyRows = Array.from({ length: 6 }, (_, idx) => `
         <tr style="height:22px;">
           <td style="text-align:center;">${idx + 1}</td>
           <td></td>
@@ -4026,53 +4436,56 @@ function buildJsonResponse(obj) {
             ${buildFullKopHTML()}
             <div style="text-align:center; margin-bottom:8px;">
               <div style="font-size:12pt; font-weight:bold; text-decoration:underline;">BERITA ACARA PELAKSANAAN UJIAN SUSULAN</div>
-              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
+              <div style="font-size:10.5pt; font-weight:bold;">${escapeHtml(s.namaUjian)}</div>
+              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.tahunAjaran)}</div>
             </div>
 
-            <p style="text-align:justify; margin-bottom:6px;">
+            <p style="text-align:justify; margin-bottom:8px;">
               Pada hari ini <span class="fill-blank" style="min-width:85px;"></span> tanggal <span class="fill-blank" style="min-width:40px;"></span>
               bulan <span class="fill-blank" style="min-width:85px;"></span> tahun <span class="fill-blank" style="min-width:55px;"></span>,
-              pukul <span class="fill-blank" style="min-width:75px;"></span> s.d. <span class="fill-blank" style="min-width:75px;"></span> WIB,
-              bertempat di ruang <span class="fill-blank" style="min-width:120px;"></span> <strong>${escapeHtml(s.sekolah)}</strong> telah dilaksanakan <strong>Ujian Susulan</strong> bagi peserta didik yang berhalangan hadir pada jadwal utama dengan rincian sebagai berikut:
+              pukul <span class="fill-blank" style="min-width:65px;"></span> s.d. <span class="fill-blank" style="min-width:65px;"></span> WIB bertempat di
+              Ruang <span class="fill-blank" style="min-width:110px;"></span> <strong>${escapeHtml(s.sekolah)}</strong> telah dilaksanakan <strong>Ujian Susulan</strong> dengan rincian peserta sebagai berikut:
             </p>
 
-            <table class="doc-table" style="font-size:8.6pt; margin-bottom:8px;">
+            <table class="doc-table" style="font-size:8.8pt; margin-bottom:10px;">
               <thead>
                 <tr>
-                  <th style="width:26px;">No</th>
-                  <th style="width:76px;">No. Peserta</th>
-                  <th>Nama Peserta Susulan</th>
+                  <th style="width:28px;">No</th>
+                  <th style="width:82px;">No. Peserta</th>
+                  <th>Nama Peserta</th>
                   <th style="width:48px;">Kelas</th>
-                  <th style="width:125px;">Mata Pelajaran</th>
-                  <th style="width:74px;">Tanda Tangan</th>
+                  <th style="width:140px;">Mata Pelajaran Susulan</th>
+                  <th style="width:72px;">Paraf</th>
                 </tr>
               </thead>
-              <tbody>${daftarPesertaRows}</tbody>
+              <tbody>${emptyRows}</tbody>
             </table>
 
             <div style="margin-bottom:3px; font-weight:bold; font-size:9.5pt;">Catatan Selama Ujian Susulan Berlangsung:</div>
-            <div style="border:1px solid #000; padding:4px 8px; min-height:44px; margin-bottom:8px;">
-              <div style="border-bottom:1px dotted #94a3b8; height:16px;"></div>
-              <div style="border-bottom:1px dotted #94a3b8; height:16px;"></div>
+            <div style="border:1px solid #000; padding:5px 8px; min-height:46px; margin-bottom:8px;">
+              <div style="border-bottom:1px dotted #64748b; height:16px;"></div>
+              <div style="border-bottom:1px dotted #64748b; height:16px;"></div>
             </div>
 
-            <p style="margin-bottom:6px; font-size:9.5pt;">Demikian berita acara ujian susulan ini dibuat dengan sesungguhnya untuk dapat dipergunakan sebagaimana mestinya.</p>
+            <p style="text-align:justify; margin-bottom:8px; font-size:9.8pt;">
+              Demikian Berita Acara Ujian Susulan ini dibuat dengan sesungguhnya untuk dipergunakan sebagaimana mestinya.
+            </p>
 
             ${ttdSection}
           </div>
         `;
       }
-
       document.getElementById('preview-ba_susulan').innerHTML = html;
     }
 
     /* =====================================================================
-       MODUL 17 (BARU): REKAPITULASI KEHADIRAN PENGAWAS (TANPA UANG TRANSPORT)
+       MODUL 17: REKAPITULASI KEHADIRAN PENGAWAS
        ===================================================================== */
     function renderRekapPengawas() {
       const mode = document.getElementById('modeRekapPengawas')?.value || 'otomatis';
       const s = appState.settings;
       const days = s.scheduleDays || [];
+
       const pengawasList = appState.staff
         .filter(p => p.peran !== 'Panitia')
         .map(p => normalizeStaffItem(p));
@@ -4083,18 +4496,15 @@ function buildJsonResponse(obj) {
         const rows = pengawasList.length > 0
           ? pengawasList.map((p, idx) => {
               const slots = p.jadwalSlots || [];
-              const rincianJadwal = slots.length > 0
-                ? slots.map(sl => `${sl.hariTanggal || '-'} (${sl.ruang || '-'} / ${sl.sesiJam || '-'})`).join('; ')
-                : '-';
-              const unikHari = new Set(slots.map(sl => sl.hariTanggal).filter(Boolean)).size;
+              const rincian = slots.map(sl => `${sl.hariTanggal || '-'} (${sl.ruang || '-'}, ${sl.sesiJam || '-'})`).join('; ');
               return `
                 <tr>
                   <td style="text-align:center;">${idx + 1}</td>
                   <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
                   <td>${escapeHtml(p.nip)}</td>
-                  <td style="font-size:8pt;">${escapeHtml(rincianJadwal)}</td>
-                  <td style="text-align:center; font-weight:bold;">${slots.length} Sesi</td>
-                  <td style="text-align:center; font-weight:bold;">${unikHari} Hari</td>
+                  <td style="font-size:8pt;">${escapeHtml(rincian || '-')}</td>
+                  <td style="text-align:center; font-weight:bold;">${slots.length}</td>
+                  <td style="text-align:center;">........</td>
                   <td></td>
                 </tr>
               `;
@@ -4108,48 +4518,42 @@ function buildJsonResponse(obj) {
                 <th style="width:28px;">No</th>
                 <th style="width:155px;">Nama Pengawas &amp; Gelar</th>
                 <th style="width:115px;">NIP / NUPTK</th>
-                <th>Rincian Hari, Ruang &amp; Sesi Mengawas</th>
-                <th style="width:62px;">Jml Sesi</th>
-                <th style="width:62px;">Jml Hari</th>
-                <th style="width:74px;">Paraf</th>
+                <th>Rincian Jadwal &amp; Ruang Tugas</th>
+                <th style="width:58px;">Jadwal Tugas</th>
+                <th style="width:58px;">Total Hadir</th>
+                <th style="width:76px;">Paraf</th>
               </tr>
             </thead>
             <tbody>${rows}</tbody>
           </table>
         `;
       } else {
+        const dayHeaders = days.map(d => `<th style="width:36px; font-size:7.4pt;">${escapeHtml(d.label)}</th>`).join('');
         const rows = pengawasList.length > 0
-          ? pengawasList.map((p, idx) => {
-              const slots = p.jadwalSlots || [];
-              const dayChecks = days.map(d => {
-                const targetLabel = (d.tanggal || d.label || '').toLowerCase();
-                const matched = slots.filter(sl => String(sl.hariTanggal || '').toLowerCase() === targetLabel);
-                return `<td style="text-align:center; font-size:7.6pt; font-weight:bold;">${matched.length > 0 ? matched.map(m => m.ruang).join(', ') : ''}</td>`;
-              }).join('');
-              return `
-                <tr>
-                  <td style="text-align:center;">${idx + 1}</td>
-                  <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
-                  <td style="font-size:8pt;">${escapeHtml(p.nip)}</td>
-                  ${dayChecks}
-                  <td style="text-align:center; font-weight:bold;">${slots.length}</td>
-                  <td></td>
-                </tr>
-              `;
-            }).join('')
+          ? pengawasList.map((p, idx) => `
+              <tr style="height:24px;">
+                <td style="text-align:center;">${idx + 1}</td>
+                <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
+                <td>${escapeHtml(p.nip)}</td>
+                ${days.map(() => `<td></td>`).join('')}
+                <td style="text-align:center;">......</td>
+                <td></td>
+              </tr>
+            `).join('')
           : `<tr><td colspan="${days.length + 5}" style="text-align:center; font-style:italic;">Belum ada data pengawas ruang.</td></tr>`;
 
         tableHtml = `
-          <table class="doc-table" style="font-size:8.2pt; margin-bottom:14px;">
+          <table class="doc-table" style="font-size:8.4pt; margin-bottom:14px;">
             <thead>
               <tr>
-                <th style="width:26px;">No</th>
-                <th>Nama Pengawas &amp; Gelar</th>
-                <th style="width:110px;">NIP / NUPTK</th>
-                ${days.map(d => `<th style="width:58px; font-size:7.4pt;">${escapeHtml(d.label)}</th>`).join('')}
-                <th style="width:44px;">Total</th>
-                <th style="width:62px;">Paraf</th>
+                <th rowspan="2" style="width:28px;">No</th>
+                <th rowspan="2">Nama Pengawas &amp; Gelar</th>
+                <th rowspan="2" style="width:115px;">NIP / NUPTK</th>
+                <th colspan="${days.length}">Kehadiran Pengawas per Hari Ujian</th>
+                <th rowspan="2" style="width:52px;">Jml Hadir</th>
+                <th rowspan="2" style="width:70px;">Paraf</th>
               </tr>
+              <tr>${dayHeaders}</tr>
             </thead>
             <tbody>${rows}</tbody>
           </table>
@@ -4166,9 +4570,9 @@ function buildJsonResponse(obj) {
 
           ${tableHtml}
 
-          <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:12px; break-inside:avoid;">
+          <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
             <tr>
-              <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+              <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false, 'rekap_pengawas')}</td>
               <td style="width:45%; vertical-align:top;">
                 <div>${escapeHtml(s.titimangsa)}</div>
                 <div>Ketua Panitia Ujian,</div>
@@ -4191,24 +4595,25 @@ function buildJsonResponse(obj) {
       const guruMapel = (document.getElementById('inpGuruMapelNilai')?.value || '').trim();
       const s = appState.settings;
 
-      const classesToRender = kelasFilter === 'ALL' ? getUniqueClasses() : [kelasFilter];
+      const classes = kelasFilter === 'ALL' ? getUniqueClasses() : [kelasFilter];
       const mapelDisplay = mapelVal === 'BLANK'
         ? '........................................................'
         : `<strong>${escapeHtml(mapelVal)}</strong>`;
 
       let pagesHtml = '';
 
-      classesToRender.forEach(kls => {
+      classes.forEach(kls => {
         const classStudents = appState.students.filter(st => (st.kelas || '7.1') === kls);
         const rows = classStudents.map((st, idx) => `
-          <tr>
+          <tr style="height:22px;">
             <td style="text-align:center;">${idx + 1}</td>
             <td style="text-align:center; font-weight:bold;">${escapeHtml(st.noPeserta)}</td>
             <td style="text-align:center;">${escapeHtml(st.nisn)}</td>
             <td>${escapeHtml(st.nama)}</td>
-            <td style="text-align:center;"></td>
-            <td style="text-align:center;"></td>
-            <td style="text-align:center;"></td>
+            <td style="text-align:center;">${escapeHtml(st.ruang)}</td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
           </tr>
         `).join('');
@@ -4217,40 +4622,41 @@ function buildJsonResponse(obj) {
           <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
             ${buildFullKopHTML()}
             <div style="text-align:center; margin-bottom:8px;">
-              <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">DAFTAR NILAI PESERTA UJIAN</div>
+              <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">DAFTAR NILAI HASIL UJIAN PESERTA DIDIK</div>
               <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
             </div>
 
-            <table style="width:100%; font-size:9pt; margin-bottom:8px; border-collapse:collapse;">
+            <table style="width:100%; font-size:9pt; margin-bottom:6px; border-collapse:collapse;">
               <tr>
                 <td style="width:115px;">Mata Pelajaran</td><td style="width:10px;">:</td><td>${mapelDisplay}</td>
-                <td style="width:100px;">Kelas / Rombel</td><td style="width:10px;">:</td><td><strong>${escapeHtml(kls)}</strong></td>
+                <td style="width:110px;">Kelas / Rombel</td><td style="width:10px;">:</td><td><strong>${escapeHtml(kls)}</strong></td>
               </tr>
               <tr>
                 <td>Guru Mapel</td><td>:</td><td>${guruMapel ? `<strong>${escapeHtml(guruMapel)}</strong>` : '........................................................'}</td>
-                <td>KKM / KKTP</td><td>:</td><td>................</td>
+                <td>Jumlah Peserta</td><td>:</td><td><strong>${classStudents.length} Siswa</strong></td>
               </tr>
             </table>
 
-            <table class="doc-table" style="font-size:8.6pt; margin-bottom:14px;">
+            <table class="doc-table" style="font-size:8.6pt; margin-bottom:12px;">
               <thead>
                 <tr>
                   <th style="width:28px;">No</th>
-                  <th style="width:78px;">No. Peserta</th>
-                  <th style="width:84px;">NISN</th>
-                  <th>Nama Lengkap Siswa</th>
-                  <th style="width:54px;">Nilai Utama</th>
-                  <th style="width:54px;">Nilai Susulan</th>
-                  <th style="width:54px;">Nilai Akhir</th>
-                  <th style="width:78px;">Keterangan</th>
+                  <th style="width:76px;">No. Peserta</th>
+                  <th style="width:82px;">NISN</th>
+                  <th>Nama Peserta</th>
+                  <th style="width:66px;">Ruang</th>
+                  <th style="width:52px;">Nilai PG</th>
+                  <th style="width:54px;">Uraian</th>
+                  <th style="width:58px;">Nilai Akhir</th>
+                  <th style="width:78px;">Predikat / Ket.</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>
             </table>
 
-            <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:12px; break-inside:avoid;">
+            <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
               <tr>
-                <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false)}</td>
+                <td style="width:55%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false, 'daftar_nilai')}</td>
                 <td style="width:45%; vertical-align:top;">
                   <div>${escapeHtml(s.titimangsa)}</div>
                   <div>Guru Mata Pelajaran,</div>
@@ -4276,6 +4682,7 @@ function buildJsonResponse(obj) {
       loadLocalState();
       populateAllForms();
       refreshAllDropdowns();
+      updateTtdControllerBarUI();
       saveLocalState();
       lucide.createIcons();
     });
