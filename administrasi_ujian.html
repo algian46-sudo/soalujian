@@ -4036,7 +4036,7 @@ function buildJsonResponse(obj) {
     }
 
     /* =====================================================================
-       MODUL 13: JURNAL AGENDA & KARTU KENDALI SISWA
+       MODUL 13: JURNAL AGENDA & KARTU KENDALI SISWA (FOTO DIKEMBALIKAN)
        ===================================================================== */
     function buildAgendaRowsFromSchedule() {
       const days = appState.settings.scheduleDays || [];
@@ -4047,7 +4047,8 @@ function buildJsonResponse(obj) {
           if (!row.istirahat && mapel && mapel !== '-' && mapel.toUpperCase() !== 'ISTIRAHAT') {
             agenda.push({
               hariTanggal: d.tanggal || d.label,
-              pukul: row.pukul || '',
+              jamKe: row.jam,
+              pukul: row.pukul,
               mapel
             });
           }
@@ -4059,175 +4060,164 @@ function buildJsonResponse(obj) {
     function renderJurnalSiswa() {
       const ruangFilter = document.getElementById('filterRuangJurnal').value || 'ALL';
       const opsiParaf = document.getElementById('opsiParafJurnal')?.value || 'keduanya';
-      const list = ruangFilter === 'ALL' ? appState.students : appState.students.filter(s => s.ruang === ruangFilter);
-      const agendaList = buildAgendaRowsFromSchedule();
+      const list = ruangFilter === 'ALL'
+        ? appState.students
+        : appState.students.filter(s => s.ruang === ruangFilter);
       const s = appState.settings;
-      const showKepsekOnJurnal = appState.ttdMode === 'kepsek';
+      const agenda = buildAgendaRowsFromSchedule();
+      const totalRows = Math.max(8, agenda.length);
+      const rowPad = totalRows > 10 ? '1px 3px' : '2px 4px';
+      const rowFont = totalRows > 10 ? '6.2pt' : '6.8pt';
 
       const parafHeaders = opsiParaf === 'keduanya'
-        ? `<th style="border:1px solid #000; padding:3px; width:76px; text-align:center;">Paraf Pengawas</th><th style="border:1px solid #000; padding:3px; width:72px; text-align:center;">Paraf Siswa</th>`
+        ? `<th style="border:1px solid #000; padding:2px 3px; width:46px;">Paraf<br>Pengawas</th><th style="border:1px solid #000; padding:2px 3px; width:46px;">Paraf<br>Siswa</th>`
         : opsiParaf === 'pengawas'
-          ? `<th style="border:1px solid #000; padding:3px; width:95px; text-align:center;">Paraf Pengawas</th>`
-          : `<th style="border:1px solid #000; padding:3px; width:95px; text-align:center;">Paraf Siswa</th>`;
-
-      const parafCells = opsiParaf === 'keduanya'
-        ? `<td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>`
-        : `<td style="border:1px solid #000;"></td>`;
-
-      const displayRows = agendaList.length > 0
-        ? agendaList
-        : Array.from({ length: 8 }, () => ({ hariTanggal: '', pukul: '', mapel: '' }));
+          ? `<th style="border:1px solid #000; padding:2px 3px; width:64px;">Paraf<br>Pengawas</th>`
+          : `<th style="border:1px solid #000; padding:2px 3px; width:64px;">Paraf<br>Siswa</th>`;
 
       let pagesHtml = '';
-
       for (let i = 0; i < list.length; i += 2) {
         const chunk = list.slice(i, i + 2);
         const cards = chunk.map(st => {
-          const rowsHtml = displayRows.map((ag, idx) => `
-            <tr style="height:20px;">
-              <td style="border:1px solid #000; text-align:center;">${idx + 1}</td>
-              <td style="border:1px solid #000; padding:1.5px 4px; font-size:7.6pt;">${escapeHtml(ag.hariTanggal)}</td>
-              <td style="border:1px solid #000; text-align:center; font-size:7.4pt;">${escapeHtml(ag.pukul)}</td>
-              <td style="border:1px solid #000; padding:1.5px 5px; font-size:7.8pt; font-weight:600;">${escapeHtml(ag.mapel)}</td>
-              ${parafCells}
-            </tr>
-          `).join('');
+          const fotoUrl = resolveDriveImage(st.foto);
+          let bodyRows = '';
+          for (let r = 0; r < totalRows; r++) {
+            const ag = agenda[r] || {};
+            const parafCells = opsiParaf === 'keduanya'
+              ? `<td style="border:1px solid #000; padding:${rowPad}; font-size:${rowFont};">${r + 1}.</td><td style="border:1px solid #000; padding:${rowPad}; font-size:${rowFont};">${r + 1}.</td>`
+              : `<td style="border:1px solid #000; padding:${rowPad}; font-size:${rowFont};">${r + 1}.</td>`;
+
+            bodyRows += `
+              <tr>
+                <td style="border:1px solid #000; text-align:center; padding:${rowPad}; font-size:${rowFont};">${r + 1}</td>
+                <td style="border:1px solid #000; padding:${rowPad}; font-size:${rowFont}; overflow-wrap:anywhere;">${escapeHtml(ag.hariTanggal || '')}</td>
+                <td style="border:1px solid #000; text-align:center; padding:${rowPad}; font-size:${rowFont};">${escapeHtml(ag.jamKe || '')}</td>
+                <td style="border:1px solid #000; padding:${rowPad}; font-size:${rowFont}; font-weight:bold; overflow-wrap:anywhere;">${escapeHtml(ag.mapel || '')}</td>
+                ${parafCells}
+              </tr>
+            `;
+          }
 
           return `
-            <div style="border:1.8px solid #000; padding:7px 9px; height:136mm; display:flex; flex-direction:column; justify-content:space-between; background:#fff; overflow:visible;">
-              <div>
-                ${buildCardKopHTML(true, true)}
-                <div style="text-align:center; font-weight:bold; font-size:9.5pt; text-decoration:underline; margin-top:4px;">
+            <div style="border:1.8px solid #000; border-radius:5px; padding:5px 8px; height:136mm; display:flex; flex-direction:column; justify-content:space-between; background:#fff; overflow:visible;">
+              <div style="min-width:0;">
+                ${buildCardKopHTML(false, true)}
+                <div style="text-align:center; font-weight:bold; font-size:8.2pt; text-decoration:underline; margin:2px 0;">
                   JURNAL AGENDA &amp; KARTU KENDALI PESERTA UJIAN
                 </div>
-                <div style="text-align:center; font-size:8pt; font-weight:bold; margin-bottom:5px;">
-                  ${escapeHtml(s.namaUjian)} (${escapeHtml(s.tahunAjaran)})
+
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:3px; min-width:0;">
+                  <table style="flex:1; font-size:7.4pt; font-weight:bold; border-collapse:collapse; table-layout:fixed;">
+                    <tr>
+                      <td style="width:76px;">Nama Peserta</td><td style="width:8px;">:</td><td style="overflow-wrap:anywhere;">${escapeHtml(st.nama)}</td>
+                      <td style="width:66px;">No. Peserta</td><td style="width:8px;">:</td><td style="overflow-wrap:anywhere;">${escapeHtml(st.noPeserta)}</td>
+                    </tr>
+                    <tr>
+                      <td>Kelas / Ruang</td><td>:</td><td style="overflow-wrap:anywhere;">${escapeHtml(st.kelas)} / ${escapeHtml(st.ruang)}</td>
+                      <td>Tahun Ajaran</td><td>:</td><td style="overflow-wrap:anywhere;">${escapeHtml(s.tahunAjaran)}</td>
+                    </tr>
+                  </table>
+
+                  <div style="width:42px; height:52px; border:1.5px solid #000; padding:1px; background:#fff; flex-shrink:0;">
+                    <div style="width:100%; height:100%; border:0.8px solid #000; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f8fafc;">
+                      ${fotoUrl
+                        ? `<img src="${fotoUrl}" referrerpolicy="no-referrer" style="width:100%; height:100%; object-fit:cover; display:block;" />`
+                        : `<span style="font-size:6pt; font-weight:bold; color:#64748b;">FOTO</span>`
+                      }
+                    </div>
+                  </div>
                 </div>
 
-                <table style="width:100%; font-size:8.2pt; margin-bottom:5px; border-collapse:collapse;">
-                  <tr>
-                    <td style="width:92px;">Nama Peserta</td><td style="width:8px;">:</td><td><strong>${escapeHtml(st.nama)}</strong></td>
-                    <td style="width:76px;">No. Peserta</td><td style="width:8px;">:</td><td><strong>${escapeHtml(st.noPeserta)}</strong></td>
-                  </tr>
-                  <tr>
-                    <td>Kelas / Rombel</td><td>:</td><td>${escapeHtml(st.kelas)}</td>
-                    <td>Ruang Ujian</td><td>:</td><td><strong>${escapeHtml(st.ruang)}</strong></td>
-                  </tr>
-                </table>
-
-                <table style="width:100%; border-collapse:collapse; font-size:7.8pt;">
+                <table style="width:100%; border-collapse:collapse; table-layout:fixed;">
                   <thead>
-                    <tr style="background:#f1f5f9; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
-                      <th style="border:1px solid #000; padding:3px; width:24px; text-align:center;">No</th>
-                      <th style="border:1px solid #000; padding:3px; width:126px; text-align:center;">Hari / Tanggal</th>
-                      <th style="border:1px solid #000; padding:3px; width:74px; text-align:center;">Pukul</th>
-                      <th style="border:1px solid #000; padding:3px; text-align:center;">Mata Pelajaran</th>
+                    <tr style="background:#f1f5f9; font-size:6.5pt; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+                      <th style="border:1px solid #000; padding:2px; width:24px;">No</th>
+                      <th style="border:1px solid #000; padding:2px;">Hari / Tanggal</th>
+                      <th style="border:1px solid #000; padding:2px; width:30px;">Jam</th>
+                      <th style="border:1px solid #000; padding:2px;">Mata Pelajaran</th>
                       ${parafHeaders}
                     </tr>
                   </thead>
-                  <tbody>${rowsHtml}</tbody>
+                  <tbody>${bodyRows}</tbody>
                 </table>
               </div>
 
-              <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:7.5pt; margin-top:4px; overflow:visible;">
-                <div style="font-style:italic; max-width:340px;">
-                  * Wajib dibawa setiap hari ujian dan diparaf sesuai ketentuan ruang ujian.
-                </div>
-                ${showKepsekOnJurnal ? buildTtdWithDigitalStampHTML('compact', false) : ''}
+              <div style="display:flex; justify-content:flex-end; margin-top:2px; overflow:visible;">
+                ${buildTtdWithDigitalStampHTML('compact')}
               </div>
             </div>
           `;
         }).join('');
 
-        pagesHtml += `
-          <div class="a4-page" style="display:flex; flex-direction:column; gap:4mm;">
-            ${cards}
-          </div>
-        `;
+        pagesHtml += `<div class="a4-page" style="display:flex; flex-direction:column; gap:3mm;">${cards}</div>`;
       }
       document.getElementById('preview-jurnal_siswa').innerHTML = pagesHtml;
     }
 
     /* =====================================================================
        MODUL 14: SURAT KETERANGAN / IJIN MENGIKUTI UJIAN
-       (NOMOR SURAT FORMAT LANGSUNG + USER/PASS CBT JIKA DIAKTIFKAN)
        ===================================================================== */
-    function updateSuratNomorField(idx, val) {
-      appState['suratNomor' + idx] = val;
-      saveLocalState();
-    }
-
     function renderSuratIjin() {
-      const selId = document.getElementById('selectSiswaSurat').value;
-      const st = appState.students.find(x => x.id === selId) || null;
-      const s = appState.settings;
+      const selectedId = document.getElementById('selectSiswaSurat').value || 'BLANK';
       const showCbt = Boolean(document.getElementById('chkShowCbtSurat')?.checked || appState.showCbt);
+      const s = appState.settings;
+      const st = selectedId === 'BLANK'
+        ? { nama: '', nisn: '', kelas: '', noPeserta: '', ruang: '', username: '', password: '' }
+        : (appState.students.find(x => x.id === selectedId) || {});
 
-      const field = (val, width = '240px') => val
-        ? `<strong style="overflow-wrap:anywhere;">${escapeHtml(val)}</strong>`
-        : `<span class="fill-blank" style="min-width:${width};"></span>`;
-
-      const cbtIdentityRow = showCbt
-        ? `
-          <tr>
-            <td style="padding:3px 0;">Username / Password</td>
-            <td>:</td>
-            <td>${st
-              ? `<strong style="font-family:monospace; font-size:10pt;">${escapeHtml(st.username || '-')} / ${escapeHtml(st.password || '-')}</strong>`
-              : `<span class="fill-blank" style="min-width:240px;"></span>`
-            }</td>
-          </tr>
-        `
-        : '';
+      const valOrBlank = (v, widthPx = 220) => v
+        ? `<strong>${escapeHtml(v)}</strong>`
+        : `<span class="fill-blank" style="min-width:${widthPx}px;"></span>`;
 
       document.getElementById('preview-surat_ijin').innerHTML = `
-        <div class="a4-page" style="font-size:11pt; line-height:1.5;">
+        <div class="a4-page" style="font-size:10.5pt; line-height:1.45;">
           ${buildFullKopHTML()}
-
-          <div style="text-align:center; margin:12px 0 18px 0;">
-            <div style="font-size:13pt; font-weight:bold; text-decoration:underline;">SURAT KETERANGAN / IJIN MENGIKUTI UJIAN</div>
-            <div style="font-size:10pt; margin-top:3px;">
+          <div style="text-align:center; margin-bottom:14px;">
+            <div style="font-size:12pt; font-weight:bold; text-decoration:underline;">SURAT KETERANGAN / IJIN MENGIKUTI UJIAN</div>
+            <div style="font-size:10pt;">
               Nomor :
-              <input type="text" value="${escapeHtml(appState.suratNomor1 || '')}" oninput="updateSuratNomorField(1, this.value)" placeholder="........." class="inline-nomor-input" style="width:65px;" />/<input type="text" value="${escapeHtml(appState.suratNomor2 || '')}" oninput="updateSuratNomorField(2, this.value)" placeholder="..........." class="inline-nomor-input" style="width:80px;" />/PAN-UJIAN/<input type="text" value="${escapeHtml(appState.suratNomor3 || '')}" oninput="updateSuratNomorField(3, this.value)" placeholder="............" class="inline-nomor-input" style="width:85px;" />/<input type="text" value="${escapeHtml(appState.suratNomor4 || '')}" oninput="updateSuratNomorField(4, this.value)" placeholder="............" class="inline-nomor-input" style="width:85px;" />
+              <input type="text" class="inline-nomor-input" style="width:65px;" value="${escapeHtml(appState.suratNomor1 || '')}" placeholder="......." onchange="appState.suratNomor1=this.value;saveLocalState();" />
+              /
+              <input type="text" class="inline-nomor-input" style="width:95px;" value="${escapeHtml(appState.suratNomor2 || '')}" placeholder="............" onchange="appState.suratNomor2=this.value;saveLocalState();" />
+              /
+              <input type="text" class="inline-nomor-input" style="width:55px;" value="${escapeHtml(appState.suratNomor3 || '')}" placeholder="......" onchange="appState.suratNomor3=this.value;saveLocalState();" />
+              /
+              <input type="text" class="inline-nomor-input" style="width:75px;" value="${escapeHtml(appState.suratNomor4 || '')}" placeholder=".........." onchange="appState.suratNomor4=this.value;saveLocalState();" />
             </div>
           </div>
 
-          <p style="text-align:justify; margin-bottom:12px;">
-            Yang bertanda tangan di bawah ini Ketua Panitia Penyelenggara <strong>${escapeHtml(s.namaUjian)}</strong>
-            <strong>${escapeHtml(s.tahunAjaran)}</strong> pada <strong>${escapeHtml(s.sekolah)}</strong>, menerangkan dan memberikan ijin kepada peserta ujian:
-          </p>
+          <p style="margin-bottom:8px;">Yang bertanda tangan di bawah ini, Panitia Penyelenggara <strong>${escapeHtml(s.namaUjian)}</strong> (${escapeHtml(s.tahunAjaran)}) pada <strong>${escapeHtml(s.sekolah)}</strong>, menerangkan bahwa:</p>
 
-          <table style="width:100%; margin-left:18px; margin-bottom:14px; border-collapse:collapse;">
-            <tr><td style="width:170px; padding:3px 0;">Nama Peserta</td><td style="width:14px;">:</td><td>${field(st?.nama)}</td></tr>
-            <tr><td style="padding:3px 0;">Nomor Peserta</td><td>:</td><td>${field(st?.noPeserta)}</td></tr>
-            <tr><td style="padding:3px 0;">NISN</td><td>:</td><td>${field(st?.nisn)}</td></tr>
-            <tr><td style="padding:3px 0;">Kelas</td><td>:</td><td>${field(st?.kelas)}</td></tr>
-            <tr><td style="padding:3px 0;">Ruang Ujian</td><td>:</td><td>${field(st?.ruang)}</td></tr>
-            ${cbtIdentityRow}
-            <tr><td style="padding:3px 0;">Alasan / Keperluan</td><td>:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
+          <table style="width:100%; margin-bottom:12px; border-collapse:collapse;">
+            <tr><td style="width:170px; padding:3px 0;">Nama Peserta</td><td style="width:12px;">:</td><td>${valOrBlank(st.nama, 260)}</td></tr>
+            <tr><td style="padding:3px 0;">NISN</td><td>:</td><td>${valOrBlank(st.nisn, 260)}</td></tr>
+            <tr><td style="padding:3px 0;">Kelas / Rombel</td><td>:</td><td>${valOrBlank(st.kelas, 260)}</td></tr>
+            <tr><td style="padding:3px 0;">Nomor Peserta</td><td>:</td><td>${valOrBlank(st.noPeserta, 260)}</td></tr>
+            <tr><td style="padding:3px 0;">Ruang Ujian</td><td>:</td><td>${valOrBlank(st.ruang, 260)}</td></tr>
+            ${showCbt ? `
+              <tr><td style="padding:3px 0;">Username / Password</td><td>:</td><td>${st.username || st.password ? `<strong>${escapeHtml(st.username)} / ${escapeHtml(st.password)}</strong>` : `<span class="fill-blank" style="min-width:260px;"></span>`}</td></tr>
+            ` : ''}
           </table>
 
-          <p style="text-align:justify; margin-bottom:12px;">
-            Untuk diperkenankan <strong>mengikuti ujian / masuk ke ruang ujian</strong> pada:
-          </p>
-
-          <table style="width:100%; margin-left:18px; margin-bottom:16px; border-collapse:collapse;">
-            <tr><td style="width:170px; padding:3px 0;">Hari / Tanggal</td><td style="width:14px;">:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
-            <tr><td style="padding:3px 0;">Mata Pelajaran</td><td>:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
-            <tr><td style="padding:3px 0;">Jam / Pukul</td><td>:</td><td><span class="fill-blank" style="min-width:240px;"></span></td></tr>
+          <p style="margin-bottom:8px;">Diizinkan / diberikan keterangan untuk mengikuti ujian pada:</p>
+          <table style="width:100%; margin-bottom:12px; border-collapse:collapse;">
+            <tr><td style="width:170px; padding:3px 0;">Hari / Tanggal</td><td style="width:12px;">:</td><td><span class="fill-blank" style="min-width:260px;"></span></td></tr>
+            <tr><td style="padding:3px 0;">Mata Pelajaran</td><td>:</td><td><span class="fill-blank" style="min-width:260px;"></span></td></tr>
+            <tr><td style="padding:3px 0;">Pukul / Sesi</td><td>:</td><td><span class="fill-blank" style="min-width:260px;"></span></td></tr>
+            <tr><td style="padding:3px 0;">Keperluan / Keterangan</td><td>:</td><td><span class="fill-blank" style="min-width:260px;"></span></td></tr>
           </table>
 
-          <p style="text-align:justify; margin-bottom:22px;">
-            Demikian surat keterangan / ijin ini dibuat untuk diserahkan kepada Pengawas Ruang Ujian dan dipergunakan sebagaimana mestinya.
+          <p style="text-align:justify; margin-bottom:18px;">
+            Demikian surat keterangan / ijin ini dibuat agar Pengawas Ruang dapat memberikan pelayanan sebagaimana mestinya.
           </p>
 
-          <table style="width:100%; text-align:center; border-collapse:collapse; margin-top:16px;">
+          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt;">
             <tr>
-              <td style="width:52%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false, 'surat_ijin')}</td>
-              <td style="width:48%; vertical-align:top;">
+              <td style="width:50%; vertical-align:top;">${buildFormalKepsekBlockHTML('Mengetahui,', false, 'surat_ijin')}</td>
+              <td style="width:50%; vertical-align:top;">
                 <div>${escapeHtml(s.titimangsa)}</div>
                 <div>Ketua Panitia Ujian,</div>
-                <div style="height:56px;"></div>
+                <div style="height:52px;"></div>
                 <div style="font-weight:bold; text-decoration:underline;">${escapeHtml(s.ketua)}</div>
                 <div>NIP. ${escapeHtml(s.nipKetua)}</div>
               </td>
@@ -4240,102 +4230,123 @@ function buildJsonResponse(obj) {
     /* =====================================================================
        MODUL 15: REKAPITULASI KETIDAKHADIRAN & UJIAN SUSULAN
        ===================================================================== */
-    function renderSusulanEditor() {
-      const container = document.getElementById('susulanEditorList');
-      if (!container) return;
-      const records = appState.susulanRecords || [];
-      if (records.length === 0) {
-        container.innerHTML = `<div class="text-xs text-slate-400 italic py-2">Belum ada baris peserta absen/susulan ditambahkan. Dokumen di bawah akan menampilkan tabel siap isi manual (12 baris), atau klik tombol di atas untuk mengisi daftar siswa.</div>`;
-        return;
-      }
-
-      const studentOpts = `<option value="">-- Ketik Manual / Pilih Siswa --</option>` +
-        appState.students.map(st => `<option value="${st.id}">${escapeHtml(st.noPeserta)} - ${escapeHtml(st.nama)} (${escapeHtml(st.kelas)})</option>`).join('');
-
-      container.innerHTML = records.map((rec, idx) => `
-        <div class="flex flex-wrap items-center gap-1.5 bg-slate-950/90 border border-slate-800 rounded-xl p-2 text-xs">
-          <span class="text-slate-400 font-bold w-5">${idx + 1}.</span>
-          <select onchange="pickStudentForSusulan(${idx}, this.value)" class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs max-w-[190px]">
-            ${studentOpts}
-          </select>
-          <input value="${escapeHtml(rec.noPeserta || '')}" placeholder="No. Peserta" onchange="editSusulanRec(${idx}, 'noPeserta', this.value)" class="w-24 px-2 py-1 rounded bg-slate-900 border border-slate-700" />
-          <input value="${escapeHtml(rec.nama || '')}" placeholder="Nama Siswa" onchange="editSusulanRec(${idx}, 'nama', this.value)" class="w-40 px-2 py-1 rounded bg-slate-900 border border-slate-700 font-semibold" />
-          <input value="${escapeHtml(rec.kelas || '')}" placeholder="Kelas" onchange="editSusulanRec(${idx}, 'kelas', this.value)" class="w-16 px-2 py-1 rounded bg-slate-900 border border-slate-700" />
-          <input value="${escapeHtml(rec.mapel || '')}" placeholder="Mapel Absen" onchange="editSusulanRec(${idx}, 'mapel', this.value)" class="w-32 px-2 py-1 rounded bg-slate-900 border border-slate-700" />
-          <input value="${escapeHtml(rec.alasan || '')}" placeholder="Alasan (S/I/A)" onchange="editSusulanRec(${idx}, 'alasan', this.value)" class="w-28 px-2 py-1 rounded bg-slate-900 border border-slate-700" />
-          <input value="${escapeHtml(rec.jadwalSusulan || '')}" placeholder="Jadwal Susulan" onchange="editSusulanRec(${idx}, 'jadwalSusulan', this.value)" class="w-36 px-2 py-1 rounded bg-slate-900 border border-slate-700" />
-          <button onclick="deleteSusulanRec(${idx})" class="p-1 text-rose-400 hover:bg-rose-950 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-        </div>
-      `).join('');
-      lucide.createIcons();
-    }
-
-    function addSusulanRow(isBlank) {
-      if (!Array.isArray(appState.susulanRecords)) appState.susulanRecords = [];
-      const firstSt = !isBlank && appState.students[0] ? appState.students[0] : null;
+    function addSusulanRow(isManual = false) {
+      const firstStudent = appState.students[0] || {};
       appState.susulanRecords.push({
-        noPeserta: firstSt ? firstSt.noPeserta : '',
-        nama: firstSt ? firstSt.nama : '',
-        kelas: firstSt ? firstSt.kelas : '',
-        mapel: getUniqueSubjectsFromSchedule()[0] || '',
-        alasan: firstSt ? 'Sakit' : '',
+        id: 'SUS_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        studentId: isManual ? '' : (firstStudent.id || ''),
+        noPeserta: isManual ? '' : (firstStudent.noPeserta || ''),
+        nama: isManual ? '' : (firstStudent.nama || ''),
+        kelas: isManual ? '' : (firstStudent.kelas || ''),
+        ruang: isManual ? '' : (firstStudent.ruang || ''),
+        mapelAbsen: '',
+        alasan: 'Sakit / Ijin',
         jadwalSusulan: ''
       });
       saveLocalState();
+      renderSusulanEditor();
       renderRekapSusulan();
     }
 
-    function pickStudentForSusulan(idx, stId) {
-      const st = appState.students.find(x => x.id === stId);
-      if (st && appState.susulanRecords[idx]) {
-        appState.susulanRecords[idx].noPeserta = st.noPeserta;
-        appState.susulanRecords[idx].nama = st.nama;
-        appState.susulanRecords[idx].kelas = st.kelas;
-        saveLocalState();
-        renderRekapSusulan();
+    function onSelectSusulanStudent(recIdx, studentId) {
+      const rec = appState.susulanRecords[recIdx];
+      if (!rec) return;
+      rec.studentId = studentId;
+      const st = appState.students.find(x => x.id === studentId);
+      if (st) {
+        rec.noPeserta = st.noPeserta || '';
+        rec.nama = st.nama || '';
+        rec.kelas = st.kelas || '';
+        rec.ruang = st.ruang || '';
       }
-    }
-
-    function editSusulanRec(idx, field, val) {
-      if (appState.susulanRecords[idx]) {
-        appState.susulanRecords[idx][field] = val.trim();
-        saveLocalState();
-        renderRekapSusulan();
-      }
-    }
-
-    function deleteSusulanRec(idx) {
-      appState.susulanRecords.splice(idx, 1);
       saveLocalState();
+      renderSusulanEditor();
       renderRekapSusulan();
+    }
+
+    function editSusulanField(recIdx, field, val) {
+      if (appState.susulanRecords[recIdx]) {
+        appState.susulanRecords[recIdx][field] = val;
+        saveLocalState();
+        renderRekapSusulan();
+      }
+    }
+
+    function deleteSusulanRow(recIdx) {
+      appState.susulanRecords.splice(recIdx, 1);
+      saveLocalState();
+      renderSusulanEditor();
+      renderRekapSusulan();
+    }
+
+    function renderSusulanEditor() {
+      const container = document.getElementById('susulanEditorList');
+      if (!container) return;
+      if (!Array.isArray(appState.susulanRecords) || appState.susulanRecords.length === 0) {
+        container.innerHTML = `<div class="text-xs text-slate-400 italic py-2">Belum ada data peserta tidak hadir. Klik <strong>+ Tambah Siswa Absen</strong> atau <strong>+ Baris Kosong Manual</strong>.</div>`;
+        return;
+      }
+
+      container.innerHTML = appState.susulanRecords.map((rec, idx) => {
+        const studentOpts = `<option value="">-- Pilih dari Data Siswa (Opsional) --</option>` +
+          appState.students.map(s => `<option value="${s.id}" ${rec.studentId === s.id ? 'selected' : ''}>${escapeHtml(s.noPeserta)} - ${escapeHtml(s.nama)} (${escapeHtml(s.kelas)})</option>`).join('');
+
+        return `
+          <div class="grid md:grid-cols-12 gap-2 items-center bg-slate-950/80 border border-slate-800 rounded-xl p-2 text-xs">
+            <div class="md:col-span-3">
+              <select onchange="onSelectSusulanStudent(${idx}, this.value)" class="w-full px-2 py-1.5 rounded bg-slate-900 border border-slate-700 text-[11px]">
+                ${studentOpts}
+              </select>
+            </div>
+            <div class="md:col-span-2">
+              <input value="${escapeHtml(rec.nama || '')}" placeholder="Nama Siswa" onchange="editSusulanField(${idx}, 'nama', this.value)" class="w-full px-2 py-1.5 rounded bg-slate-900 border border-slate-700 text-[11px]" />
+            </div>
+            <div class="md:col-span-2">
+              <input value="${escapeHtml(rec.mapelAbsen || '')}" placeholder="Mapel Tidak Hadir" onchange="editSusulanField(${idx}, 'mapelAbsen', this.value)" class="w-full px-2 py-1.5 rounded bg-slate-900 border border-slate-700 text-[11px]" />
+            </div>
+            <div class="md:col-span-2">
+              <input value="${escapeHtml(rec.alasan || '')}" placeholder="Ket. (Sakit/Ijin/Alpa)" onchange="editSusulanField(${idx}, 'alasan', this.value)" class="w-full px-2 py-1.5 rounded bg-slate-900 border border-slate-700 text-[11px]" />
+            </div>
+            <div class="md:col-span-2">
+              <input value="${escapeHtml(rec.jadwalSusulan || '')}" placeholder="Tgl / Sesi Susulan" onchange="editSusulanField(${idx}, 'jadwalSusulan', this.value)" class="w-full px-2 py-1.5 rounded bg-slate-900 border border-slate-700 text-[11px]" />
+            </div>
+            <div class="md:col-span-1 text-center">
+              <button onclick="deleteSusulanRow(${idx})" class="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
     }
 
     function renderRekapSusulan() {
       renderSusulanEditor();
       const s = appState.settings;
       const records = appState.susulanRecords || [];
-      const rowsData = records.length > 0
-        ? records
-        : Array.from({ length: 12 }, () => ({ noPeserta: '', nama: '', kelas: '', mapel: '', alasan: '', jadwalSusulan: '' }));
+      const rowCount = Math.max(8, records.length);
 
-      const rowsHtml = rowsData.map((r, idx) => `
-        <tr style="height:24px;">
-          <td style="text-align:center;">${idx + 1}</td>
-          <td style="text-align:center; font-weight:bold;">${escapeHtml(r.noPeserta)}</td>
-          <td style="font-weight:600;">${escapeHtml(r.nama)}</td>
-          <td style="text-align:center;">${escapeHtml(r.kelas)}</td>
-          <td>${escapeHtml(r.mapel)}</td>
-          <td style="text-align:center;">${escapeHtml(r.alasan)}</td>
-          <td>${escapeHtml(r.jadwalSusulan)}</td>
-          <td></td>
-        </tr>
-      `).join('');
+      let rowsHtml = '';
+      for (let i = 0; i < rowCount; i++) {
+        const r = records[i] || {};
+        rowsHtml += `
+          <tr>
+            <td style="text-align:center; height:24px;">${i + 1}</td>
+            <td style="text-align:center;">${escapeHtml(r.noPeserta || '')}</td>
+            <td>${escapeHtml(r.nama || '')}</td>
+            <td style="text-align:center;">${escapeHtml(r.kelas || '')}</td>
+            <td>${escapeHtml(r.mapelAbsen || '')}</td>
+            <td style="text-align:center;">${escapeHtml(r.alasan || '')}</td>
+            <td>${escapeHtml(r.jadwalSusulan || '')}</td>
+            <td></td>
+          </tr>
+        `;
+      }
 
       document.getElementById('preview-rekap_susulan').innerHTML = `
         <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
           ${buildFullKopHTML()}
           <div style="text-align:center; margin-bottom:10px;">
-            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">REKAPITULASI KETIDAKHADIRAN PESERTA &amp; JADWAL UJIAN SUSULAN</div>
+            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">REKAPITULASI KETIDAKHADIRAN &amp; JADWAL UJIAN SUSULAN</div>
             <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
           </div>
 
@@ -4343,13 +4354,13 @@ function buildJsonResponse(obj) {
             <thead>
               <tr>
                 <th style="width:28px;">No</th>
-                <th style="width:76px;">No. Peserta</th>
+                <th style="width:74px;">No. Peserta</th>
                 <th>Nama Peserta</th>
-                <th style="width:46px;">Kelas</th>
-                <th style="width:120px;">Mata Pelajaran</th>
-                <th style="width:66px;">Alasan (S/I/A)</th>
-                <th style="width:125px;">Jadwal Susulan</th>
-                <th style="width:65px;">Paraf</th>
+                <th style="width:52px;">Kelas</th>
+                <th style="width:110px;">Mapel Absen</th>
+                <th style="width:72px;">Keterangan</th>
+                <th style="width:105px;">Jadwal Susulan</th>
+                <th style="width:62px;">Paraf</th>
               </tr>
             </thead>
             <tbody>${rowsHtml}</tbody>
@@ -4378,15 +4389,49 @@ function buildJsonResponse(obj) {
       const qty = Math.max(1, parseInt(document.getElementById('qtyBaSusulan')?.value) || 1);
       const opsiPengawas = document.getElementById('opsiPengawasBaSusulan')?.value || '1';
       const s = appState.settings;
-      let html = '';
+      const records = appState.susulanRecords || [];
+      const rowCount = Math.max(5, records.length);
 
-      const kepsekCellHtml = buildFormalKepsekBlockHTML('Mengetahui,', false, 'ba_susulan');
+      let tableRows = '';
+      for (let i = 0; i < rowCount; i++) {
+        const r = records[i] || {};
+        tableRows += `
+          <tr>
+            <td style="text-align:center; height:22px;">${i + 1}</td>
+            <td style="text-align:center;">${escapeHtml(r.noPeserta || '')}</td>
+            <td>${escapeHtml(r.nama || '')}</td>
+            <td style="text-align:center;">${escapeHtml(r.kelas || '')}</td>
+            <td>${escapeHtml(r.mapelAbsen || '')}</td>
+            <td></td>
+          </tr>
+        `;
+      }
 
-      const ttdSection = opsiPengawas === '1'
+      const kepsekCell = buildFormalKepsekBlockHTML('Mengetahui,', false, 'ba_susulan');
+      const ttdHtml = opsiPengawas === '2'
         ? `
-          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt; margin-top:12px;">
+          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:9.5pt; margin-top:8px;">
             <tr>
-              <td style="width:50%; vertical-align:top;">${kepsekCellHtml}</td>
+              <td style="width:50%;">
+                <div>Pengawas Ujian Susulan I,</div>
+                <div style="height:42px;"></div>
+                <div>( .................................................... )</div>
+                <div>NIP. .............................................</div>
+              </td>
+              <td style="width:50%;">
+                <div>Pengawas Ujian Susulan II,</div>
+                <div style="height:42px;"></div>
+                <div>( .................................................... )</div>
+                <div>NIP. .............................................</div>
+              </td>
+            </tr>
+            <tr><td colspan="2" style="padding-top:8px;">${kepsekCell}</td></tr>
+          </table>
+        `
+        : `
+          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:9.5pt; margin-top:12px;">
+            <tr>
+              <td style="width:50%; vertical-align:top;">${kepsekCell}</td>
               <td style="width:50%; vertical-align:top;">
                 <div>${escapeHtml(s.titimangsa)}</div>
                 <div>Pengawas Ujian Susulan,</div>
@@ -4396,85 +4441,49 @@ function buildJsonResponse(obj) {
               </td>
             </tr>
           </table>
-        `
-        : `
-          <table style="width:100%; text-align:center; border-collapse:collapse; font-size:10pt;">
-            <tr>
-              <td style="width:50%; vertical-align:top;">
-                <div>Pengawas Ujian Susulan I,</div>
-                <div style="height:44px;"></div>
-                <div>( .................................................... )</div>
-                <div>NIP. .............................................</div>
-              </td>
-              <td style="width:50%; vertical-align:top;">
-                <div>Pengawas Ujian Susulan II,</div>
-                <div style="height:44px;"></div>
-                <div>( .................................................... )</div>
-                <div>NIP. .............................................</div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2" style="padding-top:8px;">${kepsekCellHtml}</td>
-            </tr>
-          </table>
         `;
 
-      const emptyRows = Array.from({ length: 6 }, (_, idx) => `
-        <tr style="height:22px;">
-          <td style="text-align:center;">${idx + 1}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      `).join('');
-
+      let html = '';
       for (let i = 0; i < qty; i++) {
         html += `
-          <div class="a4-page" style="font-size:10pt; line-height:1.36;">
+          <div class="a4-page" style="font-size:10pt; line-height:1.35;">
             ${buildFullKopHTML()}
             <div style="text-align:center; margin-bottom:8px;">
               <div style="font-size:12pt; font-weight:bold; text-decoration:underline;">BERITA ACARA PELAKSANAAN UJIAN SUSULAN</div>
-              <div style="font-size:10.5pt; font-weight:bold;">${escapeHtml(s.namaUjian)}</div>
-              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.tahunAjaran)}</div>
+              <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
             </div>
 
             <p style="text-align:justify; margin-bottom:8px;">
               Pada hari ini <span class="fill-blank" style="min-width:85px;"></span> tanggal <span class="fill-blank" style="min-width:40px;"></span>
               bulan <span class="fill-blank" style="min-width:85px;"></span> tahun <span class="fill-blank" style="min-width:55px;"></span>,
-              pukul <span class="fill-blank" style="min-width:65px;"></span> s.d. <span class="fill-blank" style="min-width:65px;"></span> WIB bertempat di
-              Ruang <span class="fill-blank" style="min-width:110px;"></span> <strong>${escapeHtml(s.sekolah)}</strong> telah dilaksanakan <strong>Ujian Susulan</strong> dengan rincian peserta sebagai berikut:
+              pukul <span class="fill-blank" style="min-width:65px;"></span> s.d. <span class="fill-blank" style="min-width:65px;"></span> WIB,
+              telah dilaksanakan <strong>Ujian Susulan</strong> bertempat di ruang <span class="fill-blank" style="min-width:120px;"></span>
+              pada <strong>${escapeHtml(s.sekolah)}</strong> dengan rincian peserta sebagai berikut:
             </p>
 
-            <table class="doc-table" style="font-size:8.8pt; margin-bottom:10px;">
+            <table class="doc-table" style="font-size:8.6pt; margin-bottom:8px;">
               <thead>
                 <tr>
                   <th style="width:28px;">No</th>
-                  <th style="width:82px;">No. Peserta</th>
-                  <th>Nama Peserta</th>
-                  <th style="width:48px;">Kelas</th>
-                  <th style="width:140px;">Mata Pelajaran Susulan</th>
-                  <th style="width:72px;">Paraf</th>
+                  <th style="width:76px;">No. Peserta</th>
+                  <th>Nama Peserta Susulan</th>
+                  <th style="width:52px;">Kelas</th>
+                  <th>Mata Pelajaran Susulan</th>
+                  <th style="width:68px;">Tanda Tangan</th>
                 </tr>
               </thead>
-              <tbody>${emptyRows}</tbody>
+              <tbody>${tableRows}</tbody>
             </table>
 
-            <div style="margin-bottom:3px; font-weight:bold; font-size:9.5pt;">Catatan Selama Ujian Susulan Berlangsung:</div>
-            <div style="border:1px solid #000; padding:5px 8px; min-height:46px; margin-bottom:8px;">
-              <div style="border-bottom:1px dotted #64748b; height:16px;"></div>
-              <div style="border-bottom:1px dotted #64748b; height:16px;"></div>
+            <div style="font-size:9.2pt; margin-bottom:6px;">
+              <strong>Catatan Pelaksanaan Susulan:</strong> <span class="fill-blank" style="min-width:340px;"></span>
             </div>
 
-            <p style="text-align:justify; margin-bottom:8px; font-size:9.8pt;">
-              Demikian Berita Acara Ujian Susulan ini dibuat dengan sesungguhnya untuk dipergunakan sebagaimana mestinya.
-            </p>
-
-            ${ttdSection}
+            ${ttdHtml}
           </div>
         `;
       }
+
       document.getElementById('preview-ba_susulan').innerHTML = html;
     }
 
@@ -4484,91 +4493,61 @@ function buildJsonResponse(obj) {
     function renderRekapPengawas() {
       const mode = document.getElementById('modeRekapPengawas')?.value || 'otomatis';
       const s = appState.settings;
-      const days = s.scheduleDays || [];
+      const pengawasList = appState.staff.filter(p => p.peran !== 'Panitia').map(normalizeStaffItem);
 
-      const pengawasList = appState.staff
-        .filter(p => p.peran !== 'Panitia')
-        .map(p => normalizeStaffItem(p));
+      const rowsHtml = pengawasList.map((p, idx) => {
+        const slots = p.jadwalSlots || [];
+        const uniqueDays = Array.from(new Set(slots.map(sl => sl.hariTanggal).filter(Boolean)));
+        const uniqueRooms = Array.from(new Set(slots.map(sl => sl.ruang).filter(Boolean)));
+        const detailJadwal = slots.map(sl =>
+          `${sl.hariTanggal || '-'} (${sl.sesiJam || '-'} • ${sl.ruang || '-'})`
+        ).join('<br>');
 
-      let tableHtml = '';
+        const jumlahSesiText = mode === 'gabungan'
+          ? `${slots.length} sesi / .........`
+          : `${slots.length} Sesi`;
 
-      if (mode === 'otomatis') {
-        const rows = pengawasList.length > 0
-          ? pengawasList.map((p, idx) => {
-              const slots = p.jadwalSlots || [];
-              const rincian = slots.map(sl => `${sl.hariTanggal || '-'} (${sl.ruang || '-'}, ${sl.sesiJam || '-'})`).join('; ');
-              return `
-                <tr>
-                  <td style="text-align:center;">${idx + 1}</td>
-                  <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
-                  <td>${escapeHtml(p.nip)}</td>
-                  <td style="font-size:8pt;">${escapeHtml(rincian || '-')}</td>
-                  <td style="text-align:center; font-weight:bold;">${slots.length}</td>
-                  <td style="text-align:center;">........</td>
-                  <td></td>
-                </tr>
-              `;
-            }).join('')
-          : `<tr><td colspan="7" style="text-align:center; font-style:italic;">Belum ada data pengawas ruang.</td></tr>`;
+        const totalHariText = mode === 'gabungan'
+          ? `${uniqueDays.length} hari / .........`
+          : `${uniqueDays.length} Hari`;
 
-        tableHtml = `
-          <table class="doc-table" style="font-size:8.6pt; margin-bottom:14px;">
-            <thead>
-              <tr>
-                <th style="width:28px;">No</th>
-                <th style="width:155px;">Nama Pengawas &amp; Gelar</th>
-                <th style="width:115px;">NIP / NUPTK</th>
-                <th>Rincian Jadwal &amp; Ruang Tugas</th>
-                <th style="width:58px;">Jadwal Tugas</th>
-                <th style="width:58px;">Total Hadir</th>
-                <th style="width:76px;">Paraf</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
+        return `
+          <tr>
+            <td style="text-align:center;">${idx + 1}</td>
+            <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
+            <td>${escapeHtml(p.nip)}</td>
+            <td style="font-size:8pt; line-height:1.25;">${detailJadwal || '-'}</td>
+            <td style="text-align:center;">${escapeHtml(uniqueRooms.join(', ') || p.ruang || '-')}</td>
+            <td style="text-align:center; font-weight:bold;">${escapeHtml(jumlahSesiText)}</td>
+            <td style="text-align:center; font-weight:bold;">${escapeHtml(totalHariText)}</td>
+            <td style="font-size:8pt;">${idx + 1}.</td>
+          </tr>
         `;
-      } else {
-        const dayHeaders = days.map(d => `<th style="width:36px; font-size:7.4pt;">${escapeHtml(d.label)}</th>`).join('');
-        const rows = pengawasList.length > 0
-          ? pengawasList.map((p, idx) => `
-              <tr style="height:24px;">
-                <td style="text-align:center;">${idx + 1}</td>
-                <td style="font-weight:bold;">${escapeHtml(p.nama)}</td>
-                <td>${escapeHtml(p.nip)}</td>
-                ${days.map(() => `<td></td>`).join('')}
-                <td style="text-align:center;">......</td>
-                <td></td>
-              </tr>
-            `).join('')
-          : `<tr><td colspan="${days.length + 5}" style="text-align:center; font-style:italic;">Belum ada data pengawas ruang.</td></tr>`;
-
-        tableHtml = `
-          <table class="doc-table" style="font-size:8.4pt; margin-bottom:14px;">
-            <thead>
-              <tr>
-                <th rowspan="2" style="width:28px;">No</th>
-                <th rowspan="2">Nama Pengawas &amp; Gelar</th>
-                <th rowspan="2" style="width:115px;">NIP / NUPTK</th>
-                <th colspan="${days.length}">Kehadiran Pengawas per Hari Ujian</th>
-                <th rowspan="2" style="width:52px;">Jml Hadir</th>
-                <th rowspan="2" style="width:70px;">Paraf</th>
-              </tr>
-              <tr>${dayHeaders}</tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        `;
-      }
+      }).join('');
 
       document.getElementById('preview-rekap_pengawas').innerHTML = `
         <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
           ${buildFullKopHTML()}
           <div style="text-align:center; margin-bottom:10px;">
-            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">REKAPITULASI KEHADIRAN PENGAWAS RUANG UJIAN</div>
+            <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">REKAPITULASI KEHADIRAN &amp; TUGAS PENGAWAS RUANG</div>
             <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
           </div>
 
-          ${tableHtml}
+          <table class="doc-table" style="font-size:8.5pt; margin-bottom:14px;">
+            <thead>
+              <tr>
+                <th style="width:28px;">No</th>
+                <th style="width:125px;">Nama Pengawas</th>
+                <th style="width:105px;">NIP</th>
+                <th>Rincian Hari, Sesi &amp; Ruang Mengawas</th>
+                <th style="width:74px;">Ruang</th>
+                <th style="width:68px;">Jml Sesi</th>
+                <th style="width:68px;">Total Hari</th>
+                <th style="width:58px;">Paraf</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml || `<tr><td colspan="8" style="text-align:center; font-style:italic;">Belum ada data pengawas.</td></tr>`}</tbody>
+          </table>
 
           <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
             <tr>
@@ -4590,28 +4569,29 @@ function buildJsonResponse(obj) {
        MODUL 18: DAFTAR NILAI LENGKAP SISWA PER KELAS & MAPEL
        ===================================================================== */
     function renderDaftarNilai() {
-      const kelasFilter = document.getElementById('filterKelasNilai')?.value || getUniqueClasses()[0];
-      const mapelVal = document.getElementById('filterMapelNilai')?.value || 'BLANK';
-      const guruMapel = (document.getElementById('inpGuruMapelNilai')?.value || '').trim();
+      const kelasFilter = document.getElementById('filterKelasNilai')?.value || 'ALL';
+      const mapelFilter = document.getElementById('filterMapelNilai')?.value || '';
+      const guruInput = (document.getElementById('inpGuruMapelNilai')?.value || '').trim();
       const s = appState.settings;
-
       const classes = kelasFilter === 'ALL' ? getUniqueClasses() : [kelasFilter];
-      const mapelDisplay = mapelVal === 'BLANK'
+
+      const mapelText = mapelFilter === 'BLANK' || !mapelFilter
         ? '........................................................'
-        : `<strong>${escapeHtml(mapelVal)}</strong>`;
+        : `<strong>${escapeHtml(mapelFilter)}</strong>`;
+
+      const guruBlock = guruInput
+        ? `<div style="font-weight:bold; text-decoration:underline;">${escapeHtml(guruInput)}</div><div>NIP. .............................................</div>`
+        : `<div style="height:52px;"></div><div>( .................................................... )</div><div>NIP. .............................................</div>`;
 
       let pagesHtml = '';
-
-      classes.forEach(kls => {
-        const classStudents = appState.students.filter(st => (st.kelas || '7.1') === kls);
+      classes.forEach(kelas => {
+        const classStudents = appState.students.filter(st => (st.kelas || '7.1') === kelas);
         const rows = classStudents.map((st, idx) => `
-          <tr style="height:22px;">
-            <td style="text-align:center;">${idx + 1}</td>
-            <td style="text-align:center; font-weight:bold;">${escapeHtml(st.noPeserta)}</td>
+          <tr>
+            <td style="text-align:center; height:22px;">${idx + 1}</td>
+            <td style="text-align:center;">${escapeHtml(st.noPeserta)}</td>
             <td style="text-align:center;">${escapeHtml(st.nisn)}</td>
             <td>${escapeHtml(st.nama)}</td>
-            <td style="text-align:center;">${escapeHtml(st.ruang)}</td>
-            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -4622,36 +4602,34 @@ function buildJsonResponse(obj) {
           <div class="a4-page a4-auto-height" style="font-size:9.5pt;">
             ${buildFullKopHTML()}
             <div style="text-align:center; margin-bottom:8px;">
-              <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">DAFTAR NILAI HASIL UJIAN PESERTA DIDIK</div>
+              <div style="font-size:11.5pt; font-weight:bold; text-decoration:underline;">DAFTAR NILAI PESERTA UJIAN</div>
               <div style="font-size:10pt; font-weight:bold;">${escapeHtml(s.namaUjian)} - ${escapeHtml(s.tahunAjaran)}</div>
             </div>
 
-            <table style="width:100%; font-size:9pt; margin-bottom:6px; border-collapse:collapse;">
+            <table style="width:100%; font-size:9pt; margin-bottom:8px; border-collapse:collapse;">
               <tr>
-                <td style="width:115px;">Mata Pelajaran</td><td style="width:10px;">:</td><td>${mapelDisplay}</td>
-                <td style="width:110px;">Kelas / Rombel</td><td style="width:10px;">:</td><td><strong>${escapeHtml(kls)}</strong></td>
+                <td style="width:120px;">Kelas / Rombel</td><td style="width:10px;">:</td><td><strong>Kelas ${escapeHtml(kelas)}</strong></td>
+                <td style="width:115px;">Mata Pelajaran</td><td style="width:10px;">:</td><td>${mapelText}</td>
               </tr>
               <tr>
-                <td>Guru Mapel</td><td>:</td><td>${guruMapel ? `<strong>${escapeHtml(guruMapel)}</strong>` : '........................................................'}</td>
                 <td>Jumlah Peserta</td><td>:</td><td><strong>${classStudents.length} Siswa</strong></td>
+                <td>KKM / Ketercapaian</td><td>:</td><td>............................................</td>
               </tr>
             </table>
 
-            <table class="doc-table" style="font-size:8.6pt; margin-bottom:12px;">
+            <table class="doc-table" style="font-size:8.8pt; margin-bottom:14px;">
               <thead>
                 <tr>
                   <th style="width:28px;">No</th>
                   <th style="width:76px;">No. Peserta</th>
-                  <th style="width:82px;">NISN</th>
+                  <th style="width:84px;">NISN</th>
                   <th>Nama Peserta</th>
-                  <th style="width:66px;">Ruang</th>
-                  <th style="width:52px;">Nilai PG</th>
-                  <th style="width:54px;">Uraian</th>
-                  <th style="width:58px;">Nilai Akhir</th>
+                  <th style="width:64px;">Nilai Angka</th>
                   <th style="width:78px;">Predikat / Ket.</th>
+                  <th style="width:88px;">Paraf / Catatan</th>
                 </tr>
               </thead>
-              <tbody>${rows}</tbody>
+              <tbody>${rows || `<tr><td colspan="7" style="text-align:center; font-style:italic;">Belum ada siswa pada kelas ini.</td></tr>`}</tbody>
             </table>
 
             <table style="width:100%; font-size:9pt; border-collapse:collapse; margin-top:10px; break-inside:avoid;">
@@ -4660,11 +4638,7 @@ function buildJsonResponse(obj) {
                 <td style="width:45%; vertical-align:top;">
                   <div>${escapeHtml(s.titimangsa)}</div>
                   <div>Guru Mata Pelajaran,</div>
-                  <div style="height:48px;"></div>
-                  ${guruMapel
-                    ? `<div style="font-weight:bold; text-decoration:underline;">${escapeHtml(guruMapel)}</div><div>NIP. .............................................</div>`
-                    : `<div>( .................................................... )</div><div>NIP. .............................................</div>`
-                  }
+                  ${guruBlock}
                 </td>
               </tr>
             </table>
@@ -4683,8 +4657,11 @@ function buildJsonResponse(obj) {
       populateAllForms();
       refreshAllDropdowns();
       updateTtdControllerBarUI();
-      saveLocalState();
       lucide.createIcons();
+
+      if (appState.gasUrl) {
+        syncPullFromSheets();
+      }
     });
   </script>
 </body>
