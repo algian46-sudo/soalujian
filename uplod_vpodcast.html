@@ -35,12 +35,12 @@
                     <select id="kelas" name="kelas" required
                         class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition outline-none">
                         <option value="" disabled selected>-- Pilih Kelas --</option>
-                        <option value="8.1">Kelas 7.1</option>
-                        <option value="8.2">Kelas 7.2</option>
-                        <option value="8.3">Kelas 8.1</option>
-                        <option value="8.4">Kelas 8.2</option>
-                        <option value="8.5">Kelas 9.1</option>
-                        <option value="8.6">Kelas 9.2</option>
+                        <option value="7.1">Kelas 7.1</option>
+                        <option value="7.2">Kelas 7.2</option>
+                        <option value="8.1">Kelas 8.1</option>
+                        <option value="8.2">Kelas 8.2</option>
+                        <option value="9.1">Kelas 9.1</option>
+                        <option value="9.2">Kelas 9.2</option>
                     </select>
                 </div>
 
@@ -121,11 +121,12 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyidS3IsgSAkDtSnjsxEJAo15KFyaavIUdB0Q69JtgE49I2igz2K7Zo33OCf_tKl8sw/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzK7CaqBfpNtxOTRsOt0aFdxdph84WKHMDjbjatlD8jH4keQlcUdAX0mtn0JlbpQlgk/exec";
         const CHUNK_SIZE = 5 * 1024 * 1024; // 5 MB per potongan
 
         const anggotaContainer = document.getElementById('anggotaContainer');
         const tambahAnggotaBtn = document.getElementById('tambahAnggotaBtn');
+        const initialAnggotaHTML = anggotaContainer.innerHTML;
         let jumlahAnggota = 3;
 
         tambahAnggotaBtn.addEventListener('click', () => {
@@ -297,6 +298,8 @@
                     <a href="${finData.url}" target="_blank" class="underline font-semibold text-emerald-900 mt-1 inline-block">Lihat Bukti File di Drive &rarr;</a>
                 `;
                 form.reset();
+                anggotaContainer.innerHTML = initialAnggotaHTML;
+                jumlahAnggota = 3;
                 filePlaceholder.classList.remove('hidden');
                 fileSelectedInfo.classList.add('hidden');
             } catch (err) {
