@@ -3,118 +3,1030 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Pengumpulan Video Podcast - SMPN 8 Cikarang Utara</title>
+    <title>Portal Podcast & Penilaian - SMP Negeri 8 Cikarang Utara</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background:
+                radial-gradient(circle at 12% 15%, rgba(168, 85, 247, 0.22), transparent 42%),
+                radial-gradient(circle at 88% 12%, rgba(244, 114, 182, 0.22), transparent 42%),
+                radial-gradient(circle at 78% 85%, rgba(56, 189, 248, 0.24), transparent 45%),
+                linear-gradient(135deg, #f8faff 0%, #f5f3ff 48%, #fdf2f8 100%);
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 12px 36px -8px rgba(109, 40, 217, 0.10), 0 4px 14px -4px rgba(56, 189, 248, 0.08);
+        }
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.84);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid rgba(255, 255, 255, 0.92);
+        }
+        .orb {
+            position: fixed;
+            border-radius: 9999px;
+            filter: blur(70px);
+            pointer-events: none;
+            z-index: 0;
+        }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen flex flex-col justify-between text-slate-800">
+<body class="text-slate-800 relative overflow-x-hidden">
 
-    <main class="container mx-auto px-4 py-8 sm:py-12 max-w-2xl">
-        <!-- Hero Card -->
-        <div class="bg-gradient-to-br from-indigo-600 via-blue-700 to-indigo-800 rounded-t-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
-            <div class="relative z-10">
-                <span class="inline-block bg-white/20 backdrop-blur-sm text-xs font-semibold px-3.5 py-1.5 rounded-full mb-4 tracking-wide uppercase">
+    <!-- Dekorasi Cahaya Latar Glassmorphism -->
+    <div class="orb w-80 h-80 bg-purple-300/40 -top-20 -left-20"></div>
+    <div class="orb w-96 h-96 bg-pink-300/35 top-24 -right-24"></div>
+    <div class="orb w-80 h-80 bg-sky-300/40 bottom-10 left-1/4"></div>
+
+    <!-- Header Glass -->
+    <header class="relative z-10 pt-6 px-4">
+        <div class="container mx-auto max-w-6xl glass-strong rounded-3xl p-6 sm:p-8 shadow-lg">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <span class="inline-flex items-center gap-2 text-xs font-bold px-3.5 py-1.5 rounded-full bg-gradient-to-r from-purple-100 via-pink-100 to-sky-100 text-purple-900 border border-white">
+                    <span class="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"></span>
                     SMP Negeri 8 Cikarang Utara
                 </span>
-                <h1 class="text-2xl sm:text-3xl font-extrabold leading-tight">
-                    Bukti Upload Video Hasil Podcast
-                </h1>
-                <p class="text-indigo-100 text-sm sm:text-base mt-2.5 leading-relaxed">
-                    Portal resmi pengumpulan karya video podcast siswa. Silakan baca panduan singkat di bawah ini sebelum membuka formulir unggah.
-                </p>
+                <button type="button" onclick="loadInitialData()"
+                    class="text-xs font-bold px-3.5 py-1.5 rounded-full bg-white/80 hover:bg-white text-slate-700 border border-purple-100 shadow-sm transition">
+                    Muat Ulang Data
+                </button>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold mt-3 bg-gradient-to-r from-purple-800 via-pink-600 to-sky-700 bg-clip-text text-transparent">
+                Portal Pengumpulan, Galeri & Penilaian Video Podcast
+            </h1>
+            <p class="text-slate-600 text-sm mt-1">
+                Unggah video ke Google Drive masing-masing (akses: <em>Siapa saja yang memiliki link</em>), setor link, dan nilai karya secara terpadu.
+            </p>
+
+            <!-- Tab Navigasi Dinamis -->
+            <div class="flex flex-wrap gap-2.5 mt-6">
+                <button type="button" id="tabGaleriBtn" onclick="switchTab('galeri')"
+                    class="px-5 py-2.5 rounded-2xl text-sm font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-sky-500 text-white shadow-md transition">
+                    Pengumpulan & Galeri Video
+                </button>
+                <button type="button" id="tabPenilaianBtn" onclick="switchTab('penilaian')"
+                    class="px-5 py-2.5 rounded-2xl text-sm font-bold bg-white/70 text-slate-700 hover:bg-white border border-purple-100 transition">
+                    Penilaian Guru & Admin
+                </button>
             </div>
         </div>
+    </header>
 
-        <!-- Content Card -->
-        <div class="bg-white rounded-b-3xl p-6 sm:p-10 shadow-xl border border-slate-200/60 space-y-6">
+    <main class="relative z-10 container mx-auto px-4 py-8 max-w-6xl">
 
-            <!-- Langkah Pengumpulan -->
-            <div class="space-y-3">
-                <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-extrabold">1</span>
-                    Persiapan Sebelum Mengunggah
-                </h2>
-                <ul class="text-sm text-slate-600 space-y-2 pl-8 list-disc">
-                    <li>Siapkan <strong>nama lengkap seluruh anggota kelompok</strong> dan pilihan kelas yang sesuai.</li>
-                    <li>Pastikan file video sudah siap di perangkat Anda (format MP4/MOV/MKV).</li>
-                    <li>Selama proses unggah berlangsung, <strong>jangan menutup atau me-refresh tab browser</strong> hingga muncul keterangan <em>Berhasil</em>.</li>
-                </ul>
-            </div>
+        <!-- ==================== TAB 1: PENGUMPULAN & GALERI ==================== -->
+        <section id="sectionGaleri" class="space-y-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-            <!-- Peringatan Penting Multi-Akun / Incognito -->
-            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 sm:p-5 space-y-2.5">
-                <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 font-bold">
-                        !
+                <!-- Form Input -->
+                <div class="lg:col-span-7 glass rounded-3xl p-6 sm:p-8">
+                    <h2 class="text-lg font-extrabold text-purple-950 border-b border-purple-200/50 pb-3 mb-5">
+                        1. Formulir Setor Link Video Kelompok
+                    </h2>
+
+                    <form id="podcastForm" class="space-y-5">
+                        <div>
+                            <label for="kelas" class="block text-sm font-bold text-slate-700 mb-1.5">
+                                Pilih Kelas <span class="text-pink-600">*</span>
+                            </label>
+                            <select id="kelas" required
+                                class="w-full px-4 py-2.5 rounded-2xl border border-purple-200/80 bg-white/80 focus:bg-white focus:ring-2 focus:ring-purple-400 outline-none text-sm font-medium">
+                                <option value="" disabled selected>-- Memuat daftar kelas... --</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label class="block text-sm font-bold text-slate-700">
+                                    Pilih Anggota Kelompok <span class="text-pink-600">*</span>
+                                </label>
+                                <button type="button" id="tambahAnggotaBtn"
+                                    class="text-xs font-bold bg-gradient-to-r from-purple-100 to-pink-100 hover:from-purple-200 hover:to-pink-200 text-purple-800 px-3.5 py-1.5 rounded-xl border border-white transition">
+                                    + Tambah Anggota
+                                </button>
+                            </div>
+                            <p class="text-xs text-slate-500">
+                                Nama siswa yang sudah terdaftar di kelompok lain otomatis terkunci.
+                            </p>
+                            <div id="anggotaContainer" class="space-y-2.5"></div>
+                        </div>
+
+                        <div>
+                            <label for="driveLink" class="block text-sm font-bold text-slate-700 mb-1.5">
+                                Link Video Google Drive <span class="text-pink-600">*</span>
+                            </label>
+                            <input type="url" id="driveLink" required
+                                placeholder="https://drive.google.com/file/d/..."
+                                class="w-full px-4 py-2.5 rounded-2xl border border-purple-200/80 bg-white/80 focus:bg-white focus:ring-2 focus:ring-sky-400 outline-none text-sm">
+                            <p class="text-xs text-purple-900 bg-gradient-to-r from-purple-50/90 via-pink-50/90 to-sky-50/90 border border-white rounded-2xl px-4 py-2.5 mt-2">
+                                <strong>Wajib:</strong> Atur akses file di Google Drive menjadi <strong>"Siapa saja yang memiliki link"</strong> agar video tampil pada preview galeri.
+                            </p>
+                        </div>
+
+                        <div id="statusBox" class="hidden rounded-2xl p-4 text-sm"></div>
+
+                        <button type="submit" id="submitBtn"
+                            class="w-full bg-gradient-to-r from-purple-600 via-pink-500 to-sky-500 hover:opacity-95 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg transition disabled:opacity-50">
+                            <span id="btnText">Simpan & Tampilkan Video</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Monitoring Siswa -->
+                <div class="lg:col-span-5 glass rounded-3xl p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-purple-200/50 pb-3">
+                        <h2 class="text-lg font-extrabold text-purple-950">2. Status Keaktifan Siswa</h2>
+                        <span id="kelasBadge" class="text-xs font-bold bg-white/80 text-purple-700 px-3 py-1 rounded-full border border-purple-100">
+                            Pilih kelas dulu
+                        </span>
                     </div>
-                    <div class="space-y-1.5">
-                        <h3 class="text-sm font-bold text-amber-900">
-                            Penting: Jika Muncul Pesan <em>"Sorry, unable to open the file"</em>
-                        </h3>
-                        <p class="text-xs sm:text-sm text-amber-800 leading-relaxed">
-                            Kendala tersebut terjadi jika browser Chrome di HP atau laptop Anda login ke <strong>lebih dari satu akun Google</strong> secara bersamaan. Solusinya:
-                        </p>
-                        <ol class="text-xs sm:text-sm text-amber-900 font-medium space-y-1 pl-4 list-decimal pt-1">
-                            <li>Klik tombol <strong>Salin Link Formulir</strong> di bawah.</li>
-                            <li>Buka menu titik tiga (<span class="font-bold">&#8942;</span>) di kanan atas browser Chrome.</li>
-                            <li>Pilih <strong>Tab Samaran Baru (New Incognito Tab)</strong>, lalu tempelkan link tersebut.</li>
-                        </ol>
+
+                    <div id="monitoringEmpty" class="text-center py-8 text-sm text-slate-500">
+                        Pilih kelas pada formulir untuk melihat daftar siswa yang sudah dan belum mengumpulkan.
+                    </div>
+
+                    <div id="monitoringContent" class="hidden space-y-4">
+                        <div class="grid grid-cols-2 gap-3 text-center">
+                            <div class="bg-sky-100/70 border border-white rounded-2xl p-3.5">
+                                <p class="text-xs text-sky-900 font-bold">Sudah Upload</p>
+                                <p id="countSudah" class="text-2xl font-extrabold text-sky-700">0</p>
+                            </div>
+                            <div class="bg-pink-100/70 border border-white rounded-2xl p-3.5">
+                                <p class="text-xs text-pink-900 font-bold">Belum Upload</p>
+                                <p id="countBelum" class="text-2xl font-extrabold text-pink-700">0</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xs font-extrabold uppercase tracking-wider text-purple-800 mb-2">
+                                Siswa Belum Terdaftar Kelompok:
+                            </h3>
+                            <div id="listBelum" class="max-h-60 overflow-y-auto bg-white/75 rounded-2xl p-3.5 border border-white text-xs space-y-1.5">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Tombol Aksi Utama -->
-            <div class="pt-2 space-y-3">
-                <a id="openFormBtn" href="#" target="_blank" rel="noopener noreferrer"
-                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-2xl shadow-lg hover:shadow-indigo-500/30 transition duration-200 flex items-center justify-center gap-2.5 text-center">
-                    <span>Buka Formulir Upload Video</span>
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </a>
+            <!-- Galeri Video -->
+            <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 glass rounded-3xl px-6 py-4">
+                    <div>
+                        <h2 class="text-xl font-extrabold text-purple-950">
+                            3. Galeri & Preview Video Podcast Masuk
+                        </h2>
+                        <p class="text-xs text-slate-600">
+                            Otomatis diperbarui setiap ada kelompok baru yang mengirimkan tautan video.
+                        </p>
+                    </div>
 
-                <button type="button" id="copyLinkBtn"
-                    class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3.5 px-6 rounded-2xl border border-slate-200 transition duration-200 flex items-center justify-center gap-2 text-sm">
-                    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                    <span id="copyBtnText">Salin Link Formulir (Untuk Mode Incognito)</span>
-                </button>
+                    <div class="flex items-center gap-2">
+                        <label for="filterKelasGaleri" class="text-xs font-bold text-slate-700">Filter Kelas:</label>
+                        <select id="filterKelasGaleri"
+                            class="px-3.5 py-2 rounded-2xl border border-purple-200/80 bg-white/85 text-xs font-bold text-purple-900 outline-none">
+                            <option value="ALL">Semua Kelas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="galleryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="col-span-full text-center py-12 glass rounded-3xl text-sm text-slate-500">
+                        Memuat data video podcast...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: PENILAIAN GURU & ADMIN ==================== -->
+        <section id="sectionPenilaian" class="hidden space-y-8">
+
+            <div id="loginPanel" class="max-w-md mx-auto glass rounded-3xl p-6 sm:p-8 space-y-4">
+                <div class="space-y-1">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-pink-600">Akses Terbatas</span>
+                    <h2 class="text-xl font-extrabold text-purple-950">Login Penilaian Guru / Admin</h2>
+                    <p class="text-xs text-slate-600">
+                        Masukkan password akun kelas untuk menilai kelas terkait, atau password Admin untuk seluruh kelas.
+                    </p>
+                </div>
+
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label for="evalPassword" class="block text-sm font-bold text-slate-700 mb-1.5">
+                            Password Akun Penilai
+                        </label>
+                        <input type="password" id="evalPassword" required placeholder="Masukkan password..."
+                            class="w-full px-4 py-2.5 rounded-2xl border border-purple-200/80 bg-white/85 focus:bg-white focus:ring-2 focus:ring-purple-400 outline-none text-sm">
+                    </div>
+
+                    <div id="loginErrorBox" class="hidden rounded-2xl p-3 text-xs bg-pink-100/80 text-pink-900 border border-pink-200"></div>
+
+                    <button type="submit" id="loginBtn"
+                        class="w-full bg-gradient-to-r from-purple-600 via-pink-500 to-sky-500 hover:opacity-95 text-white font-extrabold py-3 px-5 rounded-2xl shadow-md transition">
+                        Masuk ke Halaman Penilaian
+                    </button>
+                </form>
             </div>
 
-        </div>
+            <div id="gradingWorkspace" class="hidden space-y-8">
+
+                <div class="glass rounded-3xl p-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <span class="px-3.5 py-1 rounded-full text-xs font-extrabold bg-gradient-to-r from-purple-100 to-sky-100 text-purple-900 border border-white" id="roleBadge">
+                            ROLE
+                        </span>
+                        <div>
+                            <p class="text-sm font-extrabold text-purple-950" id="activeUserLabel">Penilai</p>
+                            <p class="text-xs text-slate-600" id="allowedClassesLabel">Kelas terakses: -</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="logoutEvaluator()"
+                        class="px-4 py-2 rounded-2xl text-xs font-bold bg-white/80 hover:bg-white text-slate-700 border border-purple-100 transition">
+                        Keluar / Ganti Akun
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                    <!-- Form 6 Instrumen Penilaian -->
+                    <div class="lg:col-span-7 glass rounded-3xl p-6 sm:p-8">
+                        <h2 class="text-lg font-extrabold text-purple-950 border-b border-purple-200/50 pb-3 mb-4">
+                            Instrumen Penilaian Kelompok (6 Kriteria)
+                        </h2>
+
+                        <form id="gradeForm" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="gradeKelas" class="block text-xs font-bold text-slate-700 mb-1">
+                                        Pilih Kelas <span class="text-pink-600">*</span>
+                                    </label>
+                                    <select id="gradeKelas" required
+                                        class="w-full px-3.5 py-2.5 rounded-2xl border border-purple-200/80 bg-white/85 text-sm font-bold text-purple-950 outline-none">
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="gradeKelompok" class="block text-xs font-bold text-slate-700 mb-1">
+                                        Pilih Kelompok (Dari Data Upload) <span class="text-pink-600">*</span>
+                                    </label>
+                                    <select id="gradeKelompok" required
+                                        class="w-full px-3.5 py-2.5 rounded-2xl border border-purple-200/80 bg-white/85 text-sm outline-none">
+                                        <option value="">-- Pilih kelompok --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="selectedGroupInfo" class="hidden bg-white/80 border border-white rounded-2xl p-3.5 text-xs space-y-1">
+                                <p class="font-bold text-slate-800" id="groupMembersPreview"></p>
+                                <a id="groupVideoLinkPreview" href="#" target="_blank" rel="noopener noreferrer"
+                                    class="text-purple-700 underline font-bold inline-block">Buka Link Video di Tab Baru &rarr;</a>
+                            </div>
+
+                            <div class="space-y-2.5 pt-1">
+                                <div class="p-3 rounded-2xl border border-white bg-white/65 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">1. Kesesuaian Tema & Relevansi</p>
+                                        <p class="text-[11px] text-slate-500">Kesesuaian topik dan relevansi pembahasan (Min 10 – Max 16)</p>
+                                    </div>
+                                    <input type="number" id="a1" min="10" max="16" value="14" required oninput="recalculateGrade()"
+                                        class="w-20 px-3 py-2 rounded-xl border border-purple-200 bg-white text-center font-extrabold text-sm text-purple-900">
+                                </div>
+
+                                <div class="p-3 rounded-2xl border border-white bg-white/65 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">2. Kualitas Konten & Akurasi</p>
+                                        <p class="text-[11px] text-slate-500">Kelengkapan isi, alur materi, dan ketepatan informasi (Min 10 – Max 16)</p>
+                                    </div>
+                                    <input type="number" id="a2" min="10" max="16" value="14" required oninput="recalculateGrade()"
+                                        class="w-20 px-3 py-2 rounded-xl border border-purple-200 bg-white text-center font-extrabold text-sm text-purple-900">
+                                </div>
+
+                                <div class="p-3 rounded-2xl border border-white bg-white/65 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">3. Penyampaian & Public Speaking</p>
+                                        <p class="text-[11px] text-slate-500">Artikulasi, intonasi, ekspresi, dan kelancaran bicara (Min 10 – Max 16)</p>
+                                    </div>
+                                    <input type="number" id="a3" min="10" max="16" value="14" required oninput="recalculateGrade()"
+                                        class="w-20 px-3 py-2 rounded-xl border border-purple-200 bg-white text-center font-extrabold text-sm text-purple-900">
+                                </div>
+
+                                <div class="p-3 rounded-2xl border border-white bg-white/65 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">4. Kreativitas</p>
+                                        <p class="text-[11px] text-slate-500">Pengemasan konsep, daya tarik, dan variasi penyajian (Min 10 – Max 16)</p>
+                                    </div>
+                                    <input type="number" id="a4" min="10" max="16" value="14" required oninput="recalculateGrade()"
+                                        class="w-20 px-3 py-2 rounded-xl border border-purple-200 bg-white text-center font-extrabold text-sm text-purple-900">
+                                </div>
+
+                                <div class="p-3 rounded-2xl border border-white bg-white/65 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">5. Kualitas Teknis & Audio</p>
+                                        <p class="text-[11px] text-slate-500">Kejernihan suara, kualitas rekaman, dan kerapian video (Min 10 – Max 18)</p>
+                                    </div>
+                                    <input type="number" id="a5" min="10" max="18" value="15" required oninput="recalculateGrade()"
+                                        class="w-20 px-3 py-2 rounded-xl border border-purple-200 bg-white text-center font-extrabold text-sm text-purple-900">
+                                </div>
+
+                                <div class="p-3 rounded-2xl border border-white bg-white/65 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">6. Orisinalitas & Kolaborasi</p>
+                                        <p class="text-[11px] text-slate-500">Keaslian karya dan pemerataan kerja sama anggota (Min 10 – Max 18)</p>
+                                    </div>
+                                    <input type="number" id="a6" min="10" max="18" value="15" required oninput="recalculateGrade()"
+                                        class="w-20 px-3 py-2 rounded-xl border border-purple-200 bg-white text-center font-extrabold text-sm text-purple-900">
+                                </div>
+                            </div>
+
+                            <!-- Ringkasan Kalkulasi Langsung -->
+                            <div class="bg-gradient-to-r from-purple-100/80 via-pink-100/80 to-sky-100/80 border border-white rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
+                                <div>
+                                    <p class="text-xs font-extrabold uppercase text-purple-900">Kalkulasi Otomatis (Min 60 – Max 100)</p>
+                                    <p class="text-xs text-slate-700 mt-0.5">Predikat: <strong id="calcPredikat" class="text-pink-700">Baik (B)</strong></p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-3xl font-extrabold text-purple-900" id="calcTotal">86</span>
+                                    <span class="text-xs font-bold text-slate-600"> / 100</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="catatanGuru" class="block text-xs font-bold text-slate-700 mb-1">
+                                    Catatan / Masukan Guru (Opsional)
+                                </label>
+                                <input type="text" id="catatanGuru" placeholder="Contoh: Kolaborasi bagus dan audio sudah jernih..."
+                                    class="w-full px-4 py-2.5 rounded-2xl border border-purple-200/80 bg-white/85 text-sm outline-none">
+                            </div>
+
+                            <div id="gradeStatusBox" class="hidden rounded-2xl p-3.5 text-sm"></div>
+
+                            <button type="submit" id="saveGradeBtn"
+                                class="w-full bg-gradient-to-r from-purple-600 via-pink-500 to-sky-500 hover:opacity-95 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg transition disabled:opacity-50">
+                                <span id="saveGradeBtnText">Simpan Hasil Penilaian</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Preview Video Kelompok yang Sedang Dinilai -->
+                    <div class="lg:col-span-5 glass rounded-3xl p-6 space-y-4">
+                        <h2 class="text-lg font-extrabold text-purple-950 border-b border-purple-200/50 pb-3">
+                            Preview Video Kelompok Terpilih
+                        </h2>
+                        <div id="gradeVideoPreviewBox" class="rounded-2xl overflow-hidden bg-slate-900/90 text-slate-200 h-60 flex items-center justify-center text-xs text-center p-4">
+                            Pilih kelompok pada form penilaian untuk menampilkan preview video di sini.
+                        </div>
+                        <div class="text-xs text-slate-600 space-y-1 bg-white/75 p-4 rounded-2xl border border-white">
+                            <p class="font-extrabold text-purple-950">Batas Nilai Per Aspek & Total:</p>
+                            <p>&bull; Aspek 1–4: <strong>Min 10 – Max 16</strong> per aspek</p>
+                            <p>&bull; Aspek 5–6: <strong>Min 10 – Max 18</strong> per aspek</p>
+                            <p>&bull; Total Nilai: <strong>Min 60 – Max 100</strong> (&ge;90: A | &ge;78: B | &ge;68: C | &lt;68: D)</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Tabel Rekap Hasil Penilaian -->
+                <div class="glass rounded-3xl p-6 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <h2 class="text-lg font-extrabold text-purple-950">Rekap Hasil Penilaian</h2>
+                        <span class="text-xs font-semibold text-slate-600" id="rekapNilaiFilterInfo">Menampilkan kelas sesuai akses akun</span>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-2xl border border-white bg-white/75">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gradient-to-r from-purple-100/80 via-pink-100/80 to-sky-100/80 text-purple-950 border-b border-purple-200/60">
+                                    <th class="p-3 font-extrabold">Waktu</th>
+                                    <th class="p-3 font-extrabold">Kelas</th>
+                                    <th class="p-3 font-extrabold">Anggota Kelompok</th>
+                                    <th class="p-3 font-extrabold text-center">1. Tema</th>
+                                    <th class="p-3 font-extrabold text-center">2. Konten</th>
+                                    <th class="p-3 font-extrabold text-center">3. Speaking</th>
+                                    <th class="p-3 font-extrabold text-center">4. Kreatif</th>
+                                    <th class="p-3 font-extrabold text-center">5. Teknis</th>
+                                    <th class="p-3 font-extrabold text-center">6. Orisinal</th>
+                                    <th class="p-3 font-extrabold text-center">Total</th>
+                                    <th class="p-3 font-extrabold">Predikat</th>
+                                    <th class="p-3 font-extrabold">Catatan</th>
+                                    <th class="p-3 font-extrabold">Penilai</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gradesTableBody" class="divide-y divide-purple-100/70">
+                                <tr>
+                                    <td colspan="13" class="p-6 text-center text-slate-500">Belum ada data penilaian.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
     </main>
 
-    <footer class="text-center py-6 text-xs text-slate-500 px-4">
+    <footer class="relative z-10 text-center py-6 text-xs text-slate-600 mt-10">
         &copy; 2026 Algian Manggara, S.Agr &bull; SMP Negeri 8 Cikarang Utara
     </footer>
 
     <script>
         // GANTI DENGAN URL WEB APP (/exec) GOOGLE APPS SCRIPT ANDA
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyxOgqcNhaEDond_W6Hv16s--F5moCp8HseBlLtspm8pREnAoZKBh9h3HSp6mOnKHY/exec";
+        const EXEC_URL = "https://script.google.com/macros/s/AKfycbzA2pImzj7oKNKPXFDMbS4aBDBsvEBxxp2O0PJPXE_7MZiaN_FsSXkR6oO9eA5ACEU/exec";
 
-        const openFormBtn = document.getElementById('openFormBtn');
-        const copyLinkBtn = document.getElementById('copyLinkBtn');
-        const copyBtnText = document.getElementById('copyBtnText');
+        let appData = {
+            classes: [],
+            masterSiswa: {},
+            usedStudents: {},
+            submissions: [],
+            grades: []
+        };
+        let jumlahSlot = 3;
+        let evalSession = null;
+        let evalPasswordSaved = "";
 
-        openFormBtn.href = WEB_APP_URL;
+        const kelasSelect = document.getElementById('kelas');
+        const filterGaleriSelect = document.getElementById('filterKelasGaleri');
+        const anggotaContainer = document.getElementById('anggotaContainer');
+        const tambahAnggotaBtn = document.getElementById('tambahAnggotaBtn');
+        const form = document.getElementById('podcastForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const statusBox = document.getElementById('statusBox');
 
-        copyLinkBtn.addEventListener('click', async () => {
+        async function apiGet(action = "getData") {
+            const url = `${EXEC_URL}?action=${encodeURIComponent(action)}&_t=${Date.now()}`;
+            const res = await fetch(url);
+            const text = await res.text();
+            return JSON.parse(text);
+        }
+
+        async function apiPost(action, extra = {}) {
+            const res = await fetch(EXEC_URL, {
+                method: "POST",
+                body: JSON.stringify({ action, ...extra })
+            });
+            const text = await res.text();
+            return JSON.parse(text);
+        }
+
+        function switchTab(tabName) {
+            const secGaleri = document.getElementById('sectionGaleri');
+            const secNilai = document.getElementById('sectionPenilaian');
+            const btnGaleri = document.getElementById('tabGaleriBtn');
+            const btnNilai = document.getElementById('tabPenilaianBtn');
+
+            const activeCls = "px-5 py-2.5 rounded-2xl text-sm font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-sky-500 text-white shadow-md transition";
+            const idleCls = "px-5 py-2.5 rounded-2xl text-sm font-bold bg-white/70 text-slate-700 hover:bg-white border border-purple-100 transition";
+
+            if (tabName === 'galeri') {
+                secGaleri.classList.remove('hidden');
+                secNilai.classList.add('hidden');
+                btnGaleri.className = activeCls;
+                btnNilai.className = idleCls;
+            } else {
+                secGaleri.classList.add('hidden');
+                secNilai.classList.remove('hidden');
+                btnNilai.className = activeCls;
+                btnGaleri.className = idleCls;
+            }
+        }
+
+        function getDriveEmbedUrl(url) {
+            const match = String(url || '').match(/[-\w]{25,}/);
+            if (match && match[0]) {
+                return `https://drive.google.com/file/d/${match[0]}/preview`;
+            }
+            return null;
+        }
+
+        function populateKelasDropdowns() {
+            const kelasList = (appData.classes && appData.classes.length)
+                ? appData.classes
+                : Object.keys(appData.masterSiswa).sort();
+            const currentVal = kelasSelect.value;
+
+            kelasSelect.innerHTML = '<option value="" disabled selected>-- Pilih Kelas --</option>';
+            filterGaleriSelect.innerHTML = '<option value="ALL">Semua Kelas</option>';
+
+            kelasList.forEach(k => {
+                const opt1 = document.createElement('option');
+                opt1.value = k;
+                opt1.textContent = `Kelas ${k}`;
+                kelasSelect.appendChild(opt1);
+
+                const opt2 = document.createElement('option');
+                opt2.value = k;
+                opt2.textContent = `Kelas ${k}`;
+                filterGaleriSelect.appendChild(opt2);
+            });
+
+            if (currentVal && kelasList.includes(currentVal)) {
+                kelasSelect.value = currentVal;
+            }
+        }
+
+        function renderAnggotaSlots() {
+            const selectedValues = Array.from(document.querySelectorAll('.anggota-select')).map(s => s.value);
+            anggotaContainer.innerHTML = '';
+
+            for (let i = 0; i < jumlahSlot; i++) {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-2';
+
+                const badge = document.createElement('span');
+                badge.className = 'w-8 h-10 flex items-center justify-center bg-white/80 text-purple-900 font-extrabold text-sm rounded-xl border border-white shrink-0';
+                badge.textContent = i + 1;
+
+                const select = document.createElement('select');
+                select.className = 'anggota-select flex-1 px-4 py-2.5 rounded-2xl border border-purple-200/80 bg-white/85 focus:bg-white focus:ring-2 focus:ring-purple-400 outline-none text-sm';
+                if (i === 0) select.required = true;
+
+                select.dataset.prevValue = selectedValues[i] || '';
+                select.addEventListener('change', updateAvailableOptions);
+
+                div.appendChild(badge);
+                div.appendChild(select);
+                anggotaContainer.appendChild(div);
+            }
+
+            updateAvailableOptions(true);
+        }
+
+        function updateAvailableOptions(restorePrev = false) {
+            const kelas = kelasSelect.value;
+            const allStudents = appData.masterSiswa[kelas] || [];
+            const alreadySubmitted = appData.usedStudents[kelas] || [];
+            const selects = Array.from(document.querySelectorAll('.anggota-select'));
+            const currentSelections = selects.map(s => restorePrev === true ? s.dataset.prevValue : s.value);
+
+            selects.forEach((select, idx) => {
+                const myChoice = currentSelections[idx];
+                select.innerHTML = '';
+
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = '';
+                defaultOpt.textContent = !kelas
+                    ? '-- Pilih kelas terlebih dahulu --'
+                    : (idx === 0 ? '-- Pilih Ketua Kelompok (Wajib) --' : `-- Pilih Anggota ${idx + 1} (Opsional) --`);
+                select.appendChild(defaultOpt);
+
+                if (!kelas) return;
+
+                allStudents.forEach(nama => {
+                    const isUsedInSheet = alreadySubmitted.includes(nama);
+                    const isPickedInOtherSlot = currentSelections.some((val, otherIdx) => otherIdx !== idx && val === nama);
+
+                    const opt = document.createElement('option');
+                    opt.value = nama;
+
+                    if (isUsedInSheet) {
+                        opt.textContent = `${nama} (Sudah Upload)`;
+                        opt.disabled = true;
+                    } else if (isPickedInOtherSlot) {
+                        opt.textContent = `${nama} (Dipilih di atas)`;
+                        opt.disabled = true;
+                    } else {
+                        opt.textContent = nama;
+                    }
+
+                    if (nama === myChoice && !isUsedInSheet) {
+                        opt.selected = true;
+                    }
+
+                    select.appendChild(opt);
+                });
+            });
+        }
+
+        function updateMonitoringPanel() {
+            const kelas = kelasSelect.value;
+            const emptyBox = document.getElementById('monitoringEmpty');
+            const contentBox = document.getElementById('monitoringContent');
+            const badge = document.getElementById('kelasBadge');
+
+            if (!kelas) {
+                emptyBox.classList.remove('hidden');
+                contentBox.classList.add('hidden');
+                badge.textContent = 'Pilih kelas dulu';
+                return;
+            }
+
+            emptyBox.classList.add('hidden');
+            contentBox.classList.remove('hidden');
+            badge.textContent = `Kelas ${kelas}`;
+
+            const allStudents = appData.masterSiswa[kelas] || [];
+            const submitted = appData.usedStudents[kelas] || [];
+            const notSubmitted = allStudents.filter(nama => !submitted.includes(nama));
+
+            document.getElementById('countSudah').textContent = submitted.length;
+            document.getElementById('countBelum').textContent = notSubmitted.length;
+
+            const listBelum = document.getElementById('listBelum');
+            if (notSubmitted.length === 0) {
+                listBelum.innerHTML = '<p class="text-sky-800 font-bold text-center py-2">Semua siswa di kelas ini sudah terdaftar!</p>';
+            } else {
+                listBelum.innerHTML = notSubmitted.map((nama, i) =>
+                    `<div class="flex items-center gap-2 text-slate-700 py-0.5">
+                        <span class="text-purple-600 font-mono font-bold">${i + 1}.</span>
+                        <span>${nama}</span>
+                    </div>`
+                ).join('');
+            }
+        }
+
+        function renderGallery() {
+            const grid = document.getElementById('galleryGrid');
+            const filterKelas = filterGaleriSelect.value;
+
+            const filtered = filterKelas === 'ALL'
+                ? appData.submissions
+                : appData.submissions.filter(item => item.kelas === filterKelas);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 glass rounded-3xl text-sm text-slate-500">
+                        Belum ada karya video podcast yang dikirimkan${filterKelas !== 'ALL' ? ' untuk Kelas ' + filterKelas : ''}.
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => {
+                const embedUrl = getDriveEmbedUrl(item.link);
+                const videoPlayer = embedUrl
+                    ? `<iframe src="${embedUrl}" class="w-full h-52 bg-slate-900" allow="autoplay; fullscreen" allowfullscreen></iframe>`
+                    : `<div class="w-full h-52 bg-gradient-to-br from-purple-900/90 to-sky-900/90 text-white flex items-center justify-center text-xs p-4 text-center">
+                        Preview tidak tersedia. Klik tautan di bawah untuk membuka video.
+                       </div>`;
+
+                const anggotaBadges = item.anggota.map((nama, idx) =>
+                    `<li class="text-xs text-slate-700 flex items-center gap-1.5">
+                        <span class="w-4 h-4 rounded-full bg-purple-100 text-purple-800 font-bold text-[10px] flex items-center justify-center shrink-0">${idx + 1}</span>
+                        <span class="truncate">${nama}</span>
+                    </li>`
+                ).join('');
+
+                return `
+                    <article class="glass rounded-3xl overflow-hidden flex flex-col justify-between">
+                        <div>
+                            ${videoPlayer}
+                            <div class="p-5 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="bg-gradient-to-r from-purple-600 to-pink-500 text-white text-xs font-extrabold px-3 py-1 rounded-full">
+                                        Kelas ${item.kelas}
+                                    </span>
+                                    <span class="text-[11px] text-slate-500 font-medium">${item.waktu}</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-extrabold text-purple-900 uppercase tracking-wider mb-1.5">Anggota Kelompok:</p>
+                                    <ul class="space-y-1">
+                                        ${anggotaBadges}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-5 py-3 bg-white/60 border-t border-white flex justify-between items-center">
+                            <a href="${item.link}" target="_blank" rel="noopener noreferrer"
+                                class="text-xs font-extrabold text-purple-700 hover:text-pink-600 flex items-center gap-1 transition">
+                                Buka di Google Drive &rarr;
+                            </a>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        // ==================== LOGIKA PENILAIAN ====================
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const pwd = document.getElementById('evalPassword').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errBox = document.getElementById('loginErrorBox');
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Memeriksa...';
+            errBox.classList.add('hidden');
+
             try {
-                await navigator.clipboard.writeText(WEB_APP_URL);
-                copyBtnText.textContent = "Link Tersalin! Buka Tab Incognito lalu Tempel";
-                copyLinkBtn.classList.add("bg-emerald-50", "text-emerald-700", "border-emerald-200");
-                setTimeout(() => {
-                    copyBtnText.textContent = "Salin Link Formulir (Untuk Mode Incognito)";
-                    copyLinkBtn.classList.remove("bg-emerald-50", "text-emerald-700", "border-emerald-200");
-                }, 4000);
+                const res = await apiPost("loginEvaluator", { password: pwd });
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Masuk ke Halaman Penilaian';
+
+                if (res.status === 'success') {
+                    evalSession = res.session;
+                    evalPasswordSaved = pwd;
+                    document.getElementById('evalPassword').value = '';
+                    document.getElementById('loginPanel').classList.add('hidden');
+                    document.getElementById('gradingWorkspace').classList.remove('hidden');
+
+                    document.getElementById('roleBadge').textContent = evalSession.role;
+                    document.getElementById('activeUserLabel').textContent = `Masuk sebagai: ${evalSession.akun}`;
+                    document.getElementById('allowedClassesLabel').textContent =
+                        `Kelas terakses: ${evalSession.allowedClasses.join(', ')}`;
+
+                    setupGradeClassDropdown();
+                    populateGradeKelompokDropdown();
+                    renderGradesTable();
+                } else {
+                    errBox.textContent = res.message;
+                    errBox.classList.remove('hidden');
+                }
             } catch (err) {
-                prompt("Salin manual link formulir berikut:", WEB_APP_URL);
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Masuk ke Halaman Penilaian';
+                errBox.textContent = 'Gagal login: ' + err.message;
+                errBox.classList.remove('hidden');
             }
         });
+
+        function logoutEvaluator() {
+            evalSession = null;
+            evalPasswordSaved = "";
+            document.getElementById('gradingWorkspace').classList.add('hidden');
+            document.getElementById('loginPanel').classList.remove('hidden');
+            document.getElementById('gradeStatusBox').classList.add('hidden');
+        }
+
+        function setupGradeClassDropdown() {
+            const gradeKelasSelect = document.getElementById('gradeKelas');
+            gradeKelasSelect.innerHTML = '';
+
+            evalSession.allowedClasses.forEach(k => {
+                const opt = document.createElement('option');
+                opt.value = k;
+                opt.textContent = `Kelas ${k}`;
+                gradeKelasSelect.appendChild(opt);
+            });
+        }
+
+        function populateGradeKelompokDropdown() {
+            if (!evalSession) return;
+            const kelas = document.getElementById('gradeKelas').value;
+            const kelompokSelect = document.getElementById('gradeKelompok');
+            const filteredSubs = appData.submissions.filter(s => s.kelas === kelas);
+
+            kelompokSelect.innerHTML = '<option value="">-- Pilih kelompok yang sudah upload --</option>';
+            filteredSubs.forEach((sub, idx) => {
+                const opt = document.createElement('option');
+                opt.value = String(idx);
+                opt.textContent = `${sub.anggota[0] || 'Kelompok'} (${sub.anggota.length} anggota)`;
+                kelompokSelect.appendChild(opt);
+            });
+
+            document.getElementById('selectedGroupInfo').classList.add('hidden');
+            document.getElementById('gradeVideoPreviewBox').innerHTML =
+                'Pilih kelompok pada form penilaian untuk menampilkan preview video di sini.';
+        }
+
+        document.getElementById('gradeKelas').addEventListener('change', () => {
+            populateGradeKelompokDropdown();
+            renderGradesTable();
+        });
+
+        document.getElementById('gradeKelompok').addEventListener('change', function() {
+            const kelas = document.getElementById('gradeKelas').value;
+            const filteredSubs = appData.submissions.filter(s => s.kelas === kelas);
+            const selected = filteredSubs[Number(this.value)];
+            const infoBox = document.getElementById('selectedGroupInfo');
+            const previewBox = document.getElementById('gradeVideoPreviewBox');
+
+            if (!selected) {
+                infoBox.classList.add('hidden');
+                previewBox.innerHTML = 'Pilih kelompok pada form penilaian untuk menampilkan preview video di sini.';
+                return;
+            }
+
+            infoBox.classList.remove('hidden');
+            document.getElementById('groupMembersPreview').textContent =
+                `Anggota: ${selected.anggota.join(', ')}`;
+            document.getElementById('groupVideoLinkPreview').href = selected.link;
+
+            const embed = getDriveEmbedUrl(selected.link);
+            previewBox.innerHTML = embed
+                ? `<iframe src="${embed}" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe>`
+                : 'Link tidak mendukung embed langsung. Klik "Buka Link Video di Tab Baru".';
+        });
+
+        function readClamped(id, min, max) {
+            const el = document.getElementById(id);
+            let v = Number(el.value);
+            if (isNaN(v)) v = min;
+            if (v < min) v = min;
+            if (v > max) v = max;
+            return v;
+        }
+
+        function recalculateGrade() {
+            const a1 = readClamped('a1', 10, 16);
+            const a2 = readClamped('a2', 10, 16);
+            const a3 = readClamped('a3', 10, 16);
+            const a4 = readClamped('a4', 10, 16);
+            const a5 = readClamped('a5', 10, 18);
+            const a6 = readClamped('a6', 10, 18);
+            const total = a1 + a2 + a3 + a4 + a5 + a6;
+
+            let predikat = "Perlu Bimbingan (D)";
+            if (total >= 90) predikat = "Sangat Baik (A)";
+            else if (total >= 78) predikat = "Baik (B)";
+            else if (total >= 68) predikat = "Cukup (C)";
+
+            document.getElementById('calcTotal').textContent = total;
+            document.getElementById('calcPredikat').textContent = predikat;
+        }
+
+        document.getElementById('gradeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!evalSession) return;
+
+            const kelas = document.getElementById('gradeKelas').value;
+            const filteredSubs = appData.submissions.filter(s => s.kelas === kelas);
+            const selected = filteredSubs[Number(document.getElementById('gradeKelompok').value)];
+
+            if (!selected) {
+                alert('Silakan pilih kelompok terlebih dahulu.');
+                return;
+            }
+
+            const payload = {
+                kelas: kelas,
+                anggotaText: selected.anggota.join(', '),
+                link: selected.link,
+                a1: readClamped('a1', 10, 16),
+                a2: readClamped('a2', 10, 16),
+                a3: readClamped('a3', 10, 16),
+                a4: readClamped('a4', 10, 16),
+                a5: readClamped('a5', 10, 18),
+                a6: readClamped('a6', 10, 18),
+                catatan: document.getElementById('catatanGuru').value.trim()
+            };
+
+            const btn = document.getElementById('saveGradeBtn');
+            const btnTxt = document.getElementById('saveGradeBtnText');
+            const gStatus = document.getElementById('gradeStatusBox');
+
+            btn.disabled = true;
+            btnTxt.textContent = 'Menyimpan Nilai...';
+            gStatus.classList.add('hidden');
+
+            try {
+                const res = await apiPost("saveGrade", { payload, password: evalPasswordSaved });
+                btn.disabled = false;
+                btnTxt.textContent = 'Simpan Hasil Penilaian';
+
+                if (res.status === 'success') {
+                    appData = res.data;
+                    gStatus.className = 'rounded-2xl p-3.5 text-sm bg-sky-100/80 text-sky-950 border border-white block';
+                    gStatus.textContent = 'Nilai berhasil dihitung dan disimpan ke sheet Hasil_Penilaian!';
+                    document.getElementById('catatanGuru').value = '';
+                    renderGradesTable();
+                } else {
+                    gStatus.className = 'rounded-2xl p-3.5 text-sm bg-pink-100/80 text-pink-900 border border-pink-200 block';
+                    gStatus.textContent = res.message;
+                }
+            } catch (err) {
+                btn.disabled = false;
+                btnTxt.textContent = 'Simpan Hasil Penilaian';
+                gStatus.className = 'rounded-2xl p-3.5 text-sm bg-pink-100/80 text-pink-900 border border-pink-200 block';
+                gStatus.textContent = 'Gagal menyimpan nilai: ' + err.message;
+            }
+        });
+
+        function renderGradesTable() {
+            if (!evalSession) return;
+            const tbody = document.getElementById('gradesTableBody');
+            const selectedKelas = document.getElementById('gradeKelas').value;
+
+            const visibleGrades = appData.grades.filter(g => {
+                if (!evalSession.allowedClasses.includes(g.kelas)) return false;
+                if (evalSession.role !== 'ADMIN' && selectedKelas) return g.kelas === selectedKelas;
+                return true;
+            });
+
+            document.getElementById('rekapNilaiFilterInfo').textContent =
+                evalSession.role === 'ADMIN'
+                    ? 'Akses Admin: menampilkan semua kelas'
+                    : `Akses Kelas ${selectedKelas}`;
+
+            if (visibleGrades.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="13" class="p-6 text-center text-slate-500">Belum ada hasil penilaian untuk kelas ini.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = visibleGrades.map(g => `
+                <tr class="hover:bg-purple-50/50 transition">
+                    <td class="p-3 whitespace-nowrap text-slate-500">${g.waktu}</td>
+                    <td class="p-3 font-extrabold text-purple-800">${g.kelas}</td>
+                    <td class="p-3 font-semibold text-slate-800">${g.anggotaText}</td>
+                    <td class="p-3 text-center">${g.a1}</td>
+                    <td class="p-3 text-center">${g.a2}</td>
+                    <td class="p-3 text-center">${g.a3}</td>
+                    <td class="p-3 text-center">${g.a4}</td>
+                    <td class="p-3 text-center">${g.a5}</td>
+                    <td class="p-3 text-center">${g.a6}</td>
+                    <td class="p-3 text-center font-extrabold text-purple-900">${g.total}</td>
+                    <td class="p-3 font-bold text-pink-700">${g.predikat}</td>
+                    <td class="p-3 text-slate-600">${g.catatan}</td>
+                    <td class="p-3 text-slate-500">${g.penilai}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ==================== EVENT LISTENER UTAMA ====================
+        kelasSelect.addEventListener('change', () => {
+            jumlahSlot = 3;
+            renderAnggotaSlots();
+            updateMonitoringPanel();
+        });
+
+        filterGaleriSelect.addEventListener('change', renderGallery);
+
+        tambahAnggotaBtn.addEventListener('click', () => {
+            if (jumlahSlot >= 8) {
+                alert('Maksimal 8 anggota dalam satu kelompok.');
+                return;
+            }
+            jumlahSlot++;
+            renderAnggotaSlots();
+        });
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const kelas = kelasSelect.value;
+            const anggota = Array.from(document.querySelectorAll('.anggota-select'))
+                .map(s => s.value)
+                .filter(v => v !== '');
+            const link = document.getElementById('driveLink').value.trim();
+
+            if (!kelas || anggota.length === 0 || !link) return;
+
+            submitBtn.disabled = true;
+            btnText.textContent = 'Menyimpan Data...';
+            statusBox.className = 'hidden';
+
+            try {
+                const res = await apiPost("submitPodcast", { payload: { kelas, anggota, link } });
+                submitBtn.disabled = false;
+                btnText.textContent = 'Simpan & Tampilkan Video';
+
+                if (res.status === 'success') {
+                    appData = res.data;
+                    statusBox.className = 'rounded-2xl p-4 text-sm bg-sky-100/80 text-sky-950 border border-white block';
+                    statusBox.innerHTML = '<strong>Berhasil!</strong> Data kelompok dan preview video Anda telah ditambahkan ke galeri.';
+
+                    document.getElementById('driveLink').value = '';
+                    jumlahSlot = 3;
+                    populateKelasDropdowns();
+                    renderAnggotaSlots();
+                    updateMonitoringPanel();
+                    filterGaleriSelect.value = kelas;
+                    renderGallery();
+                    if (evalSession) populateGradeKelompokDropdown();
+                } else {
+                    statusBox.className = 'rounded-2xl p-4 text-sm bg-pink-100/80 text-pink-900 border border-pink-200 block';
+                    statusBox.textContent = res.message;
+                    loadInitialData();
+                }
+            } catch (err) {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Simpan & Tampilkan Video';
+                statusBox.className = 'rounded-2xl p-4 text-sm bg-pink-100/80 text-pink-900 border border-pink-200 block';
+                statusBox.textContent = 'Terjadi kesalahan: ' + err.message;
+            }
+        });
+
+        async function loadInitialData() {
+            try {
+                const res = await apiGet("getData");
+                if (res.status === 'success' && res.data) {
+                    appData = res.data;
+                    populateKelasDropdowns();
+                    renderAnggotaSlots();
+                    updateMonitoringPanel();
+                    renderGallery();
+                    if (evalSession) {
+                        populateGradeKelompokDropdown();
+                        renderGradesTable();
+                    }
+                } else {
+                    throw new Error(res.message || "Gagal memuat data.");
+                }
+            } catch (err) {
+                document.getElementById('galleryGrid').innerHTML = `
+                    <div class="col-span-full text-center py-8 glass rounded-3xl text-sm text-pink-800">
+                        Gagal memuat data dari Google Sheets: ${err.message}
+                    </div>`;
+            }
+        }
+
+        recalculateGrade();
+        renderAnggotaSlots();
+        loadInitialData();
     </script>
 </body>
 </html>
